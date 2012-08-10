@@ -34,12 +34,6 @@ import com.titankingdoms.nodinchan.titanchat.event.chat.MessageSendEvent;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * TitanChatListener - Event Listener of TitanChat
- * 
- * @author NodinChan
- *
- */
 public class TitanChatListener implements Listener {
 
 	private final TitanChat plugin;
@@ -51,9 +45,6 @@ public class TitanChatListener implements Listener {
 	private final double currentVer;
 	private double newVer;
 	
-	/**
-	 * Listens to events and act accordingly
-	 */
 	public TitanChatListener() {
 		this.plugin = TitanChat.getInstance();
 		this.currentVer = Double.valueOf(plugin.getDescription().getVersion().trim().split(" ")[0].trim());
@@ -72,11 +63,6 @@ public class TitanChatListener implements Listener {
 		return words;
 	}
 	
-	/**
-	 * Listens to the MessageSendEvent
-	 * 
-	 * @param event MessageSendEvent
-	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onMessageSend(MessageSendEvent event) {
 		this.chars += event.getMessage().toCharArray().length;
@@ -84,11 +70,6 @@ public class TitanChatListener implements Listener {
 		this.lines++;
 	}
 	
-	/**
-	 * Listens to the PlayerCommandPreprocessEvent
-	 * 
-	 * @param event PlayerCommandPreprocessEvent
-	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (plugin.getServer().getPluginCommand(event.getMessage().split(" ")[0]) != null)
@@ -101,11 +82,6 @@ public class TitanChatListener implements Listener {
 		plugin.getManager().getCommandManager().getShortcutManager().handled(player, command, args);
 	}
 	
-	/**
-	 * Listens to the PlayerJoinEvent
-	 * 
-	 * @param event PlayerJoinEvent
-	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Participant participant = plugin.getManager().getChannelManager().loadParticipant(event.getPlayer());
@@ -113,20 +89,12 @@ public class TitanChatListener implements Listener {
 		updateCheck(participant.getPlayer());
 	}
 	
-	/**
-	 * Listens to the SignChangeEvent
-	 * 
-	 * @param event SignChangeEvent
-	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 		for (int line = 0; line < 4; line++)
 			event.setLine(line, plugin.getFormatHandler().colourise(event.getLine(line)));
 	}
 	
-	/**
-	 * Checks for an update
-	 */
 	private double updateCheck() {
 		try {
 			URL url = new URL("http://dev.bukkit.org/server-mods/titanchat/files.rss");

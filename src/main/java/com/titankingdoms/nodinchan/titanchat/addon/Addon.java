@@ -24,31 +24,17 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Addon - Addon base
- * 
- * @author NodinChan
- *
- */
 public class Addon extends Loadable implements Listener {
 	
 	protected final TitanChat plugin;
 	
 	protected static final Debugger db = new Debugger(1);
 	
-	/**
-	 * Addons for supporting other plugins
-	 * 
-	 * @param name The name of the Addon
-	 */
 	public Addon(String name) {
 		super(name);
 		this.plugin = TitanChat.getInstance();
 	}
 	
-	/**
-	 * Check if an Addon equals another
-	 */
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Addon)
@@ -57,36 +43,18 @@ public class Addon extends Loadable implements Listener {
 		return false;
 	}
 	
-	/**
-	 * Registers the Command
-	 * 
-	 * @param command The Command to register
-	 */
 	public final void register(CommandBase command) {
 		plugin.getManager().getCommandManager().register(command);
 	}
 	
-	/**
-	 * Registers the Custom Channel
-	 * 
-	 * @param channel The Custom Channel to register
-	 */
 	public final void register(Channel channel) {
 		plugin.getManager().getChannelManager().register(channel);
 	}
 	
-	/**
-	 * Registers the Listener
-	 * 
-	 * @param listener The Listener to register
-	 */
 	public final void register(Listener listener) {
 		plugin.register(listener);
 	}
 	
-	/**
-	 * Returns the Addon as a String
-	 */
 	@Override
 	public String toString() {
 		return "Addon:" + super.getName();

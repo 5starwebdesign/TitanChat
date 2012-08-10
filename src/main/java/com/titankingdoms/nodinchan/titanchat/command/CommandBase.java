@@ -28,12 +28,6 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Command - Command base
- * 
- * @author NodinChan
- *
- */
 public class CommandBase extends Loadable implements Listener {
 
 	protected final TitanChat plugin;
@@ -45,9 +39,6 @@ public class CommandBase extends Loadable implements Listener {
 	protected static final MessageLevel PLUGIN = MessageLevel.PLUGIN;
 	protected static final MessageLevel WARNING = MessageLevel.WARNING;
 	
-	/**
-	 * Initialises variables
-	 */
 	public CommandBase() {
 		super("");
 		this.plugin = TitanChat.getInstance();
@@ -64,13 +55,6 @@ public class CommandBase extends Loadable implements Listener {
 		return plugin.getPermissionsHandler().has((Player) sender, permission);
 	}
 	
-	/**
-	 * Sends a warning for invalid argument length
-	 * 
-	 * @param sender The command sender to send to
-	 * 
-	 * @param name The command's name
-	 */
 	public final void invalidArgLength(CommandSender sender, String name) {
 		plugin.send(MessageLevel.WARNING, sender, "Invalid Argument Length");
 		usage(sender, name);
@@ -83,40 +67,18 @@ public class CommandBase extends Loadable implements Listener {
 		return !player.isOnline();
 	}
 	
-	/**
-	 * Registers the addon
-	 * 
-	 * @param addon the addon to register
-	 */
 	public final void register(Addon addon) {
 		plugin.getManager().getAddonManager().register(addon);
 	}
 	
-	/**
-	 * Registers the custom channel
-	 * 
-	 * @param channel the channel to register
-	 */
 	public final void register(Channel channel) {
 		plugin.getManager().getChannelManager().register(channel);
 	}
 	
-	/**
-	 * Registers the Listener
-	 * 
-	 * @param listener The Listener to register
-	 */
 	public final void register(Listener listener) {
 		plugin.register(listener);
 	}
 	
-	/**
-	 * Sends the usage message of the command
-	 * 
-	 * @param sender The command sender to send to
-	 * 
-	 * @param name The command's name
-	 */
 	public final void usage(CommandSender sender, String name) {
 		Executor executor = plugin.getManager().getCommandManager().getCommandExecutor(name);
 		

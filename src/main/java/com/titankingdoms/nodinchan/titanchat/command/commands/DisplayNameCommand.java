@@ -45,7 +45,7 @@ public class DisplayNameCommand extends CommandBase {
 	/**
 	 * Name Command - Checks the real username of you or of the Player
 	 */
-	@Command(server = true)
+	@Command
 	@Description("Checks the real username of you or of the player")
 	@Usage("name <player>")
 	public void name(CommandSender sender, Channel channel, String[] args) {
@@ -73,7 +73,7 @@ public class DisplayNameCommand extends CommandBase {
 	/**
 	 * Nick Command - Changes your or your target's display name
 	 */
-	@Command(server = true)
+	@Command
 	@Description("Sets your or your target's display name")
 	@Usage("nick [displayname] <player>")
 	public void nick(CommandSender sender, Channel channel, String[] args) {
@@ -135,7 +135,7 @@ public class DisplayNameCommand extends CommandBase {
 	/**
 	 * Reset Command - Resets your or your target's display name
 	 */
-	@Command(server = true)
+	@Command
 	@Description("Resets your or your target's display name")
 	@Usage("reset <player>")
 	public void reset(CommandSender sender, Channel channel, String[] args) {

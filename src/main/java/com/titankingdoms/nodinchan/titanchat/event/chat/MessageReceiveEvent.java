@@ -29,12 +29,6 @@ import com.titankingdoms.nodinchan.titanchat.event.util.Message;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * MessageReceiveEvent - Called when Players will receive the message
- * 
- * @author NodinChan
- *
- */
 public final class MessageReceiveEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -46,15 +40,6 @@ public final class MessageReceiveEvent extends Event {
 	private final Map<Player, Message> messages;
 	private final Map<Player, Boolean> cancelled;
 	
-	/**
-	 * Called when Players will receive the message
-	 * 
-	 * @param sender The message sender
-	 * 
-	 * @param recipants The message recipants
-	 * 
-	 * @param message The message
-	 */
 	public MessageReceiveEvent(Player sender, List<Player> recipants, Message message) {
 		this.sender = sender;
 		this.message = message;
@@ -67,26 +52,10 @@ public final class MessageReceiveEvent extends Event {
 		}
 	}
 	
-	/**
-	 * Called when Players will receive the message
-	 * 
-	 * @param sender The message sender
-	 * 
-	 * @param recipants The message recipants
-	 * 
-	 * @param message The message
-	 */
 	public MessageReceiveEvent(Player sender, Player[] recipants, Message message) {
 		this(sender, Arrays.asList(recipants), message);
 	}
 	
-	/**
-	 * Gets the format to be used for the player
-	 * 
-	 * @param recipant The recipant of the message
-	 * 
-	 * @return The format to be used
-	 */
 	public String getFormat(Player recipant) {
 		if (messages.containsKey(recipant))
 			return messages.get(recipant).getFormat();
@@ -94,13 +63,6 @@ public final class MessageReceiveEvent extends Event {
 		return message.getFormat();
 	}
 	
-	/**
-	 * Gets the entire formatted message to be sent to the player
-	 * 
-	 * @param recipant The recipant of the message
-	 * 
-	 * @return The formatted message
-	 */
 	public String getFormattedMessage(Player recipant) {
 		String format = getFormat(recipant);
 		String message = getMessage(recipant);
@@ -117,13 +79,6 @@ public final class MessageReceiveEvent extends Event {
 		return handlers;
 	}
 	
-	/**
-	 * Gets the message to be sent to the player
-	 * 
-	 * @param recipant The recipant of the message
-	 * 
-	 * @return The message to be sent
-	 */
 	public String getMessage(Player recipant) {
 		if (messages.containsKey(recipant))
 			return messages.get(recipant).getMessage();
@@ -131,11 +86,6 @@ public final class MessageReceiveEvent extends Event {
 		return message.getMessage();
 	}
 	
-	/**
-	 * Gets the recipants of the message
-	 * 
-	 * @return The list of recipants
-	 */
 	public List<Player> getRecipants() {
 		List<Player> recipants = new ArrayList<Player>(messages.keySet());
 		
@@ -146,22 +96,10 @@ public final class MessageReceiveEvent extends Event {
 		return recipants;
 	}
 	
-	/**
-	 * Gets the message sender
-	 * 
-	 * @return The sender of the message
-	 */
 	public Player getSender() {
 		return sender;
 	}
 	
-	/**
-	 * Check if the event should be cancelled for the player
-	 * 
-	 * @param recipant The message recipant
-	 * 
-	 * @return True if cancelled
-	 */
 	public boolean isCancelled(Player recipant) {
 		if (cancelled.containsKey(recipant))
 			return cancelled.get(recipant);
@@ -169,36 +107,15 @@ public final class MessageReceiveEvent extends Event {
 		return true;
 	}
 	
-	/**
-	 * Cancels the event for the player
-	 * 
-	 * @param recipant The message recipant
-	 * 
-	 * @param cancelled Set to true to cancel
-	 */
 	public void setCancelled(Player recipant, boolean cancelled) {
 		this.cancelled.put(recipant, cancelled);
 	}
 	
-	/**
-	 * Sets the format to be used for the player
-	 * 
-	 * @param recipant The message recipant
-	 * 
-	 * @param format The new format
-	 */
 	public void setFormat(Player recipant, String format) {
 		if (messages.containsKey(recipant))
 			messages.get(recipant).setFormat(format);
 	}
 	
-	/**
-	 * Sets the message to be sent to the player
-	 * 
-	 * @param recipant The message recipant
-	 * 
-	 * @param message The new message
-	 */
 	public void setMessage(Player recipant, String message) {
 		if (messages.containsKey(recipant))
 			messages.get(recipant).setMessage(message);

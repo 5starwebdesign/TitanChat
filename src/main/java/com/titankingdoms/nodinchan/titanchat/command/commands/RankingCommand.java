@@ -36,7 +36,8 @@ public class RankingCommand extends CommandBase {
 	/**
 	 * Demote Command - Demotes the player of the channel
 	 */
-	@Command(server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Description("Demotes the player of the channel")
 	@Usage("demote [player]")
 	public void demote(CommandSender sender, Channel channel, String[] args) {
@@ -76,50 +77,10 @@ public class RankingCommand extends CommandBase {
 	}
 	
 	/**
-	 * Dewhitelist Command - Dewhitelists the player
-	 */
-	@Command
-	@Aliases("remove")
-	@Description("Dewhitelists the player")
-	@Usage("dewhitelist [player]")
-	public void dewhitelist(CommandSender sender, Channel channel, String[] args) {
-		if (channel.handleCommand(sender, "dewhitelist", args))
-			return;
-		
-		try {
-			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
-			
-			if (targetPlayer == null) {
-				targetPlayer = plugin.getOfflinePlayer(args[0]);
-				plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is offline");
-			}
-			
-			if (!channel.getAdmins().contains(sender.getName())) {
-				if (!(hasPermission(sender, "TitanChat.rank.*") || hasPermission(sender, "TitanChat.rank." + channel.getName()))) {
-					plugin.send(MessageLevel.WARNING, sender, "You do not have permission");
-					return;
-				}
-			}
-			
-			if (channel.getWhitelist().contains(targetPlayer.getName())) {
-				channel.getWhitelist().remove(targetPlayer.getName());
-				channel.save();
-				
-				if (targetPlayer.isOnline())
-					plugin.send(MessageLevel.WARNING, targetPlayer.getPlayer(), "You have been dewhitelisted in " + channel.getName());
-				
-				if (sender instanceof Player && !channel.isParticipating(sender.getName()))
-					plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been dewhitelisted");
-				
-			} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is not whitelisted"); }
-			
-		} catch (IndexOutOfBoundsException e) { invalidArgLength(sender, "dewhitelist"); }
-	}
-	
-	/**
 	 * Promote Command - Promotes the player of the channel
 	 */
-	@Command(server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Description("Promotes the player of the channel")
 	@Usage("promote [player]")
 	public void promote(CommandSender sender, Channel channel, String[] args) {
@@ -159,9 +120,52 @@ public class RankingCommand extends CommandBase {
 	}
 	
 	/**
+	 * Unwhitelist Command - Unwhitelists the player
+	 */
+	@Command
+	@CommandOption(requireChannel = true)
+	@Aliases("remove")
+	@Description("Unwhitelists the player")
+	@Usage("unwhitelist [player]")
+	public void unwhitelist(CommandSender sender, Channel channel, String[] args) {
+		if (channel.handleCommand(sender, "unwhitelist", args))
+			return;
+		
+		try {
+			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
+			
+			if (targetPlayer == null) {
+				targetPlayer = plugin.getOfflinePlayer(args[0]);
+				plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is offline");
+			}
+			
+			if (!channel.getAdmins().contains(sender.getName())) {
+				if (!(hasPermission(sender, "TitanChat.rank.*") || hasPermission(sender, "TitanChat.rank." + channel.getName()))) {
+					plugin.send(MessageLevel.WARNING, sender, "You do not have permission");
+					return;
+				}
+			}
+			
+			if (channel.getWhitelist().contains(targetPlayer.getName())) {
+				channel.getWhitelist().remove(targetPlayer.getName());
+				channel.save();
+				
+				if (targetPlayer.isOnline())
+					plugin.send(MessageLevel.WARNING, targetPlayer.getPlayer(), "You have been dewhitelisted in " + channel.getName());
+				
+				if (sender instanceof Player && !channel.isParticipating(sender.getName()))
+					plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been dewhitelisted");
+				
+			} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is not whitelisted"); }
+			
+		} catch (IndexOutOfBoundsException e) { invalidArgLength(sender, "dewhitelist"); }
+	}
+	
+	/**
 	 * Whitelist Command - Whitelists the player
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Aliases("add")
 	@Description("Whitelists the player")
 	@Usage("whitelist [player]")

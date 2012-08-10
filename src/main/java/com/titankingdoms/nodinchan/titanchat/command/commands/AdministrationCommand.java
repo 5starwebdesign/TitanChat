@@ -44,7 +44,8 @@ public class AdministrationCommand extends CommandBase {
 	/**
 	 * Ban Command - Bans the player from the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Aliases("b")
 	@Description("Bans the player from the channel")
 	@Usage("ban [player]")
@@ -90,7 +91,8 @@ public class AdministrationCommand extends CommandBase {
 	/**
 	 * Force Command - Forces the player to join the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Description("Forces the player to join the channel")
 	@Usage("force [player]")
 	public void force(CommandSender sender, Channel channel, String[] args) {
@@ -119,7 +121,8 @@ public class AdministrationCommand extends CommandBase {
 	/**
 	 * Kick Command - Kicks the player from the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Aliases("k")
 	@Description("Kicks the player from the channel")
 	@Usage("kick [player]")
@@ -155,7 +158,8 @@ public class AdministrationCommand extends CommandBase {
 	/**
 	 * Mute Command - Mutes the player on the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Description("Mutes the player on the channel")
 	@Usage("mute [player]")
 	public void mute(CommandSender sender, Channel channel, String[] args) {
@@ -197,7 +201,8 @@ public class AdministrationCommand extends CommandBase {
 	/**
 	 * Unban Command - Unbans the player from the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Aliases("ub")
 	@Description("Unbans the player from the channel")
 	@Usage("unban [player]")
@@ -239,7 +244,8 @@ public class AdministrationCommand extends CommandBase {
 	/**
 	 * Unmute Command - Unmutes the player on the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Description("Unmutes the player on the channel")
 	@Usage("unmute [player]")
 	public void unmute(CommandSender sender, Channel channel, String[] args) {

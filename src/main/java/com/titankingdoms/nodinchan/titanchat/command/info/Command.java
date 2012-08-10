@@ -1,8 +1,7 @@
 package com.titankingdoms.nodinchan.titanchat.command.info;
 
-public @interface Command {
-	
-	boolean channel() default false;
-	
-	boolean server() default false;
-}
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Command {}

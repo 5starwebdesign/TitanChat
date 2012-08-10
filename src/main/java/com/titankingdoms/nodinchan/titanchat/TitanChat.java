@@ -32,9 +32,9 @@ import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Graph;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Plotter;
+import com.titankingdoms.nodinchan.titanchat.permission.DefaultPermissions;
 import com.titankingdoms.nodinchan.titanchat.processing.ChatProcessor;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
-import com.titankingdoms.nodinchan.titanchat.util.DefaultPermissions;
 import com.titankingdoms.nodinchan.titanchat.util.FormatHandler;
 import com.titankingdoms.nodinchan.titanchat.util.PermissionsHandler;
 import com.titankingdoms.nodinchan.titanchat.util.displayname.DisplayName;
@@ -57,12 +57,6 @@ import com.titankingdoms.nodinchan.titanchat.util.variable.VariableHandler;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * TitanChat - Main Class
- * 
- * @author NodinChan
- *
- */
 public final class TitanChat extends JavaPlugin {
 	
 	private static TitanChat instance;
@@ -91,13 +85,6 @@ public final class TitanChat extends JavaPlugin {
 			getServer().getConsoleSender().sendMessage(line.replaceAll("(?i)(\u00A7)([a-f0-9k-or])", ""));
 	}
 	
-	/**
-	 * Creates a new list with items seperated with commas
-	 * 
-	 * @param list The string list to create a list from
-	 * 
-	 * @return The created list of items
-	 */
 	public String createList(List<String> list) {
 		StringBuilder str = new StringBuilder();
 		
@@ -112,38 +99,18 @@ public final class TitanChat extends JavaPlugin {
 		return str.toString();
 	}
 	
-	/**
-	 * Check if Channels are enabled
-	 * 
-	 * @return True if Channels are enabled
-	 */
 	public boolean enableChannels() {
 		return getConfig().getBoolean("channels.enable");
 	}
 	
-	/**
-	 * Check if join messages are enabled
-	 * 
-	 * @return True if join messages are enabled
-	 */
 	public boolean enableJoinMessage() {
 		return getConfig().getBoolean("channels.messages.join");
 	}
 	
-	/**
-	 * Check if leave messages are enabled
-	 * 
-	 * @return True if leave messages are enabled
-	 */
 	public boolean enableLeaveMessage() {
 		return getConfig().getBoolean("channels.messages.leave");
 	}
 	
-	/**
-	 * Gets the Channel directory
-	 * 
-	 * @return The Channel directory
-	 */
 	public File getChannelDir() {
 		return new File(getDataFolder(), "channels");
 	}
@@ -161,96 +128,44 @@ public final class TitanChat extends JavaPlugin {
 		return defPerms;
 	}
 	
-	/**
-	 * Gets the DisplayNameChanger
-	 * 
-	 * @return The DisplayNameChanger of TitanChat
-	 */
 	public DisplayNameChanger getDisplayNameChanger() {
 		return displayname;
 	}
 	
-	/**
-	 * Gets the FormatHandler
-	 * 
-	 * @return The FormatHandler
-	 */
 	public FormatHandler getFormatHandler() {
 		return format;
 	}
 	
-	/**
-	 * Gets an instance of this
-	 * 
-	 * @return TitanChat instance
-	 */
 	public static TitanChat getInstance() {
 		return instance;
 	}
 	
-	/**
-	 * Gets the Logger of the plugin
-	 */
 	@Override
 	public Logger getLogger() {
 		return log;
 	}
 	
-	/**
-	 * Gets the manager that manages other managers
-	 * 
-	 * @return The TitanChatManager
-	 */
 	public TitanChatManager getManager() {
 		return manager;
 	}
 	
-	/**
-	 * Gets OfflinePlayer by name
-	 * 
-	 * @param name The name of the OfflinePlayer
-	 * 
-	 * @return The OfflinePlayer with the name
-	 */
 	public OfflinePlayer getOfflinePlayer(String name) {
 		OfflinePlayer player = getServer().getOfflinePlayer(name);
 		return player;
 	}
 	
-	/**
-	 * Gets the PermissionsHandler
-	 * 
-	 * @return The built-in PermissionsHandler
-	 */
 	public PermissionsHandler getPermissionsHandler() {
 		return permHandler;
 	}
 	
-	/**
-	 * Gets Player by name
-	 * 
-	 * @param name The name of the Player
-	 * 
-	 * @return The Player with the name
-	 */
 	public Player getPlayer(String name) {
 		return getServer().getPlayer(name);
 	}
 	
-	/**
-	 * Gets the Variable manager
-	 * 
-	 * @return The Variable manager
-	 */
 	public VariableHandler getVariableManager() {
 		return variable;
 	}
 	
-	/**
-	 * Initialises Metrics
-	 * 
-	 * @return True is Metrics is initialised
-	 */
 	private boolean initMetrics() {
 		log(Level.INFO, "Hooking Metrics");
 		
@@ -293,50 +208,18 @@ public final class TitanChat extends JavaPlugin {
 		} catch (Exception e) { return false; }
 	}
 	
-	/**
-	 * Check if the Server is silenced
-	 * 
-	 * @return True if the Server is silenced
-	 */
 	public boolean isSilenced() {
 		return silenced;
 	}
 	
-	/**
-	 * Check if the Player is staff
-	 * 
-	 * @param player The Player to check
-	 * 
-	 * @return True if the Player has TitanChat.admin
-	 */
 	public boolean isStaff(Player player) {
 		return permHandler.has(player, "TitanChat.staff");
 	}
 	
-	/**
-	 * Sends the message to the log
-	 * 
-	 * @param level Level of the announcement
-	 * 
-	 * @param msg The message to send
-	 */
 	public void log(Level level, String msg) {
 		log.log(level, "[" + NAME + "] " + msg);
 	}
 	
-	/**
-	 * Called when a Player uses a command
-	 * 
-	 * @param sender The sender who sent the command
-	 * 
-	 * @param cmd The Command used
-	 * 
-	 * @param label The exact word the Player used
-	 * 
-	 * @param args The list of words that follows
-	 * 
-	 * @return True if the Command is executed
-	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		db.i("TitanChat: On command " + cmd.getName());
@@ -439,9 +322,6 @@ public final class TitanChat extends JavaPlugin {
 		return false;
 	}
 	
-	/**
-	 * Called when the Plugin disables
-	 */
 	@Override
 	public void onDisable() {
 		log(Level.INFO, "is now disabling...");
@@ -456,9 +336,6 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "is now disabled");
 	}
 	
-	/**
-	 * Called when the Plugin enables
-	 */
 	@Override
 	public void onEnable() {
 		log(Level.INFO, "is now enabling...");
@@ -513,9 +390,6 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "is now enabled");
 	}
 	
-	/**
-	 * Called when Plugin loads
-	 */
 	@Override
 	public void onLoad() {
 		instance = this;
@@ -532,24 +406,10 @@ public final class TitanChat extends JavaPlugin {
 			updateLib();
 	}
 	
-	/**
-	 * Registers the Listener
-	 * 
-	 * @param listener The Listener to register
-	 */
 	public void register(Listener listener) {
 		getServer().getPluginManager().registerEvents(listener, this);
 	}
 	
-	/**
-	 * Sends a message to the player
-	 * 
-	 * @param level The level of the mssage
-	 * 
-	 * @param player The player to send to
-	 * 
-	 * @param msg The message
-	 */
 	public void send(MessageLevel level, CommandSender sender, String msg) {
 		db.i("@" + sender.getName() + ": " + msg);
 		String format = "[" + level.getColour() + "TitanChat" + ChatColor.WHITE + "] " + level.getColour() + "%msg";
@@ -561,33 +421,16 @@ public final class TitanChat extends JavaPlugin {
 		channel.send("[" + level.getColour() + "TitanChat" + ChatColor.WHITE + "] " + level.getColour() + msg);
 	}
 	
-	/**
-	 * Sends a message to all players within the list
-	 * 
-	 * @param level The level of the message
-	 * 
-	 * @param players The players to send to
-	 * 
-	 * @param msg The message
-	 */
 	public void send(MessageLevel level, List<Player> players, String msg) {
 		for (Player player : players)
 			send(level, player, msg);
 	}
 	
-	/**
-	 * Sets whether the Server is silenced
-	 * 
-	 * @param silenced True if setting the Server to silenced
-	 */
 	public void setSilenced(boolean silenced) {
 		db.i("Setting silenced to " + silenced);
 		this.silenced = silenced;
 	}
 	
-	/**
-	 * Checks for update of the library
-	 */
 	private void updateLib() {
 		PluginManager pm = getServer().getPluginManager();
 		

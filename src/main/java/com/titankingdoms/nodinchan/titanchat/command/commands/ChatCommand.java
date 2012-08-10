@@ -43,7 +43,7 @@ public class ChatCommand extends CommandBase {
 	/**
 	 * Broadcast Command - Broadcasts the message globally
 	 */
-	@Command(server = true)
+	@Command
 	@Aliases("bc")
 	@Description("Broadcasts the message globally")
 	@Usage("broadcast [message]")
@@ -81,7 +81,8 @@ public class ChatCommand extends CommandBase {
 	/**
 	 * Emote Command - Action emote shown in channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Aliases({ "em", "me" })
 	@Description("Sends an action emote to the channel")
 	@Usage("emote [action]")
@@ -116,7 +117,8 @@ public class ChatCommand extends CommandBase {
 	/**
 	 * Send Command - Sends a message to the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Aliases("s")
 	@Description("Sends a message to the channel")
 	@Usage("send [message]")
@@ -147,7 +149,7 @@ public class ChatCommand extends CommandBase {
 	/**
 	 * Whisper Command - Whisper messages to players
 	 */
-	@Command(server = true)
+	@Command
 	@Aliases("w")
 	@Description("Whispers the message to the player")
 	@Usage("whisper [player] [message]")

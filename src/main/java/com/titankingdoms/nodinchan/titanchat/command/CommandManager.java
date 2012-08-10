@@ -38,12 +38,7 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * CommandManager - Manages registered commands
- * 
- * @author NodinChan
- *
- */
+
 public final class CommandManager {
 	
 	private final TitanChat plugin;
@@ -55,9 +50,6 @@ public final class CommandManager {
 	private final Map<String, String> aliases;
 	private final Map<String, Executor> executors;
 	
-	/**
-	 * Initialises variables
-	 */
 	public CommandManager() {
 		this.plugin = TitanChat.getInstance();
 		
@@ -69,20 +61,11 @@ public final class CommandManager {
 		this.aliases = new LinkedHashMap<String, String>();
 	}
 	
-	/**
-	 * Searches for the command and executes it if found
-	 * 
-	 * @param sender The command sender
-	 * 
-	 * @param command The command
-	 * 
-	 * @param args The arguments
-	 */
 	public void execute(CommandSender sender, String command, String chName, String[] args) {
 		if (hasCommand(command)) {
 			Executor executor = getCommandExecutor(command);
 			
-			if (!(sender instanceof Player) && !executor.allowServer()) {
+			if (!(sender instanceof Player) && !executor.allowConsoleUsage()) {
 				plugin.send(MessageLevel.WARNING, sender, "Please use this command in game");
 				return;
 			}
@@ -114,7 +97,7 @@ public final class CommandManager {
 			}
 			
 			try {
-				if (executor.allowServer())
+				if (executor.allowConsoleUsage())
 					executor.execute(sender, channel, args);
 				else
 					executor.execute((Player) sender, channel, args);
@@ -150,31 +133,14 @@ public final class CommandManager {
 		plugin.send(MessageLevel.INFO, sender, "\"/titanchat commands [page]\" for command list");
 	}
 	
-	/**
-	 * Gets the amount of commands
-	 * 
-	 * @return The amount of commands
-	 */
 	public int getCommandAmount() {
 		return executors.values().size();
 	}
 	
-	/**
-	 * Gets the Command directory
-	 * 
-	 * @return The Command directory
-	 */
 	public File getCommandDir() {
 		return new File(plugin.getManager().getAddonManager().getAddonDir(), "commands");
 	}
 	
-	/**
-	 * Gets the Executor by its alias
-	 * 
-	 * @param alias The alias
-	 * 
-	 * @return The Executor if it exists, otherwise null
-	 */
 	public Executor getCommandExecutor(String alias) {
 		if (alias == null)
 			return null;
@@ -187,24 +153,10 @@ public final class CommandManager {
 		return executors.get(name.toLowerCase());
 	}
 	
-	/**
-	 * Gets the Executor from the list by index
-	 * 
-	 * @param exeNum The index of the executor in the list
-	 * 
-	 * @return The Executor if exists, otherwise null
-	 */
 	public Executor getCommandExecutor(int exeNum) {
 		return new LinkedList<Executor>(executors.values()).get(exeNum);
 	}
 	
-	/**
-	 * Check if the command exists
-	 * 
-	 * @param alias The alias
-	 * 
-	 * @return True if the command exists
-	 */
 	public boolean hasCommand(String alias) {
 		if (alias == null || !aliases.containsKey(alias.toLowerCase()))
 			return false;
@@ -216,9 +168,6 @@ public final class CommandManager {
 		return shortcuts;
 	}
 	
-	/**
-	 * Loads all Commands
-	 */
 	public void load() {
 		register(new AdministrationCommand());
 		register(new ChannelCommand());
@@ -235,25 +184,14 @@ public final class CommandManager {
 		sortCommands();
 	}
 	
-	/**
-	 * Reloads the CommandManager and all commands
-	 */
 	public void postReload() {
 		load();
 	}
 	
-	/**
-	 * Reloads the CommandManager and all commands
-	 */
 	public void preReload() {
 		unload();
 	}
 	
-	/**
-	 * Registers the Command
-	 * 
-	 * @param command The Command to be registered
-	 */
 	public void register(CommandBase command) {
 		db.i("Try to register command " + command.toString());
 		
@@ -272,9 +210,6 @@ public final class CommandManager {
 		}
 	}
 	
-	/**
-	 * Sorts the Commands
-	 */
 	public void sortCommands() {
 		Map<String, Executor> executors = new LinkedHashMap<String, Executor>();
 		List<String> names = new ArrayList<String>(this.executors.keySet());
@@ -288,9 +223,6 @@ public final class CommandManager {
 		this.executors.putAll(executors);
 	}
 	
-	/**
-	 * Unloads the Commands
-	 */
 	public void unload() {
 		executors.clear();
 	}

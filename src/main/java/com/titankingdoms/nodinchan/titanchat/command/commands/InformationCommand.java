@@ -51,7 +51,7 @@ public class InformationCommand extends CommandBase {
 	/**
 	 * Addons Command - Lists out all addons
 	 */
-	@Command(server = true)
+	@Command
 	@Description("Lists out all addons")
 	@Usage("addons")
 	public void addons(CommandSender sender, Channel channel, String[] args) {
@@ -102,7 +102,7 @@ public class InformationCommand extends CommandBase {
 	/**
 	 * ColourCodes Command - Lists out available colour codes and respective colours
 	 */
-	@Command(server = true)
+	@Command
 	@Aliases({ "colorcodes", "colours", "colors", "codes" })
 	@Description("Lists out available colour codes and respective colours")
 	@Usage("colourcodes <format>")
@@ -143,7 +143,7 @@ public class InformationCommand extends CommandBase {
 	/**
 	 * Help Command - Shows the command list
 	 */
-	@Command(server = true)
+	@Command
 	@Aliases({ "?", "commands", "cmds" })
 	@Description("Shows the command list")
 	@Usage("help <page/command>")
@@ -210,7 +210,8 @@ public class InformationCommand extends CommandBase {
 	/**
 	 * Info Command - Gets the participants and followers of the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Aliases("i")
 	@Description("Gets the participants and followers of the channel")
 	@Usage("info")
@@ -243,6 +244,7 @@ public class InformationCommand extends CommandBase {
 	 * List Command - Lists all channels you have access to
 	 */
 	@Command
+	@CommandOption(allowConsoleUsage = false)
 	@Description("Lists all channels you have access to")
 	@Usage("list")
 	public void list(Player player, Channel channel, String[] args) {

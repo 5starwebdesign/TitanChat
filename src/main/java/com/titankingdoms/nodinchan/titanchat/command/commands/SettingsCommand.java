@@ -57,7 +57,8 @@ public final class SettingsCommand extends CommandBase {
 	/**
 	 * Set Command - Sets the channel settings
 	 */
-	@Command(channel = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Description("Channel settings (\"/titanchat set help\" for more info)")
 	@Usage("set [setting] <arguments>")
 	public void set(CommandSender sender, Channel channel, String[] args) {

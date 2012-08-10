@@ -45,12 +45,7 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Channel - Channel base
- * 
- * @author NodinChan
- *
- */
+
 public abstract class Channel extends Loadable {
 	
 	protected final TitanChat plugin;
@@ -75,20 +70,10 @@ public abstract class Channel extends Loadable {
 	private File configFile;
 	private FileConfiguration config;
 	
-	/**
-	 * Type
-	 */
 	public Channel() {
 		this("", Option.TYPE);
 	}
 	
-	/**
-	 * Channel
-	 * 
-	 * @param name The channel name
-	 * 
-	 * @param option The channel option
-	 */
 	public Channel(String name, Option option) {
 		super(name);
 		this.plugin = TitanChat.getInstance();
@@ -102,41 +87,12 @@ public abstract class Channel extends Loadable {
 		this.handler = new Handler();
 	}
 	
-	/**
-	 * Check if the player can access the channel
-	 * 
-	 * @param player The player to check
-	 * 
-	 * @return True if the player can access the channel
-	 */
 	public abstract boolean access(Player player);
 	
-	/**
-	 * Change the specified setting
-	 * 
-	 * @param sender The command sender
-	 * 
-	 * @param setting The setting to change
-	 * 
-	 * @param args The arguments
-	 * 
-	 * @return True if such setting is supported by the channel
-	 */
 	public final boolean changeSetting(CommandSender sender, String setting, String[] args) {
 		return handler.changeSetting(sender, setting, args);
 	}
 	
-	/**
-	 * Create an instance of a new channel with this type
-	 * 
-	 * @param sender The command sender
-	 * 
-	 * @param name The channel name
-	 * 
-	 * @param option The channel option
-	 * 
-	 * @return The new channel instance
-	 */
 	public abstract Channel create(CommandSender sender, String name, Option option);
 	
 	public void deny(Player player, String message) {
@@ -146,20 +102,10 @@ public abstract class Channel extends Loadable {
 			plugin.send(MessageLevel.WARNING, player, "You do not have access");
 	}
 	
-	/**
-	 * Gets the admins of the channel
-	 * 
-	 * @return The list of admins
-	 */
 	public final List<String> getAdmins() {
 		return admins;
 	}
 	
-	/**
-	 * Gets the blacklist of the channel
-	 * 
-	 * @return The blacklist
-	 */
 	public final List<String> getBlacklist() {
 		return blacklist;
 	}
@@ -172,78 +118,32 @@ public abstract class Channel extends Loadable {
 		return config;
 	}
 	
-	/**
-	 * Gets the followers of the channel
-	 * 
-	 * @return The list of followers
-	 */
 	public final List<String> getFollowers() {
 		return followers;
 	}
 	
-	/**
-	 * Gets info regarding the channel
-	 * 
-	 * @return The info regarding the channel
-	 */
 	public Info getInfo() {
 		return info;
 	}
 	
-	/**
-	 * Gets the option set for the channel
-	 * 
-	 * @return The channel option
-	 */
 	public final Option getOption() {
 		return option;
 	}
 	
-	/**
-	 * Gets the list of participants of the channel
-	 * 
-	 * @return The channel participants
-	 */
 	public final List<Participant> getParticipants() {
 		return new ArrayList<Participant>(participants.values());
 	}
 	
-	/**
-	 * Gets the password
-	 * 
-	 * @return The password
-	 */
 	public String getPassword() {
 		return password;
 	}
 	
-	/**
-	 * Gets the type of the channel
-	 * 
-	 * @return The channel type
-	 */
 	public abstract String getType();
 	
-	/**
-	 * Gets the whitelist of the channel
-	 * 
-	 * @return The whitelist
-	 */
 	public final List<String> getWhitelist() {
 		return whitelist;
 	}
 	
-	/**
-	 * Handle the specified command
-	 * 
-	 * @param sender The command sender
-	 * 
-	 * @param command The command to handle
-	 * 
-	 * @param args The arguments
-	 * 
-	 * @return True if such command is handled by the channel
-	 */
 	public final boolean handleCommand(CommandSender sender, String command, String[] args) {
 		return handler.handleCommand(sender, command, args);
 	}
@@ -260,13 +160,6 @@ public abstract class Channel extends Loadable {
 		return followers.contains(name);
 	}
 	
-	/**
-	 * Check if a participant by the specified name is participating in the channel
-	 * 
-	 * @param name The participant name
-	 * 
-	 * @return True if a participant by the specified name is participating in the channel
-	 */
 	public boolean isParticipating(String name) {
 		return participants.containsKey(name.toLowerCase());
 	}
@@ -275,53 +168,24 @@ public abstract class Channel extends Loadable {
 		return whitelist.contains(name);
 	}
 	
-	/**
-	 * Join the channel
-	 * 
-	 * @param name The name of the participant
-	 */
 	public void join(String name) {
 		if (!participants.containsKey(name.toLowerCase()) && plugin.getManager().getChannelManager().getParticipant(name) != null)
 			participants.put(name.toLowerCase(), plugin.getManager().getChannelManager().getParticipant(name)).join(this);
 	}
 	
-	/**
-	 * Join the channel
-	 * 
-	 * @param player The player to join
-	 */
 	public void join(Player player) {
 		join(player.getName());
 	}
 	
-	/**
-	 * Leave the channel
-	 * 
-	 * @param name The name of the participant
-	 */
 	public void leave(String name) {
 		if (participants.containsKey(name.toLowerCase()))
 			participants.remove(name.toLowerCase()).leave(this);
 	}
 	
-	/**
-	 * Leave the channel
-	 * 
-	 * @param player The player to leave
-	 */
 	public void leave(Player player) {
 		leave(player.getName());
 	}
 	
-	/**
-	 * Load an instance of the channel with this type
-	 * 
-	 * @param name The channel name
-	 * 
-	 * @param option The channel option
-	 * 
-	 * @return The loaded channel instance
-	 */
 	public abstract Channel load(String name, Option option);
 	
 	@Override
@@ -337,38 +201,18 @@ public abstract class Channel extends Loadable {
 			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
 	}
 	
-	/**
-	 * Registers the addon
-	 * 
-	 * @param addon The addon to register
-	 */
 	public final void register(Addon addon) {
 		plugin.getManager().getAddonManager().register(addon);
 	}
 	
-	/**
-	 * Registers the command
-	 * 
-	 * @param command The command to register
-	 */
 	public final void register(CommandBase command) {
 		plugin.getManager().getCommandManager().register(command);
 	}
 	
-	/**
-	 * Registers the command handlers
-	 * 
-	 * @param handlers The handlers to register
-	 */
 	public final void registerCommandHandlers(CommandHandler... handlers) {
 		handler.registerCommandHandlers(handlers);
 	}
 	
-	/**
-	 * Registers the setting handlers
-	 * 
-	 * @param handlers The handlers to register
-	 */
 	public final void registerSettingHandlers(SettingHandler... handlers) {
 		handler.registerSettingHandlers(handlers);
 	}
@@ -453,12 +297,6 @@ public abstract class Channel extends Loadable {
 		this.password = password;
 	}
 	
-	/**
-	 * Option - Option of the channel
-	 * 
-	 * @author NodinChan
-	 *
-	 */
 	public enum Option {
 		CUSTOM("custom"),
 		DEFAULT("default"),
@@ -487,12 +325,6 @@ public abstract class Channel extends Loadable {
 		}
 	}
 	
-	/**
-	 * Range - Range to send the message
-	 * 
-	 * @author NodinChan
-	 *
-	 */
 	public enum Range {
 		CHANNEL("channel"),
 		GLOBAL("global"),

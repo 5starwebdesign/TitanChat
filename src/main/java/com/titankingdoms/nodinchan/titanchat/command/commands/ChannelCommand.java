@@ -42,7 +42,7 @@ public class ChannelCommand extends CommandBase {
 	/**
 	 * Create Command - Creates a new channel
 	 */
-	@Command(server = true)
+	@Command
 	@Aliases("c")
 	@Description("Creates a new channel")
 	@Usage("create [channel]")
@@ -80,7 +80,8 @@ public class ChannelCommand extends CommandBase {
 	/**
 	 * Delete Command - Deletes the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Aliases("d")
 	@Description("Deletes the channel")
 	@Usage("delete")
@@ -97,7 +98,7 @@ public class ChannelCommand extends CommandBase {
 	/**
 	 * Follow Command - Follows the channel
 	 */
-	@Command(channel = true)
+	@CommandOption(requireChannel = true, allowConsoleUsage = false)
 	@Description("Follows the channel")
 	@Usage("follow")
 	public void follow(Player player, Channel channel, String[] args) {
@@ -119,7 +120,8 @@ public class ChannelCommand extends CommandBase {
 	/**
 	 * Join Command - Joins the channel
 	 */
-	@Command(channel = true)
+	@Command
+	@CommandOption(requireChannel = true, allowConsoleUsage = false)
 	@Aliases("j")
 	@Description("Joins the channel")
 	@Usage("join <password>")
@@ -170,7 +172,8 @@ public class ChannelCommand extends CommandBase {
 	/**
 	 * Leave Command - Leaves the channel you are in
 	 */
-	@Command(channel = true)
+	@Command
+	@CommandOption(requireChannel = true, allowConsoleUsage = false)
 	@Aliases("part")
 	@Description("Leaves the channel")
 	@Usage("leave")
@@ -188,7 +191,8 @@ public class ChannelCommand extends CommandBase {
 	/**
 	 * Unfollow Command - Unfollows the channel
 	 */
-	@Command(channel = true)
+	@Command
+	@CommandOption(requireChannel = true, allowConsoleUsage = false)
 	@Description("Unfollows the channel")
 	@Usage("unfollow")
 	public void unfollow(Player player, Channel channel, String[] args) {

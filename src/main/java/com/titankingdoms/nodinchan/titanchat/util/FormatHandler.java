@@ -32,12 +32,6 @@ import com.titankingdoms.nodinchan.titanchat.util.variable.VariableHandler.Varia
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * FormatHandler - Handles formatting
- * 
- * @author NodinChan
- *
- */
 public final class FormatHandler {
 	
 	private static TitanChat plugin;
@@ -50,26 +44,10 @@ public final class FormatHandler {
 		FormatHandler.plugin = TitanChat.getInstance();
 	}
 	
-	/**
-	 * Gets the broadcast format and formats the message
-	 * 
-	 * @param player The sender
-	 * 
-	 * @return The formatted message
-	 */
 	public String broadcastFormat(CommandSender sender) {
 		return Format.BROADCAST.format(sender, "");
 	}
 	
-	/**
-	 * Colourises the message according to the permissions of the sender
-	 * 
-	 * @param sender The message sender
-	 * 
-	 * @param msg The message
-	 * 
-	 * @return The processed text
-	 */
 	public String colour(Player sender, String msg) {
 		StringBuffer str = new StringBuffer();
 		Matcher match = pattern.matcher(msg);
@@ -86,50 +64,18 @@ public final class FormatHandler {
 		return match.appendTail(str).toString();
 	}
 	
-	/**
-	 * Colourises the message
-	 * 
-	 * @param text The message
-	 * 
-	 * @return The colourised text
-	 */
 	public String colourise(String text) {
 		return text.replaceAll(pattern.toString(), "\u00A7$2");
 	}
 	
-	/**
-	 * Decolourises the message
-	 * 
-	 * @param message The message
-	 * 
-	 * @return The decolourised text
-	 */
 	public String decolourise(String message) {
 		return message.replaceAll(pattern.toString(), "");
 	}
 	
-	/**
-	 * Gets the emote format and formats the message
-	 * 
-	 * @param player The sender
-	 * 
-	 * @return The formatted message
-	 */
 	public String emoteFormat(CommandSender sender, String channel) {
 		return Format.EMOTE.format(sender, channel);
 	}
 	
-	/**
-	 * Gets the format and formats the message
-	 * 
-	 * @param player The sender
-	 * 
-	 * @param channel The channel to send to
-	 * 
-	 * @param defaultMc Whether the it's default Minecraft without channels
-	 * 
-	 * @return The formatted message
-	 */
 	public String format(Player player, String channel) {
 		MessageFormatEvent event = new MessageFormatEvent(player, Format.CHANNEL.format(player, channel));
 		plugin.getServer().getPluginManager().callEvent(event);
@@ -137,9 +83,6 @@ public final class FormatHandler {
 		return event.getFormat();
 	}
 	
-	/**
-	 * Loads the basic Chat variables
-	 */
 	public void load() {
 		plugin.getVariableManager().register(new Variable() {
 			
@@ -235,13 +178,6 @@ public final class FormatHandler {
 		return Format.SERVER.format(plugin.getServer().getConsoleSender(), channel.getName());
 	}
 	
-	/**
-	 * Splits the line into lines of max 119 characters each
-	 * 
-	 * @param line The line to process
-	 * 
-	 * @return The processed String array
-	 */
 	public String[] split(String line) {
 		List<String> lines = new LinkedList<String>();
 		
@@ -264,38 +200,14 @@ public final class FormatHandler {
 		return lines.toArray(new String[0]);
 	}
 	
-	/**
-	 * Splits the line into lines of max 119 characters each after formatting
-	 * 
-	 * @param format The format to use
-	 * 
-	 * @param variable The variable to replace with the line
-	 * 
-	 * @param line The line to process
-	 * 
-	 * @return The processed String array
-	 */
 	public String[] splitAndFormat(String format, String variable, String line) {
 		return split(format.replace(variable, line));
 	}
 	
-	/**
-	 * Gets the whisper format and formats the message
-	 * 
-	 * @param player The sender
-	 * 
-	 * @return The formatted message
-	 */
 	public String whisperFormat(CommandSender sender) {
 		return Format.WHISPER.format(sender, "");
 	}
 	
-	/**
-	 * Format - Formats
-	 * 
-	 * @author NodinChan
-	 *
-	 */
 	private enum Format {
 		BROADCAST {
 			
@@ -379,13 +291,6 @@ public final class FormatHandler {
 			}
 		};
 		
-		/**
-		 * Gets the format
-		 * 
-		 * @param params Parameters for each kind of format
-		 * 
-		 * @return The format
-		 */
 		protected abstract String format(CommandSender sender, String channel);
 	}
 }

@@ -38,7 +38,7 @@ public class PluginCommand extends CommandBase {
 	/**
 	 * Debug Command - Toggles the debug
 	 */
-	@Command(server = true)
+	@Command
 	@Description("Toggles the debug")
 	@Usage("debug [enable/disable] <type>")
 	public void debug(CommandSender sender, Channel channel, String[] args) {
@@ -78,7 +78,7 @@ public class PluginCommand extends CommandBase {
 	/**
 	 * Reload Command - Reloads the config
 	 */
-	@Command(server = true)
+	@Command
 	@Description("Reloads the config")
 	@Usage("reload")
 	public void reload(CommandSender sender, Channel channel, String[] args) {

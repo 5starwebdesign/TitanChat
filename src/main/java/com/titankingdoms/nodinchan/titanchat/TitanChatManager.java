@@ -2,7 +2,8 @@ package com.titankingdoms.nodinchan.titanchat;
 
 import java.util.logging.Level;
 
-import com.nodinchan.ncbukkit.NCBL;
+import org.bukkit.plugin.Plugin;
+
 import com.titankingdoms.nodinchan.titanchat.addon.AddonManager;
 import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
 import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
@@ -22,38 +23,20 @@ public class TitanChatManager {
 		cmdManager = new CommandManager();
 	}
 	
-	/**
-	 * Gets the AddonManager
-	 * 
-	 * @return The AddonManager
-	 */
 	public AddonManager getAddonManager() {
 		return addonManager;
 	}
 	
-	/**
-	 * Gets the ChannelManager
-	 * 
-	 * @return The ChannelManager
-	 */
 	public ChannelManager getChannelManager() {
 		return chManager;
 	}
 	
-	/**
-	 * Gets the CommandManager
-	 * 
-	 * @return The CommandManager
-	 */
 	public CommandManager getCommandManager() {
 		return cmdManager;
 	}
 	
-	/**
-	 * Loads the AddonManager, ChannelManager and CommandManager
-	 */
 	public void load() {
-		NCBL ncbl = (NCBL) plugin.getServer().getPluginManager().getPlugin("NC-BukkitLib");
+		Plugin ncbl = plugin.getServer().getPluginManager().getPlugin("NC-BukkitLib");
 		
 		if (ncbl != null) {
 			addonManager.load();

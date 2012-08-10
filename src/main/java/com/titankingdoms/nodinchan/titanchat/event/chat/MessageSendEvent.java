@@ -27,12 +27,6 @@ import com.titankingdoms.nodinchan.titanchat.event.util.Message;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * MessageSendEvent - Called when a message is to be sent to a group of Players
- * 
- * @author NodinChan
- *
- */
 public final class MessageSendEvent extends Event implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -47,15 +41,6 @@ public final class MessageSendEvent extends Event implements Cancellable {
 	
 	private boolean cancelled = false;
 	
-	/**
-	 * Called when a message is to be sent to a group of Players
-	 * 
-	 * @param sender The message sender
-	 * 
-	 * @param recipants The message recipants
-	 * 
-	 * @param message The message
-	 */
 	public MessageSendEvent(Player sender, Channel sentFrom, List<Player> recipants, Message message) {
 		this.sender = sender;
 		this.sentFrom = sentFrom;
@@ -63,24 +48,10 @@ public final class MessageSendEvent extends Event implements Cancellable {
 		this.message = message;
 	}
 	
-	/**
-	 * Called when a message is going to be sent to a group of Players
-	 * 
-	 * @param sender The message sender
-	 * 
-	 * @param recipants The message recipants
-	 * 
-	 * @param message The message
-	 */
 	public MessageSendEvent(Player sender, Channel sentFrom, Player[] recipants, Message message) {
 		this(sender, sentFrom, Arrays.asList(recipants), message);
 	}
 	
-	/**
-	 * Gets the format
-	 * 
-	 * @return The format of the message
-	 */
 	public String getFormat() {
 		return message.getFormat();
 	}
@@ -94,70 +65,34 @@ public final class MessageSendEvent extends Event implements Cancellable {
 		return handlers;
 	}
 	
-	/**
-	 * Gets the message
-	 * 
-	 * @return The message to be sent
-	 */
 	public String getMessage() {
 		return message.getMessage();
 	}
 	
-	/**
-	 * Gets the message recipants
-	 * 
-	 * @return The recipants of the message
-	 */
 	public List<Player> getRecipants() {
 		return recipants;
 	}
 	
-	/**
-	 * Gets the message sender
-	 * 
-	 * @return The sender of the message
-	 */
 	public Player getSender() {
 		return sender;
 	}
 	
-	/**
-	 * Gets the Channel which the message was sent from
-	 * 
-	 * @return The Channel which sent the message
-	 */
 	public Channel getSentFrom() {
 		return sentFrom;
 	}
 	
-	/**
-	 * Check if the event is canclled
-	 */
 	public boolean isCancelled() {
 		return cancelled;
 	}
 	
-	/**
-	 * Sets the format
-	 * 
-	 * @param format The new format
-	 */
 	public void setFormat(String format) {
 		this.message.setFormat(format);
 	}
 	
-	/**
-	 * Sets the message
-	 * 
-	 * @param message The new message
-	 */
 	public void setMessage(String message) {
 		this.message.setMessage(message);
 	}
 	
-	/**
-	 * Sets the event as cancelled
-	 */
 	public void setCancelled(boolean cancelled) {
 		this.cancelled = cancelled;
 	}

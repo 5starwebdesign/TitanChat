@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.util;
+package com.titankingdoms.nodinchan.titanchat.permission;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -113,6 +113,9 @@ public final class DefaultPermissions {
 		PluginManager pm = plugin.getServer().getPluginManager();
 		
 		String name = channel.getName();
+		
+		Permission spawn = new Permission("TitanChat.spawn." + name, "Sets the channel as default spawn");
+		pm.addPermission(spawn);
 		
 		Permission join = new Permission("TitanChat.join." + name, "Grants permission to join " + name);
 		pm.addPermission(join);

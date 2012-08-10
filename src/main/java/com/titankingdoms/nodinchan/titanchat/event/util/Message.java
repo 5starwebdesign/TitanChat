@@ -15,38 +15,18 @@ public final class Message implements Cloneable {
 		return new Message(format, message);
 	}
 	
-	/**
-	 * Gets the format
-	 * 
-	 * @return The format
-	 */
 	public String getFormat() {
 		return format;
 	}
 	
-	/**
-	 * Gets the message
-	 * 
-	 * @return The message
-	 */
 	public String getMessage() {
 		return message;
 	}
 	
-	/**
-	 * Sets the format
-	 * 
-	 * @param format The new format
-	 */
 	public void setFormat(String format) {
 		this.format = format;
 	}
 	
-	/**
-	 * Sets the message
-	 * 
-	 * @param message The new message
-	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}

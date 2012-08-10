@@ -20,12 +20,6 @@ import org.bukkit.event.HandlerList;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * MessageFormatEvent - Called when a message formats
- * 
- * @author NodinChan
- *
- */
 public final class MessageFormatEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -34,23 +28,11 @@ public final class MessageFormatEvent extends Event {
 	
 	private String format;
 	
-	/**
-	 * Called when a message formats
-	 * 
-	 * @param sender The message sender
-	 * 
-	 * @param format The format
-	 */
 	public MessageFormatEvent(Player sender, String format) {
 		this.sender = sender;
 		this.format = format;
 	}
 	
-	/**
-	 * Gets the format
-	 * 
-	 * @return The format of the message
-	 */
 	public String getFormat() {
 		return format;
 	}
@@ -64,20 +46,10 @@ public final class MessageFormatEvent extends Event {
 		return handlers;
 	}
 	
-	/**
-	 * Gets the message sender
-	 * 
-	 * @return The sender of the message
-	 */
 	public Player getSender() {
 		return sender;
 	}
 	
-	/**
-	 * Sets the format
-	 * 
-	 * @param format The new format
-	 */
 	public void setFormat(String format) {
 		this.format = format;
 	}

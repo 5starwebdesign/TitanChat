@@ -43,7 +43,8 @@ public class InvitationCommand extends CommandBase {
 	/**
 	 * Accept Command - Accepts the channel join invitation and joins the channel
 	 */
-	@Command(channel = true)
+	@Command
+	@CommandOption(requireChannel = true, allowConsoleUsage = false)
 	@Description("Accepts the channel join invitation and joins the channel")
 	@Usage("accept")
 	public void accept(Player player, Channel channel, String[] args) {
@@ -54,7 +55,8 @@ public class InvitationCommand extends CommandBase {
 	/**
 	 * Decline Command - Declines the channel join invitation
 	 */
-	@Command(channel = true)
+	@Command
+	@CommandOption(requireChannel = true, allowConsoleUsage = false)
 	@Description("Declines the channel join invitation")
 	@Usage("decline [channel]")
 	public void decline(Player player, Channel channel, String[] args) {
@@ -64,7 +66,8 @@ public class InvitationCommand extends CommandBase {
 	/**
 	 * Invite Command - Invites the player to join the channel
 	 */
-	@Command(channel = true, server = true)
+	@Command
+	@CommandOption(requireChannel = true)
 	@Description("Invites the player to join the channel")
 	@Usage("invite [player]")
 	public void invite(CommandSender sender, Channel channel, String[] args) {

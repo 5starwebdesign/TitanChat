@@ -27,26 +27,11 @@ import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * StandardChannel - Represents a standard channel
- * 
- * @author NodinChan
- *
- */
+
 public final class StandardChannel extends Channel {
 	
-	/**
-	 * Standard Type
-	 */
 	public StandardChannel() {}
 	
-	/**
-	 * Standard Channel
-	 * 
-	 * @param name The channel name
-	 * 
-	 * @param option The channel option
-	 */
 	public StandardChannel(String name, Option option) {
 		super(name, option);
 	}

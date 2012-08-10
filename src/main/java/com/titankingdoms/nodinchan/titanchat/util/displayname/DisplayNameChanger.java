@@ -32,11 +32,6 @@ public final class DisplayNameChanger {
 		this.plugin = TitanChat.getInstance();
 	}
 	
-	/**
-	 * Applies the saved display name of the Player
-	 * 
-	 * @param player The Player to apply
-	 */
 	public void apply(Player player) {
 		DisplayName display = plugin.getDatabase().find(DisplayName.class).where().ieq("name", player.getName()).findUnique();
 		
@@ -59,11 +54,6 @@ public final class DisplayNameChanger {
 		return display.getDisplayName();
 	}
 	
-	/**
-	 * Saves the display name of the Player
-	 * 
-	 * @param player The Player to save
-	 */
 	public void save(Player player) {
 		DisplayName display = plugin.getDatabase().find(DisplayName.class).where().ieq("name", player.getName()).findUnique();
 		
@@ -84,13 +74,6 @@ public final class DisplayNameChanger {
 		db.i("DisplayNameChanger: Display name " + display.getDisplayName() + " saved for " + player.getName());
 	}
 	
-	/**
-	 * Sets the display name of the Player
-	 * 
-	 * @param player The Player to set
-	 * 
-	 * @param displayname The display name to set to
-	 */
 	public void set(Player player, String displayname) {
 		if (displayname.length() > 16)
 			displayname = displayname.substring(0, 16);
@@ -99,9 +82,6 @@ public final class DisplayNameChanger {
 		player.setDisplayName(displayname);
 	}
 	
-	/**
-	 * Unloads the DisplayNameChanger and saves the display name of all online Players
-	 */
 	public void unload() {
 		for (Player player : plugin.getServer().getOnlinePlayers())
 			save(player);
