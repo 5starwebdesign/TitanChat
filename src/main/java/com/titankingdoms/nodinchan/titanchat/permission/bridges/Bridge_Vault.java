@@ -1,6 +1,9 @@
 package com.titankingdoms.nodinchan.titanchat.permission.bridges;
 
+import java.util.logging.Level;
+
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
@@ -14,6 +17,16 @@ public final class Bridge_Vault extends PermissionBridge {
 	
 	public Bridge_Vault() {
 		super("Vault");
+		
+		Plugin vault = plugin.getServer().getPluginManager().getPlugin("Vault");
+		
+		if (vault != null && vault.isEnabled()) {
+			perm = plugin.getServer().getServicesManager().load(Permission.class);
+			chat = plugin.getServer().getServicesManager().load(Chat.class);
+			log(Level.INFO, getName() + " hooked");
+		}
+		
+		plugin.getServer().getPluginManager().registerEvents(new ServerListener(new VaultChecker()), plugin);
 	}
 	
 	@Override
@@ -78,5 +91,32 @@ public final class Bridge_Vault extends PermissionBridge {
 	@Override
 	public boolean isEnabled() {
 		return perm != null && chat != null;
+	}
+	
+	public final class VaultChecker extends PluginChecker {
+		
+		@Override
+		public void onPluginDisable(Plugin plugin) {
+			if (perm != null || chat != null) {
+				if (plugin.getName().equals("Vault")) {
+					perm = null;
+					chat = null;
+					log(Level.INFO, getName() + " unhooked");
+				}
+			}
+		}
+		
+		@Override
+		public void onPluginEnable(Plugin plugin) {
+			if (perm == null || chat == null) {
+				Plugin vault = plugin.getServer().getPluginManager().getPlugin("Vault");
+				
+				if (vault != null && vault.isEnabled()) {
+					perm = plugin.getServer().getServicesManager().load(Permission.class);
+					chat = plugin.getServer().getServicesManager().load(Chat.class);
+					log(Level.INFO, getName() + " hooked");
+				}
+			}
+		}
 	}
 }
