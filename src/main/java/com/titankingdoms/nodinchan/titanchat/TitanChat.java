@@ -346,9 +346,17 @@ public final class TitanChat extends JavaPlugin {
 		if (!initMetrics())
 			log(Level.WARNING, "Failed to hook into Metrics");
 		
-		if (!getChannelDir().exists()) {
+		if (getChannelDir().mkdirs()) {
 			log(Level.INFO, "Creating channel directory...");
-			saveResource("channels/", false);
+			saveResource("channels/Default.yml", false);
+			saveResource("channels/Global.yml", false);
+			saveResource("channels/Local.yml", false);
+			saveResource("channels/Password.yml", false);
+			saveResource("channels/Private.yml", false);
+			saveResource("channels/Public.yml", false);
+			saveResource("channels/README.txt", false);
+			saveResource("channels/Staff.yml", false);
+			saveResource("channels/World.yml", false);
 		}
 		
 		manager = new TitanChatManager();
