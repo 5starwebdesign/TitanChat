@@ -348,7 +348,7 @@ public final class TitanChat extends JavaPlugin {
 		
 		if (!getChannelDir().exists()) {
 			log(Level.INFO, "Creating channel directory...");
-			saveResource("channels", false);
+			saveResource("channels/", false);
 		}
 		
 		manager = new TitanChatManager();
