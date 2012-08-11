@@ -478,7 +478,11 @@ public final class TitanChat extends JavaPlugin {
 				output.getChannel().transferFrom(rbc, 0, 1 << 24);
 				output.close();
 				
-				libPlugin = (NCBL) pm.loadPlugin(pluginLib);
+				if (libPlugin == null) {
+					libPlugin = (NCBL) pm.loadPlugin(pluginLib);
+					getLogger().log(Level.INFO, "Downloaded latest NC-BukkitLib, please restart the server to apply update");
+				}
+				
 				getLogger().log(Level.INFO, "Downloaded NC-Bukkit lib");
 			}
 			

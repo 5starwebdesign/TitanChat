@@ -79,7 +79,7 @@ public final class Participant {
 		if (channel == null)
 			return;
 		
-		if (!currentChannel.equals(channel))
+		if (currentChannel == null || !currentChannel.equals(channel))
 			currentChannel = channel;
 		
 		if (!channels.containsKey(channel.getName()))
@@ -93,7 +93,7 @@ public final class Participant {
 		if (channels.containsKey(channel.getName()))
 			channels.remove(channel.getName());
 		
-		if (currentChannel.equals(channel)) {
+		if (currentChannel != null && currentChannel.equals(channel)) {
 			if (channels.isEmpty())
 				currentChannel = null;
 			else
