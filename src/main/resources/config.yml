@@ -47,7 +47,7 @@ permissions:
             guest:
                 prefix: '[&8Guest&f]'
                 priority: 0
-             member:
+            member:
                 prefix: '[&7Member&f]'
                 suffix: '&2'
                 priority: 1

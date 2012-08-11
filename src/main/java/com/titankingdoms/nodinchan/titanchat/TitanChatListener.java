@@ -34,7 +34,7 @@ import com.titankingdoms.nodinchan.titanchat.event.chat.MessageSendEvent;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public class TitanChatListener implements Listener {
+public final class TitanChatListener implements Listener {
 
 	private final TitanChat plugin;
 	

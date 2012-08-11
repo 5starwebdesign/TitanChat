@@ -18,9 +18,6 @@ public class TitanChatManager {
 	
 	public TitanChatManager() {
 		this.plugin = TitanChat.getInstance();
-		addonManager = new AddonManager();
-		chManager = new ChannelManager();
-		cmdManager = new CommandManager();
 	}
 	
 	public AddonManager getAddonManager() {
@@ -36,6 +33,10 @@ public class TitanChatManager {
 	}
 	
 	public void load() {
+		this.addonManager = new AddonManager();
+		this.chManager = new ChannelManager();
+		this.cmdManager = new CommandManager();
+		
 		Plugin ncbl = plugin.getServer().getPluginManager().getPlugin("NC-BukkitLib");
 		
 		if (ncbl != null) {

@@ -355,12 +355,7 @@ public final class TitanChat extends JavaPlugin {
 		
 		if (getChannelDir().mkdir()) {
 			log(Level.INFO, "Creating channel directory...");
-			saveResource("channels/Default.yml", false);
-			saveResource("channels/Password.yml", false);
-			saveResource("channels/Private.yml", false);
-			saveResource("channels/Public.yml", false);
-			saveResource("channels/README.txt", false);
-			saveResource("channels/Staff.yml", false);
+			saveResource("channels", false);
 		}
 		
 		manager = new TitanChatManager();
