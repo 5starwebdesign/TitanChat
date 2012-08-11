@@ -104,11 +104,6 @@ public final class Bridge_Vault extends PermissionBridge {
 		try { return perm.playerHas(player.getWorld().getName(), player.getName(), permission); } catch (Exception e) { return player.hasPermission(permission); }
 	}
 	
-	@Override
-	public boolean isEnabled() {
-		return perm != null && chat != null;
-	}
-	
 	public final class VaultChecker extends PluginChecker {
 		
 		@Override

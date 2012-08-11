@@ -38,6 +38,9 @@ public final class StandardChannel extends Channel {
 	
 	@Override
 	public boolean access(Player player) {
+		if (!plugin.getPermissionsHandler().has(player, "TitanChat.join." + getName()))
+			return false;
+		
 		if (getOption().equals(Option.STAFF) && !plugin.isStaff(player))
 			return false;
 		

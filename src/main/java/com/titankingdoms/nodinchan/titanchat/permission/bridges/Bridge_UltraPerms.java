@@ -5,7 +5,6 @@ import java.util.logging.Level;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import com.platymuus.bukkit.permissions.PermissionsPlugin;
 import com.titankingdoms.nodinchan.titanchat.permission.PermissionBridge;
 
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
@@ -24,21 +23,21 @@ import com.titankingdoms.nodinchan.titanchat.permission.PermissionBridge;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Bridge_PermissionsBukkit extends PermissionBridge {
+public final class Bridge_UltraPerms extends PermissionBridge {
 	
-	private PermissionsPlugin permBukkit;
+	private Plugin permission;
 	
-	public Bridge_PermissionsBukkit() {
-		super("PermissionsBukkit");
+	public Bridge_UltraPerms(String name) {
+		super(name);
 		
-		Plugin perm = plugin.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+		Plugin perm = plugin.getServer().getPluginManager().getPlugin(getName());
 		
 		if (perm != null && perm.isEnabled()) {
-			permBukkit = (PermissionsPlugin) perm;
+			permission = perm;
 			log(Level.INFO, getName() + " hooked");
 		}
 		
-		plugin.getServer().getPluginManager().registerEvents(new ServerListener(new PermissionsBukkitChecker()), plugin);
+		plugin.getServer().getPluginManager().registerEvents(new ServerListener(new UltraPermsChecker()), plugin);
 	}
 	
 	@Override
@@ -56,18 +55,13 @@ public final class Bridge_PermissionsBukkit extends PermissionBridge {
 		return player.hasPermission(permission);
 	}
 	
-	@Override
-	public boolean isEnabled() {
-		return permBukkit != null && permBukkit.isEnabled();
-	}
-	
-	public final class PermissionsBukkitChecker extends PluginChecker {
+	public final class UltraPermsChecker extends PluginChecker {
 		
 		@Override
 		public void onPluginDisable(Plugin plugin) {
-			if (permBukkit != null) {
-				if (plugin.getName().equals("PermissionsBukkit")) {
-					permBukkit = null;
+			if (permission != null) {
+				if (plugin.getName().equals(getName())) {
+					permission = null;
 					log(Level.INFO, getName() + " unhooked");
 				}
 			}
@@ -75,11 +69,11 @@ public final class Bridge_PermissionsBukkit extends PermissionBridge {
 		
 		@Override
 		public void onPluginEnable(Plugin plugin) {
-			if (permBukkit == null) {
-				Plugin perm = plugin.getServer().getPluginManager().getPlugin("PermissionsBukkit");
+			if (permission == null) {
+				Plugin perm = plugin.getServer().getPluginManager().getPlugin(getName());
 				
 				if (perm != null && perm.isEnabled()) {
-					permBukkit = (PermissionsPlugin) perm;
+					permission = perm;
 					log(Level.INFO, getName() + " hooked");
 				}
 			}

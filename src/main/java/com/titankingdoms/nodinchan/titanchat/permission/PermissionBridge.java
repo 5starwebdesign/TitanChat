@@ -58,8 +58,6 @@ public abstract class PermissionBridge {
 	
 	public abstract boolean hasPermission(Player player, String permission);
 	
-	public abstract boolean isEnabled();
-	
 	public final void log(Level level, String msg) {
 		plugin.log(level, msg);
 	}

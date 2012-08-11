@@ -371,6 +371,7 @@ public final class TitanChat extends JavaPlugin {
 			displayname.apply(player);
 		
 		manager.load();
+		permHandler.load();
 		
 		if (manager.getChannelManager().getDefaultChannels().isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");
@@ -478,22 +479,21 @@ public final class TitanChat extends JavaPlugin {
 				output.getChannel().transferFrom(rbc, 0, 1 << 24);
 				output.close();
 				
-				if (libPlugin == null) {
-					libPlugin = (NCBL) pm.loadPlugin(pluginLib);
-					getLogger().log(Level.INFO, "Downloaded latest NC-BukkitLib, please restart the server to apply update");
-				}
-				
-				getLogger().log(Level.INFO, "Downloaded NC-Bukkit lib");
+				getLogger().log(Level.INFO, "Downloaded NC-Bukkit lib, please restart the server to apply update");
 			}
 			
-			libPlugin.hook(this);
+			if (libPlugin != null)
+				libPlugin.hook(this);
 			
 		} catch (Exception e) { getLogger().log(Level.WARNING, "Failed to check for library update"); }
 	}
 	
 	public boolean voiceless(Player player, Channel channel, boolean message) {
-		if (permHandler.has(player, "TitanChat.voice"))
+		if (permHandler.has(player, "TitanChat.voice." + channel.getName()))
 			return false;
+		
+		if (!permHandler.has(player, "TitanChat.speak." + channel.getName()))
+			return true;
 		
 		if (isSilenced()) {
 			if (message)

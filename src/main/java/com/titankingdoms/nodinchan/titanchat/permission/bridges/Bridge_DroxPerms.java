@@ -90,11 +90,6 @@ public final class Bridge_DroxPerms extends PermissionBridge {
 		return player.hasPermission(permission);
 	}
 	
-	@Override
-	public boolean isEnabled() {
-		return api != null;
-	}
-	
 	public final class DroxPermsChecker extends PluginChecker {
 		
 		@Override

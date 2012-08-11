@@ -40,9 +40,4 @@ public final class Bridge_SuperPerms extends PermissionBridge {
 	public boolean hasPermission(Player player, String permission) {
 		return player.hasPermission(permission);
 	}
-	
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
 }

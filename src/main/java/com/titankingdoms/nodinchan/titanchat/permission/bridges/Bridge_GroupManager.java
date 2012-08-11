@@ -108,11 +108,6 @@ public final class Bridge_GroupManager extends PermissionBridge {
 		return (handler != null) ? handler.permission(player, permission) : false;
 	}
 	
-	@Override
-	public boolean isEnabled() {
-		return gm != null && gm.isEnabled();
-	}
-	
 	public final class GroupManagerChecker extends PluginChecker {
 		
 		@Override

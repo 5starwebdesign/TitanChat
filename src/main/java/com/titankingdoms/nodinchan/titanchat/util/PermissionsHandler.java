@@ -119,19 +119,19 @@ public final class PermissionsHandler {
 			return new Bridge_DroxPerms();
 		
 		if (packageExists("com.platymuus.bukkit.permissions.PermissionsPlugin"))
-			return new Bridge_PermissionsBukkit();
+			return new Bridge_UltraPerms("PermissionBukkit");
 		
 		if (packageExists("net.crystalyx.bukkit.simplyperms.SimplyPlugin"))
-			return new Bridge_SimplyPerms();
+			return new Bridge_UltraPerms("SimplyPerms");
 		
 		if (packageExists("org.anjocaido.groupmanager.GroupManager"))
 			return new Bridge_GroupManager();
 		
 		if (packageExists("net.krinsoft.privileges.Privileges"))
-			return new Bridge_Privileges();
+			return new Bridge_UltraPerms("Privileges");
 		
 		if (packageExists("org.tyrannyofheaven.bukkit.zPermissions.ZPermissionsPlugin"))
-			return new Bridge_zPermissions();
+			return new Bridge_UltraPerms("zPermissions");
 		
 		return new Bridge_SuperPerms();
 	}
@@ -152,6 +152,9 @@ public final class PermissionsHandler {
 				break;
 			}
 		}
+		
+		if (prefix.isEmpty())
+			prefix = permission.getPrefix(player, Permissible.PLAYER);
 		
 		if (prefix.isEmpty())
 			prefix = getGroupPrefix(player);
@@ -244,16 +247,8 @@ public final class PermissionsHandler {
 			plugin.log(Level.INFO, "SuperPerms loaded as backup permissions");
 	}
 	
-	public boolean packageExists(String pkg) {
+	private boolean packageExists(String pkg) {
 		try { Class.forName(pkg); return true; } catch (ClassNotFoundException e) { return false; }
-	}
-	
-	public boolean packagesExist(String... pkgs) {
-		for (String pkg : pkgs)
-			if (!packageExists(pkg))
-				return false;
-		
-		return true;
 	}
 	
 	public final class Affix {

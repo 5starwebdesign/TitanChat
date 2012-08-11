@@ -87,11 +87,6 @@ public final class Bridge_bPermissions extends PermissionBridge {
 		return ApiLayer.hasPermission(player.getWorld().getName(), USER, player.getName(), permission);
 	}
 	
-	@Override
-	public boolean isEnabled() {
-		return hooked;
-	}
-	
 	public final class bPermissionsChecker extends PluginChecker {
 		
 		@Override

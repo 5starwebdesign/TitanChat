@@ -79,11 +79,6 @@ public final class Bridge_PermissionsEx extends PermissionBridge {
 		return (user != null) ? user.has(permission, player.getWorld().getName()) : false;
 	}
 	
-	@Override
-	public boolean isEnabled() {
-		return pex != null && pex.isEnabled();
-	}
-	
 	public final class PermissionsExChecker extends PluginChecker {
 		
 		@Override
