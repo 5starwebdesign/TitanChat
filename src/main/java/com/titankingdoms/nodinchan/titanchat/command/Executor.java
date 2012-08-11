@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
 
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
@@ -70,11 +71,11 @@ public final class Executor {
 		return false;
 	}
 	
-	public void execute(CommandSender sender, com.titankingdoms.nodinchan.titanchat.channel.Channel channel, String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void execute(CommandSender sender, Channel channel, String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		method.invoke(command, sender, channel, args);
 	}
 	
-	public void execute(Player player, com.titankingdoms.nodinchan.titanchat.channel.Channel channel, String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void execute(Player player, Channel channel, String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		method.invoke(command, player, channel, args);
 	}
 	

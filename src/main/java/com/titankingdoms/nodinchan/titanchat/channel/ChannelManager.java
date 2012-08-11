@@ -91,10 +91,10 @@ public final class ChannelManager {
 		List<Participant> participants = channel.getParticipants();
 		
 		for (Participant participant : participants) {
-			if (participant.getPlayer() != null) {
-				participant.leave(channel);
+			channel.leave(participant.getName());
+			
+			if (participant.getPlayer() != null)
 				plugin.send(MessageLevel.WARNING, participant.getPlayer(), channel.getName() + " has been deleted");
-			}
 		}
 		
 		channels.remove(name.toLowerCase());

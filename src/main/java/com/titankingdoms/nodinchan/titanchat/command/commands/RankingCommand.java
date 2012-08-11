@@ -47,31 +47,25 @@ public class RankingCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (targetPlayer == null) {
+			if (isOffline(sender, targetPlayer))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
-				plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is offline");
-			}
 			
-			if (!channel.getAdmins().contains(sender.getName())) {
-				if (!(hasPermission(sender, "TitanChat.rank.*") || hasPermission(sender, "TitanChat.rank." + channel.getName()))) {
-					plugin.send(MessageLevel.WARNING, sender, "You do not have permission");
-					return;
-				}
-			}
-			
-			if (channel.getAdmins().contains(targetPlayer.getName())) {
-				channel.getAdmins().remove(targetPlayer.getName());
-				channel.save();
+			if (channel.isAdmin(sender.getName()) || hasPermission(sender, "TitanChat.rank." + channel.getName())) {
+				if (channel.getAdmins().contains(targetPlayer.getName())) {
+					channel.getAdmins().remove(targetPlayer.getName());
+					channel.save();
+					
+					if (targetPlayer.isOnline())
+						plugin.send(MessageLevel.WARNING, targetPlayer.getPlayer(), "You have been demoted in " + channel.getName());
+					
+					if (sender instanceof Player && !channel.isParticipating(sender.getName()))
+						plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been demoted");
+					
+					plugin.send(MessageLevel.INFO, channel, getDisplayName(targetPlayer) + " has been demoted");
+					
+				} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is not an admin"); }
 				
-				if (targetPlayer.isOnline())
-					plugin.send(MessageLevel.WARNING, targetPlayer.getPlayer(), "You have been demoted in " + channel.getName());
-				
-				if (sender instanceof Player && !channel.isParticipating(sender.getName()))
-					plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been demoted");
-				
-				plugin.send(MessageLevel.INFO, channel, getDisplayName(targetPlayer) + " has been demoted");
-				
-			} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is not an admin"); }
+			} else { plugin.send(MessageLevel.WARNING, sender, "You do not have permission"); }
 			
 		} catch (IndexOutOfBoundsException e) { invalidArgLength(sender, "demote"); }
 	}
@@ -90,31 +84,25 @@ public class RankingCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (targetPlayer == null) {
+			if (isOffline(sender, targetPlayer))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
-				plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is offline");
-			}
 			
-			if (!channel.getAdmins().contains(sender.getName())) {
-				if (!(hasPermission(sender, "TitanChat.rank.*") || hasPermission(sender, "TitanChat.rank." + channel.getName()))) {
-					plugin.send(MessageLevel.WARNING, sender, "You do not have permission");
-					return;
-				}
-			}
-			
-			if (!channel.getAdmins().contains(targetPlayer.getName())) {
-				channel.getAdmins().add(targetPlayer.getName());
-				channel.save();
+			if (channel.isAdmin(sender.getName()) || hasPermission(sender, "TitanChat.rank." + channel.getName())) {
+				if (!channel.getAdmins().contains(targetPlayer.getName())) {
+					channel.getAdmins().add(targetPlayer.getName());
+					channel.save();
+					
+					if (targetPlayer.isOnline())
+						plugin.send(MessageLevel.INFO, targetPlayer.getPlayer(), "You have been promoted in " + channel.getName());
+					
+					if (sender instanceof Player && !channel.isParticipating(sender.getName()))
+						plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been promoted");
+					
+					plugin.send(MessageLevel.INFO, channel, getDisplayName(targetPlayer) + " has been promoted");
+					
+				} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is already an admin"); }
 				
-				if (targetPlayer.isOnline())
-					plugin.send(MessageLevel.INFO, targetPlayer.getPlayer(), "You have been promoted in " + channel.getName());
-				
-				if (sender instanceof Player && !channel.isParticipating(sender.getName()))
-					plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been promoted");
-				
-				plugin.send(MessageLevel.INFO, channel, getDisplayName(targetPlayer) + " has been promoted");
-				
-			} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is already an admin"); }
+			} else { plugin.send(MessageLevel.WARNING, sender, "You do not have permission"); }
 			
 		} catch (IndexOutOfBoundsException e) { invalidArgLength(sender, "promote"); }
 	}
@@ -134,29 +122,23 @@ public class RankingCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (targetPlayer == null) {
+			if (isOffline(sender, targetPlayer))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
-				plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is offline");
-			}
 			
-			if (!channel.getAdmins().contains(sender.getName())) {
-				if (!(hasPermission(sender, "TitanChat.rank.*") || hasPermission(sender, "TitanChat.rank." + channel.getName()))) {
-					plugin.send(MessageLevel.WARNING, sender, "You do not have permission");
-					return;
-				}
-			}
-			
-			if (channel.getWhitelist().contains(targetPlayer.getName())) {
-				channel.getWhitelist().remove(targetPlayer.getName());
-				channel.save();
+			if (channel.isAdmin(sender.getName()) || hasPermission(sender, "TitanChat.rank." + channel.getName())) {
+				if (channel.getWhitelist().contains(targetPlayer.getName())) {
+					channel.getWhitelist().remove(targetPlayer.getName());
+					channel.save();
+					
+					if (targetPlayer.isOnline())
+						plugin.send(MessageLevel.WARNING, targetPlayer.getPlayer(), "You have been dewhitelisted in " + channel.getName());
+					
+					if (sender instanceof Player && !channel.isParticipating(sender.getName()))
+						plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been dewhitelisted");
+					
+				} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is not whitelisted"); }
 				
-				if (targetPlayer.isOnline())
-					plugin.send(MessageLevel.WARNING, targetPlayer.getPlayer(), "You have been dewhitelisted in " + channel.getName());
-				
-				if (sender instanceof Player && !channel.isParticipating(sender.getName()))
-					plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been dewhitelisted");
-				
-			} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is not whitelisted"); }
+			} else { plugin.send(MessageLevel.WARNING, sender, "You do not have permission"); }
 			
 		} catch (IndexOutOfBoundsException e) { invalidArgLength(sender, "dewhitelist"); }
 	}
@@ -176,29 +158,23 @@ public class RankingCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (targetPlayer == null) {
+			if (isOffline(sender, targetPlayer))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
-				plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is offline");
-			}
 			
-			if (!channel.getAdmins().contains(sender.getName())) {
-				if (!(hasPermission(sender, "TitanChat.rank.*") || hasPermission(sender, "TitanChat.rank." + channel.getName()))) {
-					plugin.send(MessageLevel.WARNING, sender, "You do not have permission");
-					return;
-				}
-			}
-			
-			if (!channel.getWhitelist().contains(targetPlayer.getName())) {
-				channel.getWhitelist().add(targetPlayer.getName());
-				channel.save();
+			if (channel.isAdmin(sender.getName()) || hasPermission(sender, "TitanChat.rank." + channel.getName())) {
+				if (!channel.getWhitelist().contains(targetPlayer.getName())) {
+					channel.getWhitelist().add(targetPlayer.getName());
+					channel.save();
+					
+					if (targetPlayer.isOnline())
+						plugin.send(MessageLevel.INFO, targetPlayer.getPlayer(), "You have been whitelisted in " + channel.getName());
+					
+					if (sender instanceof Player && !channel.isParticipating(sender.getName()))
+						plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been whitelisted");
+					
+				} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is already whitelisted"); }
 				
-				if (targetPlayer.isOnline())
-					plugin.send(MessageLevel.INFO, targetPlayer.getPlayer(), "You have been whitelisted in " + channel.getName());
-				
-				if (sender instanceof Player && !channel.isParticipating(sender.getName()))
-					plugin.send(MessageLevel.INFO, sender, getDisplayName(targetPlayer) + " has been whitelisted");
-				
-			} else { plugin.send(MessageLevel.WARNING, sender, getDisplayName(targetPlayer) + " is already whitelisted"); }
+			} else { plugin.send(MessageLevel.WARNING, sender, "You do not have permission"); }
 			
 		} catch (IndexOutOfBoundsException e) { invalidArgLength(sender, "whitelist"); }
 	}
