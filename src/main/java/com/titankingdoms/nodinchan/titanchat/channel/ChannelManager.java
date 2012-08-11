@@ -53,6 +53,10 @@ public final class ChannelManager {
 	
 	public ChannelManager() {
 		this.plugin = TitanChat.getInstance();
+		
+		if (getCustomChannelDir().mkdirs())
+			plugin.log(Level.INFO, "Creating custom channels directory...");
+		
 		this.aliases = new HashMap<String, String>();
 		this.channels = new LinkedHashMap<String, Channel>();
 		this.participants = new HashMap<String, Participant>();
