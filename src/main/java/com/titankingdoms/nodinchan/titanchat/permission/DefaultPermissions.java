@@ -60,12 +60,12 @@ public final class DefaultPermissions {
 		
 		pm.addPermission(new Permission("TitanChat.broadcast", "Grants permission to the broadcast command"));
 		pm.addPermission(new Permission("TitanChat.whisper", "Grants permission to the whisper command"));
-		pm.addPermission(new Permission("TitanChat.emote", "Grants permission to the traditional emote command"));
+		pm.addPermission(new Permission("TitanChat.em", "Grants permission to the traditional emote command"));
 		pm.addPermission(new Permission("TitanChat.emote.*", "Grants permission to emote in all channels"));
 		
 		pm.getPermission("TitanChat.broadcast").addParent(staff, true);
 		pm.getPermission("TitanChat.whisper").addParent(staff, true);
-		pm.getPermission("TitanChat.emote").addParent(staff, true);
+		pm.getPermission("TitanChat.em").addParent(staff, true);
 		pm.getPermission("TitanChat.emote.*").addParent(staff, true);
 		
 		pm.addPermission(new Permission("TitanChat.force", "Grants permission to force channel joins"));
