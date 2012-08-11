@@ -123,7 +123,12 @@ public final class ChannelManager {
 	}
 	
 	public Channel getChannel(Player player) {
-		return getParticipant(player).getCurrentChannel();
+		Participant participant = getParticipant(player);
+		
+		if (participant == null)
+			return null;
+		
+		return participant.getCurrentChannel();
 	}
 	
 	public Channel getChannelByAlias(String name) {
@@ -213,6 +218,9 @@ public final class ChannelManager {
 			
 			register(channel);
 		}
+		
+		for (Player player : plugin.getServer().getOnlinePlayers())
+			loadParticipant(player);
 		
 		sortChannels();
 		

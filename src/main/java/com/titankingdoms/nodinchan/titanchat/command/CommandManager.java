@@ -101,8 +101,6 @@ public final class CommandManager {
 				else
 					executor.execute((Player) sender, channel, args);
 				
-				return;
-				
 			} catch (IllegalAccessException e) {
 				plugin.send(MessageLevel.WARNING, sender, "An error seems to have occured, please check console");
 				plugin.log(Level.SEVERE, "An IllegalAccessException has occured while using command: " + executor.getName());
@@ -126,6 +124,8 @@ public final class CommandManager {
 					e.getTargetException().printStackTrace();
 				}
 			}
+			
+			return;
 		}
 		
 		plugin.send(MessageLevel.WARNING, sender, "Invalid Command");
