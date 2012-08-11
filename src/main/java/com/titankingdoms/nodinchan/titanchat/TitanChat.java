@@ -429,13 +429,8 @@ public final class TitanChat extends JavaPlugin {
 		
 		NCBL libPlugin = (NCBL) pm.getPlugin("NC-BukkitLib");
 		
-		File destination = new File(getDataFolder().getParentFile().getParentFile(), "lib");
-		destination.mkdirs();
-		
-		File lib = new File(destination, "NC-BukkitLib.jar");
 		File pluginLib = new File(getDataFolder().getParentFile(), "NC-BukkitLib.jar");
 		
-		boolean inPlugins = false;
 		boolean download = false;
 		
 		try {
@@ -444,9 +439,10 @@ public final class TitanChat extends JavaPlugin {
 			JSONObject jsonPlugin = (JSONObject) new JSONParser().parse(new InputStreamReader(url.openStream()));
 			JSONArray versions = (JSONArray) jsonPlugin.get("versions");
 			
+			String dl_link = "";
+			
 			if (libPlugin == null) {
 				getLogger().log(Level.WARNING, "Missing NC-Bukkit lib");
-				inPlugins = true;
 				download = true;
 				
 			} else {
@@ -458,6 +454,7 @@ public final class TitanChat extends JavaPlugin {
 					
 					if (version.get("type").equals("Release")) {
 						newVer = Double.parseDouble(((String) version.get("name")).split(" ")[1].trim().substring(1));
+						dl_link = (String) version.get("dl_link");
 						break;
 					}
 				}
@@ -471,35 +468,17 @@ public final class TitanChat extends JavaPlugin {
 			if (download) {
 				getLogger().log(Level.INFO, "Downloading NC-Bukkit lib");
 				
-				String dl_link = "";
-				
-				for (int ver = 0; ver < versions.size(); ver++) {
-					JSONObject version = (JSONObject) versions.get(ver);
-					
-					if (version.get("type").equals("Release")) {
-						dl_link = (String) version.get("dl_link");
-						break;
-					}
-				}
-				
 				if (dl_link == null)
 					throw new Exception();
 				
 				URL link = new URL(dl_link);
+				
 				ReadableByteChannel rbc = Channels.newChannel(link.openStream());
-				FileOutputStream output = null;
-				
-				if (inPlugins) {
-					output = new FileOutputStream(pluginLib);
-					output.getChannel().transferFrom(rbc, 0, 1 << 24);
-					libPlugin = (NCBL) pm.loadPlugin(pluginLib);
-					
-				} else {
-					output = new FileOutputStream(lib);
-					output.getChannel().transferFrom(rbc, 0, 1 << 24);
-				}
-				
+				FileOutputStream output = new FileOutputStream(pluginLib);
+				output.getChannel().transferFrom(rbc, 0, 1 << 24);
 				output.close();
+				
+				libPlugin = (NCBL) pm.loadPlugin(pluginLib);
 				getLogger().log(Level.INFO, "Downloaded NC-Bukkit lib");
 			}
 			

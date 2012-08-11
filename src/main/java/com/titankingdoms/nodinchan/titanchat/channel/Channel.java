@@ -176,8 +176,13 @@ public abstract class Channel extends Loadable implements Comparable<Channel> {
 	}
 	
 	public void join(String name) {
-		if (!participants.containsKey(name.toLowerCase()) && plugin.getManager().getChannelManager().getParticipant(name) != null)
-			participants.put(name.toLowerCase(), plugin.getManager().getChannelManager().getParticipant(name)).join(this);
+		if (!participants.containsKey(name.toLowerCase())) {
+			if (plugin.getManager().getChannelManager().getParticipant(name) != null) {
+				Participant participant = plugin.getManager().getChannelManager().getParticipant(name);
+				participants.put(name.toLowerCase(), participant);
+				participant.join(this);
+			}
+		}
 	}
 	
 	public void join(Player player) {
