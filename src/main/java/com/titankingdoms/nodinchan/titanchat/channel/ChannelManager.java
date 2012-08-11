@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.nodinchan.ncbukkit.loader.Loader;
+import com.nodinchan.ncbukkit.util.FileExtensionFilter;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel.Option;
@@ -200,15 +201,11 @@ public final class ChannelManager {
 		register(new StandardChannel());
 		
 		for (Channel channel : loader.load())
-			if (!exists(channel.getName()))
-				register(channel);
+			register(channel);
 		
 		sortTypes();
 		
-		for (File file : plugin.getChannelDir().listFiles()) {
-			if (!file.getName().endsWith(".yml"))
-				continue;
-			
+		for (File file : plugin.getChannelDir().listFiles(new FileExtensionFilter(".yml"))) {
 			Channel channel = loadChannel(file);
 			
 			if (channel == null || exists(channel.getName()))
@@ -232,13 +229,17 @@ public final class ChannelManager {
 		
 		Channel type = getType(config.getString("type", ""));
 		
-		if (type == null)
+		if (type == null) {
+			plugin.log(Level.INFO, "The channel config " + file.getName() + " failed to load: Unknown Type");
 			return null;
+		}
 		
 		Option option = Option.fromName(config.getString("option", ""));
 		
-		if (option == null)
+		if (option == null) {
+			plugin.log(Level.INFO, "The channel config " + file.getName() + " failed to load: Unknown Option");
 			return null;
+		}
 		
 		return type.load(name, option);
 	}
@@ -303,7 +304,7 @@ public final class ChannelManager {
 				types.put(channel.getType().toLowerCase(), channel);
 			
 		} else {
-			if (getChannel(channel.getName()) == null) {
+			if (!exists(channel.getName())) {
 				channels.put(channel.getName().toLowerCase(), channel);
 				
 				for (String alias : channel.getConfig().getStringList("aliases"))
@@ -318,29 +319,21 @@ public final class ChannelManager {
 	}
 	
 	public void sortChannels() {
-		Map<String, Channel> channels = new LinkedHashMap<String, Channel>();
-		List<String> names = new ArrayList<String>(this.channels.keySet());
-		
-		Collections.sort(names);
-		
-		for (String name : names)
-			channels.put(name, getChannel(name));
-		
+		List<Channel> channels = new ArrayList<Channel>(this.channels.values());
+		Collections.sort(channels);
 		this.channels.clear();
-		this.channels.putAll(channels);
+		
+		for (Channel channel : channels)
+			this.channels.put(channel.getName().toLowerCase(), channel);
 	}
 	
 	public void sortTypes() {
-		Map<String, Channel> types = new LinkedHashMap<String, Channel>();
-		List<String> names = new ArrayList<String>(this.types.keySet());
-		
-		Collections.sort(names);
-		
-		for (String name : names)
-			types.put(name, getChannel(name));
-		
+		List<Channel> types = new ArrayList<Channel>(this.types.values());
+		Collections.sort(types);
 		this.types.clear();
-		this.types.putAll(types);
+		
+		for (Channel type : types)
+			this.types.put(type.getType().toLowerCase(), type);
 	}
 	
 	public void unload() {

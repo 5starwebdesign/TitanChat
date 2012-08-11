@@ -92,8 +92,6 @@ public class PluginCommand extends CommandBase {
 		
 		plugin.send(MessageLevel.INFO, sender, "Reloading TitanChat...");
 		plugin.reloadConfig();
-		plugin.getVariableManager().unload();
-		plugin.getFormatHandler().load();
 		plugin.getManager().reload();
 		plugin.send(MessageLevel.INFO, sender, "TitanChat reloaded");
 		

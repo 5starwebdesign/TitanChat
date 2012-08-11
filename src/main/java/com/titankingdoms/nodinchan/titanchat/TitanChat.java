@@ -39,7 +39,6 @@ import com.titankingdoms.nodinchan.titanchat.util.FormatHandler;
 import com.titankingdoms.nodinchan.titanchat.util.PermissionsHandler;
 import com.titankingdoms.nodinchan.titanchat.util.displayname.DisplayName;
 import com.titankingdoms.nodinchan.titanchat.util.displayname.DisplayNameChanger;
-import com.titankingdoms.nodinchan.titanchat.util.variable.VariableHandler;
 
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
@@ -74,15 +73,14 @@ public final class TitanChat extends JavaPlugin {
 	private DisplayNameChanger displayname;
 	private FormatHandler format;
 	private PermissionsHandler permHandler;
-	private VariableHandler variable;
 	
 	private boolean silenced = false;
 	
 	public void chatLog(String line) {
 		if (getConfig().getBoolean("logging.colouring"))
-			getServer().getConsoleSender().sendMessage(line);
+			getServer().getConsoleSender().sendMessage(line.trim());
 		else
-			getServer().getConsoleSender().sendMessage(line.replaceAll("(?i)(\u00A7)([a-f0-9k-or])", ""));
+			getServer().getConsoleSender().sendMessage(line.replaceAll("(?i)(\u00A7)([0-9a-fk-or])", "").trim());
 	}
 	
 	public String createList(List<String> list) {
@@ -160,10 +158,6 @@ public final class TitanChat extends JavaPlugin {
 	
 	public Player getPlayer(String name) {
 		return getServer().getPlayer(name);
-	}
-	
-	public VariableHandler getVariableManager() {
-		return variable;
 	}
 	
 	private boolean initMetrics() {
@@ -331,7 +325,6 @@ public final class TitanChat extends JavaPlugin {
 		manager.getChannelManager().unload();
 		manager.getCommandManager().unload();
 		displayname.unload();
-		variable.unload();
 		
 		log(Level.INFO, "is now disabled");
 	}
@@ -363,7 +356,6 @@ public final class TitanChat extends JavaPlugin {
 		displayname = new DisplayNameChanger();
 		format = new FormatHandler();
 		permHandler = new PermissionsHandler();
-		variable = new VariableHandler();
 		
 		Debugger.load(getConfig().getString("logging.debug"));
 		
@@ -372,7 +364,6 @@ public final class TitanChat extends JavaPlugin {
 		
 		manager.load();
 		defPerms.load();
-		format.load();
 		
 		if (manager.getChannelManager().getDefaultChannels().isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");

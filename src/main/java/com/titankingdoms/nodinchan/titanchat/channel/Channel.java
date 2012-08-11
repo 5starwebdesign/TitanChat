@@ -46,7 +46,7 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  */
 
 
-public abstract class Channel extends Loadable {
+public abstract class Channel extends Loadable implements Comparable<Channel> {
 	
 	protected final TitanChat plugin;
 	
@@ -91,6 +91,13 @@ public abstract class Channel extends Loadable {
 	
 	public final boolean changeSetting(CommandSender sender, String setting, String[] args) {
 		return handler.changeSetting(sender, setting, args);
+	}
+	
+	public final int compareTo(Channel channel) {
+		if (getOption().equals(Option.TYPE))
+			return getType().compareTo(channel.getType());
+		else
+			return getName().compareTo(channel.getName());
 	}
 	
 	public abstract Channel create(CommandSender sender, String name, Option option);
@@ -276,16 +283,14 @@ public abstract class Channel extends Loadable {
 		MessageReceiveEvent receiveEvent = new MessageReceiveEvent(sender, sendEvent.getRecipants(), new Message(sendEvent.getFormat(), sendEvent.getMessage()));
 		plugin.getServer().getPluginManager().callEvent(receiveEvent);
 		
-		Map<String, String[]> chat = new HashMap<String, String[]>();
-		
 		for (Player recipant : receiveEvent.getRecipants()) {
 			String chatFormat = receiveEvent.getFormat(recipant);
 			String chatMessage = receiveEvent.getMessage(recipant);
-			chat.put(recipant.getName(), plugin.getFormatHandler().splitAndFormat(chatFormat, "%message", chatMessage));
+			String[] formatted = plugin.getFormatHandler().splitAndFormat(chatFormat, "%message", chatMessage);
+			
+			ChatPacket packet = new ChatPacket(recipant, formatted);
+			plugin.getChatProcessor().sendPacket(packet);
 		}
-		
-		ChatPacket packet = new ChatPacket(chat);
-		plugin.getChatProcessor().sendPacket(packet);
 		
 		MessageConsoleEvent consoleEvent = new MessageConsoleEvent(sender, new Message(sendEvent.getFormat(), sendEvent.getMessage()));
 		plugin.getServer().getPluginManager().callEvent(consoleEvent);

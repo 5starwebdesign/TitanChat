@@ -78,3 +78,5 @@ permissions:
                 suffix: '&5'
             TitanCI:
                 prefix: '[&5CI&f]'
+display-name:
+    change-player-list: true

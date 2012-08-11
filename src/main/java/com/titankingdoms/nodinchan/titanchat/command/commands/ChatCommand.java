@@ -196,10 +196,17 @@ public class ChatCommand extends CommandBase {
 			Map<String, String[]> chat = new HashMap<String, String[]>();
 			chat.put(event.getRecipant().getName(), lines);
 			
-			ChatPacket packet = new ChatPacket(chat);
-			plugin.getChatProcessor().sendPacket(packet);
+			if (event.getRecipant() instanceof Player) {
+				ChatPacket packet = new ChatPacket((Player) event.getRecipant(), lines);
+				plugin.getChatProcessor().sendPacket(packet);
+				
+			} else { event.getRecipant().sendMessage(lines); }
 			
-			event.getSender().sendMessage(sendLines);
+			if (event.getSender() instanceof Player) {
+				ChatPacket packet = new ChatPacket((Player) event.getSender(), sendLines);
+				plugin.getChatProcessor().sendPacket(packet);
+				
+			} else { event.getSender().sendMessage(sendLines); }
 			
 		} else { plugin.send(WARNING, sender, "You do not have permission"); }
 	}

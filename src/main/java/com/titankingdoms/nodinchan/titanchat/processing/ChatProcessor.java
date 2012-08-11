@@ -17,11 +17,10 @@ public final class ChatProcessor extends Thread implements Listener {
 	private final Queue<ChatPacket> chatQueue;
 	
 	public ChatProcessor() {
+		super("TitanChat Chat Processor");
 		this.plugin = TitanChat.getInstance();
 		this.chatQueue = new ConcurrentLinkedQueue<ChatPacket>();
-		
-		Thread thread = new Thread(this);
-		thread.start();
+		start();
 	}
 	
 	/**
@@ -41,18 +40,13 @@ public final class ChatProcessor extends Thread implements Listener {
 	public void run() {
 		while (true) {
 			while (!chatQueue.isEmpty()) {
-				synchronized (chatQueue) {
-					chatQueue.poll().chat();
-				}
+				chatQueue.poll().chat();
 			}
 		}
 	}
 	
 	public void sendPacket(ChatPacket packet) {
-		if (packet != null) {
-			synchronized (chatQueue) {
-				chatQueue.offer(packet);
-			}
-		}
+		if (packet != null)
+			chatQueue.offer(packet);
 	}
 }

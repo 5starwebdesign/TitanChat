@@ -78,7 +78,9 @@ public final class DisplayNameChanger {
 		if (displayname.length() > 16)
 			displayname = displayname.substring(0, 16);
 		
-		player.setPlayerListName(displayname);
+		if (plugin.getConfig().getBoolean("display-name.change-player-list"))
+			player.setPlayerListName(displayname);
+		
 		player.setDisplayName(displayname);
 	}
 	

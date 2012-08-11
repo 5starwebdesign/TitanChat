@@ -1,9 +1,5 @@
 package com.titankingdoms.nodinchan.titanchat.processing;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
@@ -12,24 +8,20 @@ public final class ChatPacket {
 	
 	private final TitanChat plugin;
 	
-	private final Map<String, String[]> messages;
+	private final String recipant;
 	
-	public ChatPacket(Map<String, String[]> chat) {
+	private final String[] chat;
+	
+	public ChatPacket(Player recipant, String[] chat) {
 		this.plugin = TitanChat.getInstance();
-		this.messages = new HashMap<String, String[]>();
-		
-		if (chat != null)
-			messages.putAll(chat);
+		this.recipant = recipant.getName();
+		this.chat = chat;
 	}
 	
 	public void chat() {
-		for (Entry<String, String[]> entry : messages.entrySet()) {
-			Player recipant = plugin.getPlayer(entry.getKey());
-			
-			if (recipant == null)
-				continue;
-			
-			recipant.sendMessage(entry.getValue());
-		}
+		Player recipant = plugin.getPlayer(this.recipant);
+		
+		if (recipant != null)
+			recipant.sendMessage(chat);
 	}
 }

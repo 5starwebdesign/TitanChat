@@ -8,13 +8,11 @@ import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Info;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageFormatEvent;
-import com.titankingdoms.nodinchan.titanchat.util.variable.VariableHandler.Variable;
 
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
@@ -45,7 +43,15 @@ public final class FormatHandler {
 	}
 	
 	public String broadcastFormat(CommandSender sender) {
-		return Format.BROADCAST.format(sender, "");
+		String format = plugin.getConfig().getString("chat.server.broadcast");
+		
+		if (sender instanceof Player) {
+			format = plugin.getConfig().getString("chat.player.broadcast");
+			format = format.replace("%player", ((Player) sender).getDisplayName());
+			format = format.replace("%name", sender.getName());
+		}
+		
+		return plugin.getFormatHandler().colourise(format);
 	}
 	
 	public String colour(Player sender, String msg) {
@@ -73,109 +79,52 @@ public final class FormatHandler {
 	}
 	
 	public String emoteFormat(CommandSender sender, String channel) {
-		return Format.EMOTE.format(sender, channel);
+		String format = plugin.getConfig().getString("chat.server.emote");
+		
+		if (channel != null && !channel.isEmpty())
+			format = plugin.getConfig().getString("chat.channel-emote.format");
+		else if (sender instanceof Player)
+			format = plugin.getConfig().getString("chat.player.emote");
+		
+		if (sender instanceof Player) {
+			format = format.replace("%player", ((Player) sender).getDisplayName());
+			format = format.replace("%name", sender.getName());
+		}
+		
+		return plugin.getFormatHandler().colourise(format);
 	}
 	
 	public String format(Player player, String channel) {
-		MessageFormatEvent event = new MessageFormatEvent(player, Format.CHANNEL.format(player, channel));
+		String format = "%tag %prefix%player%suffix&f: %message";
+		
+		Info info = plugin.getManager().getChannelManager().getChannel(channel).getInfo();
+		
+		if (plugin.getConfig().getBoolean("formatting.use-custom-format"))
+			format = info.getFormat();
+		
+		format = format.replace("%player", player.getDisplayName());
+		format = format.replace("%name", player.getName());
+		format = format.replace("%tag", info.getTag());
+		format = format.replace("%message", info.getChatColour() + "%message");
+		format = format.replace("%prefix", colourise(plugin.getPermissionsHandler().getPlayerPrefix(player)));
+		format = format.replace("%suffix", colourise(plugin.getPermissionsHandler().getPlayerSuffix(player)));
+		format = format.replace("%gprefix", colourise(plugin.getPermissionsHandler().getGroupPrefix(player)));
+		format = format.replace("%gprefix", colourise(plugin.getPermissionsHandler().getGroupPrefix(player)));
+		
+		MessageFormatEvent event = new MessageFormatEvent(player, format);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
-		return event.getFormat();
-	}
-	
-	public void load() {
-		plugin.getVariableManager().register(new Variable() {
-			
-			@Override
-			public Class<? extends Event> getEvent() {
-				return MessageFormatEvent.class;
-			}
-			
-			@Override
-			public String getReplacement(Player sender, Player... recipants) {
-				return colourise(plugin.getPermissionsHandler().getPlayerPrefix(sender));
-			}
-			
-			@Override
-			public String getVariable() {
-				return "%prefix";
-			}
-			
-			@Override
-			public VarType getVarType() {
-				return VarType.FORMAT;
-			}
-			
-		}, new Variable() {
-			
-			@Override
-			public Class<? extends Event> getEvent() {
-				return MessageFormatEvent.class;
-			}
-			
-			@Override
-			public String getReplacement(Player sender, Player... recipants) {
-				return colourise(plugin.getPermissionsHandler().getPlayerSuffix(sender));
-			}
-			
-			@Override
-			public String getVariable() {
-				return "%suffix";
-			}
-			
-			@Override
-			public VarType getVarType() {
-				return VarType.FORMAT;
-			}
-			
-		}, new Variable() {
-			
-			@Override
-			public Class<? extends Event> getEvent() {
-				return MessageFormatEvent.class;
-			}
-			
-			@Override
-			public String getReplacement(Player sender, Player... recipants) {
-				return colourise(plugin.getPermissionsHandler().getGroupPrefix(sender));
-			}
-			
-			@Override
-			public String getVariable() {
-				return "%gprefix";
-			}
-			
-			@Override
-			public VarType getVarType() {
-				return VarType.FORMAT;
-			}
-			
-		}, new Variable() {
-			
-			@Override
-			public Class<? extends Event> getEvent() {
-				return MessageFormatEvent.class;
-			}
-			
-			@Override
-			public String getReplacement(Player sender, Player... recipants) {
-				return colourise(plugin.getPermissionsHandler().getGroupSuffix(sender));
-			}
-			
-			@Override
-			public String getVariable() {
-				return "%gsuffix";
-			}
-			
-			@Override
-			public VarType getVarType() {
-				return VarType.FORMAT;
-			}
-		});
+		return plugin.getFormatHandler().colourise(event.getFormat());
 	}
 	
 	public String serverToChannelFormat(Channel channel) {
-		return Format.SERVER.format(plugin.getServer().getConsoleSender(), channel.getName());
+		String format = plugin.getConfig().getString("chat.serverToChannel");
+		
+		Info info = channel.getInfo();
+		format = format.replace("%tag", info.getTag());
+		format = format.replace("%message", info.getChatColour() + "%message");
+		
+		return plugin.getFormatHandler().colourise(format);
 	}
 	
 	public String[] split(String line) {
@@ -205,92 +154,14 @@ public final class FormatHandler {
 	}
 	
 	public String whisperFormat(CommandSender sender) {
-		return Format.WHISPER.format(sender, "");
-	}
-	
-	private enum Format {
-		BROADCAST {
-			
-			@Override
-			protected String format(CommandSender sender, String channel) {
-				String format = plugin.getConfig().getString("chat.server.broadcast");
-				
-				if (sender instanceof Player) {
-					format = plugin.getConfig().getString("chat.player.broadcast");
-					format = format.replace("%player", ((Player) sender).getDisplayName());
-					format = format.replace("%name", sender.getName());
-				}
-				
-				return plugin.getFormatHandler().colourise(format);
-			}
-		},
-		CHANNEL {
-			
-			@Override
-			protected String format(CommandSender sender, String channel) {
-				String format = "%tag %prefix%player%suffix&f: %message";
-				
-				Info info = plugin.getManager().getChannelManager().getChannel(channel).getInfo();
-				
-				if (plugin.getConfig().getBoolean("formatting.use-custom-format"))
-					format = info.getFormat();
-				
-				format = format.replace("%player", ((Player) sender).getDisplayName());
-				format = format.replace("%name", sender.getName());
-				format = format.replace("%tag", info.getTag());
-				format = format.replace("%message", info.getChatColour() + "%message");
-				
-				return plugin.getFormatHandler().colourise(format);
-			}
-		},
-		EMOTE {
-			
-			@Override
-			protected String format(CommandSender sender, String channel) {
-				String format = plugin.getConfig().getString("chat.server.emote");
-				
-				if (channel != null && !channel.isEmpty())
-					format = plugin.getConfig().getString("chat.channel-emote.format");
-				else if (sender instanceof Player)
-					format = plugin.getConfig().getString("chat.player.emote");
-				
-				if (sender instanceof Player) {
-					format = format.replace("%player", ((Player) sender).getDisplayName());
-					format = format.replace("%name", sender.getName());
-				}
-				
-				return plugin.getFormatHandler().colourise(format);
-			}
-		},
-		SERVER {
-			
-			@Override
-			protected String format(CommandSender sender, String channel) {
-				String format = plugin.getConfig().getString("chat.serverToChannel");
-				
-				Info info = plugin.getManager().getChannelManager().getChannel(channel).getInfo();
-				format = format.replace("%tag", info.getTag());
-				format = format.replace("%message", info.getChatColour() + "%message");
-				
-				return plugin.getFormatHandler().colourise(format);
-			}
-		},
-		WHISPER {
-			
-			@Override
-			protected String format(CommandSender sender, String channel) {
-				String format = plugin.getConfig().getString("chat.server.whisper");
-				
-				if (sender instanceof Player) {
-					format = plugin.getConfig().getString("chat.player.whisper");
-					format = format.replace("%player", ((Player) sender).getDisplayName());
-					format = format.replace("%name", ((Player) sender).getName());
-				}
-				
-				return plugin.getFormatHandler().colourise(format);
-			}
-		};
+		String format = plugin.getConfig().getString("chat.server.whisper");
 		
-		protected abstract String format(CommandSender sender, String channel);
+		if (sender instanceof Player) {
+			format = plugin.getConfig().getString("chat.player.whisper");
+			format = format.replace("%player", ((Player) sender).getDisplayName());
+			format = format.replace("%name", ((Player) sender).getName());
+		}
+		
+		return plugin.getFormatHandler().colourise(format);
 	}
 }
