@@ -43,7 +43,7 @@ public final class DisplayNameChanger {
 	}
 	
 	public String getDisplayName(OfflinePlayer player) {
-		if (player != null && player.isOnline())
+		if (player.isOnline())
 			return player.getPlayer().getDisplayName();
 		
 		DisplayName display = plugin.getDatabase().find(DisplayName.class).where().ieq("name", player.getName()).findUnique();
