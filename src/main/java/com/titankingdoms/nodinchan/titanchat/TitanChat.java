@@ -360,7 +360,7 @@ public final class TitanChat extends JavaPlugin {
 		}
 		
 		manager = new TitanChatManager();
-		defPerms = new DefaultPermissions();
+		defPerms = new DefaultPermissions().load();
 		displayname = new DisplayNameChanger();
 		format = new FormatHandler();
 		permHandler = new PermissionsHandler();
@@ -371,7 +371,6 @@ public final class TitanChat extends JavaPlugin {
 			displayname.apply(player);
 		
 		manager.load();
-		defPerms.load();
 		
 		if (manager.getChannelManager().getDefaultChannels().isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");
