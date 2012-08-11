@@ -28,6 +28,7 @@ public final class DefaultPermissions {
 		PluginManager pm = plugin.getServer().getPluginManager();
 		
 		Permission staff = pm.getPermission("TitanChat.staff");
+		pm.addPermission(staff);
 		
 		pm.addPermission(new Permission("TitanChat.update", "Notified about updates"));
 		pm.getPermission("TitanChat.update").addParent(staff, true);
