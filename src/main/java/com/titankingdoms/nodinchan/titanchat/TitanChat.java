@@ -346,7 +346,7 @@ public final class TitanChat extends JavaPlugin {
 		if (!initMetrics())
 			log(Level.WARNING, "Failed to hook into Metrics");
 		
-		if (getChannelDir().mkdir()) {
+		if (!getChannelDir().exists()) {
 			log(Level.INFO, "Creating channel directory...");
 			saveResource("channels", false);
 		}

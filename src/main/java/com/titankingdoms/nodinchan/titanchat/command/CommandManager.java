@@ -38,7 +38,6 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 public final class CommandManager {
 	
 	private final TitanChat plugin;
