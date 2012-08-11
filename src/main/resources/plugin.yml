@@ -26,7 +26,3 @@ commands:
         aliases: w
         permission: TitanChat.whisper
         usage: /<command> [player] [message]
-permissions:
-    TitanChat.staff:
-        description: Grants all permissions
-        default: op

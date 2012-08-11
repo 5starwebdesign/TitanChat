@@ -27,8 +27,11 @@ public final class DefaultPermissions {
 	public void load() {
 		PluginManager pm = plugin.getServer().getPluginManager();
 		
-		Permission staff = pm.getPermission("TitanChat.staff");
+		Permission staff = new Permission("TitanChat.staff", "Grants all permissions");
 		pm.addPermission(staff);
+		
+		pm.addPermission(new Permission("TitanChat.bypass.*", "Grants bypasses to channels"));
+		pm.getPermission("TitanChat.bypass.*").addParent(staff, true);
 		
 		pm.addPermission(new Permission("TitanChat.update", "Notified about updates"));
 		pm.getPermission("TitanChat.update").addParent(staff, true);
