@@ -258,7 +258,8 @@ public final class ChannelManager {
 				channel.join(player);
 		}
 		
-		return participants.put(participant.getName().toLowerCase(), participant);
+		participants.put(participant.getName().toLowerCase(), participant);
+		return participant;
 	}
 	
 	public boolean nameCheck(String name) {

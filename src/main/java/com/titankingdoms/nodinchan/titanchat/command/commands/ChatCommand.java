@@ -1,8 +1,5 @@
 package com.titankingdoms.nodinchan.titanchat.command.commands;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -192,9 +189,6 @@ public class ChatCommand extends CommandBase {
 			
 			String[] lines = plugin.getFormatHandler().splitAndFormat(event.getFormat(), "%message", event.getMessage());
 			String[] sendLines = plugin.getFormatHandler().splitAndFormat(sendFormat, "%message", event.getMessage());
-			
-			Map<String, String[]> chat = new HashMap<String, String[]>();
-			chat.put(event.getRecipant().getName(), lines);
 			
 			if (event.getRecipant() instanceof Player) {
 				ChatPacket packet = new ChatPacket((Player) event.getRecipant(), lines);
