@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
 import com.nodinchan.ncbukkit.loader.Loadable;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
@@ -46,7 +47,7 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  */
 
 
-public abstract class Channel extends Loadable implements Comparable<Channel> {
+public abstract class Channel extends Loadable implements Comparable<Channel>, Listener {
 	
 	protected final TitanChat plugin;
 	

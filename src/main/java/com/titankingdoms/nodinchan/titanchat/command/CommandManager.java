@@ -46,7 +46,8 @@ public final class CommandManager {
 	
 	private ShortcutManager shortcuts;
 	
-	private final Map<String, String> aliases;
+	private final List<String> commands;
+	
 	private final Map<String, Executor> executors;
 	
 	public CommandManager() {
@@ -56,8 +57,8 @@ public final class CommandManager {
 			plugin.log(Level.INFO, "Creating commands directory...");
 		
 		this.shortcuts = new ShortcutManager();
+		this.commands = new LinkedList<String>();
 		this.executors = new LinkedHashMap<String, Executor>();
-		this.aliases = new LinkedHashMap<String, String>();
 	}
 	
 	public void execute(CommandSender sender, String command, String chName, String[] args) {
@@ -141,26 +142,15 @@ public final class CommandManager {
 	}
 	
 	public Executor getCommandExecutor(String alias) {
-		if (alias == null)
-			return null;
-		
-		String name = aliases.get(alias.toLowerCase());
-		
-		if (name == null)
-			return null;
-		
-		return executors.get(name.toLowerCase());
+		return executors.get(alias.toLowerCase());
 	}
 	
-	public Executor getCommandExecutor(int exeNum) {
-		return new LinkedList<Executor>(executors.values()).get(exeNum);
+	public List<String> getCommands() {
+		return new LinkedList<String>(commands);
 	}
 	
 	public boolean hasCommand(String alias) {
-		if (alias == null || !aliases.containsKey(alias.toLowerCase()))
-			return false;
-		
-		return aliases.get(alias) != null && aliases.containsKey(aliases.get(alias.toLowerCase()));
+		return executors.containsKey(alias.toLowerCase());
 	}
 	
 	public ShortcutManager getShortcutManager() {
@@ -168,19 +158,21 @@ public final class CommandManager {
 	}
 	
 	public void load() {
-		register(new AdministrationCommand());
-		register(new ChannelCommand());
-		register(new ChatCommand());
-		register(new DisplayNameCommand());
-		register(new InformationCommand());
-		register(new InvitationCommand());
-		register(new PluginCommand());
-		register(new RankingCommand());
-		register(new SettingsCommand());
+		register(
+				new AdministrationCommand(),
+				new ChannelCommand(),
+				new ChatCommand(),
+				new InformationCommand(),
+				new InvitationCommand(),
+				new PluginCommand(),
+				new RankingCommand(),
+				new SettingsCommand()
+		);
 		
 		for (CommandBase command : new Loader<CommandBase>(plugin, getCommandDir()).load()) { register(command); }
 		
 		sortCommands();
+		Collections.sort(commands);
 	}
 	
 	public void postReload() {
@@ -191,35 +183,37 @@ public final class CommandManager {
 		unload();
 	}
 	
-	public void register(CommandBase command) {
-		db.i("Try to register command " + command.toString());
-		
-		for (Method method : command.getClass().getDeclaredMethods()) {
-			if (method.isAnnotationPresent(Command.class)) {
-				db.i("Adding new executor: " + method.getName());
-				
-				Executor executor = new Executor(command, method);
-				executors.put(executor.getName().toLowerCase(), executor);
-				
-				aliases.put(executor.getName().toLowerCase(), executor.getName());
-				
-				for (String alias : executor.getAliases())
-					aliases.put(alias.toLowerCase().toLowerCase(), executor.getName());
+	public void register(CommandBase... commands) {
+		for (CommandBase command : commands) {
+			db.i("Try to register command " + command.toString());
+			
+			for (Method method : command.getClass().getDeclaredMethods()) {
+				if (method.isAnnotationPresent(Command.class)) {
+					db.i("Adding new executor: " + method.getName());
+					
+					Executor executor = new Executor(command, method);
+					executors.put(executor.getName().toLowerCase(), executor);
+					
+					for (String alias : executor.getAliases())
+						executors.put(alias.toLowerCase(), executor);
+					
+					this.commands.add(executor.getName());
+				}
 			}
 		}
 	}
 	
 	public void sortCommands() {
-		Map<String, Executor> executors = new LinkedHashMap<String, Executor>();
-		List<String> names = new ArrayList<String>(this.executors.keySet());
-		
-		Collections.sort(names);
-		
-		for (String name : names)
-			executors.put(name, this.executors.get(name.toLowerCase()));
-		
+		List<Executor> executors = new ArrayList<Executor>(this.executors.values());
+		Collections.sort(executors);
 		this.executors.clear();
-		this.executors.putAll(executors);
+		
+		for (Executor executor : executors) {
+			this.executors.put(executor.getName().toLowerCase(), executor);
+			
+			for (String alias : executor.getAliases())
+				this.executors.put(alias.toLowerCase(), executor);
+		}
 	}
 	
 	public void unload() {

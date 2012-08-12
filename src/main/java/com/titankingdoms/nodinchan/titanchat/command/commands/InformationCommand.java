@@ -7,7 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.addon.Addon;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
@@ -166,27 +165,27 @@ public class InformationCommand extends CommandBase {
 				sender.sendMessage(ChatColor.AQUA + "=== TitanChat Command List (" + (page + 1) + "/" + numPages + ") ===");
 				
 				for (int cmdNum = start; cmdNum < end; cmdNum++) {
-					Executor executor = plugin.getManager().getCommandManager().getCommandExecutor(cmdNum);
+					Executor executor = cm.getCommandExecutor(cm.getCommands().get(cmdNum));
 					sender.sendMessage(ChatColor.AQUA + executor.getName() + " - " + executor.getDescription());
 				}
 				
-				plugin.send(MessageLevel.INFO, sender, "Arguments: [NECESSARY] <OPTIONAL>");
-				plugin.send(MessageLevel.INFO, sender, "\"/titanchat commands [command]\" for more info");
+				plugin.send(INFO, sender, "Arguments: [NECESSARY] <OPTIONAL>");
+				plugin.send(INFO, sender, "\"/titanchat help [command]\" for more info");
 				
 			} else {
 				sender.sendMessage(ChatColor.AQUA + "=== TitanChat Command List ===");
 				sender.sendMessage(ChatColor.AQUA + "Command: /titanchat [command] [arguments]");
-				sender.sendMessage(ChatColor.AQUA + "Alias: /tc command [arguments]");
-				plugin.send(MessageLevel.INFO, sender, "\"/titanchat commands [page]\" for command list");
+				sender.sendMessage(ChatColor.AQUA + "Aliases: tchat, chat, tc, ch");
+				plugin.send(INFO, sender, "\"/titanchat help [page]\" for command list");
 			}
 			
 		} catch (IndexOutOfBoundsException e) {
-			plugin.getServer().dispatchCommand(sender, "titanchat commands 1");
+			plugin.getServer().dispatchCommand(sender, "titanchat help 1");
 		} catch (NumberFormatException e) {
 			Executor executor = cm.getCommandExecutor(args[0]);
 			
 			if (executor == null) {
-				plugin.send(MessageLevel.WARNING, sender, "No info on command");
+				plugin.send(WARNING, sender, "No info on command");
 				return;
 			}
 			

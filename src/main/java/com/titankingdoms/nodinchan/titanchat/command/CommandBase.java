@@ -45,7 +45,17 @@ public class CommandBase extends Loadable implements Listener {
 	}
 	
 	public final String getDisplayName(OfflinePlayer player) {
-		return plugin.getDisplayNameChanger().getDisplayName(player);
+		if (player.isOnline())
+			return player.getPlayer().getDisplayName();
+		
+		return player.getName();
+	}
+	
+	public final String getDisplay(CommandSender sender) {
+		if (sender instanceof Player)
+			return ((Player) sender).getDisplayName();
+		
+		return sender.getName();
 	}
 	
 	public final boolean hasPermission(CommandSender sender, String permission) {
@@ -60,14 +70,13 @@ public class CommandBase extends Loadable implements Listener {
 		usage(sender, name);
 	}
 	
-	public final boolean isOffline(CommandSender sender, OfflinePlayer player) {
-		if (player == null)
-			return true;
+	public final boolean isOffline(CommandSender sender, String player) {
+		OfflinePlayer offPlayer = plugin.getOfflinePlayer(player);
 		
-		if (!player.isOnline())
-			plugin.send(MessageLevel.WARNING, sender, getDisplayName(player) + " is offline");
+		if (!offPlayer.isOnline())
+			plugin.send(MessageLevel.WARNING, sender, getDisplayName(offPlayer) + " is offline");
 		
-		return !player.isOnline();
+		return !offPlayer.isOnline();
 	}
 	
 	public final void register(Addon addon) {

@@ -56,10 +56,10 @@ public class AdministrationCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (isOffline(sender, targetPlayer))
+			if (isOffline(sender, args[0]))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
 			
-			if (channel.getOption().equals(Option.DEFAULT)) {
+			if (!channel.getOption().equals(Option.NONE)) {
 				plugin.send(WARNING, sender, "Command disabled for default and staff channels");
 				return;
 			}
@@ -102,7 +102,7 @@ public class AdministrationCommand extends CommandBase {
 		try {
 			Player targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (isOffline(sender, targetPlayer))
+			if (isOffline(sender, args[0]))
 				return;
 			
 			if (hasPermission(sender, "TitanChat.force")) {
@@ -133,7 +133,7 @@ public class AdministrationCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (isOffline(sender, targetPlayer))
+			if (isOffline(sender, args[0]))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
 			
 			if (channel.isAdmin(sender.getName()) || hasPermission(sender, "TitanChat.kick." + channel.getName())) {
@@ -169,7 +169,7 @@ public class AdministrationCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (isOffline(sender, targetPlayer))
+			if (isOffline(sender, args[0]))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
 			
 			Participant participant = cm.getParticipant(targetPlayer.getName());
@@ -213,10 +213,10 @@ public class AdministrationCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (isOffline(sender, targetPlayer))
+			if (isOffline(sender, args[0]))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
 			
-			if (channel.getOption().equals(Option.DEFAULT)) {
+			if (!channel.getOption().equals(Option.NONE)) {
 				plugin.send(WARNING, sender, "Command disabled for default and staff channels");
 				return;
 			}
@@ -255,7 +255,7 @@ public class AdministrationCommand extends CommandBase {
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (isOffline(sender, targetPlayer))
+			if (isOffline(sender, args[0]))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
 			
 			Participant participant = cm.getParticipant(targetPlayer.getName());

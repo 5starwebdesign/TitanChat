@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.PersistenceException;
-
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -37,8 +35,6 @@ import com.titankingdoms.nodinchan.titanchat.processing.ChatProcessor;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.FormatHandler;
 import com.titankingdoms.nodinchan.titanchat.util.PermissionsHandler;
-import com.titankingdoms.nodinchan.titanchat.util.displayname.DisplayName;
-import com.titankingdoms.nodinchan.titanchat.util.displayname.DisplayNameChanger;
 
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
@@ -70,7 +66,6 @@ public final class TitanChat extends JavaPlugin {
 	private TitanChatListener listener;
 	private TitanChatManager manager;
 	private DefaultPermissions defPerms;
-	private DisplayNameChanger displayname;
 	private FormatHandler format;
 	private PermissionsHandler permHandler;
 	
@@ -117,17 +112,8 @@ public final class TitanChat extends JavaPlugin {
 		return processor;
 	}
 	
-	@Override
-	public List<Class<?>> getDatabaseClasses() {
-		return Arrays.asList(new Class<?>[] { DisplayName.class });
-	}
-	
 	public DefaultPermissions getDefPerms() {
 		return defPerms;
-	}
-	
-	public DisplayNameChanger getDisplayNameChanger() {
-		return displayname;
 	}
 	
 	public FormatHandler getFormatHandler() {
@@ -324,7 +310,6 @@ public final class TitanChat extends JavaPlugin {
 		manager.getAddonManager().unload();
 		manager.getChannelManager().unload();
 		manager.getCommandManager().unload();
-		displayname.unload();
 		
 		log(Level.INFO, "is now disabled");
 	}
@@ -332,14 +317,6 @@ public final class TitanChat extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		log(Level.INFO, "is now enabling...");
-		
-		try {
-			getDatabase().find(DisplayName.class).findRowCount();
-			
-		} catch (PersistenceException e) {
-			log(Level.INFO, "Setting up display name database...");
-			installDDL();
-		}
 		
 		register(listener = new TitanChatListener());
 		
@@ -361,14 +338,10 @@ public final class TitanChat extends JavaPlugin {
 		
 		manager = new TitanChatManager();
 		defPerms = new DefaultPermissions().load();
-		displayname = new DisplayNameChanger();
 		format = new FormatHandler();
 		permHandler = new PermissionsHandler();
 		
 		Debugger.load(getConfig().getString("logging.debug"));
-		
-		for (Player player : getServer().getOnlinePlayers())
-			displayname.apply(player);
 		
 		manager.load();
 		permHandler.load();

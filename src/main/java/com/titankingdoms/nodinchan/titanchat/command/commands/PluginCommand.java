@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
@@ -43,7 +42,7 @@ public class PluginCommand extends CommandBase {
 	@Usage("debug [enable/disable] <type>")
 	public void debug(CommandSender sender, Channel channel, String[] args) {
 		if (sender instanceof Player && plugin.isStaff((Player) sender)) {
-			plugin.send(MessageLevel.WARNING, sender, "You do not have permission");
+			plugin.send(WARNING, sender, "You do not have permission");
 			return;
 		}
 		
@@ -83,17 +82,17 @@ public class PluginCommand extends CommandBase {
 	@Usage("reload")
 	public void reload(CommandSender sender, Channel channel, String[] args) {
 		if (sender instanceof Player && plugin.isStaff((Player) sender)) {
-			plugin.send(MessageLevel.WARNING, sender, "You do not have permission");
+			plugin.send(WARNING, sender, "You do not have permission");
 			return;
 		}
 		
 		if (sender instanceof Player)
 			plugin.log(Level.INFO, "Reloading TitanChat...");
 		
-		plugin.send(MessageLevel.INFO, sender, "Reloading TitanChat...");
+		plugin.send(INFO, sender, "Reloading TitanChat...");
 		plugin.reloadConfig();
 		plugin.getManager().reload();
-		plugin.send(MessageLevel.INFO, sender, "TitanChat reloaded");
+		plugin.send(INFO, sender, "TitanChat reloaded");
 		
 		if (sender instanceof Player)
 			plugin.log(Level.INFO, "TitanChat reloaded");

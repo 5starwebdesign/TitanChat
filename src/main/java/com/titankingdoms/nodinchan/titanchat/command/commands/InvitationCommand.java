@@ -3,7 +3,6 @@ package com.titankingdoms.nodinchan.titanchat.command.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Invitation.Response;
@@ -77,10 +76,8 @@ public class InvitationCommand extends CommandBase {
 		try {
 			Player targetPlayer = plugin.getPlayer(args[0]);
 			
-			if (targetPlayer == null) {
-				plugin.send(MessageLevel.WARNING, sender, "Player not online");
+			if (isOffline(sender, args[0]))
 				return;
-			}
 			
 			cm.getParticipant(targetPlayer).getInvitation().invite(channel, sender);
 			

@@ -85,7 +85,6 @@ public final class TitanChatListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Participant participant = plugin.getManager().getChannelManager().loadParticipant(event.getPlayer());
-		plugin.getDisplayNameChanger().apply(participant.getPlayer());
 		updateCheck(participant.getPlayer());
 	}
 	

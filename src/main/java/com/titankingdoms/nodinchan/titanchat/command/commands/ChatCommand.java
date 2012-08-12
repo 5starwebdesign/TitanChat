@@ -3,7 +3,6 @@ package com.titankingdoms.nodinchan.titanchat.command.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
@@ -49,7 +48,7 @@ public class ChatCommand extends CommandBase {
 		
 		if (hasPermission(sender, "TitanChat.broadcast")) {
 			if (!plugin.getConfig().getBoolean("chat." + ((sender instanceof Player) ? "player" : "server") + ".enable")) {
-				plugin.send(MessageLevel.WARNING, sender, "Broadcast Command Disabled");
+				plugin.send(WARNING, sender, "Broadcast Command Disabled");
 				return;
 			}
 			
@@ -69,8 +68,8 @@ public class ChatCommand extends CommandBase {
 			
 			String[] lines = plugin.getFormatHandler().splitAndFormat(event.getFormat(), "%message", event.getMessage());
 			
-			for (String line : lines)
-				plugin.getServer().broadcastMessage(line);
+			for (Player recipant : plugin.getServer().getOnlinePlayers())
+				plugin.getChatProcessor().sendPacket(new ChatPacket(recipant, lines));
 			
 		} else { plugin.send(WARNING, sender, "You do not have permission"); }
 	}
@@ -88,7 +87,7 @@ public class ChatCommand extends CommandBase {
 		
 		if (hasPermission(sender, "TitanChat.emote." + channel.getName())) {
 			if (!plugin.getConfig().getBoolean("chat.channel-emote.enable")) {
-				plugin.send(MessageLevel.WARNING, sender, "Emote Command Disabled");
+				plugin.send(WARNING, sender, "Emote Command Disabled");
 				return;
 			}
 			
@@ -155,7 +154,7 @@ public class ChatCommand extends CommandBase {
 		
 		if (hasPermission(sender, "TitanChat.whisper")) {
 			if (!plugin.getConfig().getBoolean("chat." + ((sender instanceof Player) ? "player" : "server") + ".enable")) {
-				plugin.send(MessageLevel.WARNING, sender, "Whisper Command Disabled");
+				plugin.send(WARNING, sender, "Whisper Command Disabled");
 				return;
 			}
 			
@@ -165,7 +164,7 @@ public class ChatCommand extends CommandBase {
 				if (plugin.getPlayer(args[0]) != null)
 					recipant = plugin.getPlayer(args[0]);
 				else
-					plugin.send(MessageLevel.WARNING, sender, "Player not online");
+					plugin.send(WARNING, sender, "Player not online");
 				
 			} else { recipant = plugin.getServer().getConsoleSender(); }
 			
@@ -181,26 +180,24 @@ public class ChatCommand extends CommandBase {
 				str.append(args[arg]);
 			}
 			
-			String format = plugin.getFormatHandler().whisperFormat(sender);
 			String sendFormat = plugin.getFormatHandler().colourise("&5[You -> " + sender.getName() + "] %message");
+			String format = plugin.getFormatHandler().whisperFormat(sender);
 			
 			WhisperEvent event = new WhisperEvent(sender, recipant, new Message(format, str.toString()));
 			plugin.getServer().getPluginManager().callEvent(event);
 			
-			String[] lines = plugin.getFormatHandler().splitAndFormat(event.getFormat(), "%message", event.getMessage());
 			String[] sendLines = plugin.getFormatHandler().splitAndFormat(sendFormat, "%message", event.getMessage());
+			String[] lines = plugin.getFormatHandler().splitAndFormat(event.getFormat(), "%message", event.getMessage());
 			
-			if (event.getRecipant() instanceof Player) {
-				ChatPacket packet = new ChatPacket((Player) event.getRecipant(), lines);
-				plugin.getChatProcessor().sendPacket(packet);
-				
-			} else { event.getRecipant().sendMessage(lines); }
+			if (event.getSender() instanceof Player)
+				plugin.getChatProcessor().sendPacket(new ChatPacket((Player) event.getSender(), sendLines));
+			else
+				event.getSender().sendMessage(sendLines);
 			
-			if (event.getSender() instanceof Player) {
-				ChatPacket packet = new ChatPacket((Player) event.getSender(), sendLines);
-				plugin.getChatProcessor().sendPacket(packet);
-				
-			} else { event.getSender().sendMessage(sendLines); }
+			if (event.getRecipant() instanceof Player)
+				plugin.getChatProcessor().sendPacket(new ChatPacket((Player) event.getRecipant(), lines));
+			else
+				event.getRecipant().sendMessage(lines);
 			
 		} else { plugin.send(WARNING, sender, "You do not have permission"); }
 	}

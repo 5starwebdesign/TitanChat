@@ -25,7 +25,7 @@ import com.titankingdoms.nodinchan.titanchat.command.info.*;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-public final class Executor {
+public final class Executor implements Comparable<Executor> {
 	
 	private final CommandBase command;
 	
@@ -61,6 +61,10 @@ public final class Executor {
 	
 	public boolean allowConsoleUsage() {
 		return console;
+	}
+	
+	public int compareTo(Executor executor) {
+		return getName().compareTo(executor.getName());
 	}
 	
 	@Override
