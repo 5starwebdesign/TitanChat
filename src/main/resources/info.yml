@@ -1,0 +1,44 @@
+affix:
+    variables:
+        groups:
+            prefix: '%gprefix'
+            suffix: '%gsuffix'
+        players:
+            prefix: '%prefix'
+            suffix: '%suffix'
+    affixes:
+        groups:
+            guest:
+                prefix: '[&8Guest&f]'
+                priority: 0
+            member:
+                prefix: '[&7Member&f]'
+                suffix: '&2'
+                priority: 1
+            vip:
+                prefix: '[&6VIP&f]'
+                suffix: '&5'
+                priority: 2
+            mod:
+                prefix: '[&1Mod&f]'
+                priority: 3
+            admin:
+                prefix: '[&4Admin&f]'
+                priority: 4
+        players:
+            titan:
+                prefix: '[&4Titan&f]'
+            dev:
+                prefix: '[&6Dev&f]'
+                priority: 1
+            bukkitdev:
+                prefix: '[&1Bukkit]'
+                suffix: '&b'
+    player-specific:
+        TitanDev:
+            prefix: '[&6TitanDev&f]'
+            suffix: '&1'
+        GoMySQL:
+            suffix: '&5'
+        TitanCI:
+            prefix: '[&5CI&f]'

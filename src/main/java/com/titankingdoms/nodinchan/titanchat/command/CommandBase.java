@@ -61,10 +61,13 @@ public class CommandBase extends Loadable implements Listener {
 	}
 	
 	public final boolean isOffline(CommandSender sender, OfflinePlayer player) {
-		if (player == null || !player.isOnline())
+		if (player == null)
+			return true;
+		
+		if (!player.isOnline())
 			plugin.send(MessageLevel.WARNING, sender, getDisplayName(player) + " is offline");
 		
-		return player == null || !player.isOnline();
+		return !player.isOnline();
 	}
 	
 	public final void register(Addon addon) {
