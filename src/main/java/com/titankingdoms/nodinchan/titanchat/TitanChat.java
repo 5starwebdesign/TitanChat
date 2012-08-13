@@ -35,6 +35,7 @@ import com.titankingdoms.nodinchan.titanchat.processing.ChatProcessor;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.FormatHandler;
 import com.titankingdoms.nodinchan.titanchat.util.PermissionsHandler;
+import com.titankingdoms.nodinchan.titanchat.util.info.InfoHandler;
 
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
@@ -65,6 +66,7 @@ public final class TitanChat extends JavaPlugin {
 	
 	private TitanChatListener listener;
 	private TitanChatManager manager;
+	private InfoHandler info;
 	private DefaultPermissions defPerms;
 	private FormatHandler format;
 	private PermissionsHandler permHandler;
@@ -118,6 +120,10 @@ public final class TitanChat extends JavaPlugin {
 	
 	public FormatHandler getFormatHandler() {
 		return format;
+	}
+	
+	public InfoHandler getInfoHandler() {
+		return info;
 	}
 	
 	public static TitanChat getInstance() {
@@ -307,9 +313,7 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "is now disabling...");
 		log(Level.INFO, "Unloading managers...");
 		
-		manager.getAddonManager().unload();
-		manager.getChannelManager().unload();
-		manager.getCommandManager().unload();
+		manager.unload();
 		
 		log(Level.INFO, "is now disabled");
 	}
@@ -318,7 +322,12 @@ public final class TitanChat extends JavaPlugin {
 	public void onEnable() {
 		log(Level.INFO, "is now enabling...");
 		
-		register(listener = new TitanChatListener());
+		Debugger.load(getConfig().getString("logging.debug"));
+		
+		register(
+				listener = new TitanChatListener(),
+				processor = new ChatProcessor()
+		);
 		
 		if (!initMetrics())
 			log(Level.WARNING, "Failed to hook into Metrics");
@@ -337,11 +346,13 @@ public final class TitanChat extends JavaPlugin {
 		}
 		
 		manager = new TitanChatManager();
+		info = new InfoHandler();
 		defPerms = new DefaultPermissions().load();
 		format = new FormatHandler();
 		permHandler = new PermissionsHandler();
 		
-		Debugger.load(getConfig().getString("logging.debug"));
+		if (!info.isConfigLoaded())
+			info.getConfig().options().copyDefaults(true);
 		
 		manager.load();
 		permHandler.load();
@@ -352,8 +363,6 @@ public final class TitanChat extends JavaPlugin {
 			return;
 		}
 		
-		processor = new ChatProcessor();
-		getServer().getPluginManager().registerEvents(processor, this);
 		log(Level.INFO, "is now enabled");
 	}
 	
@@ -373,8 +382,9 @@ public final class TitanChat extends JavaPlugin {
 			updateLib();
 	}
 	
-	public void register(Listener listener) {
-		getServer().getPluginManager().registerEvents(listener, this);
+	public void register(Listener... listeners) {
+		for (Listener listener : listeners)
+			getServer().getPluginManager().registerEvents(listener, this);
 	}
 	
 	public void send(MessageLevel level, CommandSender sender, String msg) {
@@ -465,8 +475,12 @@ public final class TitanChat extends JavaPlugin {
 		if (permHandler.has(player, "TitanChat.voice." + channel.getName()))
 			return false;
 		
-		if (!permHandler.has(player, "TitanChat.speak." + channel.getName()))
+		if (!permHandler.has(player, "TitanChat.speak." + channel.getName())) {
+			if (message)
+				send(MessageLevel.WARNING, player, "You do not have permission");
+			
 			return true;
+		}
 		
 		if (isSilenced()) {
 			if (message)

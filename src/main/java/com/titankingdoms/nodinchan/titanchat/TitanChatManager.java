@@ -70,4 +70,10 @@ public class TitanChatManager {
 		chManager.postReload();
 		cmdManager.postReload();
 	}
+	
+	public void unload() {
+		this.addonManager.unload();
+		this.chManager.unload();
+		this.cmdManager.unload();
+	}
 }

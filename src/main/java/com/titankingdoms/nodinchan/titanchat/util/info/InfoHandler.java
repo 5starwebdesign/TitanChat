@@ -1,13 +1,16 @@
-package com.titankingdoms.nodinchan.titanchat.util;
+package com.titankingdoms.nodinchan.titanchat.util.info;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 
@@ -18,8 +21,13 @@ public final class InfoHandler {
 	private File configFile;
 	private FileConfiguration config;
 	
+	private final Map<String, CachedInfo> cachedInfo;
+	private final Map<String, LoadedInfo> loadedInfo;
+	
 	public InfoHandler() {
 		this.plugin = TitanChat.getInstance();
+		this.cachedInfo = new HashMap<String, CachedInfo>();
+		this.loadedInfo = new HashMap<String, LoadedInfo>();
 	}
 	
 	public FileConfiguration getConfig() {
@@ -27,6 +35,18 @@ public final class InfoHandler {
 			reloadConfig();
 		
 		return config;
+	}
+	
+	public CachedInfo getCachedInfo(Player player) {
+		return getCachedInfo(player.getName());
+	}
+	
+	public CachedInfo getCachedInfo(String player) {
+		return cachedInfo.get(player.toLowerCase());
+	}
+	
+	public Object getInfo(String path, Object def) {
+		return getConfig().get(path, def);
 	}
 	
 	public String getInfo(String path, String def) {
@@ -49,8 +69,16 @@ public final class InfoHandler {
 		return getConfig().getBoolean(path, def);
 	}
 	
+	public LoadedInfo getLoadedInfo(String info) {
+		return loadedInfo.get(info);
+	}
+	
 	public ConfigurationSection getSection(String path) {
 		return getConfig().getConfigurationSection(path);
+	}
+	
+	public boolean isConfigLoaded() {
+		return new File(plugin.getDataFolder(), "info.yml").exists();
 	}
 	
 	public void reloadConfig() {
