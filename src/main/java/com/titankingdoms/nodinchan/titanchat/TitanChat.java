@@ -34,7 +34,6 @@ import com.titankingdoms.nodinchan.titanchat.permission.DefaultPermissions;
 import com.titankingdoms.nodinchan.titanchat.processing.ChatProcessor;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.FormatHandler;
-import com.titankingdoms.nodinchan.titanchat.util.PermissionsHandler;
 import com.titankingdoms.nodinchan.titanchat.util.info.InfoHandler;
 
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
@@ -69,7 +68,6 @@ public final class TitanChat extends JavaPlugin {
 	private InfoHandler info;
 	private DefaultPermissions defPerms;
 	private FormatHandler format;
-	private PermissionsHandler permHandler;
 	
 	private boolean silenced = false;
 	
@@ -144,10 +142,6 @@ public final class TitanChat extends JavaPlugin {
 		return player;
 	}
 	
-	public PermissionsHandler getPermissionsHandler() {
-		return permHandler;
-	}
-	
 	public Player getPlayer(String name) {
 		return getServer().getPlayer(name);
 	}
@@ -199,7 +193,7 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public boolean isStaff(Player player) {
-		return permHandler.has(player, "TitanChat.staff");
+		return player.hasPermission("TitanChat.staff");
 	}
 	
 	public void log(Level level, String msg) {
@@ -259,7 +253,7 @@ public final class TitanChat extends JavaPlugin {
 		}
 		
 		if (cmd.getName().equalsIgnoreCase("emote")) {
-			if (sender instanceof Player && !permHandler.has((Player) sender, "TitanChat.emote")) {
+			if (sender instanceof Player && !sender.hasPermission("TitanChat.emote")) {
 				send(MessageLevel.WARNING, sender, "You do not have permission");
 				return true;
 			}
@@ -349,13 +343,11 @@ public final class TitanChat extends JavaPlugin {
 		info = new InfoHandler();
 		defPerms = new DefaultPermissions().load();
 		format = new FormatHandler();
-		permHandler = new PermissionsHandler();
 		
 		if (!info.isConfigLoaded())
 			info.getConfig().options().copyDefaults(true);
 		
 		manager.load();
-		permHandler.load();
 		
 		if (manager.getChannelManager().getDefaultChannels().isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");
@@ -472,10 +464,10 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public boolean voiceless(Player player, Channel channel, boolean message) {
-		if (permHandler.has(player, "TitanChat.voice." + channel.getName()))
+		if (player.hasPermission("TitanChat.voice." + channel.getName()))
 			return false;
 		
-		if (!permHandler.has(player, "TitanChat.speak." + channel.getName())) {
+		if (!player.hasPermission("TitanChat.speak." + channel.getName())) {
 			if (message)
 				send(MessageLevel.WARNING, player, "You do not have permission");
 			

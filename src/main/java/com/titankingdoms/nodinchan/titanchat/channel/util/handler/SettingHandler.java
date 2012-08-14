@@ -53,7 +53,7 @@ public abstract class SettingHandler {
 		if (!(sender instanceof Player))
 			return true;
 		
-		return plugin.getPermissionsHandler().has((Player) sender, permission);
+		return sender.hasPermission(permission);
 	}
 	
 	public final void invalidArgLength(CommandSender sender) {

@@ -49,6 +49,7 @@ public final class FormatHandler {
 			format = plugin.getConfig().getString("chat.player.broadcast");
 			format = format.replace("%player", ((Player) sender).getDisplayName());
 			format = format.replace("%name", sender.getName());
+			format = infoParse((Player) sender, format);
 		}
 		
 		return plugin.getFormatHandler().colourise(format);
@@ -61,7 +62,7 @@ public final class FormatHandler {
 		while (match.find()) {
 			ChatColor colour = ChatColor.getByChar(match.group(2).toLowerCase());
 			
-			if (plugin.getPermissionsHandler().has(sender, "TitanChat.colourstyle.&" + colour.getChar()))
+			if (sender.hasPermission("TitanChat.format.&" + colour.getChar()))
 				match.appendReplacement(str, colour.toString());
 			else
 				match.appendReplacement(str, "");
@@ -89,12 +90,13 @@ public final class FormatHandler {
 		if (sender instanceof Player) {
 			format = format.replace("%player", ((Player) sender).getDisplayName());
 			format = format.replace("%name", sender.getName());
+			format = infoParse((Player) sender, format);
 		}
 		
 		return plugin.getFormatHandler().colourise(format);
 	}
 	
-	public String format(Player player, String channel) {
+	public String format(Player sender, String channel) {
 		String format = "%tag %prefix%player%suffix&f: %message";
 		
 		Info info = plugin.getManager().getChannelManager().getChannel(channel).getInfo();
@@ -102,19 +104,29 @@ public final class FormatHandler {
 		if (plugin.getConfig().getBoolean("formatting.use-custom-format"))
 			format = info.getFormat();
 		
-		format = format.replace("%player", player.getDisplayName());
-		format = format.replace("%name", player.getName());
+		format = format.replace("%player", sender.getDisplayName());
+		format = format.replace("%name", sender.getName());
 		format = format.replace("%tag", info.getTag());
 		format = format.replace("%message", info.getChatColour() + "%message");
-		format = format.replace("%prefix", colourise(plugin.getPermissionsHandler().getPlayerPrefix(player)));
-		format = format.replace("%suffix", colourise(plugin.getPermissionsHandler().getPlayerSuffix(player)));
-		format = format.replace("%gprefix", colourise(plugin.getPermissionsHandler().getGroupPrefix(player)));
-		format = format.replace("%gprefix", colourise(plugin.getPermissionsHandler().getGroupPrefix(player)));
+		format = infoParse(sender, format);
 		
-		MessageFormatEvent event = new MessageFormatEvent(player, format);
+		MessageFormatEvent event = new MessageFormatEvent(sender, format);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
 		return plugin.getFormatHandler().colourise(event.getFormat());
+	}
+	
+	public String infoParse(Player sender, String format) {
+		Pattern pattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
+		Matcher match = pattern.matcher(format);
+		
+		while (match.find()) {
+			String infoType = match.group(2);
+			String info = plugin.getInfoHandler().getInfo(sender, infoType, "");
+			format = format.replace("%" + infoType, info);
+		}
+		
+		return format;
 	}
 	
 	public String serverToChannelFormat(Channel channel) {
@@ -160,6 +172,7 @@ public final class FormatHandler {
 			format = plugin.getConfig().getString("chat.player.whisper");
 			format = format.replace("%player", ((Player) sender).getDisplayName());
 			format = format.replace("%name", ((Player) sender).getName());
+			format = infoParse((Player) sender, format);
 		}
 		
 		return plugin.getFormatHandler().colourise(format);

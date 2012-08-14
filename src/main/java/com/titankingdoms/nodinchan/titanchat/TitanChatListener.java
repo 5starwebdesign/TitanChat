@@ -115,7 +115,7 @@ public final class TitanChatListener implements Listener {
 	}
 	
 	public void updateCheck(Player player) {
-		if (updateCheck() <= currentVer || !plugin.getPermissionsHandler().has(player, "TitanChat.update"))
+		if (updateCheck() <= currentVer || !player.hasPermission("TitanChat.update"))
 			return;
 		
 		player.sendMessage("\u00A76" + newVer + " &5is out! You are running u00A76" + currentVer);

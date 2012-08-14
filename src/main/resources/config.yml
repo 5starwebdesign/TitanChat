@@ -40,5 +40,4 @@ chat:
 formatting:
     use-custom-format: false
     format: "%tag %prefix%player%suffix: %message"
-display-name:
-    change-player-list: true
+permission-system: 'SuperPerms'
