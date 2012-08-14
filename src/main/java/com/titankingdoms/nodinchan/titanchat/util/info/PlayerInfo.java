@@ -3,13 +3,13 @@ package com.titankingdoms.nodinchan.titanchat.util.info;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class CachedInfo {
+public final class PlayerInfo {
 	
 	private final String name;
 	
 	private final Map<String, String> infoMap;
 	
-	public CachedInfo(String name) {
+	public PlayerInfo(String name) {
 		this.name = name;
 		this.infoMap = new HashMap<String, String>();
 	}
