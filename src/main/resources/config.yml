@@ -23,7 +23,6 @@ logging:
     colouring: true
     debug: none
 chat:
-    serverToChannel: '%tag &4Server: %message'
     channel-emote:
         enable: true
         format: '* %player %action'
@@ -40,4 +39,5 @@ chat:
 formatting:
     use-custom-format: false
     format: "%tag %prefix%player%suffix: %message"
+    server: '%tag &4Server: %message'
 permission-system: 'SuperPerms'

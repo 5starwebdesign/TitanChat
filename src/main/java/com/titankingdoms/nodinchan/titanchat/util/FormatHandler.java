@@ -1,5 +1,6 @@
 package com.titankingdoms.nodinchan.titanchat.util;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -108,7 +109,7 @@ public final class FormatHandler {
 		format = format.replace("%name", sender.getName());
 		format = format.replace("%tag", info.getTag());
 		format = format.replace("%message", info.getChatColour() + "%message");
-		format = infoParse(sender, format);
+		format = infoParse(sender, format, "%message");
 		
 		MessageFormatEvent event = new MessageFormatEvent(sender, format);
 		plugin.getServer().getPluginManager().callEvent(event);
@@ -116,21 +117,31 @@ public final class FormatHandler {
 		return plugin.getFormatHandler().colourise(event.getFormat());
 	}
 	
-	public String infoParse(Player sender, String format) {
+	public String infoParse(Player sender, String format, String... exclude) {
+		db.i("FormatHandler: Parsing format: " + format);
 		Pattern pattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
 		Matcher match = pattern.matcher(format);
 		
+		List<String> exclusion = Arrays.asList(exclude);
+		
 		while (match.find()) {
 			String infoType = match.group(2);
+			
+			if (exclusion.contains(infoType))
+				continue;
+			
+			db.i("FormatHandler: Matched and found info type: " + infoType);
 			String info = plugin.getInfoHandler().getInfo(sender, infoType, "");
 			format = format.replace("%" + infoType, info);
+			db.i("FormatHandler: Replaced \"%" + infoType + "\" with \"" + info + "\"");
 		}
 		
+		db.i("FormatHandler: Parsed format: " + format);
 		return format;
 	}
 	
 	public String serverToChannelFormat(Channel channel) {
-		String format = plugin.getConfig().getString("chat.serverToChannel");
+		String format = plugin.getConfig().getString("formatting.server");
 		
 		Info info = channel.getInfo();
 		format = format.replace("%tag", info.getTag());
@@ -143,10 +154,7 @@ public final class FormatHandler {
 		List<String> lines = new LinkedList<String>();
 		
 		while (line.length() > 119) {
-			int end = 119;
-			
-			if (line.charAt(end) != ' ')
-				end = line.lastIndexOf(' ', 119);
+			int end = line.lastIndexOf(' ', 119);
 			
 			if (end == -1)
 				end = 119;
