@@ -1,5 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.event.util;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -15,6 +13,8 @@ package com.titankingdoms.nodinchan.titanchat.event.util;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.event.util;
 
 public final class Message implements Cloneable {
 	

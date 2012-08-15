@@ -1,8 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.command.info;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -18,6 +13,11 @@ import java.lang.annotation.RetentionPolicy;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.command.info;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Usage {

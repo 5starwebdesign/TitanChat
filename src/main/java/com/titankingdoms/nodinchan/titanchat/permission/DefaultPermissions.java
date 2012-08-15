@@ -1,16 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.permission;
-
-import java.util.EnumSet;
-import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.PluginManager;
-
-import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -26,6 +13,19 @@ import com.titankingdoms.nodinchan.titanchat.channel.Channel;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.permission;
+
+import java.util.EnumSet;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.PluginManager;
+
+import com.titankingdoms.nodinchan.titanchat.TitanChat;
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 
 public final class DefaultPermissions {
 	

@@ -1,16 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.event.chat;
-
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.event.util.Message;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -26,6 +13,19 @@ import com.titankingdoms.nodinchan.titanchat.event.util.Message;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.event.chat;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 
 public final class MessageSendEvent extends Event implements Cancellable {
 	

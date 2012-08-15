@@ -1,13 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat;
-
-import java.util.logging.Level;
-
-import org.bukkit.plugin.Plugin;
-
-import com.titankingdoms.nodinchan.titanchat.addon.AddonManager;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
-import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -23,6 +13,16 @@ import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat;
+
+import java.util.logging.Level;
+
+import org.bukkit.plugin.Plugin;
+
+import com.titankingdoms.nodinchan.titanchat.addon.AddonManager;
+import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
+import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
 
 public class TitanChatManager {
 	

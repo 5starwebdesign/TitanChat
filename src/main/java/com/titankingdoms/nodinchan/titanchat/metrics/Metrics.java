@@ -1,5 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.metrics;
-
 /*
  * Copyright 2011 Tyler Blair. All rights reserved.
  *
@@ -27,6 +25,8 @@ package com.titankingdoms.nodinchan.titanchat.metrics;
  * authors and contributors and should not be interpreted as representing official policies,
  * either expressed or implied, of anybody else.
  */
+
+package com.titankingdoms.nodinchan.titanchat.metrics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

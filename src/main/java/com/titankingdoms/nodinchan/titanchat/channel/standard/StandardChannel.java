@@ -1,16 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.channel.standard;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -27,6 +14,18 @@ import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package com.titankingdoms.nodinchan.titanchat.channel.standard;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
 
 public final class StandardChannel extends Channel {
 	

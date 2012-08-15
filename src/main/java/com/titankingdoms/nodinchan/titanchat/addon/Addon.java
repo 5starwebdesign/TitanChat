@@ -1,13 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.addon;
-
-import org.bukkit.event.Listener;
-
-import com.nodinchan.ncbukkit.loader.Loadable;
-import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
-import com.titankingdoms.nodinchan.titanchat.util.Debugger;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -23,6 +13,16 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.addon;
+
+import org.bukkit.event.Listener;
+
+import com.nodinchan.ncbukkit.loader.Loadable;
+import com.titankingdoms.nodinchan.titanchat.TitanChat;
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
+import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
 public class Addon extends Loadable implements Listener {
 	

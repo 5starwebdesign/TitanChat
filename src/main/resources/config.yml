@@ -40,4 +40,3 @@ formatting:
     use-custom-format: false
     format: "%tag %prefix%player%suffix: %message"
     server: '%tag &4Server: %message'
-permission-system: 'SuperPerms'

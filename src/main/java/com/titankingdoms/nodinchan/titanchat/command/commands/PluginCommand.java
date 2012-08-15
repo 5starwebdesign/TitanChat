@@ -1,15 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.command.commands;
-
-import java.nio.channels.Channel;
-import java.util.logging.Level;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
-import com.titankingdoms.nodinchan.titanchat.command.info.*;
-import com.titankingdoms.nodinchan.titanchat.util.Debugger;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -25,6 +13,18 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.command.commands;
+
+import java.nio.channels.Channel;
+import java.util.logging.Level;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
+import com.titankingdoms.nodinchan.titanchat.command.info.*;
+import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
 /**
  * PluginCommand - Plugin maintenance commands

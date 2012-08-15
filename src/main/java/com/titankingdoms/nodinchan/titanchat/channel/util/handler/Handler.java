@@ -1,10 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.channel.util.handler;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.command.CommandSender;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -20,6 +13,13 @@ import org.bukkit.command.CommandSender;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.channel.util.handler;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.command.CommandSender;
 
 public final class Handler {
 	

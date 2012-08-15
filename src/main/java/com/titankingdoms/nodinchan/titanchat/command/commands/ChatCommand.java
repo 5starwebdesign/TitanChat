@@ -1,17 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.command.commands;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
-import com.titankingdoms.nodinchan.titanchat.command.info.*;
-import com.titankingdoms.nodinchan.titanchat.event.BroadcastEvent;
-import com.titankingdoms.nodinchan.titanchat.event.EmoteEvent;
-import com.titankingdoms.nodinchan.titanchat.event.WhisperEvent;
-import com.titankingdoms.nodinchan.titanchat.event.util.Message;
-import com.titankingdoms.nodinchan.titanchat.processing.ChatPacket;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -27,6 +13,20 @@ import com.titankingdoms.nodinchan.titanchat.processing.ChatPacket;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.command.commands;
+
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
+import com.titankingdoms.nodinchan.titanchat.command.info.*;
+import com.titankingdoms.nodinchan.titanchat.event.BroadcastEvent;
+import com.titankingdoms.nodinchan.titanchat.event.EmoteEvent;
+import com.titankingdoms.nodinchan.titanchat.event.WhisperEvent;
+import com.titankingdoms.nodinchan.titanchat.event.util.Message;
+import com.titankingdoms.nodinchan.titanchat.processing.ChatPacket;
 
 /**
  * ChatCommand - Chat related commands
@@ -137,7 +137,7 @@ public class ChatCommand extends CommandBase {
 				return;
 			}
 			
-			channel.send(plugin.getFormatHandler().serverToChannelFormat(channel).replace("%message", str.toString()));
+			channel.send(plugin.getFormatHandler().serverFormat(channel).replace("%message", str.toString()));
 			
 		} else { invalidArgLength(sender, "send"); return; }
 	}

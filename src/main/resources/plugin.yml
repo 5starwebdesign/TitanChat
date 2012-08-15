@@ -4,7 +4,6 @@ author: NodinChan
 website: http://dev.bukkit.org/server-mods/titanchat
 main: com.titankingdoms.nodinchan.titanchat.TitanChat
 prefix: TitanChat
-database: true
 softdepend: [NC-BukkitLib, Vault]
 commands:
     titanchat:

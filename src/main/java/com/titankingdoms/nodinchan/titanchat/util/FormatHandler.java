@@ -1,3 +1,19 @@
+/*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
+ * 
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.titankingdoms.nodinchan.titanchat.util;
 
 import java.util.Arrays;
@@ -15,32 +31,20 @@ import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Info;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageFormatEvent;
 
-/*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
- * 
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- * 
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- * 
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 public final class FormatHandler {
 	
 	private static TitanChat plugin;
 	
 	protected static final Debugger db = new Debugger(5);
 	
-	private final Pattern pattern = Pattern.compile("(?i)(&)([0-9a-fk-or])");
+	private final Pattern colourPattern = Pattern.compile("(&)([a-fk-or0-9])", Pattern.CASE_INSENSITIVE);
+	private final Pattern formatPattern = Pattern.compile("(%)([a-z0-9]+)", Pattern.CASE_INSENSITIVE);
+	
+	private final AffixFinder affixFinder;
 	
 	public FormatHandler() {
 		FormatHandler.plugin = TitanChat.getInstance();
+		this.affixFinder = new AffixFinder();
 	}
 	
 	public String broadcastFormat(CommandSender sender) {
@@ -50,34 +54,36 @@ public final class FormatHandler {
 			format = plugin.getConfig().getString("chat.player.broadcast");
 			format = format.replace("%player", ((Player) sender).getDisplayName());
 			format = format.replace("%name", sender.getName());
-			format = infoParse((Player) sender, format);
+			format = format.replace("%prefix", affixFinder.getPrefix((Player) sender));
+			format = format.replace("%suffix", affixFinder.getSuffix((Player) sender));
+			format = infoParse((Player) sender, format, "%message");
 		}
 		
 		return plugin.getFormatHandler().colourise(format);
 	}
 	
 	public String colour(Player sender, String msg) {
-		StringBuffer str = new StringBuffer();
-		Matcher match = pattern.matcher(msg);
+		StringBuffer colourised = new StringBuffer();
+		Matcher match = colourPattern.matcher(msg);
 		
 		while (match.find()) {
 			ChatColor colour = ChatColor.getByChar(match.group(2).toLowerCase());
 			
 			if (sender.hasPermission("TitanChat.format.&" + colour.getChar()))
-				match.appendReplacement(str, colour.toString());
+				match.appendReplacement(colourised, colour.toString());
 			else
-				match.appendReplacement(str, "");
+				match.appendReplacement(colourised, "");
 		}
 		
-		return match.appendTail(str).toString();
+		return match.appendTail(colourised).toString();
 	}
 	
 	public String colourise(String text) {
-		return text.replaceAll(pattern.toString(), "\u00A7$2");
+		return text.replaceAll(colourPattern.toString(), "\u00A7$2");
 	}
 	
 	public String decolourise(String message) {
-		return message.replaceAll(pattern.toString(), "");
+		return message.replaceAll(colourPattern.toString(), "");
 	}
 	
 	public String emoteFormat(CommandSender sender, String channel) {
@@ -91,7 +97,9 @@ public final class FormatHandler {
 		if (sender instanceof Player) {
 			format = format.replace("%player", ((Player) sender).getDisplayName());
 			format = format.replace("%name", sender.getName());
-			format = infoParse((Player) sender, format);
+			format = format.replace("%prefix", affixFinder.getPrefix((Player) sender));
+			format = format.replace("%suffix", affixFinder.getSuffix((Player) sender));
+			format = infoParse((Player) sender, format, "%message");
 		}
 		
 		return plugin.getFormatHandler().colourise(format);
@@ -108,6 +116,8 @@ public final class FormatHandler {
 		format = format.replace("%player", sender.getDisplayName());
 		format = format.replace("%name", sender.getName());
 		format = format.replace("%tag", info.getTag());
+		format = format.replace("%prefix", affixFinder.getPrefix(sender));
+		format = format.replace("%suffix", affixFinder.getSuffix(sender));
 		format = format.replace("%message", info.getChatColour() + "%message");
 		format = infoParse(sender, format, "%message");
 		
@@ -117,10 +127,14 @@ public final class FormatHandler {
 		return plugin.getFormatHandler().colourise(event.getFormat());
 	}
 	
+	public AffixFinder getAffixFinder() {
+		return affixFinder;
+	}
+	
 	public String infoParse(Player sender, String format, String... exclude) {
 		db.i("FormatHandler: Parsing format: " + format);
-		Pattern pattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
-		Matcher match = pattern.matcher(format);
+		StringBuffer parsed = new StringBuffer();
+		Matcher match = formatPattern.matcher(format);
 		
 		List<String> exclusion = Arrays.asList(exclude);
 		
@@ -132,15 +146,16 @@ public final class FormatHandler {
 			
 			db.i("FormatHandler: Matched and found info type: " + infoType);
 			String info = plugin.getInfoHandler().getInfo(sender, infoType, "");
-			format = format.replace("%" + infoType, info);
+			match.appendReplacement(parsed, info);
 			db.i("FormatHandler: Replaced \"%" + infoType + "\" with \"" + info + "\"");
 		}
 		
-		db.i("FormatHandler: Parsed format: " + format);
-		return format;
+		match.appendTail(parsed);
+		db.i("FormatHandler: Parsed format: " + parsed.toString());
+		return parsed.toString();
 	}
 	
-	public String serverToChannelFormat(Channel channel) {
+	public String serverFormat(Channel channel) {
 		String format = plugin.getConfig().getString("formatting.server");
 		
 		Info info = channel.getInfo();
@@ -180,7 +195,9 @@ public final class FormatHandler {
 			format = plugin.getConfig().getString("chat.player.whisper");
 			format = format.replace("%player", ((Player) sender).getDisplayName());
 			format = format.replace("%name", ((Player) sender).getName());
-			format = infoParse((Player) sender, format);
+			format = format.replace("%prefix", affixFinder.getPrefix((Player) sender));
+			format = format.replace("%suffix", affixFinder.getSuffix((Player) sender));
+			format = infoParse((Player) sender, format, "%message");
 		}
 		
 		return plugin.getFormatHandler().colourise(format);

@@ -1,17 +1,3 @@
-package com.titankingdoms.nodinchan.titanchat.command.commands;
-
-import java.util.Arrays;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel.Range;
-import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
-import com.titankingdoms.nodinchan.titanchat.command.info.*;
-
 /*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  * 
  *     This program is free software: you can redistribute it and/or modify
@@ -27,6 +13,20 @@ import com.titankingdoms.nodinchan.titanchat.command.info.*;
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+package com.titankingdoms.nodinchan.titanchat.command.commands;
+
+import java.util.Arrays;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.channel.Channel.Range;
+import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
+import com.titankingdoms.nodinchan.titanchat.command.info.*;
 
 
 /**
