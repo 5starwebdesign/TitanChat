@@ -22,6 +22,8 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 
 public final class AffixFinder {
@@ -30,31 +32,31 @@ public final class AffixFinder {
 	
 	private final PluginManager pm;
 	
-	private Permission perm;
-	private Chat chat;
-	
 	public AffixFinder() {
 		this.plugin = TitanChat.getInstance();
 		this.pm = plugin.getServer().getPluginManager();
-		
-		if (pm.getPlugin("Vault") != null) {
-			this.perm = plugin.getServer().getServicesManager().load(Permission.class);
-			this.chat = plugin.getServer().getServicesManager().load(Chat.class);
-		}
 	}
 	
 	public String getPrefix(Player player) {
 		String prefix = "";
 		
-		if (chat != null) {
-			try {
-				prefix = chat.getPlayerPrefix(player);
-				
-				if (prefix == null || prefix.isEmpty())
-					prefix = chat.getGroupPrefix(player.getWorld(), perm.getPrimaryGroup(player));
-				
-			} catch (Exception e) {}
+		if (pm.getPlugin("Vault") != null) {
+			Permission perm = plugin.getServer().getServicesManager().load(Permission.class);
+			Chat chat = plugin.getServer().getServicesManager().load(Chat.class);
+			
+			if (chat != null) {
+				try {
+					prefix = chat.getPlayerPrefix(player);
+					
+					if (prefix == null || prefix.isEmpty())
+						prefix = chat.getGroupPrefix(player.getWorld(), perm.getPrimaryGroup(player));
+					
+				} catch (Exception e) {}
+			}
 		}
+		
+		if ((prefix == null || prefix.isEmpty()) && pm.getPlugin("PermissionsEx") != null)
+			prefix = PermissionsEx.getPermissionManager().getUser(player).getPrefix();
 		
 		if (prefix == null || prefix.isEmpty())
 			prefix = plugin.getInfoHandler().getInfo(player, "prefix", "");
@@ -65,15 +67,23 @@ public final class AffixFinder {
 	public String getSuffix(Player player) {
 		String suffix = "";
 		
-		if (chat != null) {
-			try {
-				suffix = chat.getPlayerSuffix(player);
-				
-				if (suffix == null || suffix.isEmpty())
-					suffix = chat.getGroupSuffix(player.getWorld(), perm.getPrimaryGroup(player));
-				
-			} catch (Exception e) {}
+		if (pm.getPlugin("Vault") != null) {
+			Permission perm = plugin.getServer().getServicesManager().load(Permission.class);
+			Chat chat = plugin.getServer().getServicesManager().load(Chat.class);
+			
+			if (chat != null) {
+				try {
+					suffix = chat.getPlayerSuffix(player);
+					
+					if (suffix == null || suffix.isEmpty())
+						suffix = chat.getGroupSuffix(player.getWorld(), perm.getPrimaryGroup(player));
+					
+				} catch (Exception e) {}
+			}
 		}
+		
+		if ((suffix == null || suffix.isEmpty()) && pm.getPlugin("PermissionsEx") != null)
+			suffix = PermissionsEx.getPermissionManager().getUser(player).getSuffix();
 		
 		if (suffix == null || suffix.isEmpty())
 			suffix = plugin.getInfoHandler().getInfo(player, "suffix", "");
