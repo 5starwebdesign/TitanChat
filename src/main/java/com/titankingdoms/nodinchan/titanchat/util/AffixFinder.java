@@ -29,6 +29,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 
+import de.bananaco.bpermissions.api.ApiLayer;
+import de.bananaco.bpermissions.api.util.CalculableType;
 import de.hydrox.bukkit.DroxPerms.DroxPerms;
 import de.hydrox.bukkit.DroxPerms.DroxPermsAPI;
 
@@ -60,6 +62,9 @@ public final class AffixFinder {
 				} catch (Exception e) {}
 			}
 		}
+		
+		if ((prefix == null || prefix.isEmpty()) && pm.getPlugin("bPermissions") != null)
+			prefix = ApiLayer.getValue(player.getWorld().getName(), CalculableType.USER, player.getName(), "prefix");
 		
 		if ((prefix == null || prefix.isEmpty()) && pm.getPlugin("PermissionsEx") != null)
 			prefix = PermissionsEx.getPermissionManager().getUser(player).getPrefix();
@@ -104,6 +109,9 @@ public final class AffixFinder {
 				} catch (Exception e) {}
 			}
 		}
+		
+		if ((suffix == null || suffix.isEmpty()) && pm.getPlugin("bPermissions") != null)
+			suffix = ApiLayer.getValue(player.getWorld().getName(), CalculableType.USER, player.getName(), "suffix");
 		
 		if ((suffix == null || suffix.isEmpty()) && pm.getPlugin("PermissionsEx") != null)
 			suffix = PermissionsEx.getPermissionManager().getUser(player).getSuffix();
