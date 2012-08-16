@@ -19,6 +19,9 @@ package com.titankingdoms.nodinchan.titanchat.util;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
+import org.anjocaido.groupmanager.GroupManager;
+import org.anjocaido.groupmanager.dataholder.worlds.WorldsHolder;
+import org.anjocaido.groupmanager.permissions.AnjoPermissionsHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
@@ -70,6 +73,14 @@ public final class AffixFinder {
 				prefix = api.getGroupInfo(api.getPlayerGroup(player.getName()), "prefix");
 		}
 		
+		if ((prefix == null || prefix.isEmpty()) && pm.getPlugin("GroupManager") != null) {
+			WorldsHolder wh = ((GroupManager) pm.getPlugin("GroupManager")).getWorldsHolder();
+			AnjoPermissionsHandler handler = wh.getWorldPermissions(player);
+			
+			if (handler != null)
+				prefix = handler.getUserPrefix(player.getName());
+		}
+		
 		if (prefix == null || prefix.isEmpty())
 			prefix = plugin.getInfoHandler().getInfo(player, "prefix", "");
 		
@@ -104,6 +115,14 @@ public final class AffixFinder {
 			
 			if (suffix == null || suffix.isEmpty())
 				suffix = api.getGroupInfo(api.getPlayerGroup(player.getName()), "suffix");
+		}
+		
+		if ((suffix == null || suffix.isEmpty()) && pm.getPlugin("GroupManager") != null) {
+			WorldsHolder wh = ((GroupManager) pm.getPlugin("GroupManager")).getWorldsHolder();
+			AnjoPermissionsHandler handler = wh.getWorldPermissions(player);
+			
+			if (handler != null)
+				suffix = handler.getUserSuffix(player.getName());
 		}
 		
 		if (suffix == null || suffix.isEmpty())
