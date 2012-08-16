@@ -56,7 +56,7 @@ public final class FormatHandler {
 			format = format.replace("%name", sender.getName());
 			format = format.replace("%prefix", affixFinder.getPrefix((Player) sender));
 			format = format.replace("%suffix", affixFinder.getSuffix((Player) sender));
-			format = infoParse((Player) sender, format, "%message");
+			format = infoParse((Player) sender, format, "message");
 		}
 		
 		return plugin.getFormatHandler().colourise(format);
@@ -99,7 +99,7 @@ public final class FormatHandler {
 			format = format.replace("%name", sender.getName());
 			format = format.replace("%prefix", affixFinder.getPrefix((Player) sender));
 			format = format.replace("%suffix", affixFinder.getSuffix((Player) sender));
-			format = infoParse((Player) sender, format, "%message");
+			format = infoParse((Player) sender, format, "action");
 		}
 		
 		return plugin.getFormatHandler().colourise(format);
@@ -119,7 +119,7 @@ public final class FormatHandler {
 		format = format.replace("%prefix", affixFinder.getPrefix(sender));
 		format = format.replace("%suffix", affixFinder.getSuffix(sender));
 		format = format.replace("%message", info.getChatColour() + "%message");
-		format = infoParse(sender, format, "%message");
+		format = infoParse(sender, format, "message");
 		
 		MessageFormatEvent event = new MessageFormatEvent(sender, format);
 		plugin.getServer().getPluginManager().callEvent(event);
@@ -197,7 +197,7 @@ public final class FormatHandler {
 			format = format.replace("%name", ((Player) sender).getName());
 			format = format.replace("%prefix", affixFinder.getPrefix((Player) sender));
 			format = format.replace("%suffix", affixFinder.getSuffix((Player) sender));
-			format = infoParse((Player) sender, format, "%message");
+			format = infoParse((Player) sender, format, "message");
 		}
 		
 		return plugin.getFormatHandler().colourise(format);

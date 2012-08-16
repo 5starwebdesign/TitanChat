@@ -20,6 +20,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 
@@ -27,13 +28,19 @@ public final class AffixFinder {
 	
 	private final TitanChat plugin;
 	
-	private final Permission perm;
-	private final Chat chat;
+	private final PluginManager pm;
+	
+	private Permission perm;
+	private Chat chat;
 	
 	public AffixFinder() {
 		this.plugin = TitanChat.getInstance();
-		this.perm = plugin.getServer().getServicesManager().load(Permission.class);
-		this.chat = plugin.getServer().getServicesManager().load(Chat.class);
+		this.pm = plugin.getServer().getPluginManager();
+		
+		if (pm.getPlugin("Vault") != null) {
+			this.perm = plugin.getServer().getServicesManager().load(Permission.class);
+			this.chat = plugin.getServer().getServicesManager().load(Chat.class);
+		}
 	}
 	
 	public String getPrefix(Player player) {
