@@ -26,6 +26,9 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 
+import de.hydrox.bukkit.DroxPerms.DroxPerms;
+import de.hydrox.bukkit.DroxPerms.DroxPermsAPI;
+
 public final class AffixFinder {
 	
 	private final TitanChat plugin;
@@ -58,6 +61,15 @@ public final class AffixFinder {
 		if ((prefix == null || prefix.isEmpty()) && pm.getPlugin("PermissionsEx") != null)
 			prefix = PermissionsEx.getPermissionManager().getUser(player).getPrefix();
 		
+		if ((prefix == null || prefix.isEmpty()) && pm.getPlugin("DroxPerms") != null) {
+			DroxPermsAPI api = ((DroxPerms) pm.getPlugin("DroxPerms")).getAPI();
+			
+			prefix = api.getPlayerInfo(player.getName(), "prefix");
+			
+			if (prefix == null || prefix.isEmpty())
+				prefix = api.getGroupInfo(api.getPlayerGroup(player.getName()), "prefix");
+		}
+		
 		if (prefix == null || prefix.isEmpty())
 			prefix = plugin.getInfoHandler().getInfo(player, "prefix", "");
 		
@@ -84,6 +96,15 @@ public final class AffixFinder {
 		
 		if ((suffix == null || suffix.isEmpty()) && pm.getPlugin("PermissionsEx") != null)
 			suffix = PermissionsEx.getPermissionManager().getUser(player).getSuffix();
+		
+		if ((suffix == null || suffix.isEmpty()) && pm.getPlugin("DroxPerms") != null) {
+			DroxPermsAPI api = ((DroxPerms) pm.getPlugin("DroxPerms")).getAPI();
+			
+			suffix = api.getPlayerInfo(player.getName(), "suffix");
+			
+			if (suffix == null || suffix.isEmpty())
+				suffix = api.getGroupInfo(api.getPlayerGroup(player.getName()), "suffix");
+		}
 		
 		if (suffix == null || suffix.isEmpty())
 			suffix = plugin.getInfoHandler().getInfo(player, "suffix", "");
