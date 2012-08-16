@@ -20,9 +20,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -78,80 +80,29 @@ public final class InfoHandler {
 	}
 	
 	public String getInfo(Player player, String infoType, String def) {
-		PlayerInfo pI = getPlayerInfo(player);
+		CachedInfo cachedInfo = getCachedInfo(player);
 		
-		if (pI != null) {
-			String info = pI.getInfo(infoType);
-			
-			if (info != null)
-				return info;
-		}
+		if (cachedInfo == null)
+			cachedInfo = loadCachedInfo(player);
 		
-		CachedInfo cached = getCachedInfo(player);
-		
-		if (cached != null) {
-			String info = cached.getInfo(infoType);
-			
-			if (info != null)
-				return info;
-		}
-		
-		String info = "";
-		int lastPriority = -1;
-		
-		for (LoadedInfo loaded : loadedInfo.values()) {
-			if (!player.hasPermission(loaded.getPermission()))
-				continue;
-			
-			int priority = loaded.getSection().getInt("priority", 0);
-			String loadedInfo = loaded.getInfo(infoType);
-			
-			if (loadedInfo != null && priority > lastPriority)
-				info = loadedInfo;
-		}
-		
-		return (!info.isEmpty()) ? info : def;
+		String info = cachedInfo.getInfo(infoType);
+		return (info != null && !info.isEmpty()) ? info : def;
 	}
 	
 	public String getInfo(String name, String infoType, String def) {
-		PlayerInfo pI = getPlayerInfo(name);
+		CachedInfo cachedInfo = getCachedInfo(name);
 		
-		if (pI != null) {
-			String info = pI.getInfo(infoType);
+		if (cachedInfo == null) {
+			Player player = plugin.getPlayer(name);
 			
-			if (info != null)
-				return info;
+			if (player != null)
+				cachedInfo = loadCachedInfo(player);
+			else
+				cachedInfo = loadCachedInfo(name);
 		}
 		
-		CachedInfo cached = getCachedInfo(name);
-		
-		if (cached != null) {
-			String info = cached.getInfo(infoType);
-			
-			if (info != null)
-				return info;
-		}
-		
-		Player player = plugin.getPlayer(name);
-		
-		if (player == null)
-			return def;
-		
-		String info = "";
-		int lastPriority = -1;
-		
-		for (LoadedInfo loaded : loadedInfo.values()) {
-			if (!player.hasPermission(loaded.getPermission()))
-				continue;
-			
-			int priority = loaded.getSection().getInt("priority", 0);
-			String loadedInfo = loaded.getInfo(infoType);
-			
-			if (loadedInfo != null && priority > lastPriority)
-				info = loadedInfo;
-		}
-		
-		return (!info.isEmpty()) ? info : def;
+		String info = cachedInfo.getInfo(infoType);
+		return (info != null && !info.isEmpty()) ? info : def;
 	}
 	
 	public Object getInfo(String path, Object def) {
@@ -196,6 +147,101 @@ public final class InfoHandler {
 	
 	public boolean isConfigLoaded() {
 		return new File(plugin.getDataFolder(), "info.yml").exists();
+	}
+	
+	public CachedInfo loadCachedInfo(Player player) {
+		CachedInfo cachedInfo = new CachedInfo(player.getName());
+		
+		PlayerInfo playerInfo = getPlayerInfo(player);
+		
+		if (playerInfo != null) {
+			for (Entry<String, String> infoEntry : playerInfo.getAllInfo().entrySet())
+				cachedInfo.setInfo(infoEntry.getKey(), infoEntry.getValue());
+		}
+		
+		List<LoadedInfo> allLoadedInfo = getAllLoadedInfo();
+		Collections.sort(allLoadedInfo);
+		Collections.reverse(allLoadedInfo);
+		
+		for (LoadedInfo loadedInfo : allLoadedInfo) {
+			if (!player.hasPermission(loadedInfo.getPermission()))
+				continue;
+			
+			for (Entry<String, String> infoEntry : loadedInfo.getAllInfo().entrySet()) {
+				if (!cachedInfo.hasInfo(infoEntry.getKey()))
+					cachedInfo.setInfo(infoEntry.getKey(), infoEntry.getValue());
+			}
+		}
+		
+		this.cachedInfo.put(player.getName(), cachedInfo);
+		return cachedInfo;
+	}
+	
+	public CachedInfo loadCachedInfo(String name) {
+		CachedInfo cachedInfo = new CachedInfo(name);
+		
+		PlayerInfo playerInfo = getPlayerInfo(name);
+		
+		if (playerInfo != null) {
+			for (Entry<String, String> infoEntry : playerInfo.getAllInfo().entrySet())
+				cachedInfo.setInfo(infoEntry.getKey(), infoEntry.getValue());
+		}
+		
+		Player player = plugin.getPlayer(name);
+		
+		if (player == null) {
+			this.cachedInfo.put(name, cachedInfo);
+			return cachedInfo;
+		}
+		
+		List<LoadedInfo> allLoadedInfo = getAllLoadedInfo();
+		Collections.sort(allLoadedInfo);
+		Collections.reverse(allLoadedInfo);
+		
+		for (LoadedInfo loadedInfo : allLoadedInfo) {
+			if (!player.hasPermission(loadedInfo.getPermission()))
+				continue;
+			
+			for (Entry<String, String> infoEntry : loadedInfo.getAllInfo().entrySet()) {
+				if (!cachedInfo.hasInfo(infoEntry.getKey()))
+					cachedInfo.setInfo(infoEntry.getKey(), infoEntry.getValue());
+			}
+		}
+		
+		this.cachedInfo.put(player.getName(), cachedInfo);
+		return cachedInfo;
+	}
+	
+	public void loadLoadedInfo() {
+		ConfigurationSection loadedSection = getSection("permission-specific");
+		
+		if (loadedSection == null)
+			return;
+		
+		for (String sectionToLoad : loadedSection.getKeys(false)) {
+			LoadedInfo loadedInfo = new LoadedInfo(this, sectionToLoad);
+			
+			for (String infoType : loadedInfo.getSection().getKeys(false))
+				loadedInfo.setInfo(infoType, loadedInfo.getSection().getString(infoType, ""));
+			
+			this.loadedInfo.put(sectionToLoad.toLowerCase(), loadedInfo);
+		}
+	}
+	
+	public void loadPlayerInfo() {
+		ConfigurationSection playerSection = getSection("player-specific");
+		
+		if (playerSection == null)
+			return;
+		
+		for (String player : playerSection.getKeys(false)) {
+			PlayerInfo playerInfo = new PlayerInfo(this, player);
+			
+			for (String infoType : playerInfo.getSection().getKeys(false))
+				playerInfo.setInfo(infoType, playerInfo.getSection().getString(infoType, ""));
+			
+			this.playerInfo.put(player.toLowerCase(), playerInfo);
+		}
 	}
 	
 	public void reloadConfig() {

@@ -25,6 +25,7 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
+import com.titankingdoms.nodinchan.titanchat.util.info.CachedInfo;
 
 /**
  * PluginCommand - Plugin maintenance commands
@@ -90,8 +91,17 @@ public class PluginCommand extends CommandBase {
 			plugin.log(Level.INFO, "Reloading TitanChat...");
 		
 		plugin.send(INFO, sender, "Reloading TitanChat...");
+		
 		plugin.reloadConfig();
 		plugin.getManager().reload();
+		
+		plugin.getInfoHandler().reloadConfig();
+		plugin.getInfoHandler().loadLoadedInfo();
+		plugin.getInfoHandler().loadPlayerInfo();
+		
+		for (CachedInfo cachedInfo : plugin.getInfoHandler().getAllCachedInfo())
+			plugin.getInfoHandler().loadCachedInfo(cachedInfo.getName());
+		
 		plugin.send(INFO, sender, "TitanChat reloaded");
 		
 		if (sender instanceof Player)

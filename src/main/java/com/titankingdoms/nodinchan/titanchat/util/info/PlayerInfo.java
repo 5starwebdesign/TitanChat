@@ -16,29 +16,24 @@
 
 package com.titankingdoms.nodinchan.titanchat.util.info;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.bukkit.configuration.ConfigurationSection;
 
-public final class PlayerInfo {
+public final class PlayerInfo extends InfoBase {
+	
+	private final InfoHandler handler;
 	
 	private final String name;
 	
-	private final Map<String, String> infoMap;
-	
-	public PlayerInfo(String name) {
+	public PlayerInfo(InfoHandler handler, String name) {
+		this.handler = handler;
 		this.name = name;
-		this.infoMap = new HashMap<String, String>();
-	}
-	
-	public String getInfo(String infoType) {
-		return infoMap.get(infoType.toLowerCase());
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public void setInfo(String infoType, String newInfo) {
-		infoMap.put(infoType.toLowerCase(), newInfo);
+	public ConfigurationSection getSection() {
+		return handler.getSection("player-specific." + name);
 	}
 }

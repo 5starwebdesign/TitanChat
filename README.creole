@@ -35,7 +35,6 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 * CraftBukkit 1.3.1-R1.0
 * NC-BukkitLib v2.2
-* Vault 1.2.17
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -56,8 +55,9 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 08.08.12 - Chat processing is multithreaded and updated for 1.3.1-R1.0
 * 12.08.12 - Full days of testing and fixing
 * 13.08.12 - Added an InfoHandler to handle info, yet to integrate it
-* 14.08.12 - InfoHandler integrated, adding back permission support with Vault optional
+* 14.08.12 - InfoHandler implemented, adding back permission support with Vault optional
 * 15.08.12 - Made Vault a dependency
+* 16.08.12 - Vault is now optional again, fixed empty chat lines and fully implemented InfoHandler
 
 -----------------------------------------------------------------------------------------------------------------------
 

@@ -50,6 +50,7 @@ import com.titankingdoms.nodinchan.titanchat.permission.DefaultPermissions;
 import com.titankingdoms.nodinchan.titanchat.processing.ChatProcessor;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.FormatHandler;
+import com.titankingdoms.nodinchan.titanchat.util.info.CachedInfo;
 import com.titankingdoms.nodinchan.titanchat.util.info.InfoHandler;
 
 public final class TitanChat extends JavaPlugin {
@@ -348,6 +349,11 @@ public final class TitanChat extends JavaPlugin {
 			info.getConfig().options().copyDefaults(true);
 		
 		manager.load();
+		info.loadLoadedInfo();
+		info.loadPlayerInfo();
+		
+		for (CachedInfo cachedInfo : info.getAllCachedInfo())
+			info.loadCachedInfo(cachedInfo.getName());
 		
 		if (manager.getChannelManager().getDefaultChannels().isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");

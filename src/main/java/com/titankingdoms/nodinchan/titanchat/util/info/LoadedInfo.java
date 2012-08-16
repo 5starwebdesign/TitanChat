@@ -16,12 +16,9 @@
 
 package com.titankingdoms.nodinchan.titanchat.util.info;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.configuration.ConfigurationSection;
 
-public final class LoadedInfo {
+public final class LoadedInfo extends InfoBase implements Comparable<LoadedInfo> {
 	
 	private final InfoHandler handler;
 	
@@ -29,17 +26,21 @@ public final class LoadedInfo {
 	
 	private final String permission;
 	
-	private final Map<String, String> infoMap;
+	private final int priority;
 	
-	public LoadedInfo(InfoHandler handler, String path, String permission) {
+	public LoadedInfo(InfoHandler handler, String section) {
+		super();
 		this.handler = handler;
-		this.path = path;
-		this.permission = permission;
-		this.infoMap = new HashMap<String, String>();
+		this.path = "permission-specific." + section;
+		this.permission = "TitanChat.info." + section;
+		this.priority = handler.getInfo(path + ".priority", 0);
 	}
 	
-	public String getInfo(String infoType) {
-		return infoMap.get(infoType.toLowerCase());
+	public int compareTo(LoadedInfo loadedInfo) {
+		if (priority == loadedInfo.priority)
+			return 0;
+		
+		return (priority > loadedInfo.priority) ? 1 : -1;
 	}
 	
 	public String getPath() {
@@ -50,11 +51,11 @@ public final class LoadedInfo {
 		return permission;
 	}
 	
-	public ConfigurationSection getSection() {
-		return handler.getSection(path);
+	public int getPriority() {
+		return priority;
 	}
 	
-	public void setInfo(String infoType, String newInfo) {
-		infoMap.put(infoType.toLowerCase(), newInfo);
+	public ConfigurationSection getSection() {
+		return handler.getSection(path);
 	}
 }
