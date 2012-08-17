@@ -25,7 +25,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,6 +33,12 @@ import org.w3c.dom.Node;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageSendEvent;
 
+/**
+ * TitanChatListener - Listens to events
+ * 
+ * @author NodinChan
+ *
+ */
 public final class TitanChatListener implements Listener {
 
 	private final TitanChat plugin;
@@ -51,18 +56,38 @@ public final class TitanChatListener implements Listener {
 		this.newVer = updateCheck();
 	}
 	
+	/**
+	 * Gets the amount of characters sent
+	 * 
+	 * @return The amount of characters sent
+	 */
 	public long getCharacters() {
 		return chars;
 	}
 	
+	/**
+	 * Gets the amount of lines sent
+	 * 
+	 * @return The amount of lines sent
+	 */
 	public long getLines() {
 		return lines;
 	}
 	
+	/**
+	 * Gets the amount of words sent
+	 * 
+	 * @return The amount of words sent
+	 */
 	public long getWords() {
 		return words;
 	}
 	
+	/**
+	 * Listens to MessageSendEvent
+	 * 
+	 * @param event MessageSendEvent
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onMessageSend(MessageSendEvent event) {
 		this.chars += event.getMessage().toCharArray().length;
@@ -70,30 +95,33 @@ public final class TitanChatListener implements Listener {
 		this.lines++;
 	}
 	
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-		if (plugin.getServer().getPluginCommand(event.getMessage().split(" ")[0]) != null)
-			return;
-		
-		Player player = event.getPlayer();
-		String command = event.getMessage().split(" ")[0];
-		String[] args = event.getMessage().substring(command.length()).trim().split(" ");
-		
-		plugin.getManager().getCommandManager().getShortcutManager().handled(player, command, args);
-	}
-	
+	/**
+	 * Listens to PlayerJoinEvent
+	 * 
+	 * @param event PlayerJoinEvent
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Participant participant = plugin.getManager().getChannelManager().loadParticipant(event.getPlayer());
 		updateCheck(participant.getPlayer());
 	}
 	
+	/**
+	 * Listens to SignChangeEvent
+	 * 
+	 * @param event SignChangeEvent
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 		for (int line = 0; line < 4; line++)
 			event.setLine(line, plugin.getFormatHandler().colourise(event.getLine(line)));
 	}
 	
+	/**
+	 * Checks for an update
+	 * 
+	 * @return The newest version
+	 */
 	private double updateCheck() {
 		try {
 			URL url = new URL("http://dev.bukkit.org/server-mods/titanchat/files.rss");
@@ -114,6 +142,11 @@ public final class TitanChatListener implements Listener {
 		return this.newVer;
 	}
 	
+	/**
+	 * Checks for an update and tells the player if outdated
+	 * 
+	 * @param player The player to tell
+	 */
 	public void updateCheck(Player player) {
 		if (updateCheck() <= currentVer || !player.hasPermission("TitanChat.update"))
 			return;

@@ -26,6 +26,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 
+/**
+ * ChatProcessor - Chat process
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChatProcessor extends Thread implements Listener {
 	
 	private final TitanChat plugin;
@@ -61,6 +67,11 @@ public final class ChatProcessor extends Thread implements Listener {
 		}
 	}
 	
+	/**
+	 * Queues the chat
+	 * 
+	 * @param packet The chat to queue
+	 */
 	public void sendPacket(ChatPacket packet) {
 		if (packet != null)
 			chatQueue.offer(packet);

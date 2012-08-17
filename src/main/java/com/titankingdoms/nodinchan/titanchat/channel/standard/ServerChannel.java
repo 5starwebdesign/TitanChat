@@ -26,6 +26,12 @@ import com.titankingdoms.nodinchan.titanchat.channel.util.handler.*;
 import com.titankingdoms.nodinchan.titanchat.channel.util.handler.Handler.HandlerInfo;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Info;
 
+/**
+ * ServerChannel - Channel when channels are disabled
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ServerChannel extends Channel {
 	
 	private static ServerChannel instance;
@@ -90,6 +96,12 @@ public final class ServerChannel extends Channel {
 		return this;
 	}
 	
+	/**
+	 * UnsupportedCommand - When channels are disabled, disabled some commands
+	 * 
+	 * @author NodinChan
+	 *
+	 */
 	public static final class UnsupportedCommand extends CommandHandler {
 		
 		public UnsupportedCommand(String command) {
@@ -102,8 +114,20 @@ public final class ServerChannel extends Channel {
 		}
 	}
 	
+	/**
+	 * ServerSettingHandlers - When channels are disabled and settings can only be changed by staff
+	 * 
+	 * @author NodinChan
+	 *
+	 */
 	public static final class ServerSettingHandlers {
 		
+		/**
+		 * ChatColourSetting - For changing the chat colour setting
+		 * 
+		 * @author NodinChan
+		 *
+		 */
 		public static final class ChatColourSetting extends SettingHandler {
 			
 			public ChatColourSetting() {
@@ -123,6 +147,12 @@ public final class ServerChannel extends Channel {
 			}
 		}
 		
+		/**
+		 * Help - Different help menu
+		 * 
+		 * @author NodinChan
+		 *
+		 */
 		public static final class Help extends SettingHandler {
 			
 			public Help() {
@@ -139,6 +169,12 @@ public final class ServerChannel extends Channel {
 			}
 		}
 		
+		/**
+		 * TagSetting - For changing the tag setting
+		 * 
+		 * @author NodinChan
+		 *
+		 */
 		public static final class TagSetting extends SettingHandler {
 			
 			public TagSetting() {
@@ -158,6 +194,12 @@ public final class ServerChannel extends Channel {
 			}
 		}
 		
+		/**
+		 * TopicSetting - For changing the topic setting
+		 * 
+		 * @author NodinChan
+		 *
+		 */
 		public static final class TopicSetting extends SettingHandler {
 			
 			public TopicSetting() {
@@ -190,6 +232,12 @@ public final class ServerChannel extends Channel {
 			}
 		}
 		
+		/**
+		 * UnsupportedCommand - When channels are disabled, disabled some settings
+		 * 
+		 * @author NodinChan
+		 *
+		 */
 		public static final class UnsupportedSetting extends SettingHandler {
 			
 			public UnsupportedSetting(String setting) {
@@ -203,6 +251,12 @@ public final class ServerChannel extends Channel {
 		}
 	}
 	
+	/**
+	 * ServerInfo - To override the standard info
+	 * 
+	 * @author NodinChan
+	 *
+	 */
 	public static final class ServerInfo extends Info {
 		
 		public ServerInfo() {
@@ -238,11 +292,6 @@ public final class ServerChannel extends Channel {
 		}
 		
 		@Override
-		public String getNameColour() {
-			return plugin.getConfig().getString("channels.name-display-colour", "");
-		}
-		
-		@Override
 		public String getTag() {
 			return plugin.getConfig().getString("channels.tag", "");
 		}
@@ -255,12 +304,6 @@ public final class ServerChannel extends Channel {
 		@Override
 		public void setChatColour(String colour) {
 			plugin.getConfig().set("channels.chat-display-colour", colour);
-			plugin.saveConfig();
-		}
-		
-		@Override
-		public void setNameColour(String colour) {
-			plugin.getConfig().set("channels.name-display-colour", colour);
 			plugin.saveConfig();
 		}
 		

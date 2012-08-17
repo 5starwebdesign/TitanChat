@@ -24,6 +24,12 @@ import com.titankingdoms.nodinchan.titanchat.addon.AddonManager;
 import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
 import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
 
+/**
+ * TitanChatManager - Manages the three main managers
+ * 
+ * @author NodinChan
+ *
+ */
 public class TitanChatManager {
 	
 	private final TitanChat plugin;
@@ -36,18 +42,36 @@ public class TitanChatManager {
 		this.plugin = TitanChat.getInstance();
 	}
 	
+	/**
+	 * Gets the addon manager
+	 * 
+	 * @return The addon manager
+	 */
 	public AddonManager getAddonManager() {
 		return addonManager;
 	}
 	
+	/**
+	 * Gets the channel manager
+	 * 
+	 * @return The channel manager
+	 */
 	public ChannelManager getChannelManager() {
 		return chManager;
 	}
 	
+	/**
+	 * Gets the command manager
+	 * 
+	 * @return The command manager
+	 */
 	public CommandManager getCommandManager() {
 		return cmdManager;
 	}
 	
+	/**
+	 * Loads the managers
+	 */
 	public void load() {
 		this.addonManager = new AddonManager();
 		this.chManager = new ChannelManager();
@@ -62,6 +86,9 @@ public class TitanChatManager {
 		}
 	}
 	
+	/**
+	 * Reloads the managers
+	 */
 	public void reload() {
 		addonManager.preReload();
 		chManager.preReload();
@@ -71,6 +98,9 @@ public class TitanChatManager {
 		cmdManager.postReload();
 	}
 	
+	/**
+	 * Unloads the managers
+	 */
 	public void unload() {
 		this.addonManager.unload();
 		this.chManager.unload();

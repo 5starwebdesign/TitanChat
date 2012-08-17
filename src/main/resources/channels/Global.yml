@@ -14,9 +14,6 @@ setting:
         leave: true
 password: ''
 format: ''
-command:
-    join: 'g'
-    send: 'gs'
 admins: []
 blacklist: []
 followers: []

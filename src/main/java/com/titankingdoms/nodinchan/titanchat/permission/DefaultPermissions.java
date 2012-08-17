@@ -36,18 +36,24 @@ public final class DefaultPermissions {
 	protected static final PermissionDefault OP = PermissionDefault.OP;
 	protected static final PermissionDefault PLAYER = PermissionDefault.NOT_OP;
 	
+	private boolean loaded = false;
+	
 	public DefaultPermissions() {
 		this.plugin = TitanChat.getInstance();
 	}
 	
 	public DefaultPermissions load() {
+		if (loaded)
+			return this;
+		
 		PluginManager pm = plugin.getServer().getPluginManager();
 		
 		Permission staff = new Permission("TitanChat.staff", "Grants all permissions");
 		pm.addPermission(staff);
 		
-		pm.addPermission(new Permission("TitanChat.bypass.*", "Grants bypasses to channels"));
-		pm.getPermission("TitanChat.bypass.*").addParent(staff, true);
+		Permission bypass = new Permission("TitanChat.bypass.*", "Grants bypasses to all channels");
+		pm.addPermission(bypass);
+		bypass.addParent(staff, true);
 		
 		pm.addPermission(new Permission("TitanChat.update", "Notified about updates"));
 		pm.getPermission("TitanChat.update").addParent(staff, true);
@@ -71,31 +77,17 @@ public final class DefaultPermissions {
 		pm.addPermission(new Permission("TitanChat.force", "Grants permission to force channel joins"));
 		pm.getPermission("TitanChat.force").addParent(staff, true);
 		
-		pm.addPermission(new Permission("TitanChat.nick", "Grants permission to all display name commands"));
-		pm.addPermission(new Permission("TitanChat.nick.check", "Grants permission to get the username of players"));
-		pm.addPermission(new Permission("TitanChat.nick.change", "Grants permission to change your display name"));
-		pm.addPermission(new Permission("TitanChat.nick.change.other", "Grants permission to change display names"));
-		pm.addPermission(new Permission("TitanChat.nick.reset", "Grants permission to reset your display name"));
-		pm.addPermission(new Permission("TitanChat.nick.reset.other", "Grants permission to reset display names"));
-		
-		pm.getPermission("TitanChat.nick").addParent(staff, true);
-		pm.getPermission("TitanChat.nick.check").addParent("TitanChat.nick", true);
-		pm.getPermission("TitanChat.nick.change").addParent("TitanChat.nick.change.other", true);
-		pm.getPermission("TitanChat.nick.change.other").addParent("TitanChat.nick", true);
-		pm.getPermission("TitanChat.nick.reset").addParent("TitanChat.nick.reset.other", true);
-		pm.getPermission("TitanChat.nick.reset.other").addParent("TitanChat.nick", true);
-		
 		Permission join = new Permission("TitanChat.join.*", "Grants permission to join all channels", ALL);
 		pm.addPermission(join);
-		join.addParent(staff, true);
-		
-		Permission speak = new Permission("TitanChat.speak.*", "Grants permission to speak in all channels");
-		pm.addPermission(speak);
-		speak.addParent(staff, true);
+		join.addParent(bypass, true);
 		
 		Permission voice = new Permission("TitanChat.voice.*", "Grants speaking rights at all times in all channels");
 		pm.addPermission(voice);
-		voice.addParent(staff, true);
+		voice.addParent(bypass, true);
+		
+		Permission speak = new Permission("TitanChat.speak.*", "Grants permission to speak in all channels");
+		pm.addPermission(speak);
+		speak.addParent(voice, true);
 		
 		Permission ban = new Permission("TitanChat.ban.*", "Grants permission to ban in all channels");
 		pm.addPermission(ban);
@@ -113,13 +105,9 @@ public final class DefaultPermissions {
 		pm.addPermission(rank);
 		rank.addParent(staff, true);
 		
-		Permission format = new Permission("TitanChat.format", "Grants permission to format code usage");
-		pm.addPermission(format);
-		format.addParent(staff, true);
-		
 		Permission codes = new Permission("TitanChat.format.*", "Grants permission to all format codes");
 		pm.addPermission(codes);
-		codes.addParent(staff, true);
+		codes.addParent(bypass, true);
 		
 		for (ChatColor colourStyle : EnumSet.allOf(ChatColor.class)) {
 			char colourC = colourStyle.getChar();
@@ -128,6 +116,7 @@ public final class DefaultPermissions {
 			code.addParent(codes, true);
 		}
 		
+		loaded = true;
 		return this;
 	}
 	
@@ -135,6 +124,12 @@ public final class DefaultPermissions {
 		PluginManager pm = plugin.getServer().getPluginManager();
 		
 		String name = channel.getName();
+		
+		try {
+			Permission bypass = new Permission("TitanChat.bypass." + name, "Grants bypasses to " + name);
+			pm.addPermission(bypass);
+			
+		} catch (Exception e) {}
 		
 		try {
 			Permission spawn = new Permission("TitanChat.spawn." + name, "Sets the channel as default spawn", NONE);
@@ -145,21 +140,21 @@ public final class DefaultPermissions {
 		try {
 			Permission join = new Permission("TitanChat.join." + name, "Grants permission to join " + name);
 			pm.addPermission(join);
-			join.addParent("TitanChat.join.*", true);
-			
-		} catch (Exception e) {}
-		
-		try {
-			Permission speak = new Permission("TitanChat.speak." + name, "Grants permission to speak in " + name);
-			pm.addPermission(speak);
-			speak.addParent("TitanChat.speak.*", true);
+			join.addParent("TitanChat.bypass." + name, true);
 			
 		} catch (Exception e) {}
 		
 		try {
 			Permission voice = new Permission("TitanChat.voice." + name, "Grants speaking rights at all times in " + name);
 			pm.addPermission(voice);
-			voice.addParent("TitanChat.voice.*", true);
+			voice.addParent("TitanChat.bypass." + name, true);
+			
+		} catch (Exception e) {}
+		
+		try {
+			Permission speak = new Permission("TitanChat.speak." + name, "Grants permission to speak in " + name);
+			pm.addPermission(speak);
+			speak.addParent("TitanChat.speak." + name, true);
 			
 		} catch (Exception e) {}
 		
@@ -188,20 +183,6 @@ public final class DefaultPermissions {
 			Permission rank = new Permission("TitanChat.rank." + name, "Grants permission to promote and demote in " + name);
 			pm.addPermission(rank);
 			rank.addParent("TitanChat.rank.*", true);
-			
-		} catch (Exception e) {}
-		
-		try {
-			Permission colour = new Permission("TitanChat.colour." + name, "Grants permission to colour usage in " + name);
-			pm.addPermission(colour);
-			colour.addParent("TitanChat.colour.*", true);
-			
-		} catch (Exception e) {}
-		
-		try {
-			Permission style = new Permission("TitanChat.style." + name, "Grants permission to style usage in " + name);
-			pm.addPermission(style);
-			style.addParent("TitanChat.style.*", true);
 			
 		} catch (Exception e) {}
 		

@@ -46,7 +46,6 @@ public final class SettingsCommand extends CommandBase {
 		sender.sendMessage(ChatColor.AQUA + "COLOURING <TRUE/FALSE> - Sets whether the channel colours chat");
 		sender.sendMessage(ChatColor.AQUA + "FORMAT [FORMAT] - Sets the format of the channel");
 		sender.sendMessage(ChatColor.AQUA + "HELP - Shows the help menu");
-		sender.sendMessage(ChatColor.AQUA + "NAME_COLOUR [COLOUR] - Sets the name display colour of the channel");
 		sender.sendMessage(ChatColor.AQUA + "RADIUS [RADIUS] - Sets the radius of the channel");
 		sender.sendMessage(ChatColor.AQUA + "RANGE [RANGE] - Sets the range of the channel");
 		sender.sendMessage(ChatColor.AQUA + "TAG [TAG] - Sets the tag of the channel");
@@ -84,11 +83,6 @@ public final class SettingsCommand extends CommandBase {
 		
 		if (args[0].equalsIgnoreCase("help")) {
 			help(sender, channel, Arrays.copyOfRange(args, 1, args.length));
-			return;
-		}
-		
-		if (args[0].equalsIgnoreCase("name-colour")) {
-			setNameColour(sender, channel, Arrays.copyOfRange(args, 1, args.length));
 			return;
 		}
 		
@@ -178,23 +172,6 @@ public final class SettingsCommand extends CommandBase {
 		} else {
 			plugin.send(MessageLevel.WARNING, sender, "Invalid Argument Length");
 			plugin.send(MessageLevel.INFO, sender, "Usage: /titanchat <@><channel> set format [format]");
-		}
-	}
-	
-	private void setNameColour(CommandSender sender, Channel channel, String[] args) {
-		if (channel.changeSetting(sender, "name-colour", args))
-			return;
-		
-		try {
-			if (channel.getAdmins().contains(sender.getName()) || !(sender instanceof Player) || plugin.isStaff((Player) sender)) {
-				channel.getInfo().setChatColour(args[0]);
-				plugin.send(MessageLevel.INFO, sender, "You have set the name colour to " + channel.getInfo().getNameColour());
-				
-			} else { plugin.send(MessageLevel.WARNING, sender, "You do not have permission"); }
-			
-		} catch (IndexOutOfBoundsException e) {
-			plugin.send(MessageLevel.WARNING, sender, "Invalid Argument Length");
-			plugin.send(MessageLevel.INFO, sender, "Usage: /titanchat <@><channel> set name-colour [colour]");
 		}
 	}
 	

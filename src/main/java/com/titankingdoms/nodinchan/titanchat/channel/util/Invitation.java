@@ -28,6 +28,12 @@ import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 
+/**
+ * Invitation - Represents an invitation
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Invitation {
 	
 	private final TitanChat plugin;
@@ -42,6 +48,13 @@ public final class Invitation {
 		this.invitors = new HashMap<String, List<String>>();
 	}
 	
+	/**
+	 * Invite the participant
+	 * 
+	 * @param channel The channel to invite to
+	 * 
+	 * @param invitor The invitor
+	 */
 	public void invite(Channel channel, CommandSender invitor) {
 		if (!invitors.containsKey(channel.getName().toLowerCase()))
 			invitors.put(channel.getName().toLowerCase(), new ArrayList<String>());
@@ -52,6 +65,13 @@ public final class Invitation {
 			invitors.get(channel.getName().toLowerCase()).add("*CONSOLE*");
 	}
 	
+	/**
+	 * Response to the invite
+	 * 
+	 * @param channel The channel to respond to
+	 * 
+	 * @param response The response
+	 */
 	public void response(Channel channel, Response response) {
 		if (!invitors.containsKey(channel.getName().toLowerCase())) {
 			plugin.send(MessageLevel.WARNING, plugin.getPlayer(invitee), "You did not receive any invitations from this channel");
@@ -83,5 +103,11 @@ public final class Invitation {
 		invitors.remove(channel.getName().toLowerCase());
 	}
 	
+	/**
+	 * Response - Response to invitations
+	 * 
+	 * @author NodinChan
+	 *
+	 */
 	public enum Response { ACCEPT, DECLINE }
 }

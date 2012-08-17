@@ -22,6 +22,12 @@ import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 
+/**
+ * ChatProcess - Process chat
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChatProcess implements Runnable {
 	
 	private final TitanChat plugin;

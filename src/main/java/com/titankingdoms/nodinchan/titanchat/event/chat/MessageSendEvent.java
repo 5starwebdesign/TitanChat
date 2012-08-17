@@ -27,6 +27,12 @@ import org.bukkit.event.HandlerList;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 
+/**
+ * MessageSendEvent - Called when messages are to be sent
+ * 
+ * @author NodinChan
+ *
+ */
 public final class MessageSendEvent extends Event implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -52,6 +58,11 @@ public final class MessageSendEvent extends Event implements Cancellable {
 		this(sender, sentFrom, Arrays.asList(recipants), message);
 	}
 	
+	/**
+	 * Gets the format
+	 * 
+	 * @return The format
+	 */
 	public String getFormat() {
 		return message.getFormat();
 	}
@@ -65,18 +76,38 @@ public final class MessageSendEvent extends Event implements Cancellable {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the message
+	 * 
+	 * @return The message
+	 */
 	public String getMessage() {
 		return message.getMessage();
 	}
 	
+	/**
+	 * Gets the recipants
+	 * 
+	 * @return The recipants
+	 */
 	public List<Player> getRecipants() {
 		return recipants;
 	}
 	
+	/**
+	 * Gets the sender
+	 * 
+	 * @return The sender
+	 */
 	public Player getSender() {
 		return sender;
 	}
 	
+	/**
+	 * Gets the channel sent from
+	 * 
+	 * @return The channel the message is sent from
+	 */
 	public Channel getSentFrom() {
 		return sentFrom;
 	}
@@ -85,10 +116,20 @@ public final class MessageSendEvent extends Event implements Cancellable {
 		return cancelled;
 	}
 	
+	/**
+	 * Sets the format
+	 * 
+	 * @param format The new format
+	 */
 	public void setFormat(String format) {
 		this.message.setFormat(format);
 	}
 	
+	/**
+	 * Sets the message
+	 * 
+	 * @param message The new message
+	 */
 	public void setMessage(String message) {
 		this.message.setMessage(message);
 	}

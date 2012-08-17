@@ -21,10 +21,14 @@ public final class CachedInfo extends InfoBase {
 	private final String name;
 	
 	public CachedInfo(String name) {
-		super();
 		this.name = name;
 	}
 	
+	/**
+	 * Gets the name of the player
+	 * 
+	 * @return The player name
+	 */
 	public String getName() {
 		return name;
 	}

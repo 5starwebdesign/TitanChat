@@ -20,6 +20,12 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 
+/**
+ * ChatPacket - Represents chat
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChatPacket {
 	
 	private final TitanChat plugin;
@@ -34,6 +40,9 @@ public final class ChatPacket {
 		this.chat = chat;
 	}
 	
+	/**
+	 * Sends the message
+	 */
 	public void chat() {
 		Player recipant = plugin.getPlayer(this.recipant);
 		

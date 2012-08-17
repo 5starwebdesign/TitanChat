@@ -26,6 +26,12 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 
+/**
+ * Participant - Represents a participant
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Participant {
 	
 	private final TitanChat plugin;
@@ -48,26 +54,58 @@ public final class Participant {
 		this.muted = new HashMap<String, Boolean>();
 	}
 	
+	/**
+	 * Gets all the channels
+	 * 
+	 * @return All the channels the participant is participating in
+	 */
 	public List<Channel> getChannels() {
 		return new ArrayList<Channel>(channels.values());
 	}
 	
+	/**
+	 * Gets the current channel
+	 * 
+	 * @return The current channel of the participant
+	 */
 	public Channel getCurrentChannel() {
 		return currentChannel;
 	}
 	
+	/**
+	 * Gets the invitation holder
+	 * 
+	 * @return The invitation storage
+	 */
 	public Invitation getInvitation() {
 		return invitation;
 	}
 	
+	/**
+	 * Gets the name of the participant
+	 * 
+	 * @return The participant name
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Gets the player that the participant is representing
+	 * 
+	 * @return The player
+	 */
 	public Player getPlayer() {
 		return plugin.getPlayer(name);
 	}
 	
+	/**
+	 * Checks if the participant is muted in the channel
+	 * 
+	 * @param channel The channel to check with
+	 * 
+	 * @return True if the participant is muted in the channel
+	 */
 	public boolean isMuted(Channel channel) {
 		if (!muted.containsKey(channel.getName().toLowerCase()))
 			return false;
@@ -75,6 +113,11 @@ public final class Participant {
 		return muted.get(channel.getName().toLowerCase());
 	}
 	
+	/**
+	 * Joins the channel
+	 * 
+	 * @param channel The channel to join
+	 */
 	public void join(Channel channel) {
 		if (channel == null)
 			return;
@@ -86,6 +129,11 @@ public final class Participant {
 			channels.put(channel.getName(), channel);
 	}
 	
+	/**
+	 * Leaves the channel
+	 * 
+	 * @param channel The channel to leave
+	 */
 	public void leave(Channel channel) {
 		if (channel == null)
 			return;
@@ -101,6 +149,13 @@ public final class Participant {
 		}
 	}
 	
+	/**
+	 * Mutes or unmutes the participant in the channel
+	 * 
+	 * @param channel The channel to mute or unmute in
+	 * 
+	 * @param mute Whether to mute the participant
+	 */
 	public void mute(Channel channel, boolean mute) {
 		muted.put(channel.getName().toLowerCase(), mute);
 	}

@@ -21,6 +21,14 @@ import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 
+//TODO: Remove the package and write something better
+
+/**
+ * Handler - Handles the CommandHandlers and SettingHandlers
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Handler {
 	
 	private final Map<String, CommandHandler> commandHandlers;

@@ -24,6 +24,14 @@ import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.util.handler.Handler.HandlerInfo;
 
+//TODO: Remove the package and write something better
+
+/**
+ * SettingHandler - Abstract setting handler for changing settings in channels
+ * 
+ * @author NodinChan
+ *
+ */
 public abstract class SettingHandler {
 	
 	protected final TitanChat plugin;
@@ -41,14 +49,33 @@ public abstract class SettingHandler {
 		this.info = info;
 	}
 	
+	/**
+	 * Gets the handler info
+	 * 
+	 * @return The info of the handler
+	 */
 	public final HandlerInfo getInfo() {
 		return info;
 	}
 	
+	/**
+	 * Gets the setting to change
+	 * 
+	 * @return The setting to change
+	 */
 	public final String getSetting() {
 		return setting;
 	}
 	
+	/**
+	 * Checks if the sender has the specified permission
+	 * 
+	 * @param sender The sender to check
+	 * 
+	 * @param permission The permission to check with
+	 * 
+	 * @return True if the sender has permission
+	 */
 	public final boolean hasPermission(CommandSender sender, String permission) {
 		if (!(sender instanceof Player))
 			return true;
@@ -56,6 +83,11 @@ public abstract class SettingHandler {
 		return sender.hasPermission(permission);
 	}
 	
+	/**
+	 * Informs the command sender that the argument length is invalid
+	 * 
+	 * @param sender The sender to inform
+	 */
 	public final void invalidArgLength(CommandSender sender) {
 		plugin.send(MessageLevel.WARNING, sender, "Invalid Argument Length");
 		usage(sender);
@@ -63,6 +95,11 @@ public abstract class SettingHandler {
 	
 	public abstract void set(CommandSender sender, String[] args);
 	
+	/**
+	 * Sends the usage of the command
+	 * 
+	 * @param sender The sender to send to
+	 */
 	public final void usage(CommandSender sender) {
 		if (info.getUsage().isEmpty())
 			plugin.send(MessageLevel.WARNING, sender, "Usage: /titanchat <@><channel> set [setting] <arguments>");

@@ -84,11 +84,11 @@ public class ChannelCommand extends CommandBase {
 	@CommandOption(requireChannel = true)
 	@Aliases("d")
 	@Description("Deletes the channel")
-	@Usage("delete")
+	@Usage("delete [channel]")
 	public void delete(CommandSender sender, Channel channel, String[] args) {
 		if (hasPermission(sender, "TitanChat.delete")) {
-			if (channel.getOption().equals(Option.NONE))
-				cm.deleteChannel(sender, channel.getName());
+			if (cm.getChannel(args[0]).getOption().equals(Option.NONE))
+				cm.deleteChannel(sender, args[0]);
 			else
 				plugin.send(WARNING, sender, "You cannot delete this channel");
 			

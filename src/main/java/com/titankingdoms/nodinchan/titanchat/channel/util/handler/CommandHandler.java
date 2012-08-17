@@ -25,6 +25,14 @@ import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.util.handler.Handler.HandlerInfo;
 import com.titankingdoms.nodinchan.titanchat.command.Executor;
 
+//TODO: Remove the package and write something better
+
+/**
+ * CommandHandler - Abstract command handler for command overriding in channels
+ * 
+ * @author NodinChan
+ *
+ */
 public abstract class CommandHandler {
 	
 	protected final TitanChat plugin;
@@ -42,14 +50,33 @@ public abstract class CommandHandler {
 		this.info = info;
 	}
 	
+	/**
+	 * Gets the command to override
+	 * 
+	 * @return The command to override
+	 */
 	public final String getCommand() {
 		return command;
 	}
 	
+	/**
+	 * Gets the handler info
+	 * 
+	 * @return The info of the handler
+	 */
 	public final HandlerInfo getInfo() {
 		return info;
 	}
 	
+	/**
+	 * Checks if the sender has the specified permission
+	 * 
+	 * @param sender The sender to check
+	 * 
+	 * @param permission The permission to check with
+	 * 
+	 * @return True if the sender has permission
+	 */
 	public final boolean hasPermission(CommandSender sender, String permission) {
 		if (!(sender instanceof Player))
 			return true;
@@ -57,13 +84,30 @@ public abstract class CommandHandler {
 		return sender.hasPermission(permission);
 	}
 	
+	/**
+	 * Informs the command sender that the argument length is invalid
+	 * 
+	 * @param sender The sender to inform
+	 */
 	public final void invalidArgLength(CommandSender sender) {
 		plugin.send(MessageLevel.WARNING, sender, "Invalid Argument Length");
 		usage(sender);
 	}
 	
+	/**
+	 * When the command is used
+	 * 
+	 * @param sender The command sender
+	 * 
+	 * @param args The arguments
+	 */
 	public abstract void onCommand(CommandSender sender, String[] args);
 	
+	/**
+	 * Sends the usage of the command
+	 * 
+	 * @param sender The sender to send to
+	 */
 	public final void usage(CommandSender sender) {
 		if (info.getUsage().isEmpty()) {
 			Executor executor = plugin.getManager().getCommandManager().getCommandExecutor(command);

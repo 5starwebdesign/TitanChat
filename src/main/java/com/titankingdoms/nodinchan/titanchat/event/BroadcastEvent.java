@@ -22,6 +22,12 @@ import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 
+/**
+ * BroadcastEvent - Called when the broadcast command is used
+ * 
+ * @author NodinChan
+ *
+ */
 public final class BroadcastEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -35,6 +41,11 @@ public final class BroadcastEvent extends Event {
 		this.message = message;
 	}
 	
+	/**
+	 * Gets the format
+	 * 
+	 * @return The broadcast format
+	 */
 	public String getFormat() {
 		return message.getFormat();
 	}
@@ -48,18 +59,38 @@ public final class BroadcastEvent extends Event {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the message
+	 * 
+	 * @return The broadcast message
+	 */
 	public String getMessage() {
 		return message.getMessage();
 	}
 	
+	/**
+	 * Gets the command sender
+	 * 
+	 * @return The command sender
+	 */
 	public CommandSender getSender() {
 		return sender;
 	}
 	
+	/**
+	 * Sets the format
+	 * 
+	 * @param format The new broadcast format
+	 */
 	public void setFormat(String format) {
 		this.message.setFormat(format);
 	}
 	
+	/**
+	 * Sets the message
+	 * 
+	 * @param message The new broadcast message
+	 */
 	public void setMessage(String message) {
 		this.message.setMessage(message);
 	}

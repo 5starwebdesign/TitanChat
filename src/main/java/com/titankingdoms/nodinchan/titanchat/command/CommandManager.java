@@ -38,13 +38,17 @@ import com.titankingdoms.nodinchan.titanchat.command.commands.*;
 import com.titankingdoms.nodinchan.titanchat.command.info.Command;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
+/**
+ * CommandManager - Manages commands
+ * 
+ * @author NodinChan
+ *
+ */
 public final class CommandManager {
 	
 	private final TitanChat plugin;
 	
 	private static final Debugger db = new Debugger(3);
-	
-	private ShortcutManager shortcuts;
 	
 	private final List<String> commands;
 	
@@ -56,11 +60,21 @@ public final class CommandManager {
 		if (getCommandDir().mkdir())
 			plugin.log(Level.INFO, "Creating commands directory...");
 		
-		this.shortcuts = new ShortcutManager();
 		this.commands = new LinkedList<String>();
 		this.executors = new LinkedHashMap<String, Executor>();
 	}
 	
+	/**
+	 * Executes the command
+	 * 
+	 * @param sender The command sender
+	 * 
+	 * @param command The command to execute
+	 * 
+	 * @param chName The channel name
+	 * 
+	 * @param args The arguments
+	 */
 	public void execute(CommandSender sender, String command, String chName, String[] args) {
 		if (hasCommand(command)) {
 			Executor executor = getCommandExecutor(command);
@@ -133,30 +147,49 @@ public final class CommandManager {
 		plugin.send(MessageLevel.INFO, sender, "\"/titanchat commands [page]\" for command list");
 	}
 	
-	public int getCommandAmount() {
-		return executors.values().size();
-	}
-	
+	/**
+	 * Gets the command directory
+	 * 
+	 * @return The command directory
+	 */
 	public File getCommandDir() {
 		return new File(plugin.getManager().getAddonManager().getAddonDir(), "commands");
 	}
 	
+	/**
+	 * Gets the command executor by alias
+	 * 
+	 * @param alias The alias to get with
+	 * 
+	 * @return The command executor if found, otherwise null
+	 */
 	public Executor getCommandExecutor(String alias) {
 		return executors.get(alias.toLowerCase());
 	}
 	
+	/**
+	 * Gets all the command names
+	 * 
+	 * @return All the command names
+	 */
 	public List<String> getCommands() {
 		return new LinkedList<String>(commands);
 	}
 	
+	/**
+	 * Checks if a command executor exists by the alias
+	 * 
+	 * @param alias The alias to check with
+	 * 
+	 * @return True if a command executor with the alias is found
+	 */
 	public boolean hasCommand(String alias) {
 		return executors.containsKey(alias.toLowerCase());
 	}
 	
-	public ShortcutManager getShortcutManager() {
-		return shortcuts;
-	}
-	
+	/**
+	 * Loads the manager
+	 */
 	public void load() {
 		register(
 				new AdministrationCommand(),
@@ -175,14 +208,25 @@ public final class CommandManager {
 		Collections.sort(commands);
 	}
 	
+	/**
+	 * After reloading everything
+	 */
 	public void postReload() {
 		load();
 	}
 	
+	/**
+	 * Before reloading everything
+	 */
 	public void preReload() {
 		unload();
 	}
 	
+	/**
+	 * Registers the commands
+	 * 
+	 * @param commands The commands to register
+	 */
 	public void register(CommandBase... commands) {
 		for (CommandBase command : commands) {
 			db.i("Try to register command " + command.toString());
@@ -203,6 +247,9 @@ public final class CommandManager {
 		}
 	}
 	
+	/**
+	 * Sorts the commands
+	 */
 	public void sortCommands() {
 		List<Executor> executors = new ArrayList<Executor>(this.executors.values());
 		Collections.sort(executors);
@@ -216,6 +263,9 @@ public final class CommandManager {
 		}
 	}
 	
+	/**
+	 * Unloads the manager
+	 */
 	public void unload() {
 		executors.clear();
 	}

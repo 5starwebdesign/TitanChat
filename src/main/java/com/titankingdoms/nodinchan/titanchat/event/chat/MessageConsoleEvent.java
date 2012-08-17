@@ -22,6 +22,12 @@ import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 
+/**
+ * MessageConsoleEvent - Called when chat is to be sent to the console
+ * 
+ * @author NodinChan
+ *
+ */
 public final class MessageConsoleEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -35,6 +41,11 @@ public final class MessageConsoleEvent extends Event {
 		this.message = message;
 	}
 	
+	/**
+	 * Gets the format
+	 * 
+	 * @return The format
+	 */
 	public String getFormat() {
 		return message.getFormat();
 	}
@@ -48,18 +59,38 @@ public final class MessageConsoleEvent extends Event {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the message
+	 * 
+	 * @return The message
+	 */
 	public String getMessage() {
 		return message.getMessage();
 	}
 	
+	/**
+	 * Gets the sender
+	 * 
+	 * @return The sender
+	 */
 	public Player getSender() {
 		return sender;
 	}
 	
+	/**
+	 * Sets the format
+	 * 
+	 * @param format The new format
+	 */
 	public void setFormat(String format) {
 		this.message.setFormat(format);
 	}
 	
+	/**
+	 * Sets the message
+	 * 
+	 * @param message The new message
+	 */
 	public void setMessage(String message) {
 		this.message.setMessage(message);
 	}

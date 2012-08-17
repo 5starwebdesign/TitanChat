@@ -29,10 +29,20 @@ public final class PlayerInfo extends InfoBase {
 		this.name = name;
 	}
 	
+	/**
+	 * Gets the name of the player
+	 * 
+	 * @return The player name
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Gets the configuration section of the info on the info config
+	 * 
+	 * @return The configuration section
+	 */
 	public ConfigurationSection getSection() {
 		return handler.getSection("player-specific." + name);
 	}

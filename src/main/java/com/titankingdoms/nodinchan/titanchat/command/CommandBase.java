@@ -28,6 +28,12 @@ import com.titankingdoms.nodinchan.titanchat.addon.Addon;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
+/**
+ * CommandBase - Command base
+ * 
+ * @author NodinChan
+ *
+ */
 public class CommandBase extends Loadable implements Listener {
 
 	protected final TitanChat plugin;
@@ -44,13 +50,29 @@ public class CommandBase extends Loadable implements Listener {
 		this.plugin = TitanChat.getInstance();
 	}
 	
+	/**
+	 * Gets the display name of the offline player
+	 * 
+	 * @param player The player to get from
+	 * 
+	 * @return The display name of the player
+	 */
 	public final String getDisplayName(OfflinePlayer player) {
 		if (player.isOnline())
 			return player.getPlayer().getDisplayName();
 		
+		//TODO: When display name support is back, use the display name from database
+		
 		return player.getName();
 	}
 	
+	/**
+	 * Gets the display name of the command sender
+	 * 
+	 * @param sender The command sender to get from
+	 * 
+	 * @return If the sender is a player, the display name of the player, otherwise "CONSOLE"
+	 */
 	public final String getDisplay(CommandSender sender) {
 		if (sender instanceof Player)
 			return ((Player) sender).getDisplayName();
@@ -58,6 +80,15 @@ public class CommandBase extends Loadable implements Listener {
 		return sender.getName();
 	}
 	
+	/**
+	 * Checks if the sender has the specified permission
+	 * 
+	 * @param sender The sender to check
+	 * 
+	 * @param permission The permission to check with
+	 * 
+	 * @return True if the sender has permission
+	 */
 	public final boolean hasPermission(CommandSender sender, String permission) {
 		if (!(sender instanceof Player))
 			return true;
@@ -65,11 +96,27 @@ public class CommandBase extends Loadable implements Listener {
 		return sender.hasPermission(permission);
 	}
 	
+	/**
+	 * Informs the command sender that the argument length is invalid
+	 * 
+	 * @param sender The sender to inform
+	 * 
+	 * @param name The name of the command
+	 */
 	public final void invalidArgLength(CommandSender sender, String name) {
 		plugin.send(MessageLevel.WARNING, sender, "Invalid Argument Length");
 		usage(sender, name);
 	}
 	
+	/**
+	 * Checks if the player is offline
+	 * 
+	 * @param sender The command sender to inform if the player is offline
+	 * 
+	 * @param player The player name
+	 * 
+	 * @return True if the player is offline
+	 */
 	public final boolean isOffline(CommandSender sender, String player) {
 		OfflinePlayer offPlayer = plugin.getOfflinePlayer(player);
 		
@@ -79,18 +126,40 @@ public class CommandBase extends Loadable implements Listener {
 		return !offPlayer.isOnline();
 	}
 	
+	/**
+	 * Registers the addon
+	 * 
+	 * @param addon The addon to register
+	 */
 	public final void register(Addon addon) {
 		plugin.getManager().getAddonManager().register(addon);
 	}
 	
+	/**
+	 * Registers the channel
+	 * 
+	 * @param channel The channel to register
+	 */
 	public final void register(Channel channel) {
 		plugin.getManager().getChannelManager().register(channel);
 	}
 	
+	/**
+	 * Registers the listener
+	 * 
+	 * @param listener The listener to register
+	 */
 	public final void register(Listener listener) {
 		plugin.register(listener);
 	}
 	
+	/**
+	 * Sends the command sender the usage of the command
+	 * 
+	 * @param sender The command sender to send to
+	 * 
+	 * @param name The name of the command
+	 */
 	public final void usage(CommandSender sender, String name) {
 		Executor executor = plugin.getManager().getCommandManager().getCommandExecutor(name);
 		

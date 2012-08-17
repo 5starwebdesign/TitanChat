@@ -16,12 +16,12 @@
 
 package com.titankingdoms.nodinchan.titanchat.command.commands;
 
-import java.nio.channels.Channel;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
@@ -79,7 +79,7 @@ public class PluginCommand extends CommandBase {
 	 * Reload Command - Reloads the config
 	 */
 	@Command
-	@Description("Reloads the config")
+	@Description("Reloads TitanChat")
 	@Usage("reload")
 	public void reload(CommandSender sender, Channel channel, String[] args) {
 		if (sender instanceof Player && plugin.isStaff((Player) sender)) {

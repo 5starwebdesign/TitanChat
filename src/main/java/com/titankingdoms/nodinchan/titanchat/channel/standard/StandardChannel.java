@@ -27,6 +27,12 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
 
+/**
+ * StandardChannel - Standard channel
+ * 
+ * @author NodinChan
+ *
+ */
 public final class StandardChannel extends Channel {
 	
 	public StandardChannel() {}
@@ -112,6 +118,13 @@ public final class StandardChannel extends Channel {
 			for (Player recipant : sender.getWorld().getPlayers())
 				recipants.add(recipant);
 			break;
+		}
+		
+		for (String follower : getFollowers()) {
+			Player following = plugin.getPlayer(follower);
+			
+			if (following != null && !recipants.contains(following))
+				recipants.add(following);
 		}
 		
 		return sendMessage(sender, recipants, message);

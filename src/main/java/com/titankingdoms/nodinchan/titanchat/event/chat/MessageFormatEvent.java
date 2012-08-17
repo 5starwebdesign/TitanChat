@@ -20,6 +20,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+/**
+ * MessageFormatEvent - Called when messages are formatted
+ * 
+ * @author NodinChan
+ *
+ */
 public final class MessageFormatEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -33,6 +39,11 @@ public final class MessageFormatEvent extends Event {
 		this.format = format;
 	}
 	
+	/**
+	 * Gets the format
+	 * 
+	 * @return The format
+	 */
 	public String getFormat() {
 		return format;
 	}
@@ -46,10 +57,20 @@ public final class MessageFormatEvent extends Event {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the sender
+	 * 
+	 * @return
+	 */
 	public Player getSender() {
 		return sender;
 	}
 	
+	/**
+	 * Sets the format
+	 * 
+	 * @param format The new format
+	 */
 	public void setFormat(String format) {
 		this.format = format;
 	}

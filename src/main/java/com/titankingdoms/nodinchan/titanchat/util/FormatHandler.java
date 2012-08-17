@@ -31,6 +31,12 @@ import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Info;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageFormatEvent;
 
+/**
+ * FormatHandler - Handles formatting
+ * 
+ * @author NodinChan
+ *
+ */
 public final class FormatHandler {
 	
 	private static TitanChat plugin;
@@ -47,6 +53,13 @@ public final class FormatHandler {
 		this.affixFinder = new AffixFinder();
 	}
 	
+	/**
+	 * Formats for broadcasting
+	 * 
+	 * @param sender The command sender
+	 * 
+	 * @return The format
+	 */
 	public String broadcastFormat(CommandSender sender) {
 		String format = plugin.getConfig().getString("chat.server.broadcast");
 		
@@ -62,6 +75,15 @@ public final class FormatHandler {
 		return plugin.getFormatHandler().colourise(format);
 	}
 	
+	/**
+	 * Colours the message according to the permissions of the sender
+	 * 
+	 * @param sender The message sender
+	 * 
+	 * @param msg The message to colour
+	 * 
+	 * @return The formatted message
+	 */
 	public String colour(Player sender, String msg) {
 		StringBuffer colourised = new StringBuffer();
 		Matcher match = colourPattern.matcher(msg);
@@ -78,14 +100,37 @@ public final class FormatHandler {
 		return match.appendTail(colourised).toString();
 	}
 	
+	/**
+	 * Colourises the text
+	 * 
+	 * @param text The text to colourise
+	 * 
+	 * @return The colourised text
+	 */
 	public String colourise(String text) {
 		return text.replaceAll(colourPattern.toString(), "\u00A7$2");
 	}
 	
+	/**
+	 * Decolourises the text
+	 * 
+	 * @param text The text to decolourise
+	 * 
+	 * @return The decolourised text
+	 */
 	public String decolourise(String message) {
 		return message.replaceAll(colourPattern.toString(), "");
 	}
 	
+	/**
+	 * Formats for emoting
+	 * 
+	 * @param sender The command sender
+	 * 
+	 * @param channel The channel to send to
+	 * 
+	 * @return The format
+	 */
 	public String emoteFormat(CommandSender sender, String channel) {
 		String format = plugin.getConfig().getString("chat.server.emote");
 		
@@ -105,6 +150,15 @@ public final class FormatHandler {
 		return plugin.getFormatHandler().colourise(format);
 	}
 	
+	/**
+	 * Formats for channels
+	 * 
+	 * @param sender The sender
+	 * 
+	 * @param channel The channel to send to
+	 * 
+	 * @return The format
+	 */
 	public String format(Player sender, String channel) {
 		String format = "%tag %prefix%player%suffix&f: %message";
 		
@@ -127,10 +181,26 @@ public final class FormatHandler {
 		return plugin.getFormatHandler().colourise(event.getFormat());
 	}
 	
+	/**
+	 * Gets the affix finder
+	 * 
+	 * @return The affix finder
+	 */
 	public AffixFinder getAffixFinder() {
 		return affixFinder;
 	}
 	
+	/**
+	 * Parses the format with the info handler
+	 * 
+	 * @param sender The sender of the message
+	 * 
+	 * @param format The format used
+	 * 
+	 * @param exclude The variables to be excluded
+	 * 
+	 * @return The parsed format
+	 */
 	public String infoParse(Player sender, String format, String... exclude) {
 		db.i("FormatHandler: Parsing format: " + format);
 		StringBuffer parsed = new StringBuffer();
@@ -155,6 +225,13 @@ public final class FormatHandler {
 		return parsed.toString();
 	}
 	
+	/**
+	 * Formats for console to channel chat
+	 * 
+	 * @param channel The channel to send to
+	 * 
+	 * @return The format
+	 */
 	public String serverFormat(Channel channel) {
 		String format = plugin.getConfig().getString("formatting.server");
 		
@@ -165,10 +242,17 @@ public final class FormatHandler {
 		return plugin.getFormatHandler().colourise(format);
 	}
 	
+	/**
+	 * Splits the line into lines of 119 characters max each
+	 * 
+	 * @param line The line to split
+	 * 
+	 * @return The array of split lines
+	 */
 	public String[] split(String line) {
 		List<String> lines = new LinkedList<String>();
 		
-		while (line.length() > 119) {
+		while (line.length() >= 119) {
 			int end = line.lastIndexOf(' ', 119);
 			
 			if (end == -1)
@@ -184,10 +268,28 @@ public final class FormatHandler {
 		return lines.toArray(new String[0]);
 	}
 	
+	/**
+	 * Splits the formatted line into lines of 119 characters max each
+	 * 
+	 * @param format The format to use
+	 * 
+	 * @param variable The variable to replace with the line
+	 * 
+	 * @param line The line to split
+	 * 
+	 * @return The array of formatted split lines
+	 */
 	public String[] splitAndFormat(String format, String variable, String line) {
 		return split(format.replace(variable, line));
 	}
 	
+	/**
+	 * Formats for whispering
+	 * 
+	 * @param sender The command sender
+	 * 
+	 * @return The format
+	 */
 	public String whisperFormat(CommandSender sender) {
 		String format = plugin.getConfig().getString("chat.server.whisper");
 		

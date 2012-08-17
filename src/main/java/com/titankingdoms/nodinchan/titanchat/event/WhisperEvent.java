@@ -22,6 +22,12 @@ import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 
+/**
+ * WhisperEvent - Called when the whisper command is used
+ * 
+ * @author NodinChan
+ *
+ */
 public final class WhisperEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -37,6 +43,11 @@ public final class WhisperEvent extends Event {
 		this.message = message;
 	}
 	
+	/**
+	 * Gets the format
+	 * 
+	 * @return The whisper format
+	 */
 	public String getFormat() {
 		return message.getFormat();
 	}
@@ -50,22 +61,47 @@ public final class WhisperEvent extends Event {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the message
+	 * 
+	 * @return The whisper message
+	 */
 	public String getMessage() {
 		return message.getMessage();
 	}
 	
+	/**
+	 * Gets the recipant
+	 * 
+	 * @return The recipant of the message
+	 */
 	public CommandSender getRecipant() {
 		return recipant;
 	}
 	
+	/**
+	 * Gets the sender
+	 * 
+	 * @return The sender of the message
+	 */
 	public CommandSender getSender() {
 		return sender;
 	}
 	
+	/**
+	 * Sets the format
+	 * 
+	 * @param format The new whisper format
+	 */
 	public void setFormat(String format) {
 		this.message.setFormat(format);
 	}
 	
+	/**
+	 * Sets the message
+	 * 
+	 * @param message The new whisper message
+	 */
 	public void setMessage(String message) {
 		this.message.setMessage(message);
 	}

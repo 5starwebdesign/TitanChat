@@ -34,6 +34,12 @@ import de.bananaco.bpermissions.api.util.CalculableType;
 import de.hydrox.bukkit.DroxPerms.DroxPerms;
 import de.hydrox.bukkit.DroxPerms.DroxPermsAPI;
 
+/**
+ * AffixFinder - Gets affixes from permission plugins
+ * 
+ * @author NodinChan
+ *
+ */
 public final class AffixFinder {
 	
 	private final TitanChat plugin;
@@ -45,6 +51,13 @@ public final class AffixFinder {
 		this.pm = plugin.getServer().getPluginManager();
 	}
 	
+	/**
+	 * Gets the prefix of the player
+	 * 
+	 * @param player The player to get for
+	 * 
+	 * @return The prefix
+	 */
 	public String getPrefix(Player player) {
 		String prefix = "";
 		
@@ -92,6 +105,13 @@ public final class AffixFinder {
 		return prefix;
 	}
 	
+	/**
+	 * Gets the suffix of the player
+	 * 
+	 * @param player The player to get for
+	 * 
+	 * @return The suffix
+	 */
 	public String getSuffix(Player player) {
 		String suffix = "";
 		

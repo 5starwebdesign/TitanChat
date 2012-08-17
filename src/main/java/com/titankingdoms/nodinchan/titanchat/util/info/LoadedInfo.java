@@ -29,7 +29,6 @@ public final class LoadedInfo extends InfoBase implements Comparable<LoadedInfo>
 	private final int priority;
 	
 	public LoadedInfo(InfoHandler handler, String section) {
-		super();
 		this.handler = handler;
 		this.path = "permission-specific." + section;
 		this.permission = "TitanChat.info." + section;
@@ -43,18 +42,38 @@ public final class LoadedInfo extends InfoBase implements Comparable<LoadedInfo>
 		return (priority > loadedInfo.priority) ? 1 : -1;
 	}
 	
+	/**
+	 * Gets the path to the loaded info on the info config
+	 * 
+	 * @return The path
+	 */
 	public String getPath() {
 		return path;
 	}
 	
+	/**
+	 * Gets the permission required for this info
+	 * 
+	 * @return The permission required
+	 */
 	public String getPermission() {
 		return permission;
 	}
 	
+	/**
+	 * Gets the priority of this info
+	 * 
+	 * @return The priority
+	 */
 	public int getPriority() {
 		return priority;
 	}
 	
+	/**
+	 * Gets the configuration section of the info on the info config
+	 * 
+	 * @return The configuration section
+	 */
 	public ConfigurationSection getSection() {
 		return handler.getSection(path);
 	}

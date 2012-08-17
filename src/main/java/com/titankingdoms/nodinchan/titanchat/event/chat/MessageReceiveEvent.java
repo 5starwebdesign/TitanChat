@@ -28,6 +28,12 @@ import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 
+/**
+ * MessageReceiveEvent - Called when messages are to be received
+ * 
+ * @author NodinChan
+ *
+ */
 public final class MessageReceiveEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -55,6 +61,13 @@ public final class MessageReceiveEvent extends Event {
 		this(sender, Arrays.asList(recipants), message);
 	}
 	
+	/**
+	 * Gets the format used for the recipant
+	 * 
+	 * @param recipant The recipant to get for
+	 * 
+	 * @return The format
+	 */
 	public String getFormat(Player recipant) {
 		if (messages.containsKey(recipant))
 			return messages.get(recipant).getFormat();
@@ -62,6 +75,13 @@ public final class MessageReceiveEvent extends Event {
 		return message.getFormat();
 	}
 	
+	/**
+	 * Gets the formatted chat
+	 * 
+	 * @param recipant The recipant to get for
+	 * 
+	 * @return The formatted chat
+	 */
 	public String getFormattedMessage(Player recipant) {
 		String format = getFormat(recipant);
 		String message = getMessage(recipant);
@@ -78,6 +98,13 @@ public final class MessageReceiveEvent extends Event {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the message used for the recipant
+	 * 
+	 * @param recipant The recipant to get for
+	 * 
+	 * @return The message
+	 */
 	public String getMessage(Player recipant) {
 		if (messages.containsKey(recipant))
 			return messages.get(recipant).getMessage();
@@ -85,6 +112,11 @@ public final class MessageReceiveEvent extends Event {
 		return message.getMessage();
 	}
 	
+	/**
+	 * Gets all the recipants
+	 * 
+	 * @return All the recipants
+	 */
 	public List<Player> getRecipants() {
 		List<Player> recipants = new ArrayList<Player>(messages.keySet());
 		
@@ -95,10 +127,22 @@ public final class MessageReceiveEvent extends Event {
 		return recipants;
 	}
 	
+	/**
+	 * Gets the sender
+	 * 
+	 * @return The sender
+	 */
 	public Player getSender() {
 		return sender;
 	}
 	
+	/**
+	 * Checks if the event is cancelled for the recipant
+	 * 
+	 * @param recipant The recipant to check
+	 * 
+	 * @return True if the event is cancelled for the recipant
+	 */
 	public boolean isCancelled(Player recipant) {
 		if (cancelled.containsKey(recipant))
 			return cancelled.get(recipant);
@@ -106,15 +150,36 @@ public final class MessageReceiveEvent extends Event {
 		return true;
 	}
 	
+	/**
+	 * Sets whether the event is cancelled for the recipant
+	 * 
+	 * @param recipant The recipant to set for
+	 * 
+	 * @param cancelled Whether the event should be cancelled
+	 */
 	public void setCancelled(Player recipant, boolean cancelled) {
 		this.cancelled.put(recipant, cancelled);
 	}
 	
+	/**
+	 * Sets the format for the recipant
+	 * 
+	 * @param recipant The recipant to set for
+	 * 
+	 * @param format The new format
+	 */
 	public void setFormat(Player recipant, String format) {
 		if (messages.containsKey(recipant))
 			messages.get(recipant).setFormat(format);
 	}
 	
+	/**
+	 * Sets the message for the recipant
+	 * 
+	 * @param recipant The recipant to set for
+	 * 
+	 * @param message The new message
+	 */
 	public void setMessage(Player recipant, String message) {
 		if (messages.containsKey(recipant))
 			messages.get(recipant).setMessage(message);

@@ -25,6 +25,12 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
 
+/**
+ * Executor - Represents a command executor
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Executor implements Comparable<Executor> {
 	
 	private final CommandBase command;
@@ -59,6 +65,11 @@ public final class Executor implements Comparable<Executor> {
 			this.usage = method.getAnnotation(Usage.class).value();
 	}
 	
+	/**
+	 * Checks if the command allows console usage
+	 * 
+	 * @return True if the command can be used at the console
+	 */
 	public boolean allowConsoleUsage() {
 		return console;
 	}
@@ -75,38 +86,99 @@ public final class Executor implements Comparable<Executor> {
 		return false;
 	}
 	
+	/**
+	 * Executes the command
+	 * 
+	 * @param sender The command sender
+	 * 
+	 * @param channel The channel
+	 * 
+	 * @param args The arguments
+	 * 
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
 	public void execute(CommandSender sender, Channel channel, String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		method.invoke(command, sender, channel, args);
 	}
 	
-	public void execute(Player player, Channel channel, String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		method.invoke(command, player, channel, args);
+	/**
+	 * Executes the command
+	 * 
+	 * @param sender The command sender
+	 * 
+	 * @param channel The channel
+	 * 
+	 * @param args The arguments
+	 * 
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 */
+	public void execute(Player sender, Channel channel, String[] args) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		method.invoke(command, sender, channel, args);
 	}
 	
+	/**
+	 * Gets the command aliases
+	 * 
+	 * @return The aliases of the command
+	 */
 	public String[] getAliases() {
 		return aliases;
 	}
 	
+	/**
+	 * Gets the command
+	 * 
+	 * @return The command
+	 */
 	public CommandBase getCommand() {
 		return command;
 	}
 	
+	/**
+	 * Gets the command description
+	 * 
+	 * @return The description of the command
+	 */
 	public String getDescription() {
 		return description;
 	}
 	
+	/**
+	 * Gets the method to execute the command
+	 * 
+	 * @return The method of the command
+	 */
 	public Method getMethod() {
 		return method;
 	}
 	
+	/**
+	 * Gets the command name
+	 * 
+	 * @return The name of the command
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/**
+	 * Gets the command usage
+	 * 
+	 * @return The usage of the command
+	 */
 	public String getUsage() {
 		return usage;
 	}
 	
+	/**
+	 * Checks if the command requires a channel
+	 * 
+	 * @return True if the command requires a channel
+	 */
 	public boolean requireChannel() {
 		return channel;
 	}

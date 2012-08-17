@@ -57,6 +57,4 @@
 # FORMAT                : Where you define the format of the   #
 #                         channel if you want a different      #
 #                         format                               #
-# COMMAND.*             : Where you define custom commands for #
-#                         any TitanChat commands by listing it #
 #==============================================================#

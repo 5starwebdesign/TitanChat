@@ -18,7 +18,6 @@ package com.titankingdoms.nodinchan.titanchat.addon;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -26,6 +25,12 @@ import com.nodinchan.ncbukkit.loader.Loader;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
+/**
+ * AddonManager - Manages addons
+ * 
+ * @author NodinChan
+ *
+ */
 public final class AddonManager {
 	
 	private final TitanChat plugin;
@@ -43,6 +48,13 @@ public final class AddonManager {
 		this.addons = new ArrayList<Addon>();
 	}
 	
+	/**
+	 * Gets the addon by name
+	 * 
+	 * @param name The name of the addon
+	 * 
+	 * @return The addon if found, otherwise null
+	 */
 	public Addon getAddon(String name) {
 		for (Addon addon : addons) {
 			if (addon.getName().equalsIgnoreCase(name))
@@ -52,14 +64,27 @@ public final class AddonManager {
 		return null;
 	}
 	
+	/**
+	 * Gets the addon directory
+	 * 
+	 * @return The directory of addons
+	 */
 	public File getAddonDir() {
 		return new File(plugin.getDataFolder(), "addons");
 	}
 	
+	/**
+	 * Gets all addons
+	 * 
+	 * @return The list of addons
+	 */
 	public List<Addon> getAddons() {
-		return Collections.unmodifiableList(addons);
+		return new ArrayList<Addon>(addons);
 	}
 	
+	/**
+	 * Loads the manager
+	 */
 	public void load() {
 		Loader<Addon> loader = new Loader<Addon>(plugin, getAddonDir(), new Object[0]);
 		for (Addon addon : loader.load()) { register(addon); }
@@ -80,19 +105,33 @@ public final class AddonManager {
 		plugin.log(Level.INFO, "Addons loaded: " + str.toString());
 	}
 	
+	/**
+	 * After reloading everything
+	 */
 	public void postReload() {
 		load();
 	}
 	
+	/**
+	 * Before reloading everything
+	 */
 	public void preReload() {
 		unload();
 	}
 	
+	/**
+	 * Registers the addon
+	 * 
+	 * @param addon The addon to register
+	 */
 	public void register(Addon addon) {
 		db.i("Registering addon: " + addon.getName());
 		addons.add(addon);
 	}
 	
+	/**
+	 * Unloads the manager
+	 */
 	public void unload() {
 		for (Addon addon : addons)
 			addon.unload();

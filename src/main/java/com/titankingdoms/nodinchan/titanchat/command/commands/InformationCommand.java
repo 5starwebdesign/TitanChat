@@ -151,15 +151,15 @@ public class InformationCommand extends CommandBase {
 		
 		try {
 			int page = Integer.parseInt(args[0]) - 1;
-			int numPages = cm.getCommandAmount() / 10;
+			int numPages = cm.getCommands().size() / 10;
 			int start = page * 10;
 			int end = start + 10;
 			
-			if (cm.getCommandAmount() % 10 != 0 && (numPages * 10) - cm.getCommandAmount() < 0)
+			if (cm.getCommands().size() % 10 != 0 && (numPages * 10) - cm.getCommands().size() < 0)
 				numPages++;
 			
-			if (end > cm.getCommandAmount())
-				end = cm.getCommandAmount();
+			if (end > cm.getCommands().size())
+				end = cm.getCommands().size();
 			
 			if (page + 1 > 0 || page + 1 <= numPages) {
 				sender.sendMessage(ChatColor.AQUA + "=== TitanChat Command List (" + (page + 1) + "/" + numPages + ") ===");
