@@ -154,7 +154,7 @@ public final class DefaultPermissions {
 		try {
 			Permission speak = new Permission("TitanChat.speak." + name, "Grants permission to speak in " + name);
 			pm.addPermission(speak);
-			speak.addParent("TitanChat.speak." + name, true);
+			speak.addParent("TitanChat.voice." + name, true);
 			
 		} catch (Exception e) {}
 		
