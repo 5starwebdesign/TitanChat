@@ -181,11 +181,14 @@ public class ChannelCommand extends CommandBase {
 		if (channel.handleCommand(player, "leave", args))
 			return;
 		
-		if (channel.isParticipating(player.getName())) {
-			channel.leave(player);
-			plugin.send(INFO, player, "You have left " + channel.getName());
+		if (hasPermission(player, "TitanChat.leave." + channel.getName())) {
+			if (channel.isParticipating(player.getName())) {
+				channel.leave(player);
+				plugin.send(INFO, player, "You have left " + channel.getName());
+				
+			} else { plugin.send(WARNING, player, "You are not in the channel"); }
 			
-		} else { plugin.send(WARNING, player, "You are not in the channel"); }
+		} else { plugin.send(WARNING, player, "You do not have permission"); }
 	}
 	
 	/**

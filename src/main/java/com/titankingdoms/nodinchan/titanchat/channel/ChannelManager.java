@@ -96,7 +96,7 @@ public final class ChannelManager {
 		
 		sortChannels();
 		
-		plugin.getDefPerms().load(channel);
+		plugin.getPermissions().load(channel);
 		plugin.send(MessageLevel.INFO, sender, "You have created channel " + name + " of type " + channel.getType());
 	}
 	
@@ -124,6 +124,8 @@ public final class ChannelManager {
 		
 		sortChannels();
 		new File(plugin.getChannelDir(), channel.getName() + ".yml").delete();
+		
+		plugin.getPermissions().unload(channel);
 		plugin.send(MessageLevel.INFO, sender, "You have deleted " + channel.getName());
 	}
 	
@@ -338,7 +340,7 @@ public final class ChannelManager {
 		
 		sortChannels();
 		
-		plugin.getDefPerms().load(getChannels());
+		plugin.getPermissions().load(getChannels());
 	}
 	
 	/**
@@ -387,10 +389,15 @@ public final class ChannelManager {
 			participant = new Participant(player);
 		
 		for (Channel channel : getChannels()) {
-			if (channel.getConfig().getStringList("participants") == null)
-				continue;
+			if (player.hasPermission("TitanChat.autojoin." + channel.getName()))
+				channel.join(player);
 			
-			if (channel.getConfig().getStringList("participants").contains(player.getName()))
+			if (player.hasPermission("TitanChat.autoleave." + channel.getName()))
+				channel.leave(player);
+			
+			List<String> participants = channel.getConfig().getStringList("participants");
+			
+			if (participants != null && participants.contains(player.getName()))
 				channel.join(player);
 		}
 		
@@ -518,6 +525,8 @@ public final class ChannelManager {
 			channel.save();
 			channel.saveParticipants();
 		}
+		
+		plugin.getPermissions().unload(getChannels());
 		
 		this.aliases.clear();
 		this.channels.clear();

@@ -25,7 +25,6 @@ import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
-import com.titankingdoms.nodinchan.titanchat.util.info.CachedInfo;
 
 /**
  * PluginCommand - Plugin maintenance commands
@@ -94,13 +93,7 @@ public class PluginCommand extends CommandBase {
 		
 		plugin.reloadConfig();
 		plugin.getManager().reload();
-		
-		plugin.getInfoHandler().reloadConfig();
-		plugin.getInfoHandler().loadLoadedInfo();
-		plugin.getInfoHandler().loadPlayerInfo();
-		
-		for (CachedInfo cachedInfo : plugin.getInfoHandler().getAllCachedInfo())
-			plugin.getInfoHandler().loadCachedInfo(cachedInfo.getName());
+		plugin.getInfoHandler().reload();
 		
 		plugin.send(INFO, sender, "TitanChat reloaded");
 		

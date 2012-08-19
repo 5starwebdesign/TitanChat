@@ -46,12 +46,11 @@ import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Graph;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Plotter;
-import com.titankingdoms.nodinchan.titanchat.permission.DefaultPermissions;
+import com.titankingdoms.nodinchan.titanchat.permission.Permissions;
 import com.titankingdoms.nodinchan.titanchat.processing.ChatPacket;
 import com.titankingdoms.nodinchan.titanchat.processing.ChatProcessor;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.FormatHandler;
-import com.titankingdoms.nodinchan.titanchat.util.info.CachedInfo;
 import com.titankingdoms.nodinchan.titanchat.util.info.InfoHandler;
 
 /**
@@ -74,7 +73,7 @@ public final class TitanChat extends JavaPlugin {
 	private TitanChatListener listener;
 	private TitanChatManager manager;
 	private InfoHandler info;
-	private DefaultPermissions defPerms;
+	private Permissions perms;
 	private FormatHandler format;
 	
 	private boolean silenced = false;
@@ -158,15 +157,6 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	/**
-	 * Gets the default permissions loader
-	 * 
-	 * @return The default permissions loader
-	 */
-	public DefaultPermissions getDefPerms() {
-		return defPerms;
-	}
-	
-	/**
 	 * Gets the format handler
 	 * 
 	 * @return The format handler
@@ -217,6 +207,15 @@ public final class TitanChat extends JavaPlugin {
 	public OfflinePlayer getOfflinePlayer(String name) {
 		OfflinePlayer player = getServer().getOfflinePlayer(name);
 		return player;
+	}
+	
+	/**
+	 * Gets the permissions loader
+	 * 
+	 * @return The permissions loader
+	 */
+	public Permissions getPermissions() {
+		return perms;
 	}
 	
 	/**
@@ -424,6 +423,7 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "Unloading managers...");
 		
 		manager.unload();
+		info.unload();
 		
 		log(Level.INFO, "is now disabled");
 	}
@@ -444,15 +444,15 @@ public final class TitanChat extends JavaPlugin {
 		
 		manager = new TitanChatManager();
 		info = new InfoHandler();
-		defPerms = new DefaultPermissions().load();
+		perms = new Permissions();
 		format = new FormatHandler();
 		
 		manager.load();
 		info.loadLoadedInfo();
 		info.loadPlayerInfo();
 		
-		for (CachedInfo cachedInfo : info.getAllCachedInfo())
-			info.loadCachedInfo(cachedInfo.getName());
+		for (Player player : getServer().getOnlinePlayers())
+			info.loadCachedInfo(player);
 		
 		if (manager.getChannelManager().getDefaultChannels().isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");

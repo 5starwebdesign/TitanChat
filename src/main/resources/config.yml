@@ -1,10 +1,9 @@
 #==============================================================#
 #                         COLOUR CODES                         #
 # &0 (black), &1 (dark blue), &2 (green), &3 (dark aqua),      #
-# &4 (red), &5 (purple), &6 (gold), &7 (silver),               #
-# &8 (grey), &9 (blue), &a (light green), &b (aqua),           #
-# &c (light red), &d (light purple), &e (yellow), &f (white),  #
-# &k (magical)                                                 #
+# &4 (red), &5 (purple), &6 (gold), &7 (grey), &8 (dark grey), #
+# &9 (blue), &a (light green), &b (aqua), &c (light red),      #
+# &d (light purple), &e (yellow), &f (white), &k (magic)       #
 # &l (bold), &m (underlined), &n (striked), &o (italic)        #
 #==============================================================#
 

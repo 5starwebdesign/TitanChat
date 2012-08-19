@@ -422,6 +422,21 @@ public final class InfoHandler {
 	}
 	
 	/**
+	 * Reloads the handler
+	 */
+	public void reload() {
+		loadedInfo.clear();
+		playerInfo.clear();
+		
+		reloadConfig();
+		loadLoadedInfo();
+		loadPlayerInfo();
+		
+		for (CachedInfo cachedInfo : getAllCachedInfo())
+			loadCachedInfo(cachedInfo.getName());
+	}
+	
+	/**
 	 * Saves the info config
 	 */
 	public void saveConfig() {
@@ -447,5 +462,11 @@ public final class InfoHandler {
 		for (PlayerInfo playerInfo : getAllPlayerInfo())
 			for (Entry<String, String> infoEntry : playerInfo.getAllInfo().entrySet())
 				playerInfo.getSection().set(infoEntry.getKey(), infoEntry.getValue());
+	}
+	
+	public void unload() {
+		cachedInfo.clear();
+		loadedInfo.clear();
+		playerInfo.clear();
 	}
 }
