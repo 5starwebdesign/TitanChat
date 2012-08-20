@@ -18,7 +18,7 @@ commands:
     emote:
         description: Emote Command
         aliases: [em, me]
-        permission: TitanChat.emote.global
+        permission: TitanChat.emote
         usage: /<command> [action]
     whisper:
         description: Whisper Command
@@ -26,24 +26,6 @@ commands:
         permission: TitanChat.whisper
         usage: /<command> [player] [message]
 permissions:
-    TitanChat.staff:
-        description: Grants all permissions
-        default: op
-        children:
-            TitanChat.update: true
-            TitanChat.create: true
-            TitanChat.delete: true
-            TitanChat.force: true
-            TitanChat.bypass.*: true
-            TitanChat.ban.*: true
-            TitanChat.kick.*: true
-            TitanChat.mute.*: true
-            TitanChat.rank.*: true
-            TitanChat.broadcast: true
-            TitanChat.emote: true
-            TitanChat.emote.*: true
-            TitanChat.whisper: true
-            TitanChat.format.*: true
     TitanChat.update:
         description: Notified about updates
         default: op
@@ -56,13 +38,6 @@ permissions:
     TitanChat.force:
         description: Grants permission to force channel joins
         default: op
-    TitanChat.bypass.*:
-        description: Grants several permissions for bypassing all channels
-        default: op
-        children:
-            TitanChat.join.*: true
-            TitanChat.leave.*: true
-            TitanChat.voice.*: true
     TitanChat.autojoin.*:
         description: Autojoins all channels on login
         default: false
@@ -75,14 +50,21 @@ permissions:
     TitanChat.leave.*:
         description: Grants permission to leave all channels
         default: op
+    TitanChat.speak.*:
+        description: Grants permission to speak in all channels
+        default: op
     TitanChat.voice.*:
         description: Grants permission to speak at all times in all channels
         default: op
         children:
             TitanChat.speak.*: true
-    TitanChat.speak.*:
-        description: Grants permission to speak in all channels
+    TitanChat.bypass.*:
+        description: Grants several permissions for bypassing all channels
         default: op
+        children:
+            TitanChat.join.*: true
+            TitanChat.leave.*: true
+            TitanChat.voice.*: true
     TitanChat.ban.*:
         description: Grants permission to ban in all channels
         default: op
@@ -107,32 +89,6 @@ permissions:
     TitanChat.whisper:
         description: Grants permission to the whisper command
         default: op
-    TitanChat.format.*:
-        description: Grants permission to use all format codes
-        default: op
-        children:
-            TitanChat.format.&0: true
-            TitanChat.format.&1: true
-            TitanChat.format.&2: true
-            TitanChat.format.&3: true
-            TitanChat.format.&4: true
-            TitanChat.format.&5: true
-            TitanChat.format.&6: true
-            TitanChat.format.&7: true
-            TitanChat.format.&8: true
-            TitanChat.format.&9: true
-            TitanChat.format.&a: true
-            TitanChat.format.&b: true
-            TitanChat.format.&c: true
-            TitanChat.format.&d: true
-            TitanChat.format.&e: true
-            TitanChat.format.&f: true
-            TitanChat.format.&k: true
-            TitanChat.format.&l: true
-            TitanChat.format.&m: true
-            TitanChat.format.&n: true
-            TitanChat.format.&o: true
-            TitanChat.format.&r: true
     TitanChat.format.&0:
         description: Grants permission to use the black format code
         default: op
@@ -199,3 +155,47 @@ permissions:
     TitanChat.format.&r:
         description: Grants permission to use the reset format code
         default: op
+    TitanChat.format.*:
+        description: Grants permission to use all format codes
+        default: op
+        children:
+            TitanChat.format.&0: true
+            TitanChat.format.&1: true
+            TitanChat.format.&2: true
+            TitanChat.format.&3: true
+            TitanChat.format.&4: true
+            TitanChat.format.&5: true
+            TitanChat.format.&6: true
+            TitanChat.format.&7: true
+            TitanChat.format.&8: true
+            TitanChat.format.&9: true
+            TitanChat.format.&a: true
+            TitanChat.format.&b: true
+            TitanChat.format.&c: true
+            TitanChat.format.&d: true
+            TitanChat.format.&e: true
+            TitanChat.format.&f: true
+            TitanChat.format.&k: true
+            TitanChat.format.&l: true
+            TitanChat.format.&m: true
+            TitanChat.format.&n: true
+            TitanChat.format.&o: true
+            TitanChat.format.&r: true
+    TitanChat.staff:
+        description: Grants all permissions
+        default: op
+        children:
+            TitanChat.update: true
+            TitanChat.create: true
+            TitanChat.delete: true
+            TitanChat.force: true
+            TitanChat.bypass.*: true
+            TitanChat.ban.*: true
+            TitanChat.kick.*: true
+            TitanChat.mute.*: true
+            TitanChat.rank.*: true
+            TitanChat.broadcast: true
+            TitanChat.emote: true
+            TitanChat.emote.*: true
+            TitanChat.whisper: true
+            TitanChat.format.*: true
