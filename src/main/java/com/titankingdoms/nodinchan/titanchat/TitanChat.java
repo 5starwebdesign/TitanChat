@@ -18,12 +18,14 @@ package com.titankingdoms.nodinchan.titanchat;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,8 +33,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
@@ -446,6 +451,19 @@ public final class TitanChat extends JavaPlugin {
 		info = new InfoHandler();
 		perms = new Permissions();
 		format = new FormatHandler();
+		
+		InputStream permissionStream = getResource("permissions.yml");
+		
+		if (permissionStream != null) {
+			YamlConfiguration permissionsYaml = YamlConfiguration.loadConfiguration(permissionStream);
+			Map<?, ?> lazyPermissions = (Map<?, ?>) permissionsYaml.get("permissions");
+			List<Permission> permissions = Permission.loadPermissions(lazyPermissions, "Permission node '%s' in plugin description file for " + getDescription().getFullName() + " is invalid", PermissionDefault.OP);
+			
+			if (permissions != null) {
+				for (Permission permission : permissions)
+					try { getServer().getPluginManager().addPermission(permission); } catch (Exception e) {}
+			}
+		}
 		
 		manager.load();
 		info.loadLoadedInfo();
