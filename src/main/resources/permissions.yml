@@ -103,6 +103,9 @@ permissions:
             TitanChat.format.&k: true
             TitanChat.format.&l: true
             TitanChat.format.&m: true
+            TitanChat.format.&n: true
+            TitanChat.format.&o: true
+            TitanChat.format.&r: true
     TitanChat.format.&0:
         description: Grants permission to use the black format code
         default: op
@@ -169,6 +172,3 @@ permissions:
     TitanChat.format.&r:
         description: Grants permission to use the reset format code
         default: op
-            TitanChat.format.&n: true
-            TitanChat.format.&o: true
-            TitanChat.format.&r: true

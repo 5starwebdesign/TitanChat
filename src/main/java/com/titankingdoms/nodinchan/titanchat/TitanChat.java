@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -456,13 +457,15 @@ public final class TitanChat extends JavaPlugin {
 		
 		if (permissionStream != null) {
 			YamlConfiguration permissionsYaml = YamlConfiguration.loadConfiguration(permissionStream);
-			Map<?, ?> lazyPermissions = (Map<?, ?>) permissionsYaml.get("permissions");
-			List<Permission> permissions = Permission.loadPermissions(lazyPermissions, "Permission node '%s' in plugin description file for " + getDescription().getFullName() + " is invalid", PermissionDefault.OP);
+			Map<?, ?> permissionMap = (Map<?, ?>) permissionsYaml.get("permissions");
 			
-			if (permissions != null) {
-				for (Permission permission : permissions)
-					try { getServer().getPluginManager().addPermission(permission); } catch (Exception e) {}
-			}
+			List<Permission> permissions = new LinkedList<Permission>();
+			
+			if (permissionMap != null)
+				permissions.addAll(Permission.loadPermissions(permissionMap, "Permission node '%s' in plugin description file for " + getDescription().getFullName() + " is invalid", PermissionDefault.OP));
+			
+			for (Permission permission : permissions)
+				try { getServer().getPluginManager().addPermission(permission); } catch (Exception e) {}
 		}
 		
 		manager.load();
