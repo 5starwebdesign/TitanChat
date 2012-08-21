@@ -34,7 +34,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permission;
@@ -44,6 +43,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import com.nodinchan.ncbukkit.NCBL;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
@@ -456,8 +457,8 @@ public final class TitanChat extends JavaPlugin {
 		InputStream permissionStream = getResource("permissions.yml");
 		
 		if (permissionStream != null) {
-			YamlConfiguration permissionsYaml = YamlConfiguration.loadConfiguration(permissionStream);
-			Map<?, ?> permissionMap = (Map<?, ?>) permissionsYaml.get("permissions");
+			Map<?, ?> yamlMap = (Map<?, ?>) new Yaml(new SafeConstructor()).load(permissionStream);
+			Map<?, ?> permissionMap = (Map<?, ?>) yamlMap.get("permissions");
 			
 			List<Permission> permissions = new LinkedList<Permission>();
 			
