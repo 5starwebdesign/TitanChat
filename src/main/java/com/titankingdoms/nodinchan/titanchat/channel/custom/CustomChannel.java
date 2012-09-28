@@ -21,20 +21,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
 
 public class CustomChannel extends Channel {
+	
+	private final ChannelLoader creator;
 	
 	private File configFile;
 	private FileConfiguration config;
 	
 	public CustomChannel(String name) {
 		super(name, Option.CUSTOM);
+		this.creator = new CustomChannelLoader(this);
 	}
 	
 	@Override
@@ -42,9 +45,8 @@ public class CustomChannel extends Channel {
 		return true;
 	}
 	
-	@Override
-	public final Channel create(CommandSender sender, String name, Option option) {
-		return this;
+	public ChannelLoader getLoader() {
+		return creator;
 	}
 	
 	/**
@@ -57,16 +59,6 @@ public class CustomChannel extends Channel {
 			reloadCustomConfig();
 		
 		return config;
-	}
-
-	@Override
-	public final String getType() {
-		return "Custom";
-	}
-
-	@Override
-	public final Channel load(String name, Option option) {
-		return this;
 	}
 	
 	/**

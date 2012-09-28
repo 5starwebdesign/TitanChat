@@ -34,9 +34,12 @@ import com.nodinchan.ncbukkit.loader.Loader;
 import com.nodinchan.ncbukkit.util.FileExtensionFilter;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
+import com.titankingdoms.nodinchan.titanchat.channel.Channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel.Option;
 import com.titankingdoms.nodinchan.titanchat.channel.standard.ServerChannel;
+import com.titankingdoms.nodinchan.titanchat.channel.standard.ServerChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.channel.standard.StandardChannel;
+import com.titankingdoms.nodinchan.titanchat.channel.standard.StandardChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
@@ -54,6 +57,7 @@ public final class ChannelManager {
 	
 	private final Map<String, String> aliases;
 	private final Map<String, Channel> channels;
+	private final Map<String, ChannelLoader> loaders;
 	private final Map<String, Participant> participants;
 	private final Map<String, Boolean> silenced;
 	private final Map<String, Channel> types;
@@ -66,6 +70,7 @@ public final class ChannelManager {
 		
 		this.aliases = new HashMap<String, String>();
 		this.channels = new LinkedHashMap<String, Channel>();
+		this.loaders = new HashMap<String, ChannelLoader>();
 		this.participants = new HashMap<String, Participant>();
 		this.silenced = new HashMap<String, Boolean>();
 		this.types = new LinkedHashMap<String, Channel>();
@@ -82,7 +87,8 @@ public final class ChannelManager {
 	 */
 	public void createChannel(CommandSender sender, String name, String type) {
 		db.i("ChannelManager: " + sender.getName() + " is creating " + name);
-		Channel channel = getType(type).create(sender, name, Option.NONE);
+		ChannelLoader loader = getChannelLoader(type);
+		Channel channel = loader.create(sender, name, Option.NONE);
 		register(channel);
 		
 		if (sender instanceof Player) {
@@ -97,7 +103,7 @@ public final class ChannelManager {
 		sortChannels();
 		
 		plugin.getPermissions().load(channel);
-		plugin.send(MessageLevel.INFO, sender, "You have created channel " + name + " of type " + channel.getType());
+		plugin.send(MessageLevel.INFO, sender, "You have created channel " + name + " of type " + loader.getName());
 	}
 	
 	/**
@@ -236,6 +242,10 @@ public final class ChannelManager {
 		return defaults;
 	}
 	
+	public ChannelLoader getChannelLoader(String name) {
+		return loaders.get(name.toLowerCase());
+	}
+	
 	/**
 	 * Gets the participant
 	 * 
@@ -313,18 +323,19 @@ public final class ChannelManager {
 	public void load() {
 		if (!plugin.enableChannels()) {
 			plugin.log(Level.INFO, "Channels disabled");
-			register(new ServerChannel());
+			register(new ServerChannelLoader());
+			register(getChannelLoader("Server").load("Server", Option.DEFAULT));
 			return;
 		}
 		
 		Loader<Channel> loader = new Loader<Channel>(plugin, getChannelDir());
 		
-		register(new StandardChannel());
+		register(new StandardChannelLoader());
 		
 		for (Channel channel : loader.load())
 			register(channel);
 		
-		sortTypes();
+		sortLoaders();
 		
 		for (File file : plugin.getChannelDir().listFiles(new FileExtensionFilter(".yml"))) {
 			Channel channel = loadChannel(file);
@@ -358,9 +369,9 @@ public final class ChannelManager {
 		
 		FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 		
-		Channel type = getType(config.getString("type", ""));
+		ChannelLoader loader = getChannelLoader(config.getString("type", ""));
 		
-		if (type == null) {
+		if (loader == null) {
 			plugin.log(Level.INFO, "The channel config " + file.getName() + " failed to load: Unknown Type");
 			return null;
 		}
@@ -372,7 +383,7 @@ public final class ChannelManager {
 			return null;
 		}
 		
-		return type.load(name, option);
+		return loader.load(name, option);
 	}
 	
 	/**
@@ -389,6 +400,9 @@ public final class ChannelManager {
 			participant = new Participant(player);
 		
 		for (Channel channel : getChannels()) {
+			if (!channel.access(player))
+				continue;
+			
 			if (player.hasPermission("TitanChat.autojoin." + channel.getName()))
 				channel.join(player);
 			
@@ -403,8 +417,29 @@ public final class ChannelManager {
 		
 		if (participant.getChannels().isEmpty()) {
 			for (Channel channel : getChannels())
-				if (player.hasPermission("TitanChat.spawn." + channel.getName()))
+				if (channel.access(player) && player.hasPermission("TitanChat.spawn." + channel.getName()))
 					channel.join(player);
+		}
+		
+		if (participant.getChannels().isEmpty()) {
+			if (plugin.isStaff(player)) {
+				for (Channel staff : getStaffChannels()) {
+					if (!staff.access(player))
+						continue;
+					
+					staff.join(player);
+					break;
+				}
+				
+			} else {
+				for (Channel def : getDefaultChannels()) {
+					if (!def.access(player))
+						continue;
+					
+					def.join(player);
+					break;
+				}
+			}
 		}
 		
 		participants.put(participant.getName().toLowerCase(), participant);
@@ -467,19 +502,18 @@ public final class ChannelManager {
 	 * @param channel The channel to register
 	 */
 	public void register(Channel channel) {
-		if (channel.getOption().equals(Option.TYPE)) {
-			if (getType(channel.getType()) == null)
-				types.put(channel.getType().toLowerCase(), channel);
+		if (!exists(channel.getName())) {
+			channels.put(channel.getName().toLowerCase(), channel);
 			
-		} else {
-			if (!exists(channel.getName())) {
-				channels.put(channel.getName().toLowerCase(), channel);
-				
-				for (String alias : channel.getConfig().getStringList("aliases"))
-					if (!aliases.containsKey(alias.toLowerCase()))
-						aliases.put(alias.toLowerCase(), channel.getName());
-			}
+			for (String alias : channel.getConfig().getStringList("aliases"))
+				if (!aliases.containsKey(alias.toLowerCase()))
+					aliases.put(alias.toLowerCase(), channel.getName());
 		}
+	}
+	
+	public void register(ChannelLoader loader) {
+		if (getChannelLoader(loader.getName()) == null)
+			loaders.put(loader.getName().toLowerCase(), loader);
 	}
 	
 	/**
@@ -508,13 +542,13 @@ public final class ChannelManager {
 	/**
 	 * Sorts the channel types
 	 */
-	public void sortTypes() {
-		List<Channel> types = new ArrayList<Channel>(this.types.values());
-		Collections.sort(types);
-		this.types.clear();
+	public void sortLoaders() {
+		List<ChannelLoader> loaders = new ArrayList<ChannelLoader>(this.loaders.values());
+		Collections.sort(loaders);
+		this.loaders.clear();
 		
-		for (Channel type : types)
-			this.types.put(type.getType().toLowerCase(), type);
+		for (ChannelLoader loader : loaders)
+			this.loaders.put(loader.getName().toLowerCase(), loader);
 	}
 	
 	/**

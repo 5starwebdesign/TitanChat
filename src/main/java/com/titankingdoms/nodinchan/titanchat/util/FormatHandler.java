@@ -30,6 +30,7 @@ import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Info;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageFormatEvent;
+import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
 /**
  * FormatHandler - Handles formatting
@@ -202,7 +203,7 @@ public final class FormatHandler {
 	 * @return The parsed format
 	 */
 	public String infoParse(Player sender, String format, String... exclude) {
-		db.i("FormatHandler: Parsing format: " + format);
+		db.debug(DebugLevel.I, "FormatHandler: Parsing format: " + format);
 		StringBuffer parsed = new StringBuffer();
 		Matcher match = formatPattern.matcher(format);
 		
@@ -214,14 +215,14 @@ public final class FormatHandler {
 			if (exclusion.contains(infoType))
 				continue;
 			
-			db.i("FormatHandler: Matched and found info type: " + infoType);
+			db.debug(DebugLevel.I, "FormatHandler: Matched and found info type: " + infoType);
 			String info = plugin.getInfoHandler().getInfo(sender, infoType, "");
 			match.appendReplacement(parsed, info);
-			db.i("FormatHandler: Replaced \"%" + infoType + "\" with \"" + info + "\"");
+			db.debug(DebugLevel.I, "FormatHandler: Replaced \"%" + infoType + "\" with \"" + info + "\"");
 		}
 		
 		match.appendTail(parsed);
-		db.i("FormatHandler: Parsed format: " + parsed.toString());
+		db.debug(DebugLevel.I, "FormatHandler: Parsed format: " + parsed.toString());
 		return parsed.toString();
 	}
 	

@@ -38,11 +38,14 @@ public final class ServerChannel extends Channel {
 	
 	private final Info info;
 	
-	public ServerChannel() {
+	private final ChannelLoader loader;
+	
+	public ServerChannel(ServerChannelLoader loader) {
 		super("Server", Option.DEFAULT);
 		ServerChannel.instance = this;
 		load(null, null);
 		this.info = new ServerInfo();
+		this.loader = loader;
 	}
 	
 	@Override
@@ -51,18 +54,13 @@ public final class ServerChannel extends Channel {
 	}
 	
 	@Override
-	public Channel create(CommandSender sender, String name, Option option) {
-		return this;
-	}
-	
-	@Override
 	public Info getInfo() {
 		return info;
 	}
 	
 	@Override
-	public String getType() {
-		return "Server";
+	public ChannelLoader getLoader() {
+		return loader;
 	}
 	
 	@Override

@@ -35,9 +35,10 @@ import com.nodinchan.ncbukkit.loader.Loadable;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.addon.Addon;
+import com.titankingdoms.nodinchan.titanchat.channel.util.CommandHandler;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Info;
 import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
-import com.titankingdoms.nodinchan.titanchat.channel.util.handler.*;
+import com.titankingdoms.nodinchan.titanchat.channel.util.SettingChanger;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageConsoleEvent;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageReceiveEvent;
@@ -69,16 +70,10 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 	
 	private final Map<String, Participant> participants;
 	
-	private final Handler handler;
-	
 	private String password;
 	
 	private File configFile;
 	private FileConfiguration config;
-	
-	public Channel() {
-		this("", Option.TYPE);
-	}
 	
 	public Channel(String name, Option option) {
 		super(name);
@@ -90,7 +85,6 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 		this.followers = new ArrayList<String>();
 		this.whitelist = new ArrayList<String>();
 		this.participants = new HashMap<String, Participant>();
-		this.handler = new Handler();
 	}
 	
 	/**
@@ -102,40 +96,9 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 	 */
 	public abstract boolean access(Player player);
 	
-	/**
-	 * Changes the setting of the channel
-	 * 
-	 * @param sender The command sender
-	 * 
-	 * @param setting The setting to change
-	 * 
-	 * @param args The arguments
-	 * 
-	 * @return True if the channel supports changing such setting
-	 */
-	public final boolean changeSetting(CommandSender sender, String setting, String[] args) {
-		return handler.changeSetting(sender, setting, args);
-	}
-	
 	public final int compareTo(Channel channel) {
-		if (getOption().equals(Option.TYPE))
-			return getType().compareTo(channel.getType());
-		else
-			return getName().compareTo(channel.getName());
+		return getName().compareTo(channel.getName());
 	}
-	
-	/**
-	 * Creates an instance of a new channel of this type
-	 * 
-	 * @param sender The command sender
-	 * 
-	 * @param name The channel name
-	 * 
-	 * @param option The channel option
-	 * 
-	 * @return The created channel
-	 */
-	public abstract Channel create(CommandSender sender, String name, Option option);
 	
 	/**
 	 * Sends a message about denial of access
@@ -169,6 +132,10 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 		return blacklist;
 	}
 	
+	public CommandHandler getCommand(String command) {
+		return null;
+	}
+	
 	@Override
 	public FileConfiguration getConfig() {
 		if (config == null)
@@ -194,6 +161,13 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 	public Info getInfo() {
 		return info;
 	}
+	
+	/**
+	 * Gets the loader
+	 * 
+	 * @return The loader
+	 */
+	public abstract ChannelLoader getLoader();
 	
 	/**
 	 * Gets the option set for the channel
@@ -222,12 +196,9 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 		return password;
 	}
 	
-	/**
-	 * Gets the type of the channel
-	 * 
-	 * @return The channel type
-	 */
-	public abstract String getType();
+	public SettingChanger getSetting(String setting) {
+		return null;
+	}
 	
 	/**
 	 * Gets the whitelist of the channel
@@ -236,21 +207,6 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 	 */
 	public final List<String> getWhitelist() {
 		return whitelist;
-	}
-	
-	/**
-	 * Handles the command
-	 * 
-	 * @param sender The command sender
-	 * 
-	 * @param command The command to handle
-	 * 
-	 * @param args The arguments
-	 * 
-	 * @return True if the channel has its own way of handling the command
-	 */
-	public final boolean handleCommand(CommandSender sender, String command, String[] args) {
-		return handler.handleCommand(sender, command, args);
 	}
 	
 	/**
@@ -351,17 +307,6 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 		leave(player.getName());
 	}
 	
-	/**
-	 * Loads an instance of the channel of this type
-	 * 
-	 * @param name The channel name
-	 * 
-	 * @param option The channel option
-	 * 
-	 * @return The loaded channel
-	 */
-	public abstract Channel load(String name, Option option);
-	
 	@Override
 	public void reloadConfig() {
 		if (configFile == null)
@@ -400,24 +345,6 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 	 */
 	public final void register(Listener listener) {
 		plugin.register(listener);
-	}
-	
-	/**
-	 * Registers the command handlers
-	 * 
-	 * @param handlers The command handlers to register
-	 */
-	public final void registerCommandHandlers(CommandHandler... handlers) {
-		handler.registerCommandHandlers(handlers);
-	}
-	
-	/**
-	 * Registers the setting handlers
-	 * 
-	 * @param handlers The setting handlers to register
-	 */
-	public final void registerSettingHandlers(SettingHandler... handlers) {
-		handler.registerSettingHandlers(handlers);
 	}
 	
 	/**
@@ -554,6 +481,40 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 		this.password = password;
 	}
 	
+	public static interface ChannelLoader extends Comparable<ChannelLoader> {
+		
+		/**
+		 * Creates an instance of a new channel of this type
+		 * 
+		 * @param sender The command sender
+		 * 
+		 * @param name The channel name
+		 * 
+		 * @param option The channel option
+		 * 
+		 * @return The created channel
+		 */
+		public Channel create(CommandSender sender, String name, Option option);
+		
+		/**
+		 * Gets the name of the creator
+		 * 
+		 * @return The name
+		 */
+		public String getName();
+		
+		/**
+		 * Loads an instance of the channel of this type
+		 * 
+		 * @param name The channel name
+		 * 
+		 * @param option The channel option
+		 * 
+		 * @return The loaded channel
+		 */
+		public Channel load(String name, Option option);
+	}
+	
 	/**
 	 * Option - Channel options
 	 * 
@@ -565,7 +526,7 @@ public abstract class Channel extends Loadable implements Comparable<Channel>, L
 		DEFAULT("default"),
 		NONE("none"),
 		STAFF("staff"),
-		TYPE("type");
+		UTIL("util");
 		
 		private String name;
 		private static Map<String, Option> NAME_MAP = new HashMap<String, Option>();

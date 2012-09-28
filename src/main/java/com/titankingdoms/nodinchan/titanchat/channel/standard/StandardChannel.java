@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -35,10 +34,11 @@ import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
  */
 public final class StandardChannel extends Channel {
 	
-	public StandardChannel() {}
+	private final ChannelLoader creator;
 	
-	public StandardChannel(String name, Option option) {
+	public StandardChannel(String name, Option option, StandardChannelLoader creator) {
 		super(name, option);
+		this.creator = creator;
 	}
 	
 	@Override
@@ -59,37 +59,8 @@ public final class StandardChannel extends Channel {
 	}
 	
 	@Override
-	public Channel create(CommandSender sender, String name, Option option) {
-		StandardChannel channel = new StandardChannel(name, option);
-		
-		if (sender instanceof Player)
-			channel.getAdmins().add(sender.getName());
-		
-		return channel;
-	}
-	
-	@Override
-	public String getType() {
-		return "Standard";
-	}
-	
-	@Override
-	public Channel load(String name, Option option) {
-		StandardChannel channel = new StandardChannel(name, option);
-		
-		if (channel.getConfig().get("admins") != null)
-			channel.getAdmins().addAll(channel.getConfig().getStringList("admins"));
-		
-		if (channel.getConfig().get("blacklist") != null)
-			channel.getBlacklist().addAll(channel.getConfig().getStringList("blacklist"));
-		
-		if (channel.getConfig().get("followers") != null)
-			channel.getFollowers().addAll(channel.getConfig().getStringList("followers"));
-		
-		if (channel.getConfig().get("whitelist") != null)
-			channel.getWhitelist().addAll(channel.getConfig().getStringList("whitelist"));
-		
-		return channel;
+	public ChannelLoader getLoader() {
+		return creator;
 	}
 	
 	@Override

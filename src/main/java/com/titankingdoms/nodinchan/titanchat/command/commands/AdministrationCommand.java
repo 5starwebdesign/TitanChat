@@ -50,8 +50,10 @@ public class AdministrationCommand extends CommandBase {
 	@Description("Bans the player from the channel")
 	@Usage("ban [player]")
 	public void ban(CommandSender sender, Channel channel, String[] args) {
-		if (channel.handleCommand(sender, "ban", args))
+		if (channel.getCommand("") != null) {
+			channel.getCommand("").onCommand(sender, args);
 			return;
+		}
 		
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
@@ -96,8 +98,10 @@ public class AdministrationCommand extends CommandBase {
 	@Description("Forces the player to join the channel")
 	@Usage("force [player]")
 	public void force(CommandSender sender, Channel channel, String[] args) {
-		if (channel.handleCommand(sender, "force", args))
+		if (channel.getCommand("") != null) {
+			channel.getCommand("").onCommand(sender, args);
 			return;
+		}
 		
 		try {
 			Player targetPlayer = plugin.getPlayer(args[0]);
@@ -127,8 +131,10 @@ public class AdministrationCommand extends CommandBase {
 	@Description("Kicks the player from the channel")
 	@Usage("kick [player]")
 	public void kick(CommandSender sender, Channel channel, String[] args) {
-		if (channel.handleCommand(sender, "kick", args))
+		if (channel.getCommand("") != null) {
+			channel.getCommand("").onCommand(sender, args);
 			return;
+		}
 		
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
@@ -163,8 +169,10 @@ public class AdministrationCommand extends CommandBase {
 	@Description("Mutes the player on the channel")
 	@Usage("mute [player]")
 	public void mute(CommandSender sender, Channel channel, String[] args) {
-		if (channel.handleCommand(sender, "mute", args))
+		if (channel.getCommand("") != null) {
+			channel.getCommand("").onCommand(sender, args);
 			return;
+		}
 		
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
@@ -207,8 +215,10 @@ public class AdministrationCommand extends CommandBase {
 	@Description("Unbans the player from the channel")
 	@Usage("unban [player]")
 	public void unban(CommandSender sender, Channel channel, String[] args) {
-		if (channel.handleCommand(sender, "unban", args))
+		if (channel.getCommand("") != null) {
+			channel.getCommand("").onCommand(sender, args);
 			return;
+		}
 		
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
@@ -249,8 +259,10 @@ public class AdministrationCommand extends CommandBase {
 	@Description("Unmutes the player on the channel")
 	@Usage("unmute [player]")
 	public void unmute(CommandSender sender, Channel channel, String[] args) {
-		if (channel.handleCommand(sender, "unmute", args))
+		if (channel.getCommand("") != null) {
+			channel.getCommand("").onCommand(sender, args);
 			return;
+		}
 		
 		try {
 			OfflinePlayer targetPlayer = plugin.getPlayer(args[0]);
