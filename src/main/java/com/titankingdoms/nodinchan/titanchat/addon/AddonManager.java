@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import com.nodinchan.ncbukkit.loader.Loader;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
+import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
 /**
  * AddonManager - Manages addons
@@ -35,7 +36,7 @@ public final class AddonManager {
 	
 	private final TitanChat plugin;
 	
-	private static final Debugger db = new Debugger(1);
+	private static final Debugger db = new Debugger(1, "AddonManager");
 	
 	private List<Addon> addons;
 	
@@ -125,7 +126,7 @@ public final class AddonManager {
 	 * @param addon The addon to register
 	 */
 	public void register(Addon addon) {
-		db.i("Registering addon: " + addon.getName());
+		db.debug(DebugLevel.I, "Registering addon: " + addon.getName());
 		addons.add(addon);
 	}
 	

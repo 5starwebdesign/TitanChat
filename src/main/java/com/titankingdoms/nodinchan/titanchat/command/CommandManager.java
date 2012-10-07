@@ -37,6 +37,7 @@ import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.command.commands.*;
 import com.titankingdoms.nodinchan.titanchat.command.info.Command;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
+import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
 /**
  * CommandManager - Manages commands
@@ -48,7 +49,7 @@ public final class CommandManager {
 	
 	private final TitanChat plugin;
 	
-	private static final Debugger db = new Debugger(3);
+	private static final Debugger db = new Debugger(3, "CommandManager");
 	
 	private final List<String> commands;
 	
@@ -91,7 +92,7 @@ public final class CommandManager {
 					channel = plugin.getManager().getChannelManager().getChannel((Player) sender);
 				
 			} else {
-				if (plugin.getManager().getChannelManager().existsByAlias(chName))
+				if (plugin.getManager().getChannelManager().existingChannelAlias(chName))
 					channel = plugin.getManager().getChannelManager().getChannelByAlias(chName);
 				
 				if (executor.requireChannel() && channel == null) {
@@ -229,11 +230,11 @@ public final class CommandManager {
 	 */
 	public void register(CommandBase... commands) {
 		for (CommandBase command : commands) {
-			db.i("Try to register command " + command.toString());
+			db.debug(DebugLevel.I, "Try to register command " + command.toString());
 			
 			for (Method method : command.getClass().getDeclaredMethods()) {
 				if (method.isAnnotationPresent(Command.class)) {
-					db.i("Adding new executor: " + method.getName());
+					db.debug(DebugLevel.I, "Adding new executor: " + method.getName());
 					
 					Executor executor = new Executor(command, method);
 					executors.put(executor.getName().toLowerCase(), executor);

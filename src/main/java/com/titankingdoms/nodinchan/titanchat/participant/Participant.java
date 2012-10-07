@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.channel.f;
+package com.titankingdoms.nodinchan.titanchat.participant;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
+import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
@@ -25,10 +26,13 @@ public final class Participant {
 	private Channel current;
 	private final Map<String, Channel> channels;
 	
-	public Participant(String name) {
+	private final Map<String, Boolean> muted;
+	
+	public Participant(Player player) {
 		this.plugin = TitanChat.getInstance();
-		this.name = name;
+		this.name = player.getName();
 		this.channels = new HashMap<String, Channel>();
+		this.muted = new HashMap<String, Boolean>();
 	}
 	
 	public void chat(Channel channel, String message) {
@@ -42,6 +46,13 @@ public final class Participant {
 	
 	public void chat(String message) {
 		chat(current, message);
+	}
+	
+	public void direct(Channel channel) {
+		this.current = channel;
+		
+		if (!isParticipating(channel))
+			join(channel);
 	}
 	
 	public Set<Channel> getChannels() {
@@ -64,6 +75,22 @@ public final class Participant {
 		return plugin.getServer().getPlayer(name);
 	}
 	
+	public boolean isDirectedAt(String channel) {
+		return (current != null) ? current.getName().equalsIgnoreCase(channel) : false;
+	}
+	
+	public boolean isDirectedAt(Channel channel) {
+		return (channel != null) ? isDirectedAt(channel.getName()) : current == null;
+	}
+	
+	public boolean isMutedOn(String channel) {
+		return (muted.containsKey(channel.toLowerCase())) ? muted.get(channel.toLowerCase()) : false;
+	}
+	
+	public boolean isMutedOn(Channel channel) {
+		return (channel != null) ? isMutedOn(channel.getName()) : false;
+	}
+	
 	public boolean isOnline() {
 		return getOfflinePlayer().isOnline();
 	}
@@ -73,7 +100,7 @@ public final class Participant {
 	}
 	
 	public boolean isParticipating(Channel channel) {
-		return isParticipating(channel.getName());
+		return (channel != null) ? isParticipating(channel.getName()) : false;
 	}
 	
 	public void join(Channel channel) {
@@ -83,7 +110,7 @@ public final class Participant {
 		this.channels.put(channel.getName().toLowerCase(), channel);
 		
 		if (!this.current.equals(channel))
-			this.current = channel;
+			direct(channel);
 		
 		if (!channel.isParticipating(this))
 			channel.join(this);
@@ -96,10 +123,14 @@ public final class Participant {
 		this.channels.remove(channel.getName().toLowerCase());
 		
 		if (this.current.equals(channel))
-			this.current = ((this.channels.size() > 0) ? getChannels().iterator().next() : null);
+			direct(getChannels().iterator().hasNext() ? getChannels().iterator().next() : null);
 		
 		if (channel.isParticipating(this))
 			channel.leave(this);
+	}
+	
+	public void mute(String channel, boolean muted) {
+		this.muted.put(channel.toLowerCase(), muted);
 	}
 	
 	public void send(MessageLevel level, String message) {

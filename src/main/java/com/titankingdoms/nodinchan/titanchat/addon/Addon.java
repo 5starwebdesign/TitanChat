@@ -34,7 +34,7 @@ public class Addon extends Loadable implements Listener {
 	
 	protected final TitanChat plugin;
 	
-	protected static final Debugger db = new Debugger(1);
+	protected static final Debugger db = new Debugger(1, "Addon");
 	
 	public Addon(String name) {
 		super(name);

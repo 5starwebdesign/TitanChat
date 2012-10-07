@@ -38,7 +38,7 @@ public class CommandBase extends Loadable implements Listener {
 
 	protected final TitanChat plugin;
 	
-	protected static final Debugger db = new Debugger(3);
+	protected static final Debugger db = new Debugger(3, "CommandBase");
 	
 	protected static final MessageLevel INFO = MessageLevel.INFO;
 	protected static final MessageLevel NONE = MessageLevel.NONE;

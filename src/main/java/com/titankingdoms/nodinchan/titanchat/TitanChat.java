@@ -47,7 +47,10 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import com.nodinchan.ncbukkit.NCBL;
+import com.titankingdoms.nodinchan.titanchat.addon.AddonManager;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
+import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
 import com.titankingdoms.nodinchan.titanchat.event.EmoteEvent;
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 import com.titankingdoms.nodinchan.titanchat.loading.Loader;
@@ -74,13 +77,16 @@ public final class TitanChat extends JavaPlugin {
 	private String NAME;
 	
 	private static final Logger log = Logger.getLogger("TitanLog");
-	private static final Debugger db = new Debugger(0);
+	private static final Debugger db = new Debugger(0, "TitanChat");
 	
 	private Loader loader;
 	
 	private ChatProcessor processor;
 	
 	private TitanChatListener listener;
+	private AddonManager addonManager;
+	private ChannelManager channelManager;
+	private CommandManager commandManager;
 	private TitanChatManager manager;
 	private InfoHandler info;
 	private Permissions perms;
@@ -446,7 +452,8 @@ public final class TitanChat extends JavaPlugin {
 	public void onEnable() {
 		log(Level.INFO, "is now enabling...");
 		
-		Debugger.load(getConfig().getString("logging.debug"));
+		for (int id : getConfig().getIntegerList("logging.debug"))
+			Debugger.startDebug(id);
 		
 		register(
 				listener = new TitanChatListener(),
@@ -564,7 +571,7 @@ public final class TitanChat extends JavaPlugin {
 	 */
 	public void send(MessageLevel level, Channel channel, String msg) {
 		db.i("@Channel:" + channel.getName() + ": " + msg);
-		channel.send("[" + level.getColour() + "TitanChat" + ChatColor.WHITE + "] " + level.getColour() + msg);
+		channel.broadcast(level, msg);
 	}
 	
 	/**

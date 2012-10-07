@@ -1,17 +1,13 @@
 tag: ''
-chat-display-colour: ''
-type: 'Standard'
-option: 'none'
+display-colour: ''
+loader-type: 'Standard'
+channel-type: 'none'
 aliases: []
 topic: ''
 setting:
     colouring: false
     range: 'channel'
-    radius: 15
     whitelist: false
-    messages:
-        join: true
-        leave: true
 password: ''
 format: ''
 admins: []

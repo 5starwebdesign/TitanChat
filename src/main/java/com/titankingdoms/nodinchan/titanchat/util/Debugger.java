@@ -36,12 +36,20 @@ public final class Debugger {
 		return name;
 	}
 	
+	public void i(String message) {
+		debug(DebugLevel.I, message);
+	}
+	
 	public boolean isDebugging() {
 		return isDebugging(id);
 	}
 	
 	public boolean isDebugging(int id) {
 		return debugging.contains(id);
+	}
+	
+	public void s(String message) {
+		debug(DebugLevel.S, message);
 	}
 	
 	public void startDebug() {
@@ -64,6 +72,10 @@ public final class Debugger {
 			debugging.clear();
 		else
 			debugging.remove(id);
+	}
+	
+	public void w(String message) {
+		debug(DebugLevel.W, message);
 	}
 	
 	public enum DebugLevel {

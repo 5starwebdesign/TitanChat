@@ -4,7 +4,7 @@ author: NodinChan
 website: http://dev.bukkit.org/server-mods/titanchat
 main: com.titankingdoms.nodinchan.titanchat.TitanChat
 prefix: TitanChat
-softdepend: [NC-BukkitLib, Vault]
+softdepend: [Vault]
 commands:
     titanchat:
         description: TitanChat Commands
@@ -12,7 +12,7 @@ commands:
         usage: /<command> <@><channel> [subcommand] [arguments]
     broadcast:
         description: Broadcast Command
-        aliases: bc
+        aliases: [bc, announce]
         permission: TitanChat.broadcast
         usage: /<command> [message]
     emote:
@@ -22,6 +22,6 @@ commands:
         usage: /<command> [action]
     whisper:
         description: Whisper Command
-        aliases: w
+        aliases: [w, tell]
         permission: TitanChat.whisper
         usage: /<command> [player] [message]

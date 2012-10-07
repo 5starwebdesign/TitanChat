@@ -15,12 +15,9 @@ channels:
         display-colour: '&f'
         topic: ''
     channel-limit: -1
-    messages:
-        join: true
-        leave: true
 logging:
     colouring: true
-    debug: none
+    debug: []
 chat:
     channel-emote:
         enable: true
@@ -36,6 +33,10 @@ chat:
         emote: '* &4Server &f%action'
         whisper: '&4Server &5whispers: %message'
 formatting:
-    use-custom-format: false
-    format: "%tag %prefix%player%suffix: %message"
+    format: '%tag %prefix%player%suffix: %message'
     server: '%tag &4Server: %message'
+    bracket: '[%var%]'
+    variables:
+        %tag: '[%var%]'
+        %prefix: '[%var%]'
+        %suffix: '[%var%]'

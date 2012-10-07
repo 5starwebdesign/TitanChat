@@ -1,29 +1,30 @@
 package com.titankingdoms.nodinchan.titanchat.channel.standard;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel.ChannelLoader;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel.Option;
+import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
+import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
 
-public final class StandardChannelLoader implements ChannelLoader {
+public class StandardLoader extends ChannelLoader {
 	
-	public Channel create(CommandSender sender, String name, Option option) {
-		StandardChannel channel = new StandardChannel(name, option, this);
+	public StandardLoader() {
+		super("Standard");
+	}
+	
+	@Override
+	public Channel create(CommandSender sender, String name, Type type) {
+		StandardChannel channel = new StandardChannel(name, type, this);
 		
-		if (sender instanceof Player)
-			channel.getAdmins().add(sender.getName());
+		channel.getConfig().options().copyDefaults(true);
+		channel.saveConfig();
 		
 		return channel;
 	}
 	
-	public String getName() {
-		return "Standard";
-	}
-	
-	public Channel load(String name, Option option) {
-		StandardChannel channel = new StandardChannel(name, option, this);
+	@Override
+	public Channel load(String name, Type type) {
+		StandardChannel channel = new StandardChannel(name, type, this);
 		
 		if (channel.getConfig().get("admins") != null)
 			channel.getAdmins().addAll(channel.getConfig().getStringList("admins"));
@@ -38,5 +39,11 @@ public final class StandardChannelLoader implements ChannelLoader {
 			channel.getWhitelist().addAll(channel.getConfig().getStringList("whitelist"));
 		
 		return channel;
+	}
+	
+	@Override
+	public void reload() {
+		// TODO Auto-generated method stub
+		
 	}
 }
