@@ -125,7 +125,7 @@ public final class SimplePermissionsBridge {
 	}
 	
 	public boolean hasPermission(CommandSender sender, String permission) {
-		return (sender instanceof Player) ? hasPermission(sender, permission) : true;
+		return (sender instanceof Player) ? hasPermission((Player) sender, permission) : true;
 	}
 	
 	public boolean hasPermission(Player player, String permission) {

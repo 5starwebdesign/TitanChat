@@ -57,7 +57,10 @@ import com.titankingdoms.nodinchan.titanchat.loading.Loader;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Graph;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Plotter;
+import com.titankingdoms.nodinchan.titanchat.participant.Participant;
+import com.titankingdoms.nodinchan.titanchat.participant.ParticipantManager;
 import com.titankingdoms.nodinchan.titanchat.permission.Permissions;
+import com.titankingdoms.nodinchan.titanchat.permissions.SimplePermissionsBridge;
 import com.titankingdoms.nodinchan.titanchat.processing.ChatPacket;
 import com.titankingdoms.nodinchan.titanchat.processing.ChatProcessor;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
@@ -87,10 +90,12 @@ public final class TitanChat extends JavaPlugin {
 	private AddonManager addonManager;
 	private ChannelManager channelManager;
 	private CommandManager commandManager;
+	private ParticipantManager participantManager;
 	private TitanChatManager manager;
 	private InfoHandler info;
 	private Permissions perms;
 	private FormatHandler format;
+	private SimplePermissionsBridge bridge;
 	
 	private boolean silenced = false;
 	
@@ -209,15 +214,6 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	/**
-	 * Gets the manager of the three main managers
-	 * 
-	 * @return The manager of the three main managers
-	 */
-	public TitanChatManager getManager() {
-		return manager;
-	}
-	
-	/**
 	 * Gets the offline player with the specified name
 	 * 
 	 * @param name The name of the player
@@ -229,6 +225,10 @@ public final class TitanChat extends JavaPlugin {
 		return player;
 	}
 	
+	public Participant getParticipant(String name) {
+		return participantManager.getParticipant(name);
+	}
+	
 	/**
 	 * Gets the permissions loader
 	 * 
@@ -236,6 +236,10 @@ public final class TitanChat extends JavaPlugin {
 	 */
 	public Permissions getPermissions() {
 		return perms;
+	}
+	
+	public SimplePermissionsBridge getPermBridge() {
+		return bridge;
 	}
 	
 	/**

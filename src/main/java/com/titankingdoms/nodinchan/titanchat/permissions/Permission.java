@@ -22,6 +22,10 @@ public enum Permission {
 		this.name = name;
 	}
 	
+	public String getPermission() {
+		return "TitanChat." + name + ".*";
+	}
+	
 	public String getPermission(Channel channel) {
 		return "TitanChat." + name + "." + channel.getName();
 	}

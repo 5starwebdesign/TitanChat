@@ -75,6 +75,13 @@ public final class Participant {
 		return plugin.getServer().getPlayer(name);
 	}
 	
+	public boolean hasPermission(String permission) {
+		if (!isOnline())
+			return false;
+		
+		return plugin.getPermBridge().hasPermission(getPlayer(), permission);
+	}
+	
 	public boolean isDirectedAt(String channel) {
 		return (current != null) ? current.getName().equalsIgnoreCase(channel) : false;
 	}

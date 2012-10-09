@@ -62,7 +62,8 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 18.08.12 - Fixed infinite permission loop
 * 19.08.12 - Added some new permissions
 * 28.09.12 - Started rewriting my rewrite since release has been delayed
-* 07.10.12 - NC-BukkitLib is no longer a dependency, now changing commands
+* 07.10.12 - NC-BukkitLib is no longer a dependency
+* 10.10.12 - Channel system completely scraped and rewritten, now working on participants
 
 -----------------------------------------------------------------------------------------------------------------------
 
