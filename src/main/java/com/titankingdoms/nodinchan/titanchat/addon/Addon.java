@@ -18,11 +18,11 @@ package com.titankingdoms.nodinchan.titanchat.addon;
 
 import org.bukkit.event.Listener;
 
-import com.nodinchan.ncbukkit.loader.Loadable;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
-import com.titankingdoms.nodinchan.titanchat.util.Debugger;
+import com.titankingdoms.nodinchan.titanchat.loading.Loadable;
 
 /**
  * Addon - Addon base
@@ -33,8 +33,6 @@ import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 public class Addon extends Loadable implements Listener {
 	
 	protected final TitanChat plugin;
-	
-	protected static final Debugger db = new Debugger(1, "Addon");
 	
 	public Addon(String name) {
 		super(name);
@@ -55,7 +53,7 @@ public class Addon extends Loadable implements Listener {
 	 * @param command The command to register
 	 */
 	public final void register(CommandBase command) {
-		plugin.getManager().getCommandManager().register(command);
+		plugin.getCommandManager().register(command);
 	}
 	
 	/**
@@ -64,7 +62,11 @@ public class Addon extends Loadable implements Listener {
 	 * @param channel The channel to register
 	 */
 	public final void register(Channel channel) {
-		plugin.getManager().getChannelManager().register(channel);
+		plugin.getChannelManager().register(channel);
+	}
+	
+	public final void register(ChannelLoader loader) {
+		plugin.getChannelManager().register(loader);
 	}
 	
 	/**

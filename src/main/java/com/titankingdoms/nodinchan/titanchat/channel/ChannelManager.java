@@ -112,7 +112,7 @@ public final class ChannelManager {
 	}
 	
 	public File getCustomChannelDirectory() {
-		return new File(plugin.getManager().getAddonManager().getAddonDir(), "channels");
+		return new File(plugin.getAddonManager().getAddonDirectory(), "channels");
 	}
 	
 	public List<Channel> getDefaultChannels() {
@@ -124,7 +124,7 @@ public final class ChannelManager {
 	}
 	
 	public File getLoaderDirectory() {
-		return new File(plugin.getManager().getAddonManager().getAddonDir(), "channel-loaders");
+		return new File(plugin.getAddonManager().getAddonDirectory(), "channel-loaders");
 	}
 	
 	public List<ChannelLoader> getLoaders() {

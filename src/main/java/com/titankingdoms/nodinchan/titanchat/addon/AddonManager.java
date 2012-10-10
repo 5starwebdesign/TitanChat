@@ -18,10 +18,12 @@ package com.titankingdoms.nodinchan.titanchat.addon;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
-import com.nodinchan.ncbukkit.loader.Loader;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
@@ -38,15 +40,15 @@ public final class AddonManager {
 	
 	private static final Debugger db = new Debugger(1, "AddonManager");
 	
-	private List<Addon> addons;
+	private Map<String, Addon> addons;
 	
 	public AddonManager() {
 		this.plugin = TitanChat.getInstance();
 		
-		if (getAddonDir().mkdir())
+		if (getAddonDirectory().mkdir())
 			plugin.log(Level.INFO, "Creating addon directory...");
 		
-		this.addons = new ArrayList<Addon>();
+		this.addons = new HashMap<String, Addon>();
 	}
 	
 	/**
@@ -57,12 +59,7 @@ public final class AddonManager {
 	 * @return The addon if found, otherwise null
 	 */
 	public Addon getAddon(String name) {
-		for (Addon addon : addons) {
-			if (addon.getName().equalsIgnoreCase(name))
-				return addon;
-		}
-		
-		return null;
+		return addons.get(name.toLowerCase());
 	}
 	
 	/**
@@ -70,7 +67,7 @@ public final class AddonManager {
 	 * 
 	 * @return The directory of addons
 	 */
-	public File getAddonDir() {
+	public File getAddonDirectory() {
 		return new File(plugin.getDataFolder(), "addons");
 	}
 	
@@ -80,23 +77,24 @@ public final class AddonManager {
 	 * @return The list of addons
 	 */
 	public List<Addon> getAddons() {
-		return new ArrayList<Addon>(addons);
+		return new ArrayList<Addon>(addons.values());
 	}
 	
 	/**
 	 * Loads the manager
 	 */
 	public void load() {
-		Loader<Addon> loader = new Loader<Addon>(plugin, getAddonDir(), new Object[0]);
-		for (Addon addon : loader.load()) { register(addon); }
-		addons = loader.sort(addons);
+		for (Addon addon : plugin.getLoader().load(Addon.class, getAddonDirectory()))
+			register(addon);
+		
+		sortAddons();
 		
 		if (addons.size() < 1)
 			return;
 		
 		StringBuilder str = new StringBuilder();
 		
-		for (Addon addon : addons) {
+		for (Addon addon : getAddons()) {
 			if (str.length() > 0)
 				str.append(", ");
 			
@@ -127,16 +125,24 @@ public final class AddonManager {
 	 */
 	public void register(Addon addon) {
 		db.debug(DebugLevel.I, "Registering addon: " + addon.getName());
-		addons.add(addon);
+		
+		if (!addons.containsKey(addon.getName().toLowerCase()))
+			addons.put(addon.getName().toLowerCase(), addon);
+	}
+	
+	private void sortAddons() {
+		List<Addon> addons = new ArrayList<Addon>(this.addons.values());
+		Collections.sort(addons);
+		this.addons.clear();
+		
+		for (Addon addon : addons)
+			this.addons.put(addon.getName().toLowerCase(), addon);
 	}
 	
 	/**
 	 * Unloads the manager
 	 */
 	public void unload() {
-		for (Addon addon : addons)
-			addon.unload();
-		
 		addons.clear();
 	}
 }

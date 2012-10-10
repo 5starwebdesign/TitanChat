@@ -91,7 +91,6 @@ public final class TitanChat extends JavaPlugin {
 	private ChannelManager channelManager;
 	private CommandManager commandManager;
 	private ParticipantManager participantManager;
-	private TitanChatManager manager;
 	private InfoHandler info;
 	private Permissions perms;
 	private FormatHandler format;
@@ -159,13 +158,12 @@ public final class TitanChat extends JavaPlugin {
 		return getConfig().getBoolean("channels.messages.leave");
 	}
 	
-	/**
-	 * Gets the channel directory
-	 * 
-	 * @return The directory of channels
-	 */
-	public File getChannelDir() {
-		return new File(getDataFolder(), "channels");
+	public AddonManager getAddonManager() {
+		return addonManager;
+	}
+	
+	public ChannelManager getChannelManager() {
+		return channelManager;
 	}
 	
 	/**
@@ -175,6 +173,10 @@ public final class TitanChat extends JavaPlugin {
 	 */
 	public ChatProcessor getChatProcessor() {
 		return processor;
+	}
+	
+	public CommandManager getCommandManager() {
+		return commandManager;
 	}
 	
 	/**
@@ -346,11 +348,6 @@ public final class TitanChat extends JavaPlugin {
 				return true;
 			}
 			
-			if (args[0].equalsIgnoreCase("updatelib")) {
-				updateLib();
-				return true;
-			}
-			
 			String command = args[0];
 			String chName = null;
 			
@@ -367,7 +364,7 @@ public final class TitanChat extends JavaPlugin {
 				arguments = Arrays.copyOfRange(args, 1, args.length);
 			
 			db.i("TitanChat: Passing " + command + " to CommandManager");
-			manager.getCommandManager().execute(sender, command, chName, arguments);
+			commandManager.execute(sender, command, chName, arguments);
 			return true;
 		}
 		
@@ -446,7 +443,8 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "is now disabling...");
 		log(Level.INFO, "Unloading managers...");
 		
-		manager.unload();
+		addonManager.unload();
+		commandManager.unload();
 		info.unload();
 		
 		log(Level.INFO, "is now disabled");
@@ -467,7 +465,6 @@ public final class TitanChat extends JavaPlugin {
 		if (!initMetrics())
 			log(Level.WARNING, "Failed to hook into Metrics");
 		
-		manager = new TitanChatManager();
 		info = new InfoHandler();
 		perms = new Permissions();
 		format = new FormatHandler();
@@ -487,14 +484,17 @@ public final class TitanChat extends JavaPlugin {
 				try { getServer().getPluginManager().addPermission(permission); } catch (Exception e) {}
 		}
 		
-		manager.load();
+		addonManager.load();
+		channelManager.load();
+		commandManager.load();
+		
 		info.loadLoadedInfo();
 		info.loadPlayerInfo();
 		
 		for (Player player : getServer().getOnlinePlayers())
 			info.loadCachedInfo(player);
 		
-		if (manager.getChannelManager().getDefaultChannels().isEmpty()) {
+		if (channelManager.getDefaultChannels().isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
@@ -515,10 +515,11 @@ public final class TitanChat extends JavaPlugin {
 			saveResource("config.yml", false);
 		}
 		
-		if (getConfig().getBoolean("auto-library-update"))
-			updateLib();
+		this.addonManager = new AddonManager();
+		this.channelManager = new ChannelManager();
+		this.commandManager = new CommandManager();
 		
-		if (getChannelDir().mkdirs()) {
+		if (channelManager.getChannelDirectory().mkdirs()) {
 			log(Level.INFO, "Creating channel directory...");
 			saveResource("channels/Default.yml", false);
 			saveResource("channels/Global.yml", false);
@@ -600,72 +601,6 @@ public final class TitanChat extends JavaPlugin {
 	public void setSilenced(boolean silenced) {
 		db.i("Setting silenced to " + silenced);
 		this.silenced = silenced;
-	}
-	
-	/**
-	 * Updates the NC-BukkitLib
-	 */
-	private void updateLib() {
-		PluginManager pm = getServer().getPluginManager();
-		
-		NCBL libPlugin = (NCBL) pm.getPlugin("NC-BukkitLib");
-		
-		File pluginLib = new File(getDataFolder().getParentFile(), "NC-BukkitLib.jar");
-		
-		boolean download = false;
-		
-		try {
-			URL url = new URL("http://bukget.org/api/plugin/nc-bukkitlib");
-			
-			JSONObject jsonPlugin = (JSONObject) new JSONParser().parse(new InputStreamReader(url.openStream()));
-			JSONArray versions = (JSONArray) jsonPlugin.get("versions");
-			
-			String dl_link = "";
-			
-			if (libPlugin == null) {
-				getLogger().log(Level.WARNING, "Missing NC-Bukkit lib");
-				download = true;
-				
-			} else {
-				double currentVer = libPlugin.getVersion();
-				double newVer = currentVer;
-				
-				for (int ver = 0; ver < versions.size(); ver++) {
-					JSONObject version = (JSONObject) versions.get(ver);
-					
-					if (version.get("type").equals("Release")) {
-						newVer = Double.parseDouble(((String) version.get("name")).split(" ")[1].trim().substring(1));
-						dl_link = (String) version.get("dl_link");
-						break;
-					}
-				}
-				
-				if (newVer > currentVer) {
-					getLogger().log(Level.WARNING, "NC-Bukkit lib outdated");
-					download = true;
-				}
-			}
-			
-			if (download) {
-				getLogger().log(Level.INFO, "Downloading NC-Bukkit lib");
-				
-				if (dl_link == null)
-					throw new Exception();
-				
-				URL link = new URL(dl_link);
-				
-				ReadableByteChannel rbc = Channels.newChannel(link.openStream());
-				FileOutputStream output = new FileOutputStream(pluginLib);
-				output.getChannel().transferFrom(rbc, 0, 1 << 24);
-				output.close();
-				
-				getLogger().log(Level.INFO, "Downloaded NC-Bukkit lib, please restart the server to apply update");
-			}
-			
-			if (libPlugin != null)
-				libPlugin.hook(this);
-			
-		} catch (Exception e) { getLogger().log(Level.WARNING, "Failed to check for library update"); }
 	}
 	
 	/**

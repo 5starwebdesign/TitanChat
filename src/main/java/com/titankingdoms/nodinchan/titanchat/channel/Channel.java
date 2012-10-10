@@ -160,7 +160,7 @@ public abstract class Channel extends Loadable implements Listener {
 	@Override
 	public void reloadConfig() {
 		if (configFile == null)
-			configFile = new File(plugin.getManager().getChannelManager().getChannelDirectory(), getName() + ".yml");
+			configFile = new File(plugin.getChannelManager().getChannelDirectory(), getName() + ".yml");
 		
 		config = YamlConfiguration.loadConfiguration(configFile);
 		

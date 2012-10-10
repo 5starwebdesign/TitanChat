@@ -7,7 +7,6 @@
 # &l (bold), &m (underlined), &n (striked), &o (italic)        #
 #==============================================================#
 
-auto-library-update: true
 channels:
     enable: true
     server:

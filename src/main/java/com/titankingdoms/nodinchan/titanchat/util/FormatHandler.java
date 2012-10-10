@@ -28,7 +28,7 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.util.Info;
+import com.titankingdoms.nodinchan.titanchat.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageFormatEvent;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
@@ -42,7 +42,7 @@ public final class FormatHandler {
 	
 	private static TitanChat plugin;
 	
-	protected static final Debugger db = new Debugger(5);
+	protected static final Debugger db = new Debugger(5, "FormatHandler");
 	
 	private final Pattern colourPattern = Pattern.compile("(&)([a-fk-or0-9])", Pattern.CASE_INSENSITIVE);
 	private final Pattern formatPattern = Pattern.compile("(%)([a-z0-9]+)", Pattern.CASE_INSENSITIVE);
@@ -163,7 +163,7 @@ public final class FormatHandler {
 	public String format(Player sender, String channel) {
 		String format = "%tag %prefix%player%suffix&f: %message";
 		
-		Info info = plugin.getManager().getChannelManager().getChannel(channel).getInfo();
+		ChannelInfo info = plugin.getChannelManager().getChannel(channel).getInfo();
 		
 		if (plugin.getConfig().getBoolean("formatting.use-custom-format"))
 			format = info.getFormat();
@@ -173,7 +173,7 @@ public final class FormatHandler {
 		format = format.replace("%tag", info.getTag());
 		format = format.replace("%prefix", affixFinder.getPrefix(sender));
 		format = format.replace("%suffix", affixFinder.getSuffix(sender));
-		format = format.replace("%message", info.getChatColour() + "%message");
+		format = format.replace("%message", info.getColour() + "%message");
 		format = infoParse(sender, format, "message");
 		
 		MessageFormatEvent event = new MessageFormatEvent(sender, format);
@@ -236,9 +236,9 @@ public final class FormatHandler {
 	public String serverFormat(Channel channel) {
 		String format = plugin.getConfig().getString("formatting.server");
 		
-		Info info = channel.getInfo();
+		ChannelInfo info = channel.getInfo();
 		format = format.replace("%tag", info.getTag());
-		format = format.replace("%message", info.getChatColour() + "%message");
+		format = format.replace("%message", info.getColour() + "%message");
 		
 		return plugin.getFormatHandler().colourise(format);
 	}

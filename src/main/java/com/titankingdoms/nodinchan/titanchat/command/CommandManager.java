@@ -154,7 +154,7 @@ public final class CommandManager {
 	 * @return The command directory
 	 */
 	public File getCommandDir() {
-		return new File(plugin.getManager().getAddonManager().getAddonDir(), "commands");
+		return new File(plugin.getManager().getAddonManager().getAddonDirectory(), "commands");
 	}
 	
 	/**
