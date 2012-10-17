@@ -9,6 +9,11 @@ public class ServerInfo extends ChannelInfo {
 	}
 	
 	@Override
+	public String[] getAliases() {
+		return new String[0];
+	}
+	
+	@Override
 	public String getColour() {
 		return plugin.getConfig().getString("channels.server.display-colour", "");
 	}

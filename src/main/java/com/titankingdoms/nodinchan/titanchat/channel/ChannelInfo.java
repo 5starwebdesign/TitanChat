@@ -13,6 +13,8 @@ public abstract class ChannelInfo {
 		this.channel = channel;
 	}
 	
+	public abstract String[] getAliases();
+	
 	public final Channel getChannel() {
 		return channel;
 	}

@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
@@ -51,7 +52,7 @@ public final class Participant {
 	public void direct(Channel channel) {
 		this.current = channel;
 		
-		if (!isParticipating(channel))
+		if (!isParticipating(channel) && !channel.getType().equals(Type.UTILITY))
 			join(channel);
 	}
 	

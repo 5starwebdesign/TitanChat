@@ -9,6 +9,14 @@ public final class StandardInfo extends ChannelInfo {
 	}
 	
 	@Override
+	public String[] getAliases() {
+		if (channel.getConfig().get("aliases") == null)
+			return new String[0];
+		
+		return channel.getConfig().getStringList("aliases").toArray(new String[0]);
+	}
+	
+	@Override
 	public String getColour() {
 		return channel.getConfig().getString("display-colour", "");
 	}

@@ -64,6 +64,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 07.10.12 - NC-BukkitLib is no longer a dependency
 * 10.10.12 - Channel system completely scraped and rewritten, now working on participants
 * 11.10.12 - Slowly removing unneeded code
+* 17.10.12 - Added new UtilityChannels
 
 -----------------------------------------------------------------------------------------------------------------------
 

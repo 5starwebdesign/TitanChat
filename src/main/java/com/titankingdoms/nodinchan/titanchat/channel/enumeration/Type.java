@@ -9,7 +9,7 @@ public enum Type {
 	DEFAULT("default"),
 	NONE("none"),
 	STAFF("staff"),
-	UTIL("util");
+	UTILITY("utility");
 	
 	private String name;
 	private static Map<String, Type> NAME_MAP = new HashMap<String, Type>();

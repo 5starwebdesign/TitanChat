@@ -10,9 +10,9 @@ public final class ServerLoader extends ChannelLoader {
 	
 	private final ServerChannel channel;
 	
-	public ServerLoader() {
+	public ServerLoader(ServerChannel channel) {
 		super("Server");
-		this.channel = new ServerChannel(this);
+		this.channel = channel;
 	}
 	
 	@Override

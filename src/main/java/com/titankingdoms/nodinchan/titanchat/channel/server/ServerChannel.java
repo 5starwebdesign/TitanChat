@@ -17,9 +17,9 @@ public class ServerChannel extends Channel {
 	private final ServerLoader loader;
 	private final ServerInfo info;
 	
-	public ServerChannel(ServerLoader loader) {
+	public ServerChannel() {
 		super("Server", Type.DEFAULT);
-		this.loader = loader;
+		this.loader = new ServerLoader(this);
 		this.info = new ServerInfo(this);
 	}
 	

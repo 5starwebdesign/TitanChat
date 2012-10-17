@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.permissions.Permission;
 
 public final class ParticipantManager {
 	
@@ -41,8 +42,15 @@ public final class ParticipantManager {
 		
 		Participant participant = getParticipant(player);
 		
-		for (Channel channel : plugin.getManager().getChannelManager().getChannels()) {
+		for (Channel channel : plugin.getChannelManager().getChannels()) {
+			if (participant.hasPermission(Permission.AUTOJOIN.getPermission(channel)))
+				channel.join(participant);
 			
+			if (participant.hasPermission(Permission.AUTOLEAVE.getPermission(channel)))
+				channel.leave(participant);
+			
+			if (participant.hasPermission(Permission.AUTODIRECT.getPermission(channel)))
+				participant.direct(channel);
 		}
 	}
 }

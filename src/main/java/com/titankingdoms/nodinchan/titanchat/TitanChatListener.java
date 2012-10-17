@@ -30,7 +30,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageSendEvent;
 
 /**
@@ -102,8 +101,7 @@ public final class TitanChatListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		Participant participant = plugin.getManager().getChannelManager().loadParticipant(event.getPlayer());
-		updateCheck(participant.getPlayer());
+		
 	}
 	
 	/**
@@ -151,7 +149,7 @@ public final class TitanChatListener implements Listener {
 		if (updateCheck() <= currentVer || !player.hasPermission("TitanChat.update"))
 			return;
 		
-		player.sendMessage("\u00A76" + newVer + " &5is out! You are running u00A76" + currentVer);
+		player.sendMessage("\u00A76" + newVer + " \u00A75is out! You are running \u00A76" + currentVer);
 		player.sendMessage("\u00A75Update at \u00A79http://dev.bukkit.org/server-mods/titanchat");
 	}
 }

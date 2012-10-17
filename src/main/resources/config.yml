@@ -9,33 +9,44 @@
 
 channels:
     enable: true
-    server:
-        tag: ''
-        display-colour: '&f'
-        topic: ''
     channel-limit: -1
 logging:
     colouring: true
     debug: []
-chat:
-    channel-emote:
-        enable: true
-        format: '* %player %action'
-    player:
-        enable: true
-        broadcast: '[&cBroadcast&f] %player: %message'
-        emote: '* %player %action'
-        whisper: '&5%player whispers: %message'
-    server:
-        enable: true
-        broadcast: '<&4Server&f> %message'
-        emote: '* &4Server &f%action'
-        whisper: '&4Server &5whispers: %message'
 formatting:
     format: '%tag %prefix%player%suffix: %message'
-    server: '%tag &4Server: %message'
+    console: '%tag &4Server: %message'
     bracket: '[%var%]'
     variables:
         %tag: '[%var%]'
         %prefix: '[%var%]'
         %suffix: '[%var%]'
+utilities:
+    server:
+        tag: ''
+        display-colour: ''
+        topic: ''
+        format: ''
+    broadcast:
+        enable-player: true
+        enable-console: true
+        player-format: '[&cBroadcast&f] %player&f: %message'
+        console-format: '[&cBroadcast&f] &4Server&f: %message'
+    emote:
+        enable-player:
+            global: true
+            channel: true
+        enable-console: true
+        player-format:
+            global: '* %player %action'
+            channel: '* %player %action'
+        console-format: '* &4Server &f%action'
+    whisper:
+        enable-player: true
+        enable-console: true
+        player-format:
+            in: '&5[%player -> You] %message'
+            out: '&5[You -> %player] %message'
+        console-format:
+            in: '&5[&4Server &5-> You] %message'
+            out: '&5[You -> &4Server&5] %message'

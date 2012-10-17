@@ -3,6 +3,7 @@ package com.titankingdoms.nodinchan.titanchat.permissions;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 
 public enum Permission {
+	AUTODIRECT("autodirect"),
 	AUTOJOIN("autojoin"),
 	AUTOLEAVE("autoleave"),
 	BAN("ban"),

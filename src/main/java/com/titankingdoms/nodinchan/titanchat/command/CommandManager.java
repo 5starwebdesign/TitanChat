@@ -89,11 +89,11 @@ public final class CommandManager {
 			
 			if (chName == null || chName.isEmpty()) {
 				if (sender instanceof Player)
-					channel = plugin.getManager().getChannelManager().getChannel((Player) sender);
+					channel = plugin.getChannelManager().getChannel((Player) sender);
 				
 			} else {
-				if (plugin.getManager().getChannelManager().existingChannelAlias(chName))
-					channel = plugin.getManager().getChannelManager().getChannelByAlias(chName);
+				if (plugin.getChannelManager().existingChannelAlias(chName))
+					channel = plugin.getChannelManager().getChannelByAlias(chName);
 				
 				if (executor.requireChannel() && channel == null) {
 					plugin.send(MessageLevel.WARNING, sender, "No such channel");
@@ -154,7 +154,7 @@ public final class CommandManager {
 	 * @return The command directory
 	 */
 	public File getCommandDir() {
-		return new File(plugin.getManager().getAddonManager().getAddonDirectory(), "commands");
+		return new File(plugin.getAddonManager().getAddonDirectory(), "commands");
 	}
 	
 	/**

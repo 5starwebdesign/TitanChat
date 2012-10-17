@@ -26,6 +26,7 @@ import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.addon.Addon;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
 /**
@@ -132,7 +133,7 @@ public class CommandBase extends Loadable implements Listener {
 	 * @param addon The addon to register
 	 */
 	public final void register(Addon addon) {
-		plugin.getManager().getAddonManager().register(addon);
+		plugin.getAddonManager().register(addon);
 	}
 	
 	/**
@@ -141,7 +142,11 @@ public class CommandBase extends Loadable implements Listener {
 	 * @param channel The channel to register
 	 */
 	public final void register(Channel channel) {
-		plugin.getManager().getChannelManager().register(channel);
+		plugin.getChannelManager().register(channel);
+	}
+	
+	public final void register(ChannelLoader loader) {
+		plugin.getChannelManager().register(loader);
 	}
 	
 	/**
@@ -161,7 +166,7 @@ public class CommandBase extends Loadable implements Listener {
 	 * @param name The name of the command
 	 */
 	public final void usage(CommandSender sender, String name) {
-		Executor executor = plugin.getManager().getCommandManager().getCommandExecutor(name);
+		Executor executor = plugin.getCommandManager().getCommandExecutor(name);
 		
 		if (!executor.getUsage().equals(""))
 			plugin.send(MessageLevel.INFO, sender, "Usage: /titanchat <@><channel> " + executor.getUsage());
