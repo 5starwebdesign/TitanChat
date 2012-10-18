@@ -18,6 +18,7 @@ package com.titankingdoms.nodinchan.titanchat.command;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -51,6 +52,10 @@ public class CommandBase extends Loadable implements Listener {
 		this.plugin = TitanChat.getInstance();
 	}
 	
+	public ConsoleCommandSender getConsoleCommandSender() {
+		return plugin.getServer().getConsoleSender();
+	}
+	
 	/**
 	 * Gets the display name of the offline player
 	 * 
@@ -79,6 +84,14 @@ public class CommandBase extends Loadable implements Listener {
 			return ((Player) sender).getDisplayName();
 		
 		return sender.getName();
+	}
+	
+	public final OfflinePlayer getOfflinePlayer(String name) {
+		return plugin.getServer().getOfflinePlayer(name);
+	}
+	
+	public final Player getPlayer(String name) {
+		return plugin.getServer().getPlayer(name);
 	}
 	
 	/**
@@ -119,7 +132,7 @@ public class CommandBase extends Loadable implements Listener {
 	 * @return True if the player is offline
 	 */
 	public final boolean isOffline(CommandSender sender, String player) {
-		OfflinePlayer offPlayer = plugin.getOfflinePlayer(player);
+		OfflinePlayer offPlayer = getOfflinePlayer(player);
 		
 		if (!offPlayer.isOnline())
 			plugin.send(MessageLevel.WARNING, sender, getDisplayName(offPlayer) + " is offline");

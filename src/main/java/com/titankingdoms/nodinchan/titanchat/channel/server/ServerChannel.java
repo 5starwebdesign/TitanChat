@@ -11,6 +11,7 @@ import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Access;
 import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Range;
 import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public class ServerChannel extends Channel {
 	
@@ -47,7 +48,7 @@ public class ServerChannel extends Channel {
 	public void reload() {}
 	
 	@Override
-	public List<Player> selectRecipants(Player sender, String message) {
-		return new ArrayList<Player>();
+	public List<Participant> selectRecipants(Player sender, String message) {
+		return new ArrayList<Participant>();
 	}
 }

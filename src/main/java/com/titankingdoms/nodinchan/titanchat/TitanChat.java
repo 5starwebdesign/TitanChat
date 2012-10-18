@@ -57,7 +57,7 @@ import com.titankingdoms.nodinchan.titanchat.loading.Loader;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Graph;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Plotter;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
+import com.titankingdoms.nodinchan.titanchat.participant.ChannelParticipant;
 import com.titankingdoms.nodinchan.titanchat.participant.ParticipantManager;
 import com.titankingdoms.nodinchan.titanchat.permission.Permissions;
 import com.titankingdoms.nodinchan.titanchat.permissions.SimplePermissionsBridge;
@@ -227,7 +227,7 @@ public final class TitanChat extends JavaPlugin {
 		return player;
 	}
 	
-	public Participant getParticipant(String name) {
+	public ChannelParticipant getParticipant(String name) {
 		return participantManager.getParticipant(name);
 	}
 	

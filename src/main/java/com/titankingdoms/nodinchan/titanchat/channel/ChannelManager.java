@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.channel.standard.StandardLoader;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
@@ -136,6 +137,8 @@ public final class ChannelManager {
 	}
 	
 	public void load() {
+		register(new StandardLoader());
+		
 		for (ChannelLoader loader : plugin.getLoader().load(ChannelLoader.class, getLoaderDirectory()))
 			register(loader);
 		

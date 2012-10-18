@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public abstract class UtilityChannel extends Channel {
 	
@@ -30,8 +31,8 @@ public abstract class UtilityChannel extends Channel {
 	public void reload() {}
 	
 	@Override
-	public List<Player> selectRecipants(Player sender, String message) {
-		return new ArrayList<Player>();
+	public List<Participant> selectRecipants(Player sender, String message) {
+		return new ArrayList<Participant>();
 	}
 	
 	public final class UtilityLoader extends ChannelLoader {

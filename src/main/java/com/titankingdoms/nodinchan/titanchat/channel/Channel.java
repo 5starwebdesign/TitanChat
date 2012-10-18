@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
+import com.titankingdoms.nodinchan.titanchat.addon.Addon;
 import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Access;
 import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Range;
 import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
@@ -155,6 +156,10 @@ public abstract class Channel extends Loadable implements Listener {
 			participant.leave(this);
 	}
 	
+	public final void register(Addon addon) {
+		plugin.getAddonManager().register(addon);
+	}
+	
 	public abstract void reload();
 	
 	@Override
@@ -180,5 +185,5 @@ public abstract class Channel extends Loadable implements Listener {
 		try { config.save(configFile); } catch (Exception e) { plugin.log(Level.SEVERE, "Failed to save to " + configFile); }
 	}
 	
-	public abstract List<Player> selectRecipants(Player sender, String message);
+	public abstract List<Participant> selectRecipants(Player sender, String message);
 }

@@ -1,6 +1,5 @@
 package com.titankingdoms.nodinchan.titanchat.channel.standard;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -97,13 +96,7 @@ public final class StandardChannel extends Channel {
 	}
 	
 	@Override
-	public List<Player> selectRecipants(Player sender, String message) {
-		List<Player> recipants = new ArrayList<Player>();
-		
-		for (Participant participant : getParticipants())
-			if (participant.isOnline())
-				recipants.add(participant.getPlayer());
-		
-		return recipants;
+	public List<Participant> selectRecipants(Player sender, String message) {
+		return getParticipants();
 	}
 }

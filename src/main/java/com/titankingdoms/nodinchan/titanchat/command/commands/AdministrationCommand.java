@@ -180,7 +180,7 @@ public class AdministrationCommand extends CommandBase {
 			if (isOffline(sender, args[0]))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
 			
-			Participant participant = cm.getParticipant(targetPlayer.getName());
+			ChannelParticipant participant = cm.getParticipant(targetPlayer.getName());
 			
 			if (participant == null && targetPlayer.isOnline())
 				participant = cm.loadParticipant(targetPlayer.getPlayer());
@@ -270,7 +270,7 @@ public class AdministrationCommand extends CommandBase {
 			if (isOffline(sender, args[0]))
 				targetPlayer = plugin.getOfflinePlayer(args[0]);
 			
-			Participant participant = cm.getParticipant(targetPlayer.getName());
+			ChannelParticipant participant = cm.getParticipant(targetPlayer.getName());
 			
 			if (participant == null && targetPlayer.isOnline())
 				participant = cm.loadParticipant(targetPlayer.getPlayer());

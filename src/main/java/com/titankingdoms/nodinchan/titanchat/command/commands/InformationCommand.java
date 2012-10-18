@@ -227,7 +227,7 @@ public class InformationCommand extends CommandBase {
 		
 		List<String> participants = new ArrayList<String>();
 		
-		for (Participant participant : channel.getParticipants()) {
+		for (ChannelParticipant participant : channel.getParticipants()) {
 			if (participant.getPlayer() != null)
 				participants.add(ChatColor.GREEN + participant.getName());
 			else
