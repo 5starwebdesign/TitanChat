@@ -6,7 +6,7 @@ import java.util.Map;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.permissions.Permission;
 
 public final class ParticipantManager {

@@ -21,9 +21,9 @@ import java.util.logging.Level;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
 /**

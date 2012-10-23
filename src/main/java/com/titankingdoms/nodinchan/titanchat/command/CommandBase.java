@@ -25,9 +25,9 @@ import org.bukkit.event.Listener;
 import com.nodinchan.ncbukkit.loader.Loadable;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
-import com.titankingdoms.nodinchan.titanchat.addon.Addon;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
+import com.titankingdoms.nodinchan.titanchat.core.addon.Addon;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
 /**

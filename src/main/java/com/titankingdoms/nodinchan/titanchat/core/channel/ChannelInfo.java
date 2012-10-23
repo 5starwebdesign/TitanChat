@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.channel;
+package com.titankingdoms.nodinchan.titanchat.core.channel;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 

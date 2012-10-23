@@ -47,10 +47,10 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import com.nodinchan.ncbukkit.NCBL;
-import com.titankingdoms.nodinchan.titanchat.addon.AddonManager;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
 import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
+import com.titankingdoms.nodinchan.titanchat.core.addon.AddonManager;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.nodinchan.titanchat.event.EmoteEvent;
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 import com.titankingdoms.nodinchan.titanchat.loading.Loader;

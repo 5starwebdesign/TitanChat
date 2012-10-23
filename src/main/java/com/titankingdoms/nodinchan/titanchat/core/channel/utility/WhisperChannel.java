@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.channel.utility;
+package com.titankingdoms.nodinchan.titanchat.core.channel.utility;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,15 +7,15 @@ import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelInfo;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Range;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.info.Aliases;
 import com.titankingdoms.nodinchan.titanchat.command.info.Command;
 import com.titankingdoms.nodinchan.titanchat.command.info.Description;
 import com.titankingdoms.nodinchan.titanchat.command.info.Usage;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
 import com.titankingdoms.nodinchan.titanchat.participant.ChannelParticipant;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 

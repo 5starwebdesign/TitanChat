@@ -24,7 +24,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 
 /**

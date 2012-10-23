@@ -1,16 +1,16 @@
-package com.titankingdoms.nodinchan.titanchat.channel.server;
+package com.titankingdoms.nodinchan.titanchat.core.channel.server;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelInfo;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Range;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public class ServerChannel extends Channel {

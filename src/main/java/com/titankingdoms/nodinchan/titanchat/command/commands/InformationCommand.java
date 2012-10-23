@@ -23,15 +23,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.addon.Addon;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelManager;
-import com.titankingdoms.nodinchan.titanchat.channel.custom.CustomChannel;
-import com.titankingdoms.nodinchan.titanchat.channel.util.Participant;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
 import com.titankingdoms.nodinchan.titanchat.command.Executor;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
+import com.titankingdoms.nodinchan.titanchat.core.addon.Addon;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelManager;
+import com.titankingdoms.nodinchan.titanchat.core.channel.custom.CustomChannel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.util.Participant;
 
 /**
  * InformationCommand - Gives information on Commands, Channels, etc.

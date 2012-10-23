@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.channel;
+package com.titankingdoms.nodinchan.titanchat.core.channel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
-import com.titankingdoms.nodinchan.titanchat.channel.standard.StandardLoader;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
@@ -101,7 +101,7 @@ public final class ChannelManager {
 	}
 	
 	public Channel getChannelByAlias(String alias) {
-		return getChannel(existingChannelAlias(alias) ? aliases.get(alias.toLowerCase()) : "");
+		return (existingChannelAlias(alias)) ? getChannel(aliases.get(alias.toLowerCase())) : null;
 	}
 	
 	public File getChannelDirectory() {
@@ -150,30 +150,34 @@ public final class ChannelManager {
 		sortChannels();
 	}
 	
-	public void register(Channel channel) {
-		if (existingChannel(channel))
-			return;
-		
-		switch (channel.getType()) {
-		
-		default:
-			channels.put(channel.getName().toLowerCase(), channel);
+	public void register(Channel... channels) {
+		for (Channel channel : channels) {
+			if (existingChannel(channel))
+				return;
 			
-		case DEFAULT:
-			defaults.add(channel);
-			break;
+			switch (channel.getType()) {
 			
-		case STAFF:
-			defaults.add(channel);
-			break;
+			default:
+				this.channels.put(channel.getName().toLowerCase(), channel);
+				
+			case DEFAULT:
+				defaults.add(channel);
+				break;
+				
+			case STAFF:
+				defaults.add(channel);
+				break;
+			}
 		}
 	}
 	
-	public void register(ChannelLoader loader) {
-		if (existingLoader(loader))
-			return;
-		
-		loaders.put(loader.getName().toLowerCase(), loader);
+	public void register(ChannelLoader... loaders) {
+		for (ChannelLoader loader : loaders) {
+			if (existingLoader(loader))
+				return;
+			
+			this.loaders.put(loader.getName().toLowerCase(), loader);
+		}
 	}
 	
 	public void reload() {

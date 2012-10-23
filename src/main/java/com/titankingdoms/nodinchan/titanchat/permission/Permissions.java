@@ -7,7 +7,7 @@ import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginManager;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 
 public final class Permissions {
 	

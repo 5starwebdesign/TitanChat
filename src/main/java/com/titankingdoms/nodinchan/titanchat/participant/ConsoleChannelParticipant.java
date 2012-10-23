@@ -5,7 +5,7 @@ import java.util.logging.Level;
 import org.bukkit.ChatColor;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 
 public class ConsoleChannelParticipant extends Participant {
 	

@@ -27,8 +27,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelInfo;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.event.chat.MessageFormatEvent;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 

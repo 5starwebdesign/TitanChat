@@ -14,14 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.titankingdoms.nodinchan.titanchat.addon;
+package com.titankingdoms.nodinchan.titanchat.core.addon;
 
 import org.bukkit.event.Listener;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.loading.Loadable;
 
 /**

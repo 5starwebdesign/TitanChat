@@ -1,6 +1,6 @@
-package com.titankingdoms.nodinchan.titanchat.channel.standard;
+package com.titankingdoms.nodinchan.titanchat.core.channel.standard;
 
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelInfo;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 
 public final class StandardInfo extends ChannelInfo {
 	

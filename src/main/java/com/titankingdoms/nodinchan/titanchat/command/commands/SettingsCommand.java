@@ -23,10 +23,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.Channel.Range;
 import com.titankingdoms.nodinchan.titanchat.command.CommandBase;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel.Range;
 
 
 /**

@@ -1,6 +1,6 @@
 package com.titankingdoms.nodinchan.titanchat.permissions;
 
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 
 public enum Permission {
 	AUTODIRECT("autodirect"),

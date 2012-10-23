@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.channel.utility;
+package com.titankingdoms.nodinchan.titanchat.core.channel.utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,9 +6,9 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public abstract class UtilityChannel extends Channel {

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.titankingdoms.nodinchan.titanchat.addon;
+package com.titankingdoms.nodinchan.titanchat.core.addon;
 
 import java.io.File;
 import java.util.ArrayList;

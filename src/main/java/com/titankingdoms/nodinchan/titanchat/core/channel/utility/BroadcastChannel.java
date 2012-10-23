@@ -1,11 +1,11 @@
-package com.titankingdoms.nodinchan.titanchat.channel.utility;
+package com.titankingdoms.nodinchan.titanchat.core.channel.utility;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelInfo;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Range;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
 
 public final class BroadcastChannel extends UtilityChannel {
 	

@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.channel;
+package com.titankingdoms.nodinchan.titanchat.core.channel;
 
 import java.io.File;
 import java.io.InputStream;
@@ -15,10 +15,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
-import com.titankingdoms.nodinchan.titanchat.addon.Addon;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Range;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.addon.Addon;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
 import com.titankingdoms.nodinchan.titanchat.loading.Loadable;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;

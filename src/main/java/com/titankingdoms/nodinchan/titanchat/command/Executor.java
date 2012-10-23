@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.command.info.*;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 
 /**
  * Executor - Represents a command executor

@@ -1,10 +1,10 @@
-package com.titankingdoms.nodinchan.titanchat.channel.standard;
+package com.titankingdoms.nodinchan.titanchat.core.channel.standard;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.nodinchan.titanchat.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.channel.ChannelLoader;
-import com.titankingdoms.nodinchan.titanchat.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
+import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
 
 public class StandardLoader extends ChannelLoader {
 	
