@@ -14,8 +14,8 @@ import com.titankingdoms.nodinchan.titanchat.command.info.Description;
 import com.titankingdoms.nodinchan.titanchat.command.info.Usage;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Range;
 import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
 import com.titankingdoms.nodinchan.titanchat.participant.ChannelParticipant;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 

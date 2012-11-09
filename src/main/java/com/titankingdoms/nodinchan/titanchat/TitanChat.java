@@ -17,12 +17,7 @@
 package com.titankingdoms.nodinchan.titanchat;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,15 +33,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
-import com.nodinchan.ncbukkit.NCBL;
 import com.titankingdoms.nodinchan.titanchat.command.CommandManager;
 import com.titankingdoms.nodinchan.titanchat.core.addon.AddonManager;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
@@ -231,6 +221,10 @@ public final class TitanChat extends JavaPlugin {
 		return participantManager.getParticipant(name);
 	}
 	
+	public ParticipantManager getParticipantManager() {
+		return participantManager;
+	}
+	
 	/**
 	 * Gets the permissions loader
 	 * 
@@ -335,13 +329,9 @@ public final class TitanChat extends JavaPlugin {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		db.i("TitanChat: On command: " + cmd.getName());
-		
 		if (cmd.getName().equals("titanchat")) {
-			db.i("TitanChat: Command confirmed to be /TitanChat");
-			
 			if (args.length < 1 || (args[0].startsWith("@") && args.length < 2)) {
-				db.i("TitanChat: /TitanChat: No arguments");
+				db.i("/TitanChat");
 				
 				sender.sendMessage(ChatColor.AQUA + "You are running " + this);
 				send(MessageLevel.INFO, sender, "\"/titanchat commands [page]\" for command list");
@@ -632,14 +622,7 @@ public final class TitanChat extends JavaPlugin {
 			return true;
 		}
 		
-		if (manager.getChannelManager().isSilenced(channel)) {
-			if (message)
-				send(MessageLevel.WARNING, player, "The channel is silenced");
-			
-			return true;
-		}
-		
-		if (manager.getChannelManager().getParticipant(player).isMuted(channel)) {
+		if (getParticipantManager().getParticipant(player).isMutedOn(channel)) {
 			if (message)
 				send(MessageLevel.WARNING, player, "You have been muted");
 			

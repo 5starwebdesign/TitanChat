@@ -1,24 +1,18 @@
 package com.titankingdoms.nodinchan.titanchat.core.channel;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import org.bukkit.OfflinePlayer;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
 import com.titankingdoms.nodinchan.titanchat.core.addon.Addon;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.command.Command;
 import com.titankingdoms.nodinchan.titanchat.loading.Loadable;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
@@ -27,31 +21,28 @@ public abstract class Channel extends Loadable implements Listener {
 	
 	protected final Debugger db = new Debugger(2, "Channel");
 	
-	private File configFile;
-	private FileConfiguration config;
-	
 	private final Type type;
 	
 	private final List<String> admins;
 	private final List<String> blacklist;
-	private final List<String> followers;
+	private final List<String> participants;
 	private final List<String> whitelist;
 	
-	private final Map<String, Participant> participants;
+	private final Map<String, Command> commands;
 	
 	public Channel(String name, Type type) {
 		super(name);
 		this.type = type;
 		this.admins = new ArrayList<String>();
 		this.blacklist = new ArrayList<String>();
-		this.followers = new ArrayList<String>();
+		this.participants = new ArrayList<String>();
 		this.whitelist = new ArrayList<String>();
-		this.participants = new HashMap<String, Participant>();
+		this.commands = new HashMap<String, Command>();
 	}
 	
 	public void broadcast(MessageLevel level, String message) {
-		for (Participant participant : getParticipants())
-			participant.send(level, message);
+		for (String name : participants)
+			plugin.getParticipant(name).send(level, message);
 	}
 	
 	public List<String> getAdmins() {
@@ -64,22 +55,14 @@ public abstract class Channel extends Loadable implements Listener {
 	
 	public abstract ChannelLoader getChannelLoader();
 	
-	@Override
-	public FileConfiguration getConfig() {
-		if (config == null)
-			reloadConfig();
-		
-		return config;
-	}
-	
-	public List<String> getFollowers() {
-		return followers;
+	public final Command getCommand(String name) {
+		return this.commands.get(name.toLowerCase());
 	}
 	
 	public abstract ChannelInfo getInfo();
 	
-	public List<Participant> getParticipants() {
-		return new ArrayList<Participant>(participants.values());
+	public List<String> getParticipants() {
+		return Collections.unmodifiableList(participants);
 	}
 	
 	public abstract Range getRange();
@@ -92,54 +75,64 @@ public abstract class Channel extends Loadable implements Listener {
 		return whitelist;
 	}
 	
-	public abstract boolean hasAccess(Player player, Access access);
+	public final boolean hasCommand(String name) {
+		return this.commands.containsKey(name.toLowerCase());
+	}
+	
+	public boolean isAdmin(String name) {
+		return admins.contains(name);
+	}
 	
 	public boolean isAdmin(Participant participant) {
-		return admins.contains(participant.getName());
+		return isAdmin(participant.getName());
 	}
 	
 	public boolean isAdmin(OfflinePlayer player) {
-		return admins.contains(player.getName());
+		return isAdmin(player.getName());
+	}
+	
+	public boolean isBlacklisted(String name) {
+		return blacklist.contains(name);
 	}
 	
 	public boolean isBlacklisted(Participant participant) {
-		return blacklist.contains(participant.getName());
+		return isBlacklisted(participant.getName());
 	}
 	
 	public boolean isBlacklisted(OfflinePlayer player) {
-		return blacklist.contains(player.getName());
+		return isBlacklisted(player.getName());
 	}
 	
-	public boolean isFollower(Participant participant) {
-		return followers.contains(participant.getName());
-	}
-	
-	public boolean isFollower(OfflinePlayer player) {
-		return followers.contains(player.getName());
+	public boolean isParticipating(String name) {
+		return participants.contains(name);
 	}
 	
 	public boolean isParticipating(Participant participant) {
-		return participants.containsKey(participant.getName().toLowerCase());
+		return isParticipating(participant.getName());
 	}
 	
 	public boolean isParticipating(OfflinePlayer player) {
-		return participants.containsKey(player.getName().toLowerCase());
+		return isParticipating(player.getName());
+	}
+	
+	public boolean isWhitelisted(String name) {
+		return whitelist.contains(name);
 	}
 	
 	public boolean isWhitelisted(Participant participant) {
-		return whitelist.contains(participant.getName());
+		return isWhitelisted(participant.getName());
 	}
 	
 	public boolean isWhitelisted(OfflinePlayer player) {
-		return whitelist.contains(player.getName());
+		return isWhitelisted(player.getName());
 	}
 	
 	public void join(Participant participant) {
 		if (participant == null)
 			return;
 		
-		if (!participants.containsKey(participant.getName().toLowerCase()))
-			participants.put(participant.getName().toLowerCase(), participant);
+		if (!participants.contains(participant.getName()))
+			participants.add(participant.getName());
 		
 		if (!participant.isParticipating(this))
 			participant.join(this);
@@ -149,8 +142,8 @@ public abstract class Channel extends Loadable implements Listener {
 		if (participant == null)
 			return;
 		
-		if (participants.containsKey(participant.getName().toLowerCase()))
-			participants.remove(participant.getName().toLowerCase());
+		if (participants.contains(participant.getName()))
+			participants.remove(participant.getName());
 		
 		if (participant.isParticipating(this))
 			participant.leave(this);
@@ -160,30 +153,17 @@ public abstract class Channel extends Loadable implements Listener {
 		plugin.getAddonManager().register(addon);
 	}
 	
+	public final void register(Command command) {
+		
+	}
+	
+	protected final void registerCommands(Command... commands) {
+		for (Command command : commands)
+			if (!hasCommand(command.getName()))
+				this.commands.put(command.getName().toLowerCase(), command);
+	}
+	
 	public abstract void reload();
-	
-	@Override
-	public void reloadConfig() {
-		if (configFile == null)
-			configFile = new File(plugin.getChannelManager().getChannelDirectory(), getName() + ".yml");
-		
-		config = YamlConfiguration.loadConfiguration(configFile);
-		
-		InputStream defConfigStream = plugin.getResource("channel.yml");
-		
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			config.setDefaults(defConfig);
-		}
-	}
-	
-	@Override
-	public void saveConfig() {
-		if (config == null || configFile == null)
-			return;
-		
-		try { config.save(configFile); } catch (Exception e) { plugin.log(Level.SEVERE, "Failed to save to " + configFile); }
-	}
 	
 	public abstract List<Participant> selectRecipants(Player sender, String message);
 }

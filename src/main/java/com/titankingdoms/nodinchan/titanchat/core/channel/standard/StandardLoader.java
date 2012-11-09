@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 
 public class StandardLoader extends ChannelLoader {
 	
@@ -31,9 +31,6 @@ public class StandardLoader extends ChannelLoader {
 		
 		if (channel.getConfig().get("blacklist") != null)
 			channel.getBlacklist().addAll(channel.getConfig().getStringList("blacklist"));
-		
-		if (channel.getConfig().get("followers") != null)
-			channel.getFollowers().addAll(channel.getConfig().getStringList("followers"));
 		
 		if (channel.getConfig().get("whitelist") != null)
 			channel.getWhitelist().addAll(channel.getConfig().getStringList("whitelist"));

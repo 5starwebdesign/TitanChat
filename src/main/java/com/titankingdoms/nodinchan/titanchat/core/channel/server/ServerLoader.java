@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 
 public final class ServerLoader extends ChannelLoader {
 	

@@ -12,6 +12,5 @@ password: ''
 format: ''
 admins: []
 blacklist: []
-followers: []
 whitelist: []
 participants: []

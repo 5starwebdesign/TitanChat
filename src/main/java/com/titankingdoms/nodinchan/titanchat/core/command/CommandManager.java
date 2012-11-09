@@ -1,116 +1,65 @@
 package com.titankingdoms.nodinchan.titanchat.core.command;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.core.command.annotation.Command;
-import com.titankingdoms.nodinchan.titanchat.core.command.execution.AnnotationExecutor;
-import com.titankingdoms.nodinchan.titanchat.core.command.execution.Executor;
-import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
-public class CommandManager {
+public final class CommandManager {
 	
 	private final TitanChat plugin;
 	
-	private static final Debugger db = new Debugger(3, "CommandManager");
-	
 	private final Map<String, String> aliases;
-	private final Map<String, CommandBase> bases;
-	private final Map<String, Executor> executors;
+	private final Map<String, Command> commands;
 	
 	public CommandManager() {
 		this.plugin = TitanChat.getInstance();
-		this.aliases = new HashMap<String, String>();
-		this.bases = new HashMap<String, CommandBase>();
-		this.executors = new HashMap<String, Executor>();
+		this.aliases = new TreeMap<String, String>();
+		this.commands = new TreeMap<String, Command>();
 	}
 	
-	public boolean existingCommandBase(String name) {
-		return bases.containsKey(name.toLowerCase());
+	public boolean existingCommand(String name) {
+		return commands.containsKey(name.toLowerCase());
 	}
 	
-	public boolean existingCommandBase(CommandBase base) {
-		return existingCommandBase(base.getName());
+	public boolean existingCommand(Command command) {
+		return existingCommand(command.getName());
 	}
 	
-	public boolean existingExecutor(String name) {
-		return executors.containsKey(name.toLowerCase());
-	}
-	
-	public boolean existingExecutor(Executor executor) {
-		return existingExecutor(executor.getName());
-	}
-	
-	public boolean existingExecutorAlias(String alias) {
+	public boolean existingCommandAlias(String alias) {
 		return aliases.containsKey(alias.toLowerCase());
 	}
 	
-	public CommandBase getCommandBase(String name) {
-		return bases.get(name.toLowerCase());
+	public Command getCommand(String name) {
+		return commands.get(name.toLowerCase());
+	}
+	
+	public Command getCommandByAlias(String alias) {
+		return (existingCommandAlias(alias)) ? getCommand(aliases.get(alias.toLowerCase())) : null;
 	}
 	
 	public File getCommandDirectory() {
 		return new File(plugin.getAddonManager().getAddonDirectory(), "commands");
 	}
 	
-	public Executor getExecutor(String name) {
-		return executors.get(name.toLowerCase());
+	public List<Command> getCommands() {
+		return new ArrayList<Command>(commands.values());
 	}
 	
-	public Executor getExecutorByAlias(String alias) {
-		return (existingExecutorAlias(alias)) ? getExecutor(aliases.get(alias.toLowerCase())) : null;
-	}
-	
-	public void register(CommandBase... bases) {
-		for (CommandBase base : bases) {
-			if (existingCommandBase(base))
-				return;
+	public void register(Command... commands) {
+		for (Command command : commands) {
+			if (existingCommand(command))
+				continue;
 			
-			this.bases.put(base.getName().toLowerCase(), base);
+			this.commands.put(command.getName().toLowerCase(), command);
+			this.aliases.put(command.getName().toLowerCase(), command.getName());
 			
-			for (Method method : base.getClass().getDeclaredMethods()) {
-				if (!method.isAnnotationPresent(Command.class))
-					continue;
-				
-				register(new AnnotationExecutor(base, new CommandMethod(base, method)));
-			}
+			for (String alias : command.getAliases())
+				if (!existingCommand(alias) && !existingCommandAlias(alias))
+					this.aliases.put(alias.toLowerCase(), command.getName());
 		}
-	}
-	
-	public void register(Executor... executors) {
-		for (Executor executor : executors) {
-			if (existingExecutor(executor))
-				return;
-			
-			this.executors.put(executor.getName().toLowerCase(), executor);
-			
-			for (String alias : executor.getAliases())
-				if (!existingExecutorAlias(alias))
-					aliases.put(alias.toLowerCase(), executor.getName());
-		}
-	}
-	
-	private void sortCommandBases() {
-		List<CommandBase> bases = new ArrayList<CommandBase>(this.bases.values());
-		Collections.sort(bases);
-		this.bases.clear();
-		
-		for (CommandBase base : bases)
-			this.bases.put(base.getName().toLowerCase(), base);
-	}
-	
-	private void sortExecutors() {
-		List<Executor> executors = new ArrayList<Executor>(this.executors.values());
-		Collections.sort(executors);
-		this.executors.clear();
-		
-		for (Executor executor : executors)
-			this.executors.put(executor.getName().toLowerCase(), executor);
 	}
 }

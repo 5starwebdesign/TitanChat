@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.core.channel.enumeration;
+package com.titankingdoms.nodinchan.titanchat.core.channel;
 
 import java.util.EnumSet;
 import java.util.HashMap;

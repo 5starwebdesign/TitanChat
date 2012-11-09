@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public abstract class UtilityChannel extends Channel {

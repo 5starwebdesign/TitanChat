@@ -1,21 +1,29 @@
 package com.titankingdoms.nodinchan.titanchat.core.channel.standard;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Level;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Range;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public final class StandardChannel extends Channel {
 	
 	private final StandardLoader loader;
 	private final StandardInfo info;
+	
+	private File configFile;
+	private FileConfiguration config;
 	
 	public StandardChannel(String name, Type type, StandardLoader loader) {
 		super(name, type);
@@ -26,6 +34,14 @@ public final class StandardChannel extends Channel {
 	@Override
 	public ChannelLoader getChannelLoader() {
 		return loader;
+	}
+	
+	@Override
+	public FileConfiguration getConfig() {
+		if (config == null)
+			reloadConfig();
+		
+		return config;
 	}
 
 	@Override
@@ -91,8 +107,30 @@ public final class StandardChannel extends Channel {
 		getConfig().set("admins", getAdmins());
 		getConfig().set("blacklist", getBlacklist());
 		getConfig().set("whitelist", getWhitelist());
-		getConfig().set("followers", getFollowers());
 		saveConfig();
+	}
+	
+	@Override
+	public void reloadConfig() {
+		if (configFile == null)
+			configFile = new File(plugin.getChannelManager().getChannelDirectory(), getName() + ".yml");
+		
+		config = YamlConfiguration.loadConfiguration(configFile);
+		
+		InputStream defConfigStream = plugin.getResource("channel.yml");
+		
+		if (defConfigStream != null) {
+			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+			config.setDefaults(defConfig);
+		}
+	}
+	
+	@Override
+	public void saveConfig() {
+		if (config == null || configFile == null)
+			return;
+		
+		try { config.save(configFile); } catch (Exception e) { plugin.log(Level.SEVERE, "Failed to save to " + configFile); }
 	}
 	
 	@Override

@@ -2,7 +2,6 @@ package com.titankingdoms.nodinchan.titanchat.core.channel;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
 import com.titankingdoms.nodinchan.titanchat.loading.Loadable;
 
 public abstract class ChannelLoader extends Loadable {

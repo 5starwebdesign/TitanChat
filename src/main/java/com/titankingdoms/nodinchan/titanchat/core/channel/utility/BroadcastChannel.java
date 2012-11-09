@@ -4,8 +4,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Range;
 import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
 
 public final class BroadcastChannel extends UtilityChannel {
 	

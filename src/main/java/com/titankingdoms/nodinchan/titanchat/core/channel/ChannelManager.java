@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.TitanChat.MessageLevel;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
 import com.titankingdoms.nodinchan.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
@@ -59,7 +58,8 @@ public final class ChannelManager {
 		Channel channel = getChannel(name);
 		channels.remove(channel.getName().toLowerCase());
 		
-		for (Participant participant : channel.getParticipants()) {
+		for (String participantName : channel.getParticipants()) {
+			Participant participant = plugin.getParticipant(participantName);
 			channel.leave(participant);
 			participant.send(MessageLevel.WARNING, channel.getName() + " has been deleted");
 		}
@@ -155,17 +155,24 @@ public final class ChannelManager {
 			if (existingChannel(channel))
 				return;
 			
+			this.channels.put(channel.getName().toLowerCase(), channel);
+			this.aliases.put(channel.getName().toLowerCase(), channel.getName());
+			
+			for (String alias : channel.getInfo().getAliases())
+				if (!existingChannel(alias) && !existingChannelAlias(alias))
+					this.aliases.put(alias.toLowerCase(), channel.getName());
+			
 			switch (channel.getType()) {
 			
-			default:
-				this.channels.put(channel.getName().toLowerCase(), channel);
-				
 			case DEFAULT:
 				defaults.add(channel);
 				break;
 				
 			case STAFF:
-				defaults.add(channel);
+				staff.add(channel);
+				break;
+				
+			default:
 				break;
 			}
 		}

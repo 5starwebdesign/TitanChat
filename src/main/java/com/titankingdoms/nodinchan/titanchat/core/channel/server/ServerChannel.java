@@ -3,14 +3,15 @@ package com.titankingdoms.nodinchan.titanchat.core.channel.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Range;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Access;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Range;
-import com.titankingdoms.nodinchan.titanchat.core.channel.enumeration.Type;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public class ServerChannel extends Channel {
@@ -40,7 +41,7 @@ public class ServerChannel extends Channel {
 	}
 	
 	@Override
-	public boolean hasAccess(Player player, Access access) {
+	public boolean hasAccess(CommandSender sender, Access access) {
 		return false;
 	}
 	
