@@ -1,0 +1,20 @@
+tag: '[D]'
+chat-display-colour: '&f'
+type: 'Standard'
+option: 'default'
+aliases: [d]
+topic: 'Welcome to the default channel'
+setting:
+    colouring: false
+    range: 'channel'
+    radius: 15
+    whitelist: false
+    messages:
+        join: true
+        leave: true
+password: ''
+format: ''
+admins: []
+blacklist: []
+followers: []
+whitelist: []

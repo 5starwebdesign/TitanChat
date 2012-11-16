@@ -1,0 +1,55 @@
+player-specific:
+    TitanDev:
+        prefix: '[&6TitanDev&f]'
+        suffix: '&1'
+    TitanCI:
+        prefix: '[&5CI&f]'
+    GoMySQL:
+        suffix: '&5'
+    SomePlayer:
+        someinfo: 'SomePlayer will get this info node without any need of permissions'
+    SomeOtherPlayer:
+        someinfo: 'SomeOtherPlayer will get this info node instead'
+permission-specific:
+    guest:
+        prefix: '[&8Guest&f]'
+        priority: 0
+    member:
+        prefix: '[&7Member&f]'
+        suffix: '&2'
+        priority: 1
+    vip:
+        prefix: '[&6VIP&f]'
+        suffix: '&5'
+        priority: 2
+    mod:
+        prefix: '[&1Mod&f]'
+        priority: 3
+    admin:
+        prefix: '[&4Admin&f]'
+        priority: 4
+    somestringexample:
+        stringexample: 'Some String'
+    somebooleanexample:
+        booleanexample: true
+    someintegerexample:
+        integerexample: 1337
+    somedoubleexample:
+        doubleexample: 1.3
+    somelongexample:
+        longexample: 86400000
+    examplewithsmallerpriority:
+        thisexample: 'This is a sentence that will be used if the player has the permission'
+        priority: 0
+    examplewithlargerpriority:
+        thisexample: 'This sentence would be used instead of the one above if the player has both permissions'
+        priority: 1
+    permissionexplaination:
+        permission: 'For example, the permission of this info would be TitanChat.info.permissionexplaination'
+    permissionexplainationcontinued:
+        continued: 'While the permission of this info would be TitanChat.info.permissionexplainationcontinued'
+    multipleinfo:
+        info1: 'With the permission TitanChat.info.multipleinfo, you will get this info'
+        info2: 'And this info'
+        info3: 'And this one'
+        info4: 'And so on'
