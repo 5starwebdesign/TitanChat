@@ -1,0 +1,6 @@
+display-name: '&4Server'
+current: 'Staff'
+channels:
+- 'Default'
+- 'Staff'
+ignore-list: []

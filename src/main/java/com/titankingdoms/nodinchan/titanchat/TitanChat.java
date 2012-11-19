@@ -43,6 +43,7 @@ import com.titankingdoms.nodinchan.titanchat.core.addon.AddonManager;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelManager;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 import com.titankingdoms.nodinchan.titanchat.event.EmoteEvent;
 import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 import com.titankingdoms.nodinchan.titanchat.info.InfoHandler;
@@ -290,14 +291,14 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	/**
-	 * Checks if the player has TitanChat.staff
+	 * Checks if the sender has TitanChat.staff
 	 * 
-	 * @param player The player to check
+	 * @param sender The sender to check
 	 * 
-	 * @return True if the player has TitanChat.staff
+	 * @return True if the sender has TitanChat.staff
 	 */
-	public boolean isStaff(Player player) {
-		return player.hasPermission("TitanChat.staff");
+	public boolean isStaff(CommandSender sender) {
+		return sender.hasPermission("TitanChat.staff");
 	}
 	
 	/**
@@ -336,10 +337,15 @@ public final class TitanChat extends JavaPlugin {
 			
 			Channel channel = null;
 			
-			if (channelManager.existingChannelAlias(channelName))
+			if (!channelName.isEmpty()) {
+				if (!channelManager.existingChannel(channelName)) {
+					Messaging.sendMessage(sender, C.RED + "Channel does not exist");
+					return true;
+				}
+				
 				channel = getChannel(channelName);
-			else
-				channel = getParticipant(sender.getName()).getCurrentChannel();
+				
+			} else { channel = getParticipant(sender.getName()).getCurrentChannel(); }
 			
 			if (channel != null) {
 				if (channel.hasCommand(commandName)) {
@@ -434,6 +440,9 @@ public final class TitanChat extends JavaPlugin {
 	public void onEnable() {
 		log(Level.INFO, "is now enabling...");
 		
+		if (instance == null)
+			instance = this;
+		
 		for (int id : getConfig().getIntegerList("logging.debug"))
 			Debugger.startDebug(id);
 		
@@ -471,7 +480,7 @@ public final class TitanChat extends JavaPlugin {
 		for (Player player : getServer().getOnlinePlayers())
 			info.loadCachedInfo(player);
 		
-		if (channelManager.getDefaultChannels().isEmpty()) {
+		if (channelManager.getChannels(Type.DEFAULT).isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");
 			getServer().getPluginManager().disablePlugin(this);
 			return;

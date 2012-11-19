@@ -2,10 +2,13 @@ package com.titankingdoms.nodinchan.titanchat.core.channel;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,10 +16,10 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.nodinchan.titanchat.loading.Loader;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
+import com.titankingdoms.nodinchan.titanchat.util.Messaging;
 
 public final class ChannelManager {
 	
@@ -24,30 +27,39 @@ public final class ChannelManager {
 	
 	private final Debugger db = new Debugger(2, "ChannelManager");
 	
-	private final List<Channel> defaults;
-	private final List<Channel> staff;
-	
 	private final Map<String, String> aliases;
 	private final Map<String, Channel> channels;
 	private final Map<String, ChannelLoader> loaders;
+	private final Map<Type, Set<Channel>> types;
 	
 	public ChannelManager() {
 		this.plugin = TitanChat.getInstance();
-		this.defaults = new ArrayList<Channel>();
-		this.staff = new ArrayList<Channel>();
+		
+		if (getChannelDirectory().mkdirs())
+			plugin.log(Level.INFO, "Creating channel directory...");
+		
+		if (getCustomChannelDirectory().mkdirs())
+			plugin.log(Level.INFO, "Creating custom channel directory...");
+		
+		if (getLoaderDirectory().mkdirs())
+			plugin.log(Level.INFO, "Creating channel loader directory...");
+		
 		this.aliases = new HashMap<String, String>();
-		this.channels = new HashMap<String, Channel>();
-		this.loaders = new HashMap<String, ChannelLoader>();
+		this.channels = new TreeMap<String, Channel>();
+		this.loaders = new TreeMap<String, ChannelLoader>();
+		this.types = new HashMap<Type, Set<Channel>>();
 	}
 	
-	public void createChannel(CommandSender sender, String name, String type) {
+	public void createChannel(CommandSender sender, String name, ChannelLoader loader) {
 		db.debug(DebugLevel.I, sender.getName() + " is creating channel " + name);
 		
-		ChannelLoader loader = getLoader(type);
 		Channel channel = loader.create(sender, name, Type.NONE);
 		register(channel);
 		
-		sortChannels();
+		Messaging.sendMessage(sender, C.GOLD + "You have created " + channel.getName());
+		
+		channel.getAdmins().add(sender.getName());
+		channel.join(plugin.getParticipant(sender.getName()));
 		
 		channel.getConfig().options().copyDefaults(true);
 		channel.saveConfig();
@@ -59,14 +71,11 @@ public final class ChannelManager {
 		Channel channel = getChannel(name);
 		channels.remove(channel.getName().toLowerCase());
 		
-		for (String participantName : channel.getParticipants()) {
-			Participant participant = plugin.getParticipant(participantName);
-			channel.leave(participant);
-		}
-		
+		Messaging.sendMessage(sender, C.RED + "You have deleted " + channel.getName());
 		channel.broadcast(C.RED + channel.getName() + " has been deleted");
 		
-		sortChannels();
+		for (String participantName : channel.getParticipants())
+			channel.leave(plugin.getParticipant(participantName));
 		
 		File config = new File(getChannelDirectory(), channel.getName() + ".yml");
 		
@@ -114,12 +123,17 @@ public final class ChannelManager {
 		return new ArrayList<Channel>(channels.values());
 	}
 	
+	public Set<Channel> getChannels(Type type) {
+		Set<Channel> channels = types.get(type);
+		return (channels != null) ? new HashSet<Channel>(channels) : new HashSet<Channel>();
+	}
+	
 	public File getCustomChannelDirectory() {
 		return new File(plugin.getAddonManager().getAddonDirectory(), "channels");
 	}
 	
-	public List<Channel> getDefaultChannels() {
-		return new ArrayList<Channel>(defaults);
+	public int getLimit() {
+		return plugin.getConfig().getInt("channels.limit", -1);
 	}
 	
 	public ChannelLoader getLoader(String name) {
@@ -134,22 +148,40 @@ public final class ChannelManager {
 		return new ArrayList<ChannelLoader>(loaders.values());
 	}
 	
-	public List<Channel> getStaffChannels() {
-		return new ArrayList<Channel>(staff);
-	}
-	
 	public void load() {
 		register(new StandardLoader());
 		
 		for (ChannelLoader loader : Loader.load(ChannelLoader.class, getLoaderDirectory()))
 			register(loader);
 		
-		sortLoaders();
+		if (loaders.size() > 0) {
+			StringBuilder str = new StringBuilder();
+			
+			for (ChannelLoader loader : getLoaders()) {
+				if (str.length() > 0)
+					str.append(", ");
+				
+				str.append(loader.getName());
+			}
+			
+			plugin.log(Level.INFO, "Channel Loaders loaded: " + str.toString());
+		}
 		
 		for (Channel channel : Loader.load(Channel.class, getCustomChannelDirectory()))
 			register(channel);
 		
-		sortChannels();
+		if (channels.size() > 0) {
+			StringBuilder str = new StringBuilder();
+			
+			for (Channel channel : getChannels()) {
+				if (str.length() > 0)
+					str.append(", ");
+				
+				str.append(channel.getName());
+			}
+			
+			plugin.log(Level.INFO, "Channels loaded: " + str.toString());
+		}
 	}
 	
 	public void register(Channel... channels) {
@@ -164,19 +196,10 @@ public final class ChannelManager {
 				if (!existingChannel(alias) && !existingChannelAlias(alias))
 					this.aliases.put(alias.toLowerCase(), channel.getName());
 			
-			switch (channel.getType()) {
+			if (!this.types.containsKey(channel.getType()))
+				this.types.put(channel.getType(), new HashSet<Channel>());
 			
-			case DEFAULT:
-				defaults.add(channel);
-				break;
-				
-			case STAFF:
-				staff.add(channel);
-				break;
-				
-			default:
-				break;
-			}
+			this.types.get(channel.getType()).add(channel);
 		}
 	}
 	
@@ -193,29 +216,7 @@ public final class ChannelManager {
 		for (ChannelLoader loader : getLoaders())
 			loader.reload();
 		
-		sortLoaders();
-		
 		for (Channel channel : getChannels())
 			channel.reload();
-		
-		sortChannels();
-	}
-	
-	private void sortChannels() {
-		List<Channel> channels = new ArrayList<Channel>(this.channels.values());
-		Collections.sort(channels);
-		this.channels.clear();
-		
-		for (Channel channel : channels)
-			this.channels.put(channel.getName().toLowerCase(), channel);
-	}
-	
-	private void sortLoaders() {
-		List<ChannelLoader> loaders = new ArrayList<ChannelLoader>(this.loaders.values());
-		Collections.sort(loaders);
-		this.loaders.clear();
-		
-		for (ChannelLoader loader : loaders)
-			this.loaders.put(loader.getName().toLowerCase(), loader);
 	}
 }

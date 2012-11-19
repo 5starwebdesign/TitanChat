@@ -18,10 +18,9 @@ package com.titankingdoms.nodinchan.titanchat.core.addon;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
@@ -46,10 +45,10 @@ public final class AddonManager {
 	public AddonManager() {
 		this.plugin = TitanChat.getInstance();
 		
-		if (getAddonDirectory().mkdir())
+		if (getAddonDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating addon directory...");
 		
-		this.addons = new HashMap<String, Addon>();
+		this.addons = new TreeMap<String, Addon>();
 	}
 	
 	/**
@@ -88,35 +87,18 @@ public final class AddonManager {
 		for (Addon addon : Loader.load(Addon.class, getAddonDirectory()))
 			register(addon);
 		
-		sortAddons();
-		
-		if (addons.size() < 1)
-			return;
-		
-		StringBuilder str = new StringBuilder();
-		
-		for (Addon addon : getAddons()) {
-			if (str.length() > 0)
-				str.append(", ");
+		if (addons.size() > 0) {
+			StringBuilder str = new StringBuilder();
 			
-			str.append(addon.getName());
+			for (Addon addon : getAddons()) {
+				if (str.length() > 0)
+					str.append(", ");
+				
+				str.append(addon.getName());
+			}
+			
+			plugin.log(Level.INFO, "Addons loaded: " + str.toString());
 		}
-		
-		plugin.log(Level.INFO, "Addons loaded: " + str.toString());
-	}
-	
-	/**
-	 * After reloading everything
-	 */
-	public void postReload() {
-		load();
-	}
-	
-	/**
-	 * Before reloading everything
-	 */
-	public void preReload() {
-		unload();
 	}
 	
 	/**
@@ -129,15 +111,6 @@ public final class AddonManager {
 		
 		if (!addons.containsKey(addon.getName().toLowerCase()))
 			addons.put(addon.getName().toLowerCase(), addon);
-	}
-	
-	private void sortAddons() {
-		List<Addon> addons = new ArrayList<Addon>(this.addons.values());
-		Collections.sort(addons);
-		this.addons.clear();
-		
-		for (Addon addon : addons)
-			this.addons.put(addon.getName().toLowerCase(), addon);
 	}
 	
 	/**

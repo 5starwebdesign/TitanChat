@@ -21,6 +21,11 @@ public final class KickCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
+		if (channel == null) {
+			msg(sender, C.RED + "Please specify or join a channel to use the command");
+			return;
+		}
+		
 		for (String playerName : args) {
 			OfflinePlayer player = getOfflinePlayer(playerName);
 			

@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.command.defaults.*;
+import com.titankingdoms.nodinchan.titanchat.loading.Loader;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 import com.titankingdoms.nodinchan.titanchat.util.Messaging;
 
@@ -22,6 +25,10 @@ public final class CommandManager {
 	
 	public CommandManager() {
 		this.plugin = TitanChat.getInstance();
+		
+		if (getCommandDirectory().mkdirs())
+			plugin.log(Level.INFO, "Creating command directory...");
+		
 		this.aliases = new TreeMap<String, String>();
 		this.commands = new TreeMap<String, Command>();
 	}
@@ -78,7 +85,29 @@ public final class CommandManager {
 	}
 	
 	public void load() {
+		register(new BanCommand());
+		register(new CreateCommand());
+		register(new JoinCommand());
+		register(new KickCommand());
+		register(new LeaveCommand());
+		register(new PlaceCommand());
+		register(new UnbanCommand());
 		
+		for (Command command : Loader.load(Command.class, getCommandDirectory()))
+			register(command);
+		
+		if (commands.size() > 0) {
+			StringBuilder str = new StringBuilder();
+			
+			for (Command command : getCommands()) {
+				if (str.length() > 0)
+					str.append(", ");
+				
+				str.append(command.getName());
+			}
+			
+			plugin.log(Level.INFO, "Commands loaded: " + str.toString());
+		}
 	}
 	
 	public void register(Command... commands) {

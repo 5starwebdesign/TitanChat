@@ -21,6 +21,11 @@ public class BanCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
+		if (channel == null) {
+			msg(sender, C.RED + "Please specify or join a channel to use the command");
+			return;
+		}
+		
 		switch (channel.getType()) {
 		
 		case CUSTOM:
