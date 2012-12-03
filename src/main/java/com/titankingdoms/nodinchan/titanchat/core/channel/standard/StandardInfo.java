@@ -23,8 +23,7 @@ public final class StandardInfo extends ChannelInfo {
 	
 	@Override
 	public String getFormat() {
-		String format = channel.getConfig().getString("format", "");
-		return (format.isEmpty()) ? plugin.getConfig().getString("formatting.format") : format;
+		return channel.getConfig().getString("format", "");
 	}
 	
 	@Override

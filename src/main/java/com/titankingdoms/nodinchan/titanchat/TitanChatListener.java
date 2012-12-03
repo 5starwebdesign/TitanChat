@@ -25,12 +25,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.titankingdoms.nodinchan.titanchat.event.chat.MessageSendEvent;
+import com.titankingdoms.nodinchan.titanchat.format.FormatHandler;
 
 /**
  * TitanChatListener - Listens to events
@@ -42,10 +43,6 @@ public final class TitanChatListener implements Listener {
 
 	private final TitanChat plugin;
 	
-	private long chars = 0;
-	private long lines = 0;
-	private long words = 0;
-	
 	private final double currentVer;
 	private double newVer;
 	
@@ -55,43 +52,9 @@ public final class TitanChatListener implements Listener {
 		this.newVer = updateCheck();
 	}
 	
-	/**
-	 * Gets the amount of characters sent
-	 * 
-	 * @return The amount of characters sent
-	 */
-	public long getCharacters() {
-		return chars;
-	}
-	
-	/**
-	 * Gets the amount of lines sent
-	 * 
-	 * @return The amount of lines sent
-	 */
-	public long getLines() {
-		return lines;
-	}
-	
-	/**
-	 * Gets the amount of words sent
-	 * 
-	 * @return The amount of words sent
-	 */
-	public long getWords() {
-		return words;
-	}
-	
-	/**
-	 * Listens to MessageSendEvent
-	 * 
-	 * @param event MessageSendEvent
-	 */
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onMessageSend(MessageSendEvent event) {
-		this.chars += event.getMessage().toCharArray().length;
-		this.words += event.getMessage().split(" ").length;
-		this.lines++;
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+		
 	}
 	
 	/**
@@ -112,7 +75,7 @@ public final class TitanChatListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 		for (int line = 0; line < 4; line++)
-			event.setLine(line, plugin.getFormatHandler().colourise(event.getLine(line)));
+			event.setLine(line, FormatHandler.colourise(event.getLine(line)));
 	}
 	
 	/**

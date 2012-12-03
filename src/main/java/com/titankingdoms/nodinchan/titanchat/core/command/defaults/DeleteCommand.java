@@ -40,7 +40,7 @@ public final class DeleteCommand extends Command {
 		return hasPermission(sender, "TitanChat.delete");
 	}
 	
-	public final class DeleteHelp implements HelpTopic {
+	public final class DeleteTopic implements HelpTopic {
 		
 		public boolean canView(CommandSender sender) {
 			return true;
@@ -50,11 +50,13 @@ public final class DeleteCommand extends Command {
 			return "Deletes the channel";
 		}
 		
-		public String[] getFullDescription() {
-			return new String[] {
-					"Description: Deletes the channel",
-					"Aliases: 'd'",
-					"Usage: /titanchat <@[channel]> delete [channel]"
+		public String[][] getFullDescription() {
+			return new String[][] {
+					{
+						"Description: Deletes the channel",
+						"Aliases: 'd'",
+						"Usage: /titanchat <@[channel]> delete [channel]"
+					}
 			};
 		}
 		

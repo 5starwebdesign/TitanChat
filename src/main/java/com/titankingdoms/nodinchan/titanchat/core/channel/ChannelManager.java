@@ -124,7 +124,7 @@ public final class ChannelManager {
 	}
 	
 	public Set<Channel> getChannels(Type type) {
-		Set<Channel> channels = types.get(type);
+		Set<Channel> channels = this.types.get(type);
 		return (channels != null) ? new HashSet<Channel>(channels) : new HashSet<Channel>();
 	}
 	
@@ -187,7 +187,7 @@ public final class ChannelManager {
 	public void register(Channel... channels) {
 		for (Channel channel : channels) {
 			if (existingChannel(channel))
-				return;
+				continue;
 			
 			this.channels.put(channel.getName().toLowerCase(), channel);
 			this.aliases.put(channel.getName().toLowerCase(), channel.getName());
@@ -206,7 +206,7 @@ public final class ChannelManager {
 	public void register(ChannelLoader... loaders) {
 		for (ChannelLoader loader : loaders) {
 			if (existingLoader(loader))
-				return;
+				continue;
 			
 			this.loaders.put(loader.getName().toLowerCase(), loader);
 		}

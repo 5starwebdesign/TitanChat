@@ -80,6 +80,14 @@ public final class AddonManager {
 		return new ArrayList<Addon>(addons.values());
 	}
 	
+	public boolean hasAddon(String name) {
+		return addons.containsKey(name.toLowerCase());
+	}
+	
+	public boolean hasAddon(Addon addon) {
+		return hasAddon(addon.getName());
+	}
+	
 	/**
 	 * Loads the manager
 	 */
@@ -106,11 +114,15 @@ public final class AddonManager {
 	 * 
 	 * @param addon The addon to register
 	 */
-	public void register(Addon addon) {
-		db.debug(DebugLevel.I, "Registering addon: " + addon.getName());
-		
-		if (!addons.containsKey(addon.getName().toLowerCase()))
-			addons.put(addon.getName().toLowerCase(), addon);
+	public void register(Addon... addons) {
+		for (Addon addon : addons) {
+			db.debug(DebugLevel.I, "Registering addon: " + addon.getName());
+			
+			if (hasAddon(addon))
+				continue;
+			
+			this.addons.put(addon.getName().toLowerCase(), addon);
+		}
 	}
 	
 	/**
