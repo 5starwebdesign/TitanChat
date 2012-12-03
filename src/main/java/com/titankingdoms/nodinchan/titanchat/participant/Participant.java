@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
@@ -24,12 +27,6 @@ public abstract class Participant {
 		this.channels = new HashMap<String, Channel>();
 	}
 	
-	public abstract void chat(Channel channel, String message);
-	
-	public final void chat(String message) {
-		chat(current, message);
-	}
-	
 	public final void direct(Channel channel) {
 		this.current = channel;
 		
@@ -41,8 +38,18 @@ public abstract class Participant {
 		return new HashSet<Channel>(channels.values());
 	}
 	
+	public abstract CommandSender getCommandSender();
+	
+	public final ConfigurationSection getConfigSection() {
+		return plugin.getParticipantManager().getConfig().getConfigurationSection(getName());
+	}
+	
 	public final Channel getCurrentChannel() {
 		return current;
+	}
+	
+	public String getDisplayName() {
+		return getConfigSection().getString("display-name", getName());
 	}
 	
 	public final String getName() {
@@ -57,6 +64,12 @@ public abstract class Participant {
 	
 	public final boolean isDirectedAt(Channel channel) {
 		return (channel != null) ? isDirectedAt(channel.getName()) : current == null;
+	}
+	
+	public abstract boolean isMuted(String channel);
+	
+	public boolean isMuted(Channel channel) {
+		return isMuted(channel.getName());
 	}
 	
 	public abstract boolean isOnline();
@@ -93,6 +106,12 @@ public abstract class Participant {
 		
 		if (channel.isParticipating(this))
 			channel.leave(this);
+	}
+	
+	public abstract void mute(String channel, boolean mute);
+	
+	public void mute(Channel channel, boolean mute) {
+		mute(channel.getName(), mute);
 	}
 	
 	public abstract void send(String... messages);

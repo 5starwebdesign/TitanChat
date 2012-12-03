@@ -85,13 +85,16 @@ public final class CommandManager {
 	}
 	
 	public void load() {
-		register(new BanCommand());
-		register(new CreateCommand());
-		register(new JoinCommand());
-		register(new KickCommand());
-		register(new LeaveCommand());
-		register(new PlaceCommand());
-		register(new UnbanCommand());
+		register(
+				new BanCommand(),
+				new CreateCommand(),
+				new DeleteCommand(),
+				new JoinCommand(),
+				new KickCommand(),
+				new LeaveCommand(),
+				new PlaceCommand(),
+				new UnbanCommand()
+		);
 		
 		for (Command command : Loader.load(Command.class, getCommandDirectory()))
 			register(command);

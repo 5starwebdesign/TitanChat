@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.command.Command;
 import com.titankingdoms.nodinchan.titanchat.help.HelpTopic;
+import com.titankingdoms.nodinchan.titanchat.permissions.Permission;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 
 public class BanCommand extends Command {
@@ -16,7 +17,7 @@ public class BanCommand extends Command {
 		setArgumentRange(1, 1024);
 		setDescription("Bans the player(s) from the channel");
 		setUsage("[player]...");
-		registerHelpTopic(new BanHelp());
+		registerHelpTopic(new BanTopic());
 	}
 	
 	@Override
@@ -64,13 +65,13 @@ public class BanCommand extends Command {
 		if (channel.isAdmin(sender.getName()))
 			return true;
 		
-		if (hasPermission(sender, "TitanChat.ban." + channel.getName()))
+		if (hasPermission(sender, Permission.BAN.getPermission(channel)))
 			return true;
 		
 		return false;
 	}
 	
-	public final class BanHelp implements HelpTopic {
+	public final class BanTopic implements HelpTopic {
 		
 		public boolean canView(CommandSender sender) {
 			return true;
@@ -80,11 +81,13 @@ public class BanCommand extends Command {
 			return "Bans the player(s) from the channel";
 		}
 		
-		public String[] getFullDescription() {
-			return new String[] {
-					"Description: Bans the player(s) from the channel",
-					"Aliases: 'b', 'blacklist'",
-					"Usage: /titanchat <@[channel]> ban [player]..."
+		public String[][] getFullDescription() {
+			return new String[][] {
+					{
+						"Description: Bans the player(s) from the channel",
+						"Aliases: 'b', 'blacklist'",
+						"Usage: /titanchat <@[channel]> ban [player]..."
+					}
 			};
 		}
 		

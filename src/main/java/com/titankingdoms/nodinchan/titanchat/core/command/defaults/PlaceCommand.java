@@ -16,7 +16,7 @@ public final class PlaceCommand extends Command {
 		setArgumentRange(1, 1024);
 		setDescription("Places the player(s) in the channel");
 		setUsage("[player]...");
-		registerHelpTopic(new PlaceHelp());
+		registerHelpTopic(new PlaceTopic());
 	}
 	
 	@Override
@@ -56,7 +56,7 @@ public final class PlaceCommand extends Command {
 		return false;
 	}
 	
-	public final class PlaceHelp implements HelpTopic {
+	public final class PlaceTopic implements HelpTopic {
 		
 		public boolean canView(CommandSender sender) {
 			return true;
@@ -66,11 +66,13 @@ public final class PlaceCommand extends Command {
 			return "Places the player(s) in the channel";
 		}
 		
-		public String[] getFullDescription() {
-			return new String[] {
-					"Description: Places the player(s) in the channel",
-					"Aliases: 'p'",
-					"Usage: /titanchat <@[channel]> place [player]..."
+		public String[][] getFullDescription() {
+			return new String[][] {
+					{
+						"Description: Places the player(s) in the channel",
+						"Aliases: 'p'",
+						"Usage: /titanchat <@[channel]> place [player]..."
+					}
 			};
 		}
 		
