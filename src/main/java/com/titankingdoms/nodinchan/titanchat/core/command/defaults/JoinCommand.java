@@ -16,7 +16,7 @@ public final class JoinCommand extends Command {
 		setArgumentRange(1, 2);
 		setDescription("Joins the channel");
 		setUsage("[channel] <password>");
-		registerHelpTopic(new JoinTopic());
+		registerHelpTopic(new JoinHelp());
 	}
 	
 	@Override
@@ -66,11 +66,7 @@ public final class JoinCommand extends Command {
 			channel.join(plugin.getParticipant(sender.getName()));
 			msg(sender, C.GOLD + "You have joined " + channel.getName());
 			
-		} else {
-			msg(sender, C.RED + "You have already joined the channel");
-			msg(sender, C.GOLD + "Attempting to set as current...");
-			plugin.getServer().dispatchCommand(sender, "titanchat direct " + channel.getName());
-		}
+		} else { msg(sender, C.RED + "You are already in the channel"); }
 	}
 	
 	@Override
@@ -78,7 +74,7 @@ public final class JoinCommand extends Command {
 		return true;
 	}
 	
-	public final class JoinTopic implements HelpTopic {
+	public final class JoinHelp implements HelpTopic {
 		
 		public boolean canView(CommandSender sender) {
 			return true;
@@ -88,13 +84,11 @@ public final class JoinCommand extends Command {
 			return "Joins the channel";
 		}
 		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Joins the channel",
-						"Aliases: 'j'",
-						"Usage: /titanchat <@[channel]> join [channel] <password>"
-					}
+		public String[] getFullDescription() {
+			return new String[] {
+					"Description: Joins the channel",
+					"Aliases: 'j'",
+					"Usage: /titanchat <@[channel]> join [channel] <password>"
 			};
 		}
 		

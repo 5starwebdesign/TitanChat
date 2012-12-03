@@ -18,7 +18,7 @@ public final class CreateCommand extends Command {
 		setArgumentRange(1, 2);
 		setDescription("Creates a channel with specified ChannelLoader or StandardLoader");
 		setUsage("[channel] <loader>");
-		registerHelpTopic(new CreateTopic());
+		registerHelpTopic(new CreateHelp());
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public final class CreateCommand extends Command {
 		return hasPermission(sender, "TitanChat.create");
 	}
 	
-	public final class CreateTopic implements HelpTopic {
+	public final class CreateHelp implements HelpTopic {
 		
 		public boolean canView(CommandSender sender) {
 			return true;
@@ -80,13 +80,11 @@ public final class CreateCommand extends Command {
 			return "Creates a channel";
 		}
 		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Creates a channel with specified ChannelLoader or StandardLoader",
-						"Aliases: 'c'",
-						"Usage: /titanchat <@[channel]> create [channel] <loader>"
-					}
+		public String[] getFullDescription() {
+			return new String[] {
+					"Description: Creates a channel with specified ChannelLoader or StandardLoader",
+					"Aliases: 'c'",
+					"Usage: /titanchat <@[channel]> create [channel] <loader>"
 			};
 		}
 		

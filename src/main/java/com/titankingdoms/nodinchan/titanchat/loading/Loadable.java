@@ -2,6 +2,7 @@ package com.titankingdoms.nodinchan.titanchat.loading;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -91,7 +92,7 @@ public class Loadable implements Comparable<Loadable> {
 		if (configFile == null || config == null)
 			return;
 		
-		try { config.save(configFile); } catch (Exception e) {}
+		try { config.save(configFile); } catch (Exception e) { plugin.log(Level.SEVERE, "Failed to save to " + configFile); }
 	}
 	
 	public final class InitResult {

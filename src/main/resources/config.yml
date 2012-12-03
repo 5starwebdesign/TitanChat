@@ -5,10 +5,42 @@ logging:
     colouring: true
     debug: []
 formatting:
-    format: '%tag %prefix%display%suffix: %message'
-    variable:
-        default: '%var%'
-        custom:
-            tag: '[%var%]'
-            prefix: '[%var%]'
-            suffix: '[%var%]'
+    format: '%tag %prefix%player%suffix: %message'
+    console: '%tag &4Server: %message'
+    bracket: '[%var%]'
+    variables:
+        tag: '[%var%]'
+        prefix: '[%var%]'
+        suffix: '[%var%]'
+utilities:
+    server:
+        tag: ''
+        display-colour: ''
+        topic: ''
+    broadcast:
+        enable-player: true
+        enable-console: true
+        player-format: '[&cBroadcast&f] %player&f: %message'
+        console-format: '[&cBroadcast&f] &4Server&f: %message'
+    emote:
+        enable-player:
+            global: true
+            channel: true
+        enable-console:
+            global: true
+            channel: true
+        player-format:
+            global: '* %player %action'
+            channel: '* %player %action'
+        console-format:
+            global: '* &4Server %action'
+            channel: '* &4Server %action'
+        whisper:
+            enable-player: true
+            enable-console: true
+            player-format:
+                in: '&5[%player -> You] %message'
+                out: '&5[You -> %player] %message'
+            console-format:
+                in: '&5[&4Server &5-> You] %message'
+                out: '&5[You -> &4Server&5] %message'

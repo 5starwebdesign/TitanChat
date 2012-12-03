@@ -15,7 +15,7 @@ public final class LeaveCommand extends Command {
 		setArgumentRange(1, 1);
 		setDescription("Leaves the channel");
 		setUsage("[channel]");
-		registerHelpTopic(new LeaveTopic());
+		registerHelpTopic(new LeaveHelp());
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public final class LeaveCommand extends Command {
 		return true;
 	}
 	
-	public final class LeaveTopic implements HelpTopic {
+	public final class LeaveHelp implements HelpTopic {
 		
 		public boolean canView(CommandSender sender) {
 			return true;
@@ -54,13 +54,11 @@ public final class LeaveCommand extends Command {
 			return "Leaves the channel";
 		}
 		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Leaves the channel",
-						"Aliases: 'l'",
-						"Usage: /titanchat <@[channel]> leave [channel]"
-					}
+		public String[] getFullDescription() {
+			return new String[] {
+					"Description: Leaves the channel",
+					"Aliases: 'l'",
+					"Usage: /titanchat <@[channel]> leave [channel]"
 			};
 		}
 		

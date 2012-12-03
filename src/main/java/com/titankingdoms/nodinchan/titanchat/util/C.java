@@ -1,6 +1,5 @@
 package com.titankingdoms.nodinchan.titanchat.util;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,11 +36,6 @@ public enum C {
 	
 	private C(ChatColor colour) {
 		this.colour = colour;
-	}
-	
-	static {
-		for (C colour : EnumSet.allOf(C.class))
-			COLOUR_MAP.put(colour.toChatColor(), colour);
 	}
 	
 	public static C fromChatColor(ChatColor colour) {

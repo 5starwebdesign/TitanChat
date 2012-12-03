@@ -1,12 +1,13 @@
 package com.titankingdoms.nodinchan.titanchat.core.channel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import com.titankingdoms.nodinchan.titanchat.core.addon.Addon;
@@ -21,20 +22,20 @@ public abstract class Channel extends Loadable implements Listener {
 	
 	private final Type type;
 	
-	private final Set<String> admins;
-	private final Set<String> blacklist;
-	private final Set<String> participants;
-	private final Set<String> whitelist;
+	private final List<String> admins;
+	private final List<String> blacklist;
+	private final List<String> participants;
+	private final List<String> whitelist;
 	
 	private final Map<String, Command> commands;
 	
 	public Channel(String name, Type type) {
 		super(name);
 		this.type = type;
-		this.admins = new HashSet<String>();
-		this.blacklist = new HashSet<String>();
-		this.participants = new HashSet<String>();
-		this.whitelist = new HashSet<String>();
+		this.admins = new ArrayList<String>();
+		this.blacklist = new ArrayList<String>();
+		this.participants = new ArrayList<String>();
+		this.whitelist = new ArrayList<String>();
 		this.commands = new HashMap<String, Command>();
 	}
 	
@@ -43,17 +44,15 @@ public abstract class Channel extends Loadable implements Listener {
 			plugin.getParticipant(name).send(messages);
 	}
 	
-	public Set<String> getAdmins() {
+	public List<String> getAdmins() {
 		return admins;
 	}
 	
-	public Set<String> getBlacklist() {
+	public List<String> getBlacklist() {
 		return blacklist;
 	}
 	
 	public abstract ChannelLoader getChannelLoader();
-	
-	public abstract Set<Participant> getChatRecipients(Participant sender, String message);
 	
 	public final Command getCommand(String name) {
 		return this.commands.get(name.toLowerCase());
@@ -61,8 +60,8 @@ public abstract class Channel extends Loadable implements Listener {
 	
 	public abstract ChannelInfo getInfo();
 	
-	public Set<String> getParticipants() {
-		return Collections.unmodifiableSet(participants);
+	public List<String> getParticipants() {
+		return Collections.unmodifiableList(participants);
 	}
 	
 	public abstract Range getRange();
@@ -71,7 +70,7 @@ public abstract class Channel extends Loadable implements Listener {
 		return type;
 	}
 	
-	public Set<String> getWhitelist() {
+	public List<String> getWhitelist() {
 		return whitelist;
 	}
 	
@@ -149,12 +148,12 @@ public abstract class Channel extends Loadable implements Listener {
 			participant.leave(this);
 	}
 	
-	public final void register(Addon... addons) {
-		plugin.getAddonManager().register(addons);
+	public final void register(Addon addon) {
+		plugin.getAddonManager().register(addon);
 	}
 	
-	public final void register(Command... commands) {
-		plugin.getCommandManager().register(commands);
+	public final void register(Command command) {
+		
 	}
 	
 	protected final void registerCommands(Command... commands) {
@@ -164,4 +163,6 @@ public abstract class Channel extends Loadable implements Listener {
 	}
 	
 	public abstract void reload();
+	
+	public abstract List<Participant> selectRecipants(Player sender, String message);
 }

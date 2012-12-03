@@ -44,17 +44,20 @@ import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
-import com.titankingdoms.nodinchan.titanchat.format.FormatHandler;
+import com.titankingdoms.nodinchan.titanchat.event.EmoteEvent;
+import com.titankingdoms.nodinchan.titanchat.event.util.Message;
 import com.titankingdoms.nodinchan.titanchat.info.InfoHandler;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics;
+import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Graph;
+import com.titankingdoms.nodinchan.titanchat.metrics.Metrics.Plotter;
 import com.titankingdoms.nodinchan.titanchat.participant.ChannelParticipant;
 import com.titankingdoms.nodinchan.titanchat.participant.ParticipantManager;
 import com.titankingdoms.nodinchan.titanchat.permission.Permissions;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
+import com.titankingdoms.nodinchan.titanchat.util.FormatHandler;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 import com.titankingdoms.nodinchan.titanchat.util.Messaging;
-import com.titankingdoms.nodinchan.titanchat.format.VariableManager;
 
 /**
  * TitanChat - Main class of TitanChat
@@ -71,14 +74,14 @@ public final class TitanChat extends JavaPlugin {
 	private static final Logger log = Logger.getLogger("TitanLog");
 	private static final Debugger db = new Debugger(0, "TitanChat");
 	
+	private TitanChatListener listener;
 	private AddonManager addonManager;
 	private ChannelManager channelManager;
 	private CommandManager commandManager;
 	private ParticipantManager participantManager;
 	private InfoHandler info;
 	private Permissions perms;
-	private FormatHandler formatHandler;
-	private VariableManager variableManager;
+	private FormatHandler format;
 	
 	/**
 	 * Logs the line to the console
@@ -174,7 +177,7 @@ public final class TitanChat extends JavaPlugin {
 	 * @return The format handler
 	 */
 	public FormatHandler getFormatHandler() {
-		return formatHandler;
+		return format;
 	}
 	
 	/**
@@ -193,6 +196,11 @@ public final class TitanChat extends JavaPlugin {
 	 */
 	public static TitanChat getInstance() {
 		return instance;
+	}
+	
+	@Override
+	public Logger getLogger() {
+		return log;
 	}
 	
 	/**
@@ -235,10 +243,6 @@ public final class TitanChat extends JavaPlugin {
 		return getServer().getPlayer(name);
 	}
 	
-	public VariableManager getVariableManager() {
-		return variableManager;
-	}
-	
 	/**
 	 * Initialise Metrics
 	 * 
@@ -252,6 +256,34 @@ public final class TitanChat extends JavaPlugin {
 			
 			if (metrics.isOptOut())
 				return true;
+			
+			Graph metricsStats = metrics.createGraph("Stats");
+			
+			metricsStats.addPlotter(new Plotter("Characters") {
+				
+				@Override
+				public int getValue() {
+					return (int) listener.getCharacters();
+				}
+			});
+			
+			metricsStats.addPlotter(new Plotter("Lines") {
+				
+				@Override
+				public int getValue() {
+					return (int) listener.getLines();
+				}
+			});
+			
+			metricsStats.addPlotter(new Plotter("Words") {
+				
+				@Override
+				public int getValue() {
+					return (int) listener.getWords();
+				}
+			});
+			
+			metrics.addGraph(metricsStats);
 			
 			return metrics.start();
 			
@@ -327,6 +359,68 @@ public final class TitanChat extends JavaPlugin {
 			return true;
 		}
 		
+		if (cmd.getName().equalsIgnoreCase("broadcast")) {
+			db.i("TitanChat: Command confirmed to be /Broadcast");
+			
+			StringBuilder str = new StringBuilder();
+			
+			for (String arg : args) {
+				if (str.length() > 0)
+					str.append(" ");
+				
+				str.append(arg);
+			}
+			
+			getServer().dispatchCommand(sender, "titanchat broadcast " + str.toString());
+			return true;
+		}
+		
+		if (cmd.getName().equalsIgnoreCase("emote")) {
+			db.i("TitanChat: Command confirmed to be /Emote");
+			
+			if (sender instanceof Player && !sender.hasPermission("TitanChat.emote")) {
+				Messaging.sendMessage(sender, C.RED + "You do not have permission");
+				return true;
+			}
+			
+			if (!getConfig().getBoolean("chat." + ((sender instanceof Player) ? "player" : "server") + ".enable")) {
+				Messaging.sendMessage(sender, "Emote Command Disabled");
+				return true;
+			}
+			
+			StringBuilder str = new StringBuilder();
+			
+			for (String word : args) {
+				if (str.length() > 0)
+					str.append(" ");
+				
+				str.append(word);
+			}
+			
+			String format = getFormatHandler().emoteFormat(sender, "");
+			
+			EmoteEvent event = new EmoteEvent(sender, new Message(format, str.toString()));
+			getServer().getPluginManager().callEvent(event);
+			
+			return true;
+		}
+		
+		if (cmd.getName().equalsIgnoreCase("whisper")) {
+			db.i("TitanChat: Command confirmed to be /Whisper");
+			
+			StringBuilder str = new StringBuilder();
+			
+			for (String arg : args) {
+				if (str.length() > 0)
+					str.append(" ");
+				
+				str.append(arg);
+			}
+			
+			getServer().dispatchCommand(sender, "titanchat whisper " + str.toString());
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -352,14 +446,14 @@ public final class TitanChat extends JavaPlugin {
 		for (int id : getConfig().getIntegerList("logging.debug"))
 			Debugger.startDebug(id);
 		
-		register(new TitanChatListener());
+		register(listener = new TitanChatListener());
 		
 		if (!initMetrics())
 			log(Level.WARNING, "Failed to hook into Metrics");
 		
 		info = new InfoHandler();
 		perms = new Permissions();
-		formatHandler = new FormatHandler();
+		format = new FormatHandler();
 		
 		InputStream permissionStream = getResource("permissions.yml");
 		
@@ -463,7 +557,7 @@ public final class TitanChat extends JavaPlugin {
 			return true;
 		}
 		
-		if (getParticipantManager().getParticipant(player).isMuted(channel)) {
+		if (getParticipantManager().getParticipant(player).isMutedOn(channel)) {
 			if (message)
 				Messaging.sendMessage(player, C.RED + "You have been muted");
 			

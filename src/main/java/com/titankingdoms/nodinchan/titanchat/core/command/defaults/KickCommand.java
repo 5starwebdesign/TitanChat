@@ -16,7 +16,7 @@ public final class KickCommand extends Command {
 		setArgumentRange(1, 1024);
 		setDescription("Kicks the player(s) from the channel");
 		setUsage("[player]...");
-		registerHelpTopic(new KickTopic());
+		registerHelpTopic(new KickHelp());
 	}
 	
 	@Override
@@ -56,7 +56,7 @@ public final class KickCommand extends Command {
 		return false;
 	}
 	
-	public final class KickTopic implements HelpTopic {
+	public final class KickHelp implements HelpTopic {
 		
 		public boolean canView(CommandSender sender) {
 			return true;
@@ -66,13 +66,11 @@ public final class KickCommand extends Command {
 			return "Kicks the player(s) from the channel";
 		}
 		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Kicks the player(s) from the channel",
-						"Aliases: 'k'",
-						"Usage: /titanchat <@[channel]> kick [player]..."
-					}
+		public String[] getFullDescription() {
+			return new String[] {
+					"Description: Kicks the player(s) from the channel",
+					"Aliases: 'k'",
+					"Usage: /titanchat <@[channel]> kick [player]..."
 			};
 		}
 		

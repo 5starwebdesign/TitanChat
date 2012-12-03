@@ -2,12 +2,13 @@ package com.titankingdoms.nodinchan.titanchat.core.channel.standard;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
@@ -33,16 +34,6 @@ public final class StandardChannel extends Channel {
 	@Override
 	public ChannelLoader getChannelLoader() {
 		return loader;
-	}
-	
-	@Override
-	public Set<Participant> getChatRecipients(Participant sender, String message) {
-		Set<Participant> recipients = new HashSet<Participant>();
-		
-		for (String name : getParticipants())
-			recipients.add(plugin.getParticipant(name));
-		
-		return recipients;
 	}
 	
 	@Override
@@ -94,5 +85,15 @@ public final class StandardChannel extends Channel {
 			return;
 		
 		try { config.save(configFile); } catch (Exception e) { plugin.log(Level.SEVERE, "Failed to save to " + configFile); }
+	}
+	
+	@Override
+	public List<Participant> selectRecipants(Player sender, String message) {
+		List<Participant> participants = new ArrayList<Participant>();
+		
+		for (String name : getParticipants())
+			participants.add(plugin.getParticipant(name));
+		
+		return participants;
 	}
 }

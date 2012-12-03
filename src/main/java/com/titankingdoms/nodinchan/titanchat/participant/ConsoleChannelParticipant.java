@@ -2,17 +2,17 @@ package com.titankingdoms.nodinchan.titanchat.participant;
 
 import java.util.logging.Level;
 
-import org.bukkit.command.CommandSender;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 
-public final class ConsoleChannelParticipant extends Participant {
+public class ConsoleChannelParticipant extends Participant {
 	
 	public ConsoleChannelParticipant() {
-		super("CONSOLE");
+		super("#!");
 	}
 	
 	@Override
-	public CommandSender getCommandSender() {
-		return plugin.getServer().getConsoleSender();
+	public void chat(Channel channel, String message) {
+		
 	}
 	
 	@Override
@@ -21,17 +21,9 @@ public final class ConsoleChannelParticipant extends Participant {
 	}
 	
 	@Override
-	public boolean isMuted(String channel) {
-		return false;
-	}
-	
-	@Override
 	public boolean isOnline() {
 		return true;
 	}
-	
-	@Override
-	public void mute(String channel, boolean mute) {}
 	
 	@Override
 	public void send(String... messages) {

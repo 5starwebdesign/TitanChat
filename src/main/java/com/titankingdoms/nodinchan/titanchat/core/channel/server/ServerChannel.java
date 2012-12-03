@@ -1,7 +1,9 @@
 package com.titankingdoms.nodinchan.titanchat.core.channel.server;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
@@ -10,7 +12,7 @@ import com.titankingdoms.nodinchan.titanchat.core.channel.Range;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
-public final class ServerChannel extends Channel {
+public class ServerChannel extends Channel {
 	
 	private final ServerLoader loader;
 	private final ServerInfo info;
@@ -27,11 +29,6 @@ public final class ServerChannel extends Channel {
 	}
 	
 	@Override
-	public Set<Participant> getChatRecipients(Participant sender, String message) {
-		return new HashSet<Participant>();
-	}
-	
-	@Override
 	public ChannelInfo getInfo() {
 		return info;
 	}
@@ -43,4 +40,9 @@ public final class ServerChannel extends Channel {
 	
 	@Override
 	public void reload() {}
+	
+	@Override
+	public List<Participant> selectRecipants(Player sender, String message) {
+		return new ArrayList<Participant>();
+	}
 }
