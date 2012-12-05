@@ -2,8 +2,6 @@ package com.titankingdoms.nodinchan.titanchat.core.channel.standard;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,7 +12,6 @@ import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Range;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public final class StandardChannel extends Channel {
 	
@@ -33,16 +30,6 @@ public final class StandardChannel extends Channel {
 	@Override
 	public ChannelLoader getChannelLoader() {
 		return loader;
-	}
-	
-	@Override
-	public Set<Participant> getChatRecipients(Participant sender, String message) {
-		Set<Participant> recipients = new HashSet<Participant>();
-		
-		for (String name : getParticipants())
-			recipients.add(plugin.getParticipant(name));
-		
-		return recipients;
 	}
 	
 	@Override

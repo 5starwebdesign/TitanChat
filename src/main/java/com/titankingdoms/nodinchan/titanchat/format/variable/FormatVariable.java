@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.format;
+package com.titankingdoms.nodinchan.titanchat.format.variable;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.participant.Participant;

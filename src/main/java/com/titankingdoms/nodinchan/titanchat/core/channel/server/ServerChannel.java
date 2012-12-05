@@ -1,14 +1,10 @@
 package com.titankingdoms.nodinchan.titanchat.core.channel.server;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Range;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public final class ServerChannel extends Channel {
 	
@@ -24,11 +20,6 @@ public final class ServerChannel extends Channel {
 	@Override
 	public ChannelLoader getChannelLoader() {
 		return loader;
-	}
-	
-	@Override
-	public Set<Participant> getChatRecipients(Participant sender, String message) {
-		return new HashSet<Participant>();
 	}
 	
 	@Override

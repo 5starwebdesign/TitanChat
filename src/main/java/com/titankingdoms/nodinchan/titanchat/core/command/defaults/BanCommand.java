@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.command.Command;
 import com.titankingdoms.nodinchan.titanchat.help.HelpTopic;
-import com.titankingdoms.nodinchan.titanchat.permissions.Permission;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 
 public class BanCommand extends Command {
@@ -65,7 +64,7 @@ public class BanCommand extends Command {
 		if (channel.isAdmin(sender.getName()))
 			return true;
 		
-		if (hasPermission(sender, Permission.BAN.getPermission(channel)))
+		if (hasPermission(sender, "TitanChat.ban." + channel.getName()))
 			return true;
 		
 		return false;

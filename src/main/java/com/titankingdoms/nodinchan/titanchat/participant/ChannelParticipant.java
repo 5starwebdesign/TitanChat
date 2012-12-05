@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
@@ -15,8 +14,8 @@ public final class ChannelParticipant extends Participant {
 	
 	private final Map<String, Boolean> mutes = new HashMap<String, Boolean>();
 	
-	public ChannelParticipant(Player player) {
-		super(player.getName());
+	public ChannelParticipant(String name) {
+		super(name);
 	}
 	
 	@Override

@@ -53,8 +53,6 @@ public abstract class Channel extends Loadable implements Listener {
 	
 	public abstract ChannelLoader getChannelLoader();
 	
-	public abstract Set<Participant> getChatRecipients(Participant sender, String message);
-	
 	public final Command getCommand(String name) {
 		return this.commands.get(name.toLowerCase());
 	}

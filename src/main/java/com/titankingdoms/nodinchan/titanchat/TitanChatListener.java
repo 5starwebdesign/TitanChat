@@ -31,7 +31,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.titankingdoms.nodinchan.titanchat.format.FormatHandler;
+import com.titankingdoms.nodinchan.titanchat.format.FormatUtils;
 
 /**
  * TitanChatListener - Listens to events
@@ -75,7 +75,7 @@ public final class TitanChatListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 		for (int line = 0; line < 4; line++)
-			event.setLine(line, FormatHandler.colourise(event.getLine(line)));
+			event.setLine(line, FormatUtils.colourise(event.getLine(line)));
 	}
 	
 	/**

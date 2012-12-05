@@ -20,8 +20,8 @@ public final class CommandManager {
 	
 	private final TitanChat plugin;
 	
-	private final Map<String, String> aliases;
 	private final Map<String, Command> commands;
+	private final Map<String, Command> labels;
 	
 	public CommandManager() {
 		this.plugin = TitanChat.getInstance();
@@ -29,13 +29,13 @@ public final class CommandManager {
 		if (getCommandDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating command directory...");
 		
-		this.aliases = new TreeMap<String, String>();
 		this.commands = new TreeMap<String, Command>();
+		this.labels = new TreeMap<String, Command>();
 	}
 	
 	public void dispatch(CommandSender sender, Channel channel, String label, String[] args) {
-		if (existingCommandAlias(label)) {
-			Command command = getCommandByAlias(label);
+		if (existingCommandLabel(label)) {
+			Command command = getCommand(label);
 			
 			if (args.length < command.getMinArguments() || args.length > command.getMaxArguments()) {
 				Messaging.sendMessage(sender, C.RED + "Invalid Argument Length");
@@ -64,16 +64,12 @@ public final class CommandManager {
 		return existingCommand(command.getName());
 	}
 	
-	public boolean existingCommandAlias(String alias) {
-		return aliases.containsKey(alias.toLowerCase());
+	public boolean existingCommandLabel(String label) {
+		return labels.containsKey(label.toLowerCase());
 	}
 	
-	public Command getCommand(String name) {
-		return commands.get(name.toLowerCase());
-	}
-	
-	public Command getCommandByAlias(String alias) {
-		return (existingCommandAlias(alias)) ? getCommand(aliases.get(alias.toLowerCase())) : null;
+	public Command getCommand(String label) {
+		return labels.get(label.toLowerCase());
 	}
 	
 	public File getCommandDirectory() {
@@ -119,11 +115,11 @@ public final class CommandManager {
 				continue;
 			
 			this.commands.put(command.getName().toLowerCase(), command);
-			this.aliases.put(command.getName().toLowerCase(), command.getName());
+			this.labels.put(command.getName().toLowerCase(), command);
 			
 			for (String alias : command.getAliases())
-				if (!existingCommand(alias) && !existingCommandAlias(alias))
-					this.aliases.put(alias.toLowerCase(), command.getName());
+				if (!existingCommandLabel(alias))
+					this.labels.put(alias.toLowerCase(), command);
 		}
 	}
 	

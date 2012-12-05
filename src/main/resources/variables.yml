@@ -1,0 +1,21 @@
+formatting:
+    default: '%var%'
+    variables:
+        tag: '[%var%]'
+presets:
+    users:
+        TitanDev:
+            prefix: '[&4Dev&f]'
+        Steve:
+            suffix: ' the &4Adventurer'
+    permissions:
+        default:
+            prefix: '[&7Default&f]'
+        memeber:
+            prefix: '[&2Member&f]'
+        vip:
+            prefix: '[&5VIP&f]'
+        mod:
+            prefix: '[&1Mod&f]'
+        admin:
+            prefix: '[&4Admin&f]'

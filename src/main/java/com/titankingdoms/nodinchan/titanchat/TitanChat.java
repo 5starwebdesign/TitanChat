@@ -37,24 +37,21 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 
-import com.titankingdoms.nodinchan.titanchat.core.command.CommandManager;
 import com.titankingdoms.nodinchan.titanchat.core.addon.Addon;
 import com.titankingdoms.nodinchan.titanchat.core.addon.AddonManager;
+import com.titankingdoms.nodinchan.titanchat.core.command.CommandManager;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 import com.titankingdoms.nodinchan.titanchat.format.FormatHandler;
-import com.titankingdoms.nodinchan.titanchat.info.InfoHandler;
 import com.titankingdoms.nodinchan.titanchat.metrics.Metrics;
 import com.titankingdoms.nodinchan.titanchat.participant.ChannelParticipant;
 import com.titankingdoms.nodinchan.titanchat.participant.ParticipantManager;
-import com.titankingdoms.nodinchan.titanchat.permission.Permissions;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 import com.titankingdoms.nodinchan.titanchat.util.Messaging;
-import com.titankingdoms.nodinchan.titanchat.format.VariableManager;
 
 /**
  * TitanChat - Main class of TitanChat
@@ -75,10 +72,7 @@ public final class TitanChat extends JavaPlugin {
 	private ChannelManager channelManager;
 	private CommandManager commandManager;
 	private ParticipantManager participantManager;
-	private InfoHandler info;
-	private Permissions perms;
 	private FormatHandler formatHandler;
-	private VariableManager variableManager;
 	
 	/**
 	 * Logs the line to the console
@@ -178,15 +172,6 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	/**
-	 * Gets the info handler
-	 * 
-	 * @return The info handler
-	 */
-	public InfoHandler getInfoHandler() {
-		return info;
-	}
-	
-	/**
 	 * Gets an instance of this
 	 * 
 	 * @return The TitanChat instance
@@ -216,15 +201,6 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	/**
-	 * Gets the permissions loader
-	 * 
-	 * @return The permissions loader
-	 */
-	public Permissions getPermissions() {
-		return perms;
-	}
-	
-	/**
 	 * Gets the player with the specified name
 	 * 
 	 * @param name The name of the player
@@ -233,10 +209,6 @@ public final class TitanChat extends JavaPlugin {
 	 */
 	public Player getPlayer(String name) {
 		return getServer().getPlayer(name);
-	}
-	
-	public VariableManager getVariableManager() {
-		return variableManager;
 	}
 	
 	/**
@@ -337,7 +309,6 @@ public final class TitanChat extends JavaPlugin {
 		
 		addonManager.unload();
 		commandManager.unload();
-		info.unload();
 		
 		log(Level.INFO, "is now disabled");
 	}
@@ -357,8 +328,6 @@ public final class TitanChat extends JavaPlugin {
 		if (!initMetrics())
 			log(Level.WARNING, "Failed to hook into Metrics");
 		
-		info = new InfoHandler();
-		perms = new Permissions();
 		formatHandler = new FormatHandler();
 		
 		InputStream permissionStream = getResource("permissions.yml");
@@ -379,12 +348,6 @@ public final class TitanChat extends JavaPlugin {
 		addonManager.load();
 		channelManager.load();
 		commandManager.load();
-		
-		info.loadLoadedInfo();
-		info.loadPlayerInfo();
-		
-		for (Player player : getServer().getOnlinePlayers())
-			info.loadCachedInfo(player);
 		
 		if (channelManager.getChannels(Type.DEFAULT).isEmpty()) {
 			log(Level.SEVERE, "A default channel is not defined");

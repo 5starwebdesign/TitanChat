@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.permissions.Permission;
 
 public final class ParticipantManager {
 	
@@ -52,18 +51,18 @@ public final class ParticipantManager {
 	
 	public void registerParticipant(Player player) {
 		if (!existingParticipant(player))
-			participants.put(player.getName().toLowerCase(), new ChannelParticipant(player));
+			participants.put(player.getName().toLowerCase(), new ChannelParticipant(player.getName()));
 		
 		ChannelParticipant participant = getParticipant(player);
 		
 		for (Channel channel : plugin.getChannelManager().getChannels()) {
-			if (participant.hasPermission(Permission.AUTOJOIN.getPermission(channel)))
+			if (participant.hasPermission("TitanChat.autojoin." + channel.getName()))
 				channel.join(participant);
 			
-			if (participant.hasPermission(Permission.AUTOLEAVE.getPermission(channel)))
+			if (participant.hasPermission("TitanChat.autoleave." + channel.getName()))
 				channel.leave(participant);
 			
-			if (participant.hasPermission(Permission.AUTODIRECT.getPermission(channel)))
+			if (participant.hasPermission("TitanChat.autodirect." + channel.getName()))
 				participant.direct(channel);
 		}
 	}
@@ -85,23 +84,5 @@ public final class ParticipantManager {
 			return;
 		
 		try { config.save(configFile); } catch (Exception e) {}
-	}
-	
-	public void loadParticipant(Player player) {
-		if (!existingParticipant(player))
-			participants.put(player.getName().toLowerCase(), new ChannelParticipant(player));
-		
-		ChannelParticipant participant = getParticipant(player);
-		
-		for (Channel channel : plugin.getChannelManager().getChannels()) {
-			if (participant.hasPermission(Permission.AUTOJOIN.getPermission(channel)))
-				channel.join(participant);
-			
-			if (participant.hasPermission(Permission.AUTOLEAVE.getPermission(channel)))
-				channel.leave(participant);
-			
-			if (participant.hasPermission(Permission.AUTODIRECT.getPermission(channel)))
-				participant.direct(channel);
-		}
 	}
 }

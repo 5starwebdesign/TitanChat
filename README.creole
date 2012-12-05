@@ -70,6 +70,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 10.11.12 - Adding back commands and a help system
 * 17.11.12 - Removed all old broken code and started adding new code
 * 03.12.12 - Made some changes
+* 05.12.12 - Started work on chat handling
 
 -----------------------------------------------------------------------------------------------------------------------
 

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
@@ -18,12 +17,15 @@ public abstract class Participant {
 	
 	private final String name;
 	
+	private final ParticipantConfig config;
+	
 	private Channel current;
 	private final Map<String, Channel> channels;
 	
 	public Participant(String name) {
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
+		this.config = new ParticipantConfig(this);
 		this.channels = new HashMap<String, Channel>();
 	}
 	
@@ -40,8 +42,8 @@ public abstract class Participant {
 	
 	public abstract CommandSender getCommandSender();
 	
-	public final ConfigurationSection getConfigSection() {
-		return plugin.getParticipantManager().getConfig().getConfigurationSection(getName());
+	public final ParticipantConfig getConfig() {
+		return config;
 	}
 	
 	public final Channel getCurrentChannel() {
@@ -49,7 +51,7 @@ public abstract class Participant {
 	}
 	
 	public String getDisplayName() {
-		return getConfigSection().getString("display-name", getName());
+		return config.getString("display-name", getName());
 	}
 	
 	public final String getName() {
