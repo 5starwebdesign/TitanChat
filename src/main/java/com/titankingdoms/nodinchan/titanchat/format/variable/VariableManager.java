@@ -2,17 +2,22 @@ package com.titankingdoms.nodinchan.titanchat.format.variable;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
+import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
+import com.titankingdoms.nodinchan.titanchat.format.variable.defaults.*;
 
 public final class VariableManager {
 	
@@ -23,10 +28,14 @@ public final class VariableManager {
 	
 	private final Pattern format = Pattern.compile("(%)([a-z0-9]+)", Pattern.CASE_INSENSITIVE);
 	
+	private final Map<String, PresetSet> permissionPresets;
+	private final Map<String, PresetSet> userPresets;
 	private final Map<String, FormatVariable> variables;
 	
 	public VariableManager() {
 		this.plugin = TitanChat.getInstance();
+		this.permissionPresets = new HashMap<String, PresetSet>();
+		this.userPresets = new HashMap<String, PresetSet>();
 		this.variables = new HashMap<String, FormatVariable>();
 	}
 	
@@ -39,6 +48,14 @@ public final class VariableManager {
 	
 	public String getDefaultVariableFormat() {
 		return getConfig().getString("formatting.default", "%var%");
+	}
+	
+	public PresetSet getPermissionPresets(String group) {
+		return permissionPresets.get(group.toLowerCase());
+	}
+	
+	public PresetSet getUserPresets(String user) {
+		return userPresets.get(user.toLowerCase());
 	}
 	
 	private FormatVariable getVariable(String formatTag) {
@@ -58,20 +75,100 @@ public final class VariableManager {
 	}
 	
 	public void load() {
+		register(
+				new DisplayNameVariable(),
+				new NameVariable(),
+				new TagVariable()
+		);
 		
+		ConfigurationSection userSection = getConfig().getConfigurationSection("users");
+		
+		for (String name : userSection.getKeys(false)) {
+			ConfigurationSection nameSection = userSection.getConfigurationSection(name);
+			
+			if (!userPresets.containsKey(name))
+				userPresets.put(name.toLowerCase(), new PresetSet());
+			
+			PresetSet set = userPresets.get(name.toLowerCase());
+			
+			for (String type : nameSection.getKeys(false))
+				set.registerVariable(new PresetVariable(type, nameSection.getString(type)));
+		}
+		
+		ConfigurationSection permissionSection = getConfig().getConfigurationSection("permissions");
+		
+		for (String group : permissionSection.getKeys(false)) {
+			ConfigurationSection groupSection = permissionSection.getConfigurationSection(group);
+			int priority = groupSection.getInt("priority", 0);
+			
+			if (!permissionPresets.containsKey(group.toLowerCase()))
+				permissionPresets.put(group.toLowerCase(), new PresetSet(group, priority));
+			
+			PresetSet set = permissionPresets.get(group.toLowerCase());
+			
+			for (String type : groupSection.getKeys(false))
+				set.registerVariable(new PresetVariable(type, groupSection.getString(type)));
+		}
 	}
 	
 	public String parse(Participant sender, Channel channel, String format) {
 		StringBuffer parsed = new StringBuffer();
 		Matcher match = this.format.matcher(format);
 		
-		while (match.find()) {
-			if (!existingVariable(match.group()))
-				continue;
-			
-			match.appendReplacement(parsed, getVariable(match.group()).getVariable(sender, channel));
+		PresetSet userSets = null;
+		List<PresetSet> permissionSets = new ArrayList<PresetSet>();
+		
+		if (this.userPresets.containsKey(sender.getName().toLowerCase()))
+			userSets = getUserPresets(sender.getName());
+		
+		for (PresetSet set : permissionPresets.values())
+			if (set.hasPermission(sender))
+				permissionSets.add(set);
+		
+		if (!permissionSets.isEmpty()) {
+			Collections.sort(permissionSets);
+			Collections.reverse(permissionSets);
 		}
 		
+		while (match.find()) {
+			String varFormat = getVariableFormat(match.group());
+			
+			if (userSets != null) {
+				if (userSets.existingVariable(match.group())) {
+					PresetVariable variable = userSets.getVariable(match.group());
+					String rep = varFormat.replace("%var%", variable.getVariable(sender, channel));
+					match.appendReplacement(parsed, rep);
+					continue;
+				}
+			}
+			
+			if (!permissionSets.isEmpty()) {
+				boolean cont = false;
+				
+				for (PresetSet set : permissionSets) {
+					if (set.existingVariable(match.group())) {
+						PresetVariable variable = set.getVariable(match.group());
+						String rep = varFormat.replace("%var%", variable.getVariable(sender, channel));
+						match.appendReplacement(parsed, rep);
+						cont = true;
+						break;
+					}
+				}
+				
+				if (cont)
+					continue;
+			}
+			
+			if (!existingVariable(match.group())) {
+				match.appendReplacement(parsed, "");
+				continue;
+			}
+			
+			FormatVariable variable = getVariable(match.group());
+			String rep = varFormat.replace("%var%", variable.getVariable(sender, channel));
+			match.appendReplacement(parsed, rep);
+		}
+	
 		return match.appendTail(parsed).toString();
 	}
 	

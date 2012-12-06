@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.participant;
+package com.titankingdoms.nodinchan.titanchat.core.participant;
 
 import java.io.File;
 import java.io.InputStream;

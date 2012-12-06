@@ -9,13 +9,14 @@ import java.util.Set;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Listener;
 
+import com.titankingdoms.nodinchan.titanchat.core.ChatTarget;
 import com.titankingdoms.nodinchan.titanchat.core.addon.Addon;
 import com.titankingdoms.nodinchan.titanchat.core.command.Command;
+import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.loading.Loadable;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
-public abstract class Channel extends Loadable implements Listener {
+public abstract class Channel extends Loadable implements ChatTarget, Listener {
 	
 	protected final Debugger db = new Debugger(2, "Channel");
 	

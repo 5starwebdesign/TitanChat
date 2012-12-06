@@ -1,12 +1,13 @@
-package com.titankingdoms.nodinchan.titanchat.core.channel;
+package com.titankingdoms.nodinchan.titanchat.core;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
+import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.event.ChannelChatEvent;
 import com.titankingdoms.nodinchan.titanchat.format.FormatUtils;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public abstract class ChatHandler {
 	
@@ -41,5 +42,10 @@ public abstract class ChatHandler {
 		
 		ChannelChatEvent event = new ChannelChatEvent(sender, recipients, channel, format, message);
 		plugin.getServer().getPluginManager().callEvent(event);
+		
+		message = event.getMessage();
+		format = plugin.getFormatHandler().getVariableManager().parse(sender, channel, event.getFormat());
+		
+		
 	}
 }

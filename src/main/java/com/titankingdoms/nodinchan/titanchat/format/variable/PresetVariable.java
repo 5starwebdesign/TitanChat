@@ -1,21 +1,15 @@
 package com.titankingdoms.nodinchan.titanchat.format.variable;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
+import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
 
 public final class PresetVariable implements FormatVariable {
 	
 	private final String tag;
-	private final String permission;
 	private final String info;
 	
-	public PresetVariable(String infoType, String info) {
-		this("", infoType, info);
-	}
-	
-	public PresetVariable(String group, String infoType, String info) {
+	protected PresetVariable(String infoType, String info) {
 		this.tag = "%" + infoType;
-		this.permission = (group != null && !group.isEmpty()) ? "TitanChat.preset." + group : "";
 		this.info = info;
 	}
 	
@@ -24,6 +18,6 @@ public final class PresetVariable implements FormatVariable {
 	}
 	
 	public String getVariable(Participant sender, Channel channel) {
-		return (permission.isEmpty() || sender.hasPermission(permission)) ? info : "";
+		return info;
 	}
 }

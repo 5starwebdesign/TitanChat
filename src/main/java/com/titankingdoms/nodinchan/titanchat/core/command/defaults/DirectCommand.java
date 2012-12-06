@@ -4,8 +4,8 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.command.Command;
+import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.help.HelpTopic;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 
 public final class DirectCommand extends Command {

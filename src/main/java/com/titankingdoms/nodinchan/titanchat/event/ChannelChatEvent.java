@@ -7,8 +7,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
+import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.format.FormatHandler;
-import com.titankingdoms.nodinchan.titanchat.participant.Participant;
 
 public final class ChannelChatEvent extends Event {
 	

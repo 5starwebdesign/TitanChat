@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.titankingdoms.nodinchan.titanchat.core.ChatHandler;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
@@ -30,6 +31,10 @@ public final class StandardChannel extends Channel {
 	@Override
 	public ChannelLoader getChannelLoader() {
 		return loader;
+	}
+	
+	public ChatHandler getChatHandler() {
+		return null;
 	}
 	
 	@Override

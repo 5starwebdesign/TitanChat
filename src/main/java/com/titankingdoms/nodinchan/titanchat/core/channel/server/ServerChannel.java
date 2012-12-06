@@ -1,5 +1,6 @@
 package com.titankingdoms.nodinchan.titanchat.core.channel.server;
 
+import com.titankingdoms.nodinchan.titanchat.core.ChatHandler;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
@@ -20,6 +21,10 @@ public final class ServerChannel extends Channel {
 	@Override
 	public ChannelLoader getChannelLoader() {
 		return loader;
+	}
+	
+	public ChatHandler getChatHandler() {
+		return null;
 	}
 	
 	@Override

@@ -6,9 +6,3 @@ logging:
     debug: []
 formatting:
     format: '%tag %prefix%display%suffix: %message'
-    variable:
-        default: '%var%'
-        custom:
-            tag: '[%var%]'
-            prefix: '[%var%]'
-            suffix: '[%var%]'

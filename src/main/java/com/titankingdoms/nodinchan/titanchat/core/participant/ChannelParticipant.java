@@ -1,10 +1,11 @@
-package com.titankingdoms.nodinchan.titanchat.participant;
+package com.titankingdoms.nodinchan.titanchat.core.participant;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 
+import com.titankingdoms.nodinchan.titanchat.core.ChatHandler;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
@@ -16,6 +17,10 @@ public final class ChannelParticipant extends Participant {
 	
 	public ChannelParticipant(String name) {
 		super(name);
+	}
+	
+	public ChatHandler getChatHandler() {
+		return null;
 	}
 	
 	@Override

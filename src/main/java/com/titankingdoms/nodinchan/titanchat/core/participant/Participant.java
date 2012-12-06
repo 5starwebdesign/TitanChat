@@ -1,4 +1,4 @@
-package com.titankingdoms.nodinchan.titanchat.participant;
+package com.titankingdoms.nodinchan.titanchat.core.participant;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,10 +8,11 @@ import java.util.Set;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
+import com.titankingdoms.nodinchan.titanchat.core.ChatTarget;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 
-public abstract class Participant {
+public abstract class Participant implements ChatTarget {
 	
 	protected final TitanChat plugin;
 	

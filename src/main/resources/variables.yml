@@ -11,11 +11,16 @@ presets:
     permissions:
         default:
             prefix: '[&7Default&f]'
+            priority: 1
         memeber:
             prefix: '[&2Member&f]'
+            priority: 2
         vip:
             prefix: '[&5VIP&f]'
+            priority: 4
         mod:
             prefix: '[&1Mod&f]'
+            priority: 5
         admin:
             prefix: '[&4Admin&f]'
+            priority: 6
