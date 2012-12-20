@@ -1,31 +1,25 @@
 package com.titankingdoms.nodinchan.titanchat.core.channel.standard;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.logging.Level;
-
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import com.titankingdoms.nodinchan.titanchat.core.ChatHandler;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
-import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelInfo;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
+import com.titankingdoms.nodinchan.titanchat.core.channel.ChatHandler;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Range;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
 
 public final class StandardChannel extends Channel {
 	
-	private final StandardLoader loader;
-	private final StandardInfo info;
-	
-	private File configFile;
-	private FileConfiguration config;
+	private final ChannelLoader loader;
+	private final ChatHandler chatHandler;
 	
 	public StandardChannel(String name, Type type, StandardLoader loader) {
 		super(name, type);
 		this.loader = loader;
-		this.info = new StandardInfo(this);
+		this.chatHandler = new StandardChatHandler(this);
+	}
+	
+	@Override
+	public String[] getAliases() {
+		return getConfig().getStringList("aliases").toArray(new String[0]);
 	}
 
 	@Override
@@ -33,27 +27,30 @@ public final class StandardChannel extends Channel {
 		return loader;
 	}
 	
+	@Override
 	public ChatHandler getChatHandler() {
-		return null;
+		return chatHandler;
 	}
 	
 	@Override
-	public FileConfiguration getConfig() {
-		if (config == null)
-			reloadConfig();
-		
-		return config;
+	public String getFormat() {
+		return getSetting("format", "");
 	}
-
+	
 	@Override
-	public ChannelInfo getInfo() {
-		return info;
+	public String getPassword() {
+		return getSetting("password", "");
 	}
 	
 	@Override
 	public Range getRange() {
-		Range range = Range.fromName(getInfo().getSetting("range", "channel"));
+		Range range = Range.fromName(getSetting("range", "channel"));
 		return (range != null) ? range : Range.CHANNEL;
+	}
+	
+	@Override
+	public String getTag() {
+		return getSetting("tag", "");
 	}
 	
 	@Override
@@ -63,28 +60,5 @@ public final class StandardChannel extends Channel {
 		getConfig().set("blacklist", getBlacklist());
 		getConfig().set("whitelist", getWhitelist());
 		saveConfig();
-	}
-	
-	@Override
-	public void reloadConfig() {
-		if (configFile == null)
-			configFile = new File(plugin.getChannelManager().getChannelDirectory(), getName() + ".yml");
-		
-		config = YamlConfiguration.loadConfiguration(configFile);
-		
-		InputStream defConfigStream = plugin.getResource("channel.yml");
-		
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			config.setDefaults(defConfig);
-		}
-	}
-	
-	@Override
-	public void saveConfig() {
-		if (config == null || configFile == null)
-			return;
-		
-		try { config.save(configFile); } catch (Exception e) { plugin.log(Level.SEVERE, "Failed to save to " + configFile); }
 	}
 }

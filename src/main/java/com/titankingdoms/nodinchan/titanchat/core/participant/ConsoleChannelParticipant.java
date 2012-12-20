@@ -4,16 +4,10 @@ import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.nodinchan.titanchat.core.ChatHandler;
-
 public final class ConsoleChannelParticipant extends Participant {
 	
 	public ConsoleChannelParticipant() {
 		super("CONSOLE");
-	}
-	
-	public ChatHandler getChatHandler() {
-		return null;
 	}
 	
 	@Override

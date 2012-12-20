@@ -1,10 +1,9 @@
-package com.titankingdoms.nodinchan.titanchat.core;
+package com.titankingdoms.nodinchan.titanchat.core.channel;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.event.ChannelChatEvent;
 import com.titankingdoms.nodinchan.titanchat.format.FormatUtils;

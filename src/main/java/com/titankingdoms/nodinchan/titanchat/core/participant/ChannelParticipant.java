@@ -5,9 +5,7 @@ import java.util.Map;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.nodinchan.titanchat.core.ChatHandler;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
-import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
 public final class ChannelParticipant extends Participant {
 	
@@ -17,10 +15,6 @@ public final class ChannelParticipant extends Participant {
 	
 	public ChannelParticipant(String name) {
 		super(name);
-	}
-	
-	public ChatHandler getChatHandler() {
-		return null;
 	}
 	
 	@Override
@@ -57,7 +51,7 @@ public final class ChannelParticipant extends Participant {
 			return;
 		
 		for (String message : messages)
-			db.debug(DebugLevel.I, "@" + getName() + ": " + message);
+			db.i("@" + getName() + ": " + message);
 		
 		getCommandSender().sendMessage(messages);
 	}

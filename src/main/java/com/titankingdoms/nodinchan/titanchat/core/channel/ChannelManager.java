@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,7 +19,6 @@ import com.titankingdoms.nodinchan.titanchat.core.channel.standard.StandardLoade
 import com.titankingdoms.nodinchan.titanchat.loading.Loader;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
-import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 import com.titankingdoms.nodinchan.titanchat.util.Messaging;
 
 public final class ChannelManager {
@@ -27,7 +27,7 @@ public final class ChannelManager {
 	
 	private final Debugger db = new Debugger(2, "ChannelManager");
 	
-	private final Map<String, String> aliases;
+	private final Map<String, Channel> aliases;
 	private final Map<String, Channel> channels;
 	private final Map<String, ChannelLoader> loaders;
 	private final Map<Type, Set<Channel>> types;
@@ -35,23 +35,20 @@ public final class ChannelManager {
 	public ChannelManager() {
 		this.plugin = TitanChat.getInstance();
 		
-		if (getChannelDirectory().mkdirs())
-			plugin.log(Level.INFO, "Creating channel directory...");
-		
 		if (getCustomChannelDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating custom channel directory...");
 		
 		if (getLoaderDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating channel loader directory...");
 		
-		this.aliases = new HashMap<String, String>();
+		this.aliases = new HashMap<String, Channel>();
 		this.channels = new TreeMap<String, Channel>();
 		this.loaders = new TreeMap<String, ChannelLoader>();
 		this.types = new HashMap<Type, Set<Channel>>();
 	}
 	
 	public void createChannel(CommandSender sender, String name, ChannelLoader loader) {
-		db.debug(DebugLevel.I, sender.getName() + " is creating channel " + name);
+		db.i(sender.getName() + " is creating channel " + name);
 		
 		Channel channel = loader.create(sender, name, Type.NONE);
 		register(channel);
@@ -59,14 +56,14 @@ public final class ChannelManager {
 		Messaging.sendMessage(sender, C.GOLD + "You have created " + channel.getName());
 		
 		channel.getAdmins().add(sender.getName());
-		channel.join(plugin.getParticipant(sender.getName()));
+		channel.join(plugin.getParticipantManager().getParticipant(sender.getName()));
 		
 		channel.getConfig().options().copyDefaults(true);
 		channel.saveConfig();
 	}
 	
 	public void deleteChannel(CommandSender sender, String name) {
-		db.debug(DebugLevel.I, sender.getName() + " is deleting channel " + name);
+		db.i(sender.getName() + " is deleting channel " + name);
 		
 		Channel channel = getChannel(name);
 		channels.remove(channel.getName().toLowerCase());
@@ -75,7 +72,7 @@ public final class ChannelManager {
 		channel.broadcast(C.RED + channel.getName() + " has been deleted");
 		
 		for (String participantName : channel.getParticipants())
-			channel.leave(plugin.getParticipant(participantName));
+			channel.leave(plugin.getParticipantManager().getParticipant(participantName));
 		
 		File config = new File(getChannelDirectory(), channel.getName() + ".yml");
 		
@@ -112,7 +109,7 @@ public final class ChannelManager {
 	}
 	
 	public Channel getChannelByAlias(String alias) {
-		return (existingChannelAlias(alias)) ? getChannel(aliases.get(alias.toLowerCase())) : null;
+		return aliases.get(alias.toLowerCase());
 	}
 	
 	public File getChannelDirectory() {
@@ -154,34 +151,14 @@ public final class ChannelManager {
 		for (ChannelLoader loader : Loader.load(ChannelLoader.class, getLoaderDirectory()))
 			register(loader);
 		
-		if (loaders.size() > 0) {
-			StringBuilder str = new StringBuilder();
-			
-			for (ChannelLoader loader : getLoaders()) {
-				if (str.length() > 0)
-					str.append(", ");
-				
-				str.append(loader.getName());
-			}
-			
-			plugin.log(Level.INFO, "Channel Loaders loaded: " + str.toString());
-		}
+		if (!loaders.isEmpty())
+			plugin.log(Level.INFO, "ChannelLoaders loaded: " + StringUtils.join(loaders.keySet(), ", "));
 		
 		for (Channel channel : Loader.load(Channel.class, getCustomChannelDirectory()))
 			register(channel);
 		
-		if (channels.size() > 0) {
-			StringBuilder str = new StringBuilder();
-			
-			for (Channel channel : getChannels()) {
-				if (str.length() > 0)
-					str.append(", ");
-				
-				str.append(channel.getName());
-			}
-			
-			plugin.log(Level.INFO, "Channels loaded: " + str.toString());
-		}
+		if (!channels.isEmpty())
+			plugin.log(Level.INFO, "Channels loaded: " + StringUtils.join(channels.keySet(), ", "));
 	}
 	
 	public void register(Channel... channels) {
@@ -190,11 +167,11 @@ public final class ChannelManager {
 				continue;
 			
 			this.channels.put(channel.getName().toLowerCase(), channel);
-			this.aliases.put(channel.getName().toLowerCase(), channel.getName());
+			this.aliases.put(channel.getName().toLowerCase(), channel);
 			
-			for (String alias : channel.getInfo().getAliases())
-				if (!existingChannel(alias) && !existingChannelAlias(alias))
-					this.aliases.put(alias.toLowerCase(), channel.getName());
+			for (String alias : channel.getAliases())
+				if (!existingChannelAlias(alias))
+					this.aliases.put(alias.toLowerCase(), channel);
 			
 			if (!this.types.containsKey(channel.getType()))
 				this.types.put(channel.getType(), new HashSet<Channel>());
@@ -218,5 +195,12 @@ public final class ChannelManager {
 		
 		for (Channel channel : getChannels())
 			channel.reload();
+	}
+	
+	public void unload() {
+		aliases.clear();
+		channels.clear();
+		loaders.clear();
+		types.clear();
 	}
 }

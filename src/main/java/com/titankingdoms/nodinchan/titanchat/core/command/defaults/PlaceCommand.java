@@ -31,7 +31,7 @@ public final class PlaceCommand extends Command {
 			
 			if (player.isOnline()) {
 				if (!channel.isParticipating(player)) {
-					channel.join(plugin.getParticipant(player.getName()));
+					channel.join(plugin.getParticipantManager().getParticipant(player.getName()));
 					msg(player, C.GOLD + "You have been placed into " + channel.getName());
 					
 					if (!channel.isParticipating(sender.getName()))

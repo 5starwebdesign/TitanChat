@@ -1,8 +1,15 @@
 channels:
     enable: true
     limit: -1
+    server-channel:
+        tag: ''
+        display-colour: ''
 logging:
     colouring: true
     debug: []
+metrics-statistics: true
 formatting:
     format: '%tag %prefix%display%suffix: %message'
+filtering:
+    censor: '*'
+    phrases: []

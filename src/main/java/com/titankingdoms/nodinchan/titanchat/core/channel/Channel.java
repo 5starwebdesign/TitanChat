@@ -1,52 +1,63 @@
 package com.titankingdoms.nodinchan.titanchat.core.channel;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
-import com.titankingdoms.nodinchan.titanchat.core.ChatTarget;
 import com.titankingdoms.nodinchan.titanchat.core.addon.Addon;
+import com.titankingdoms.nodinchan.titanchat.core.channel.setting.SettingModifier;
 import com.titankingdoms.nodinchan.titanchat.core.command.Command;
 import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
+import com.titankingdoms.nodinchan.titanchat.format.variable.FormatVariable;
 import com.titankingdoms.nodinchan.titanchat.loading.Loadable;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 
-public abstract class Channel extends Loadable implements ChatTarget, Listener {
+public abstract class Channel extends Loadable implements Listener {
 	
 	protected final Debugger db = new Debugger(2, "Channel");
 	
+	private File configFile;
+	private FileConfiguration config;
+	
 	private final Type type;
+	
+	private final SettingModifier settings;
 	
 	private final Set<String> admins;
 	private final Set<String> blacklist;
 	private final Set<String> participants;
 	private final Set<String> whitelist;
 	
-	private final Map<String, Command> commands;
-	
 	public Channel(String name, Type type) {
 		super(name);
 		this.type = type;
+		this.settings = new SettingModifier();
 		this.admins = new HashSet<String>();
 		this.blacklist = new HashSet<String>();
 		this.participants = new HashSet<String>();
 		this.whitelist = new HashSet<String>();
-		this.commands = new HashMap<String, Command>();
 	}
 	
 	public void broadcast(String... messages) {
 		for (String name : participants)
-			plugin.getParticipant(name).send(messages);
+			plugin.getParticipantManager().getParticipant(name).send(messages);
 	}
 	
 	public Set<String> getAdmins() {
 		return admins;
 	}
+	
+	public abstract String[] getAliases();
 	
 	public Set<String> getBlacklist() {
 		return blacklist;
@@ -54,17 +65,66 @@ public abstract class Channel extends Loadable implements ChatTarget, Listener {
 	
 	public abstract ChannelLoader getChannelLoader();
 	
-	public final Command getCommand(String name) {
-		return this.commands.get(name.toLowerCase());
+	public abstract ChatHandler getChatHandler();
+	
+	public final FileConfiguration getConfig() {
+		if (config == null)
+			reloadConfig();
+		
+		return config;
 	}
 	
-	public abstract ChannelInfo getInfo();
+	public abstract String getFormat();
 	
 	public Set<String> getParticipants() {
 		return Collections.unmodifiableSet(participants);
 	}
 	
+	public abstract String getPassword();
+	
 	public abstract Range getRange();
+	
+	public final boolean getSetting(String path, boolean def) {
+		return getConfig().getBoolean(path, def);
+	}
+	
+	public final double getSetting(String path, double def) {
+		return getConfig().getDouble(path, def);
+	}
+	
+	public final int getSetting(String path, int def) {
+		return getConfig().getInt(path, def);
+	}
+	
+	public final ItemStack getSetting(String path, ItemStack def) {
+		return getConfig().getItemStack(path, def);
+	}
+	
+	public final List<?> getSetting(String path, List<?> def) {
+		return getConfig().getList(path, def);
+	}
+	
+	public final long getSetting(String path, long def) {
+		return getConfig().getLong(path, def);
+	}
+	
+	public final OfflinePlayer getSetting(String path, OfflinePlayer def) {
+		return getConfig().getOfflinePlayer(path, def);
+	}
+	
+	public final String getSetting(String path, String def) {
+		return getConfig().getString(path, def);
+	}
+	
+	public final Vector getSetting(String path, Vector def) {
+		return getConfig().getVector(path, def);
+	}
+	
+	public final SettingModifier getSettingModifier() {
+		return settings;
+	}
+	
+	public abstract String getTag();
 	
 	public final Type getType() {
 		return type;
@@ -72,10 +132,6 @@ public abstract class Channel extends Loadable implements ChatTarget, Listener {
 	
 	public Set<String> getWhitelist() {
 		return whitelist;
-	}
-	
-	public final boolean hasCommand(String name) {
-		return this.commands.containsKey(name.toLowerCase());
 	}
 	
 	public boolean isAdmin(String name) {
@@ -156,11 +212,30 @@ public abstract class Channel extends Loadable implements ChatTarget, Listener {
 		plugin.getCommandManager().register(commands);
 	}
 	
-	protected final void registerCommands(Command... commands) {
-		for (Command command : commands)
-			if (!hasCommand(command.getName()))
-				this.commands.put(command.getName().toLowerCase(), command);
+	public final void register(FormatVariable... variables) {
+		plugin.getFormatHandler().getVariableManager().register(variables);
 	}
 	
 	public abstract void reload();
+	
+	@Override
+	public final void reloadConfig() {
+		if (configFile == null)
+			configFile = new File(plugin.getChannelManager().getChannelDirectory(), getName() + ".yml");
+		
+		config = YamlConfiguration.loadConfiguration(configFile);
+		
+		InputStream defConfigStream = plugin.getResource("channel.yml");
+		
+		if (defConfigStream != null)
+			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
+	}
+	
+	@Override
+	public final void saveConfig() {
+		if (configFile == null || config == null)
+			return;
+		
+		try { config.save(configFile); } catch (Exception e) {}
+	}
 }

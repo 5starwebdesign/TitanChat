@@ -8,11 +8,11 @@ import java.util.Set;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
-import com.titankingdoms.nodinchan.titanchat.core.ChatTarget;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Type;
+import com.titankingdoms.nodinchan.titanchat.util.C;
 
-public abstract class Participant implements ChatTarget {
+public abstract class Participant {
 	
 	protected final TitanChat plugin;
 	
@@ -28,6 +28,19 @@ public abstract class Participant implements ChatTarget {
 		this.name = name;
 		this.config = new ParticipantConfig(this);
 		this.channels = new HashMap<String, Channel>();
+	}
+	
+	public final void chat(String message) {
+		chat(current, message);
+	}
+	
+	public final void chat(Channel channel, String message) {
+		if (channel == null) {
+			send(C.GOLD + "You must be in a channel to speak");
+			return;
+		}
+		
+		channel.getChatHandler().processChat(this, channel, message);
 	}
 	
 	public final void direct(Channel channel) {

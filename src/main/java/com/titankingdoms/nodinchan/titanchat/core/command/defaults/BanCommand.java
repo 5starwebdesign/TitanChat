@@ -40,7 +40,7 @@ public class BanCommand extends Command {
 						channel.getAdmins().remove(player.getName());
 					
 					if (channel.isParticipating(player))
-						channel.leave(plugin.getParticipant(player.getName()));
+						channel.leave(plugin.getParticipantManager().getParticipant(player.getName()));
 					
 					msg(player, C.RED + "You have been banned from " + channel.getName());
 					
@@ -64,10 +64,7 @@ public class BanCommand extends Command {
 		if (channel.isAdmin(sender.getName()))
 			return true;
 		
-		if (hasPermission(sender, "TitanChat.ban." + channel.getName()))
-			return true;
-		
-		return false;
+		return hasPermission(sender, "TitanChat.ban." + channel.getName());
 	}
 	
 	public final class BanTopic implements HelpTopic {

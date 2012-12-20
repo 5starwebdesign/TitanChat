@@ -2,11 +2,13 @@ package com.titankingdoms.nodinchan.titanchat.core.command;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
@@ -30,11 +32,11 @@ public final class CommandManager {
 			plugin.log(Level.INFO, "Creating command directory...");
 		
 		this.commands = new TreeMap<String, Command>();
-		this.labels = new TreeMap<String, Command>();
+		this.labels = new HashMap<String, Command>();
 	}
 	
 	public void dispatch(CommandSender sender, Channel channel, String label, String[] args) {
-		if (existingCommandLabel(label)) {
+		if (existingLabel(label)) {
 			Command command = getCommand(label);
 			
 			if (args.length < command.getMinArguments() || args.length > command.getMaxArguments()) {
@@ -64,7 +66,7 @@ public final class CommandManager {
 		return existingCommand(command.getName());
 	}
 	
-	public boolean existingCommandLabel(String label) {
+	public boolean existingLabel(String label) {
 		return labels.containsKey(label.toLowerCase());
 	}
 	
@@ -95,18 +97,8 @@ public final class CommandManager {
 		for (Command command : Loader.load(Command.class, getCommandDirectory()))
 			register(command);
 		
-		if (commands.size() > 0) {
-			StringBuilder str = new StringBuilder();
-			
-			for (Command command : getCommands()) {
-				if (str.length() > 0)
-					str.append(", ");
-				
-				str.append(command.getName());
-			}
-			
-			plugin.log(Level.INFO, "Commands loaded: " + str.toString());
-		}
+		if (!commands.isEmpty())
+			plugin.log(Level.INFO, "Commands loaded: " + StringUtils.join(commands.keySet(), ", "));
 	}
 	
 	public void register(Command... commands) {
@@ -118,7 +110,7 @@ public final class CommandManager {
 			this.labels.put(command.getName().toLowerCase(), command);
 			
 			for (String alias : command.getAliases())
-				if (!existingCommandLabel(alias))
+				if (!existingLabel(alias))
 					this.labels.put(alias.toLowerCase(), command);
 		}
 	}

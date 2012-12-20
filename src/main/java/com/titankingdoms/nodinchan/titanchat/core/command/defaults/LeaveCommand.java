@@ -25,7 +25,7 @@ public final class LeaveCommand extends Command {
 			return;
 		}
 		
-		channel = plugin.getChannel(args[0]);
+		channel = plugin.getChannelManager().getChannel(args[0]);
 		
 		if (!hasPermission(sender, "TitanChat.leave." + channel.getName())) {
 			msg(sender, C.RED + "You do not have permission");
@@ -33,7 +33,7 @@ public final class LeaveCommand extends Command {
 		}
 		
 		if (channel.isParticipating(sender.getName())) {
-			channel.leave(plugin.getParticipant(sender.getName()));
+			channel.leave(plugin.getParticipantManager().getParticipant(sender.getName()));
 			msg(sender, C.GOLD + "You have left " + channel.getName());
 			
 		} else { msg(sender, C.RED + "You are not in the channel"); }

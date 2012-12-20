@@ -26,25 +26,25 @@ public final class JoinCommand extends Command {
 			return;
 		}
 		
-		channel = plugin.getChannel(args[0]);
+		channel = plugin.getChannelManager().getChannel(args[0]);
 		
 		if (!hasPermission(sender, "TitanChat.join." + channel.getName())) {
 			msg(sender, C.RED + "You do not have permission");
 			return;
 		}
 		
-		if (channel.getType().equals(Type.STAFF) && !plugin.isStaff(sender)) {
+		if (channel.getType().equals(Type.STAFF) && !hasPermission(sender, "TitanChat.staff")) {
 			msg(sender, C.RED + "You do not have permission to join a staff channel");
 			return;
 		}
 		
-		if (channel.getInfo().getPassword() != null && !channel.getInfo().getPassword().isEmpty()) {
+		if (channel.getPassword() != null && !channel.getPassword().isEmpty()) {
 			if (args.length < 2) {
 				msg(sender, C.RED + "Please enter a password");
 				return;
 			}
 			
-			if (!channel.getInfo().getPassword().equals(args[1])) {
+			if (!channel.getPassword().equals(args[1])) {
 				msg(sender, C.RED + "Incorrect Password");
 				return;
 			}
@@ -55,7 +55,7 @@ public final class JoinCommand extends Command {
 			return;
 		}
 		
-		if (channel.getInfo().getSetting("whitelist", false)) {
+		if (channel.getSetting("whitelist", false)) {
 			if (!channel.isWhitelisted(sender.getName())) {
 				msg(sender, C.RED + "You are not whitelisted for the channel");
 				return;
@@ -63,7 +63,7 @@ public final class JoinCommand extends Command {
 		}
 		
 		if (!channel.isParticipating(sender.getName())) {
-			channel.join(plugin.getParticipant(sender.getName()));
+			channel.join(plugin.getParticipantManager().getParticipant(sender.getName()));
 			msg(sender, C.GOLD + "You have joined " + channel.getName());
 			
 		} else {

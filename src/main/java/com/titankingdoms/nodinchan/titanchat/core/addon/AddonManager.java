@@ -23,17 +23,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.loading.Loader;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
-import com.titankingdoms.nodinchan.titanchat.util.Debugger.DebugLevel;
 
-/**
- * AddonManager - Manages addons
- * 
- * @author NodinChan
- *
- */
 public final class AddonManager {
 	
 	private final TitanChat plugin;
@@ -51,83 +46,44 @@ public final class AddonManager {
 		this.addons = new TreeMap<String, Addon>();
 	}
 	
-	/**
-	 * Gets the addon by name
-	 * 
-	 * @param name The name of the addon
-	 * 
-	 * @return The addon if found, otherwise null
-	 */
+	public boolean existingAddon(String name) {
+		return addons.containsKey(name.toLowerCase());
+	}
+	
+	private boolean existingAddon(Addon addon) {
+		return existingAddon(addon.getName());
+	}
+	
 	public Addon getAddon(String name) {
 		return addons.get(name.toLowerCase());
 	}
 	
-	/**
-	 * Gets the addon directory
-	 * 
-	 * @return The directory of addons
-	 */
 	public File getAddonDirectory() {
 		return new File(plugin.getDataFolder(), "addons");
 	}
 	
-	/**
-	 * Gets all addons
-	 * 
-	 * @return The list of addons
-	 */
 	public List<Addon> getAddons() {
 		return new ArrayList<Addon>(addons.values());
 	}
 	
-	public boolean hasAddon(String name) {
-		return addons.containsKey(name.toLowerCase());
-	}
-	
-	public boolean hasAddon(Addon addon) {
-		return hasAddon(addon.getName());
-	}
-	
-	/**
-	 * Loads the manager
-	 */
 	public void load() {
 		for (Addon addon : Loader.load(Addon.class, getAddonDirectory()))
 			register(addon);
 		
-		if (addons.size() > 0) {
-			StringBuilder str = new StringBuilder();
-			
-			for (Addon addon : getAddons()) {
-				if (str.length() > 0)
-					str.append(", ");
-				
-				str.append(addon.getName());
-			}
-			
-			plugin.log(Level.INFO, "Addons loaded: " + str.toString());
-		}
+		if (!addons.isEmpty())
+			plugin.log(Level.INFO, "Addons loaded: " + StringUtils.join(addons.keySet(), ", "));
 	}
 	
-	/**
-	 * Registers the addon
-	 * 
-	 * @param addon The addon to register
-	 */
 	public void register(Addon... addons) {
 		for (Addon addon : addons) {
-			db.debug(DebugLevel.I, "Registering addon: " + addon.getName());
-			
-			if (hasAddon(addon))
+			if (existingAddon(addon))
 				continue;
 			
 			this.addons.put(addon.getName().toLowerCase(), addon);
+			db.i("Registered addon: " + addon.getName());
 		}
 	}
 	
-	/**
-	 * Unloads the manager
-	 */
 	public void unload() {
 		addons.clear();
 	}

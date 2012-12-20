@@ -20,7 +20,6 @@ import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,58 +30,48 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import com.titankingdoms.nodinchan.titanchat.core.participant.Participant;
 import com.titankingdoms.nodinchan.titanchat.format.FormatUtils;
+import com.titankingdoms.nodinchan.titanchat.util.C;
 
-/**
- * TitanChatListener - Listens to events
- * 
- * @author NodinChan
- *
- */
 public final class TitanChatListener implements Listener {
 
 	private final TitanChat plugin;
 	
-	private final double currentVer;
+	private final String site = "http://dev.bukkit.org/server-mods/titanchat/";
+	private final double currentVer = 4.0;
 	private double newVer;
 	
 	public TitanChatListener() {
 		this.plugin = TitanChat.getInstance();
-		this.currentVer = Double.valueOf(plugin.getDescription().getVersion().trim().split(" ")[0].trim());
+		this.newVer = currentVer;
 		this.newVer = updateCheck();
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-		
+		plugin.getParticipantManager().getParticipant(event.getPlayer()).chat(event.getMessage());
 	}
 	
-	/**
-	 * Listens to PlayerJoinEvent
-	 * 
-	 * @param event PlayerJoinEvent
-	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		Participant participant = plugin.getParticipantManager().registerParticipant(event.getPlayer());
 		
+		if (participant.hasPermission("TitanChat.update")) {
+			if (updateCheck() > currentVer) {
+				participant.send(C.GOLD + "" + newVer + " " + C.DARK_PURPLE + "is out!");
+				participant.send(C.DARK_PURPLE + "You are running " + C.GOLD + "" + currentVer);
+				participant.send(C.DARK_PURPLE + "Update at " + C.BLUE + site);
+			}
+		}
 	}
 	
-	/**
-	 * Listens to SignChangeEvent
-	 * 
-	 * @param event SignChangeEvent
-	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 		for (int line = 0; line < 4; line++)
 			event.setLine(line, FormatUtils.colourise(event.getLine(line)));
 	}
 	
-	/**
-	 * Checks for an update
-	 * 
-	 * @return The newest version
-	 */
 	private double updateCheck() {
 		try {
 			URL url = new URL("http://dev.bukkit.org/server-mods/titanchat/files.rss");
@@ -101,18 +90,5 @@ public final class TitanChatListener implements Listener {
 		} catch (Exception e) { this.newVer = currentVer; }
 		
 		return this.newVer;
-	}
-	
-	/**
-	 * Checks for an update and tells the player if outdated
-	 * 
-	 * @param player The player to tell
-	 */
-	public void updateCheck(Player player) {
-		if (updateCheck() <= currentVer || !player.hasPermission("TitanChat.update"))
-			return;
-		
-		player.sendMessage("\u00A76" + newVer + " \u00A75is out! You are running \u00A76" + currentVer);
-		player.sendMessage("\u00A75Update at \u00A79http://dev.bukkit.org/server-mods/titanchat");
 	}
 }

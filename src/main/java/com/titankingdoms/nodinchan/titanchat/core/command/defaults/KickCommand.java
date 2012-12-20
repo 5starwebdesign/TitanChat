@@ -31,7 +31,7 @@ public final class KickCommand extends Command {
 			
 			if (player.isOnline()) {
 				if (!channel.isParticipating(player)) {
-					channel.leave(plugin.getParticipant(player.getName()));
+					channel.leave(plugin.getParticipantManager().getParticipant(player.getName()));
 					msg(player, C.RED + "You have been kicked from " + channel.getName());
 					
 					if (!channel.isParticipating(sender.getName()))

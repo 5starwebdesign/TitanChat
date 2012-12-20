@@ -11,9 +11,6 @@ public final class TagVariable implements FormatVariable {
 	}
 	
 	public String getVariable(Participant sender, Channel channel) {
-		if (channel == null || channel.getInfo() == null)
-			return "";
-		
-		return (channel.getInfo().getTag() != null) ? channel.getInfo().getTag() : "";
+		return (channel != null && channel.getTag() != null) ? channel.getTag() : "";
 	}
 }

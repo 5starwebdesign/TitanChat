@@ -23,7 +23,7 @@ public final class Debugger {
 			debuggers.add(id);
 	}
 	
-	public void debug(DebugLevel level, String message) {
+	private void debug(DebugLevel level, String message) {
 		if (isDebugging())
 			log.log(level.getLevel(), "[TitanDebug] " + ((!name.isEmpty()) ? name + ": " : "") + message);
 	}

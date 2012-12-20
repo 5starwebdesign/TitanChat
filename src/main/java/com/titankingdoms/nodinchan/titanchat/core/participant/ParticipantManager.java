@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -19,11 +20,11 @@ public final class ParticipantManager {
 	private File configFile;
 	private FileConfiguration config;
 	
-	private Map<String, ChannelParticipant> participants;
+	private Map<String, Participant> participants;
 	
 	public ParticipantManager() {
 		this.plugin = TitanChat.getInstance();
-		this.participants = new HashMap<String, ChannelParticipant>();
+		this.participants = new HashMap<String, Participant>();
 	}
 	
 	public boolean existingParticipant(String name) {
@@ -41,19 +42,19 @@ public final class ParticipantManager {
 		return config;
 	}
 	
-	public ChannelParticipant getParticipant(String name) {
+	public Participant getParticipant(String name) {
 		return participants.get(name.toLowerCase());
 	}
 	
-	public ChannelParticipant getParticipant(Player player) {
-		return getParticipant(player.getName());
+	public Participant getParticipant(CommandSender sender) {
+		return getParticipant(sender.getName());
 	}
 	
-	public void registerParticipant(Player player) {
+	public Participant registerParticipant(Player player) {
 		if (!existingParticipant(player))
 			participants.put(player.getName().toLowerCase(), new ChannelParticipant(player.getName()));
 		
-		ChannelParticipant participant = getParticipant(player);
+		Participant participant = getParticipant(player);
 		
 		for (Channel channel : plugin.getChannelManager().getChannels()) {
 			if (participant.hasPermission("TitanChat.autojoin." + channel.getName()))
@@ -61,10 +62,9 @@ public final class ParticipantManager {
 			
 			if (participant.hasPermission("TitanChat.autoleave." + channel.getName()))
 				channel.leave(participant);
-			
-			if (participant.hasPermission("TitanChat.autodirect." + channel.getName()))
-				participant.direct(channel);
 		}
+		
+		return participant;
 	}
 	
 	public void reloadConfig() {

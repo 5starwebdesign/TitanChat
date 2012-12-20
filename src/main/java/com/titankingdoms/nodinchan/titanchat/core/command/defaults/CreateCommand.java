@@ -61,7 +61,7 @@ public final class CreateCommand extends Command {
 			}
 		}
 		
-		ChannelLoader loader = plugin.getChannelLoader(loaderName);
+		ChannelLoader loader = plugin.getChannelManager().getLoader(loaderName);
 		plugin.getChannelManager().createChannel(sender, channelName, loader);
 	}
 

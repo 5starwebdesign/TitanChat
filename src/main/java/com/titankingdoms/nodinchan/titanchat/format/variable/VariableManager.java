@@ -135,8 +135,8 @@ public final class VariableManager {
 			
 			if (userSets != null) {
 				if (userSets.existingVariable(match.group())) {
-					PresetVariable variable = userSets.getVariable(match.group());
-					String rep = varFormat.replace("%var%", variable.getVariable(sender, channel));
+					String variable = userSets.getVariable(match.group()).getVariable(sender, channel);
+					String rep = (!variable.isEmpty()) ? varFormat.replace("%var%", variable) : "";
 					match.appendReplacement(parsed, rep);
 					continue;
 				}
@@ -147,8 +147,8 @@ public final class VariableManager {
 				
 				for (PresetSet set : permissionSets) {
 					if (set.existingVariable(match.group())) {
-						PresetVariable variable = set.getVariable(match.group());
-						String rep = varFormat.replace("%var%", variable.getVariable(sender, channel));
+						String variable = set.getVariable(match.group()).getVariable(sender, channel);
+						String rep = (!variable.isEmpty()) ? varFormat.replace("%var%", variable) : "";
 						match.appendReplacement(parsed, rep);
 						cont = true;
 						break;
@@ -164,8 +164,8 @@ public final class VariableManager {
 				continue;
 			}
 			
-			FormatVariable variable = getVariable(match.group());
-			String rep = varFormat.replace("%var%", variable.getVariable(sender, channel));
+			String variable = getVariable(match.group()).getVariable(sender, channel);
+			String rep = (!variable.isEmpty()) ? varFormat.replace("%var%", variable) : "";
 			match.appendReplacement(parsed, rep);
 		}
 	

@@ -24,12 +24,6 @@ import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
 import com.titankingdoms.nodinchan.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.nodinchan.titanchat.loading.Loadable;
 
-/**
- * Addon - Addon base
- * 
- * @author NodinChan
- *
- */
 public class Addon extends Loadable implements Listener {
 	
 	protected final TitanChat plugin;
@@ -47,20 +41,10 @@ public class Addon extends Loadable implements Listener {
 		return false;
 	}
 	
-	/**
-	 * Registers the command
-	 * 
-	 * @param command The command to register
-	 */
 	public final void register(Command command) {
 		plugin.getCommandManager().register(command);
 	}
 	
-	/**
-	 * Registers the channel
-	 * 
-	 * @param channel The channel to register
-	 */
 	public final void register(Channel channel) {
 		plugin.getChannelManager().register(channel);
 	}
@@ -69,13 +53,8 @@ public class Addon extends Loadable implements Listener {
 		plugin.getChannelManager().register(loader);
 	}
 	
-	/**
-	 * Registers the listener
-	 * 
-	 * @param listener The listener to register
-	 */
 	public final void register(Listener listener) {
-		plugin.register(listener);
+		plugin.registerListener(listener);
 	}
 	
 	@Override

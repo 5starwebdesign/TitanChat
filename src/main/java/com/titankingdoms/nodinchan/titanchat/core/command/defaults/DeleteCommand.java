@@ -25,7 +25,7 @@ public final class DeleteCommand extends Command {
 			return;
 		}
 		
-		channel = plugin.getChannel(args[0]);
+		channel = plugin.getChannelManager().getChannel(args[0]);
 		
 		if (!channel.getType().equals(Type.NONE)) {
 			msg(sender, C.RED + "You cannot delete this type of channels");

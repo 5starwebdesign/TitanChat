@@ -25,7 +25,7 @@ public final class DirectCommand extends Command {
 			return;
 		}
 		
-		channel = plugin.getChannel(args[0]);
+		channel = plugin.getChannelManager().getChannel(args[0]);
 		
 		if (!channel.isParticipating(sender.getName())) {
 			msg(sender, C.RED + "You have not joined the channel");
@@ -34,7 +34,7 @@ public final class DirectCommand extends Command {
 			return;
 		}
 		
-		Participant participant = plugin.getParticipant(sender.getName());
+		Participant participant = plugin.getParticipantManager().getParticipant(sender.getName());
 		
 		if (!participant.isDirectedAt(channel)) {
 			participant.direct(channel);
