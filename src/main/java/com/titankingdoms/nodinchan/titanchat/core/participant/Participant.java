@@ -1,9 +1,9 @@
 package com.titankingdoms.nodinchan.titanchat.core.participant;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.command.CommandSender;
 
@@ -27,7 +27,7 @@ public abstract class Participant {
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
 		this.config = new ParticipantConfig(this);
-		this.channels = new HashMap<String, Channel>();
+		this.channels = new ConcurrentHashMap<String, Channel>();
 	}
 	
 	public final void chat(String message) {

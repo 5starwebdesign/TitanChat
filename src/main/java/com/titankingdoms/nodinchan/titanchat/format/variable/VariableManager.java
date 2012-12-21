@@ -81,7 +81,7 @@ public final class VariableManager {
 				new TagVariable()
 		);
 		
-		ConfigurationSection userSection = getConfig().getConfigurationSection("users");
+		ConfigurationSection userSection = getConfig().getConfigurationSection("presets.users");
 		
 		for (String name : userSection.getKeys(false)) {
 			ConfigurationSection nameSection = userSection.getConfigurationSection(name);
@@ -95,7 +95,7 @@ public final class VariableManager {
 				set.registerVariable(new PresetVariable(type, nameSection.getString(type)));
 		}
 		
-		ConfigurationSection permissionSection = getConfig().getConfigurationSection("permissions");
+		ConfigurationSection permissionSection = getConfig().getConfigurationSection("presets.permissions");
 		
 		for (String group : permissionSection.getKeys(false)) {
 			ConfigurationSection groupSection = permissionSection.getConfigurationSection(group);
