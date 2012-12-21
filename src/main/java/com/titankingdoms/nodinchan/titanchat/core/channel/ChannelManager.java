@@ -12,11 +12,14 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.nodinchan.titanchat.loading.Loader;
+import com.titankingdoms.nodinchan.titanchat.loading.Loader.ExtensionFilter;
 import com.titankingdoms.nodinchan.titanchat.util.C;
 import com.titankingdoms.nodinchan.titanchat.util.Debugger;
 import com.titankingdoms.nodinchan.titanchat.util.Messaging;
@@ -147,18 +150,37 @@ public final class ChannelManager {
 	
 	public void load() {
 		register(new StandardLoader());
-		
-		for (ChannelLoader loader : Loader.load(ChannelLoader.class, getLoaderDirectory()))
-			register(loader);
+		register(Loader.load(ChannelLoader.class, getLoaderDirectory()).toArray(new ChannelLoader[0]));
 		
 		if (!loaders.isEmpty())
 			plugin.log(Level.INFO, "ChannelLoaders loaded: " + StringUtils.join(loaders.keySet(), ", "));
 		
-		for (Channel channel : Loader.load(Channel.class, getCustomChannelDirectory()))
-			register(channel);
+		load(getChannelDirectory().listFiles(new ExtensionFilter(".yml")));
+		
+		register(Loader.load(Channel.class, getCustomChannelDirectory()).toArray(new Channel[0]));
 		
 		if (!channels.isEmpty())
 			plugin.log(Level.INFO, "Channels loaded: " + StringUtils.join(channels.keySet(), ", "));
+	}
+	
+	private void load(File... files) {
+		for (File file : files) {
+			if (!file.getName().endsWith(".yml"))
+				continue;
+			
+			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+			
+			if (config.getString("channel-type") == null || config.getString("loader-type") == null)
+				continue;
+			
+			Type type = Type.fromName(config.getString("channel-type"));
+			ChannelLoader loader = getLoader(config.getString("loader-type"));
+			
+			if (type == null || loader == null)
+				continue;
+			
+			register(loader.load(file.getName().substring(0, file.getName().lastIndexOf(".yml")), type));
+		}
 	}
 	
 	public void register(Channel... channels) {

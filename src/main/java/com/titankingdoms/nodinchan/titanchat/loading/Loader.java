@@ -82,10 +82,23 @@ public final class Loader {
 		return loadables;
 	}
 	
-	public static final class JarFilter implements FileFilter {
+	public static class ExtensionFilter implements FileFilter {
 		
-		public boolean accept(File file) {
-			return file.getName().endsWith(".jar");
+		private final String extension;
+		
+		public ExtensionFilter(String extension) {
+			this.extension = extension;
+		}
+		
+		public final boolean accept(File file) {
+			return file.getName().endsWith(extension);
+		}
+	}
+	
+	public static final class JarFilter extends ExtensionFilter {
+		
+		public JarFilter() {
+			super(".jar");
 		}
 	}
 }

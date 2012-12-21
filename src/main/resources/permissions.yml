@@ -1,60 +1,24 @@
 permissions:
-    TitanChat.staff:
-        description: Grants all permissions
-        default: op
-        children:
-            TitanChat.update: true
-            TitanChat.create: true
-            TitanChat.delete: true
-            TitanChat.force: true
-            TitanChat.bypass.*: true
-            TitanChat.ban.*: true
-            TitanChat.kick.*: true
-            TitanChat.mute.*: true
-            TitanChat.rank.*: true
-            TitanChat.broadcast: true
-            TitanChat.emote: true
-            TitanChat.emote.*: true
-            TitanChat.whisper: true
-            TitanChat.format.*: true
-    TitanChat.update:
-        description: Notified about updates
-        default: op
-    TitanChat.create:
-        description: Grants permission to channel creation
-        default: op
-    TitanChat.delete:
-        description: Grants permission to channel deletion
-        default: op
-    TitanChat.force:
-        description: Grants permission to force channel joins
-        default: op
-    TitanChat.autojoin.*:
-        description: Autojoins all channels on login
-        default: false
-    TitanChat.autoleave.*:
-        description: Autoleaves all channels on login
-        default: false
-    TitanChat.bypass.*:
-        description: Grants several permissions for bypassing all channels
-        default: op
-        children:
-            TitanChat.join.*: true
-            TitanChat.leave.*: true
-            TitanChat.voice.*: true
     TitanChat.join.*:
         description: Grants permission to join all channels
         default: op
     TitanChat.leave.*:
         description: Grants permission to leave all channels
         default: op
-    TitanChat.voice.*:
-        description: Grants permission to speak at all times in all channels
-        default: op
-        children:
-            TitanChat.speak.*: true
     TitanChat.speak.*:
         description: Grants permission to speak in all channels
+        default: op
+    TitanChat.autojoin.*:
+        description: Autojoins all channels on log in
+        default: none
+    TitanChat.autoleave.*:
+        description: Autoleaves all channels on log in
+        default: none
+    TitanChat.create:
+        description: Grants permission to channel creation
+        default: op
+    TitanChat.delete:
+        description: Grants permission to channel deletion
         default: op
     TitanChat.ban.*:
         description: Grants permission to ban in all channels
@@ -62,113 +26,36 @@ permissions:
     TitanChat.kick.*:
         description: Grants permission to kick in all channels
         default: op
-    TitanChat.mute.*:
-        description: Grants permission to mute in all channels
+    TitanChat.place.*:
+        description: Grants permission to place in all channels
         default: op
     TitanChat.rank.*:
         description: Grants permission to rank in all channels
         default: op
-    TitanChat.broadcast:
-        description: Grants permission to the broadcast command
+    TitanChat.mute.*:
+        description: Grants permission to mute in all channels
         default: op
-    TitanChat.emote:
-        description: Grants permission to the traditional emote command
-        default: op
-    TitanChat.emote.*:
-        description: Grants permission to the emote command in all channels
-        default: op
-    TitanChat.whisper:
-        description: Grants permission to the whisper command
-        default: op
-    TitanChat.format.*:
-        description: Grants permission to use all format codes
+    TitanChat.voice.*:
+        description: Grants voice in all channels
         default: op
         children:
-            TitanChat.format.&0: true
-            TitanChat.format.&1: true
-            TitanChat.format.&2: true
-            TitanChat.format.&3: true
-            TitanChat.format.&4: true
-            TitanChat.format.&5: true
-            TitanChat.format.&6: true
-            TitanChat.format.&7: true
-            TitanChat.format.&8: true
-            TitanChat.format.&9: true
-            TitanChat.format.&a: true
-            TitanChat.format.&b: true
-            TitanChat.format.&c: true
-            TitanChat.format.&d: true
-            TitanChat.format.&e: true
-            TitanChat.format.&f: true
-            TitanChat.format.&k: true
-            TitanChat.format.&l: true
-            TitanChat.format.&m: true
-            TitanChat.format.&n: true
-            TitanChat.format.&o: true
-            TitanChat.format.&r: true
-    TitanChat.format.&0:
-        description: Grants permission to use the black format code
+            TitanChat.speak.*: true
+    TitanChat.admin:
+        description: Grants all permissions
         default: op
-    TitanChat.format.&1:
-        description: Grants permission to use the dark blue format code
-        default: op
-    TitanChat.format.&2:
-        description: Grants permission to use the green format code
-        default: op
-    TitanChat.format.&3:
-        description: Grants permission to use the dark aqua format code
-        default: op
-    TitanChat.format.&4:
-        description: Grants permission to use the red format code
-        default: op
-    TitanChat.format.&5:
-        description: Grants permission to use the purple format code
-        default: op
-    TitanChat.format.&6:
-        description: Grants permission to use the gold format code
-        default: op
-    TitanChat.format.&7:
-        description: Grants permission to use the grey format code
-        default: op
-    TitanChat.format.&8:
-        description: Grants permission to use the dark grey format code
-        default: op
-    TitanChat.format.&9:
-        description: Grants permission to use the blue format code
-        default: op
-    TitanChat.format.&a:
-        description: Grants permission to use the light green format code
-        default: op
-    TitanChat.format.&b:
-        description: Grants permission to use the aqua format code
-        default: op
-    TitanChat.format.&c:
-        description: Grants permission to use the light red format code
-        default: op
-    TitanChat.format.&d:
-        description: Grants permission to use the light purple format code
-        default: op
-    TitanChat.format.&e:
-        description: Grants permission to use the yellow format code
-        default: op
-    TitanChat.format.&f:
-        description: Grants permission to use the white format code
-        default: op
-    TitanChat.format.&k:
-        description: Grants permission to use the magic format code
-        default: op
-    TitanChat.format.&l:
-        description: Grants permission to use the bold format code
-        default: op
-    TitanChat.format.&m:
-        description: Grants permission to use the underlined format code
-        default: op
-    TitanChat.format.&n:
-        description: Grants permission to use the striked format code
-        default: op
-    TitanChat.format.&o:
-        description: Grants permission to use the italic format code
-        default: op
-    TitanChat.format.&r:
-        description: Grants permission to use the reset format code
-        default: op
+        children:
+            TitanChat.join.*: true
+            TitanChat.leave.*: true
+            TitanChat.speak.*: true
+            TitanChat.autojoin.*: true
+            TitanChat.autoleave.*: true
+            TitanChat.create: true
+            TitanChat.delete: true
+            TitanChat.ban.*: true
+            TitanChat.kick.*: true
+            TitanChat.place.*: true
+            TitanChat.rank.*: true
+            TitanChat.voice.*: true
+    TitanChat.update:
+        description: Notified about updates
+        default: none
