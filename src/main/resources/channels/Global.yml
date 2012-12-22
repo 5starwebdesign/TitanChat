@@ -1,7 +1,7 @@
 tag: '[G]'
-chat-display-colour: '&1'
-type: 'Standard'
-option: 'none'
+display-colour: '&1'
+loader-type: 'Standard'
+channel-type: 'none'
 aliases: [g]
 topic: 'Welcome to the global channel || Chat is sent to all players on the server'
 setting:
@@ -9,13 +9,9 @@ setting:
     range: 'global'
     radius: 15
     whitelist: false
-    messages:
-        join: true
-        leave: true
 password: ''
 format: ''
 admins: []
 blacklist: []
 followers: []
 whitelist: []
-participants: []

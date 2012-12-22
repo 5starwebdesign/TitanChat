@@ -1,7 +1,7 @@
 tag: '[S]'
-chat-display-colour: '&4'
-type: 'Standard'
-option: 'staff'
+display-colour: '&4'
+loader-type: 'Standard'
+channel-type: 'staff'
 aliases: [s]
 topic: 'Welcome to the staff channel || Only staff can be able to join'
 setting:
@@ -9,13 +9,9 @@ setting:
     range: 'channel'
     radius: 15
     whitelist: false
-    messages:
-        join: true
-        leave: true
 password: ''
 format: ''
 admins: []
 blacklist: []
 followers: []
 whitelist: []
-participants: []

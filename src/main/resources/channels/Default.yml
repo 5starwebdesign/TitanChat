@@ -1,7 +1,7 @@
 tag: '[D]'
-chat-display-colour: '&f'
-type: 'Standard'
-option: 'default'
+display-colour: '&f'
+loader-type: 'Standard'
+channel-type: 'default'
 aliases: [d]
 topic: 'Welcome to the default channel'
 setting:
@@ -9,9 +9,6 @@ setting:
     range: 'channel'
     radius: 15
     whitelist: false
-    messages:
-        join: true
-        leave: true
 password: ''
 format: ''
 admins: []

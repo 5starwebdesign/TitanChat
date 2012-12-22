@@ -1,3 +1,21 @@
+/*
+ *     TitanChat
+ *     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
+ *     
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *     
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *     
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.titankingdoms.nodinchan.titanchat.core.channel;
 
 import java.io.File;
@@ -149,6 +167,8 @@ public final class ChannelManager {
 	}
 	
 	public void load() {
+		db.i("Loading...");
+		
 		register(new StandardLoader());
 		register(Loader.load(ChannelLoader.class, getLoaderDirectory()).toArray(new ChannelLoader[0]));
 		
@@ -170,14 +190,18 @@ public final class ChannelManager {
 			
 			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 			
-			if (config.getString("channel-type") == null || config.getString("loader-type") == null)
+			if (config.getString("channel-type") == null || config.getString("loader-type") == null) {
+				db.w("Failed to load " + file + ": Invalid config");
 				continue;
+			}
 			
 			Type type = Type.fromName(config.getString("channel-type"));
 			ChannelLoader loader = getLoader(config.getString("loader-type"));
 			
-			if (type == null || loader == null)
+			if (type == null || loader == null) {
+				db.w("Failed to load " + file + ": Invalid loader/channel type");
 				continue;
+			}
 			
 			register(loader.load(file.getName().substring(0, file.getName().lastIndexOf(".yml")), type));
 		}
@@ -199,6 +223,7 @@ public final class ChannelManager {
 				this.types.put(channel.getType(), new HashSet<Channel>());
 			
 			this.types.get(channel.getType()).add(channel);
+			db.i("Registered Channel: " + channel.getName());
 		}
 	}
 	
@@ -208,10 +233,13 @@ public final class ChannelManager {
 				continue;
 			
 			this.loaders.put(loader.getName().toLowerCase(), loader);
+			db.i("Registered ChannelLoader: " + loader.getName());
 		}
 	}
 	
 	public void reload() {
+		db.i("Reloading...");
+		
 		for (ChannelLoader loader : getLoaders())
 			loader.reload();
 		
@@ -220,6 +248,8 @@ public final class ChannelManager {
 	}
 	
 	public void unload() {
+		db.i("Unloading...");
+		
 		aliases.clear();
 		channels.clear();
 		loaders.clear();

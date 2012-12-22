@@ -1,18 +1,20 @@
-/*     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
- * 
+/*
+ *     TitanChat
+ *     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
+ *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation, either version 3 of the License, or
  *     (at your option) any later version.
- * 
+ *     
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
- * 
+ *     
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 
 package com.titankingdoms.nodinchan.titanchat;
 
@@ -55,7 +57,7 @@ public final class TitanChat extends JavaPlugin {
 	
 	private static TitanChat instance;
 	
-	private final String NAME = "TitanChat Pre-v4.0";
+	private final String NAME = "TitanChat v4.0";
 	
 	private static final Logger log = Logger.getLogger("TitanLog");
 	private static final Debugger db = new Debugger(0, "TitanChat");
@@ -281,26 +283,5 @@ public final class TitanChat extends JavaPlugin {
 	public void registerListener(Listener... listeners) {
 		for (Listener listener : listeners)
 			getServer().getPluginManager().registerEvents(listener, this);
-	}
-	
-	public boolean voiceless(Player player, Channel channel, boolean message) {
-		if (player.hasPermission("TitanChat.voice." + channel.getName()))
-			return false;
-		
-		if (!player.hasPermission("TitanChat.speak." + channel.getName())) {
-			if (message)
-				Messaging.sendMessage(player, C.RED + "You do not have permission");
-			
-			return true;
-		}
-		
-		if (getParticipantManager().getParticipant(player).isMuted(channel)) {
-			if (message)
-				Messaging.sendMessage(player, C.RED + "You have been muted");
-			
-			return true;
-		}
-		
-		return false;
 	}
 }

@@ -1,3 +1,21 @@
+/*
+ *     TitanChat
+ *     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
+ *     
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *     
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *     
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.titankingdoms.nodinchan.titanchat.util;
 
 import java.util.HashSet;
@@ -15,6 +33,10 @@ public final class Debugger {
 	private static final Set<Integer> debuggers = new HashSet<Integer>();
 	private static final Set<Integer> debugging = new HashSet<Integer>();
 	
+	public Debugger(int id) {
+		this(id, "");
+	}
+	
 	public Debugger(int id, String name) {
 		this.id = id;
 		this.name = (name != null) ? name : "";
@@ -23,9 +45,9 @@ public final class Debugger {
 			debuggers.add(id);
 	}
 	
-	private void debug(DebugLevel level, String message) {
+	public void debug(Level level, String message) {
 		if (isDebugging())
-			log.log(level.getLevel(), "[TitanDebug] " + ((!name.isEmpty()) ? name + ": " : "") + message);
+			log.log(level, "[TitanDebug] " + ((!name.isEmpty()) ? name + ": " : "") + message);
 	}
 	
 	public int getID() {
@@ -37,7 +59,7 @@ public final class Debugger {
 	}
 	
 	public void i(String message) {
-		debug(DebugLevel.I, message);
+		debug(Level.INFO, message);
 	}
 	
 	public boolean isDebugging() {
@@ -49,7 +71,7 @@ public final class Debugger {
 	}
 	
 	public void s(String message) {
-		debug(DebugLevel.S, message);
+		debug(Level.SEVERE, message);
 	}
 	
 	public void startDebug() {
@@ -75,22 +97,6 @@ public final class Debugger {
 	}
 	
 	public void w(String message) {
-		debug(DebugLevel.W, message);
-	}
-	
-	public enum DebugLevel {
-		I(Level.INFO),
-		S(Level.SEVERE),
-		W(Level.WARNING);
-		
-		private Level level;
-		
-		private DebugLevel(Level level) {
-			this.level = level;
-		}
-		
-		public Level getLevel() {
-			return level;
-		}
+		debug(Level.WARNING, message);
 	}
 }
