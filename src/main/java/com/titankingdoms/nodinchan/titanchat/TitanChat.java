@@ -239,6 +239,9 @@ public final class TitanChat extends JavaPlugin {
 		if (channelManager.getChannels(Type.DEFAULT).isEmpty())
 			log(Level.WARNING, "A default channel is not defined");
 		
+		for (Player player : getServer().getOnlinePlayers())
+			participantManager.registerParticipant(player);
+		
 		log(Level.INFO, "is now enabled");
 	}
 	
@@ -256,6 +259,7 @@ public final class TitanChat extends JavaPlugin {
 		this.addonManager = new AddonManager();
 		this.channelManager = new ChannelManager();
 		this.commandManager = new CommandManager();
+		this.participantManager = new ParticipantManager();
 		this.formatHandler = new FormatHandler();
 		this.helpMap = new HelpMap();
 		
@@ -272,9 +276,9 @@ public final class TitanChat extends JavaPlugin {
 			saveResource("channels/World.yml", false);
 		}
 		
-		File info = new File(getDataFolder(), "variables.yml");
+		File variables = new File(getDataFolder(), "variables.yml");
 		
-		if (!info.exists()) {
+		if (!variables.exists()) {
 			log(Level.INFO, "Loading default variables.yml...");
 			saveResource("variables.yml", false);
 		}

@@ -61,6 +61,9 @@ public final class ParticipantManager {
 	}
 	
 	public Participant getParticipant(String name) {
+		if (!existingParticipant(name))
+			registerParticipant(name);
+		
 		return participants.get(name.toLowerCase());
 	}
 	
@@ -69,10 +72,14 @@ public final class ParticipantManager {
 	}
 	
 	public Participant registerParticipant(Player player) {
-		if (!existingParticipant(player))
-			participants.put(player.getName().toLowerCase(), new ChannelParticipant(player.getName()));
+		return registerParticipant(player.getName());
+	}
+	
+	private Participant registerParticipant(String name) {
+		if (!existingParticipant(name))
+			participants.put(name.toLowerCase(), new ChannelParticipant(name));
 		
-		Participant participant = getParticipant(player);
+		Participant participant = getParticipant(name);
 		
 		for (Channel channel : plugin.getChannelManager().getChannels()) {
 			if (participant.hasPermission("TitanChat.autojoin." + channel.getName()))
