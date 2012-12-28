@@ -10,10 +10,10 @@ permissions:
         default: op
     TitanChat.autojoin.*:
         description: Autojoins all channels on log in
-        default: none
+        default: false
     TitanChat.autoleave.*:
         description: Autoleaves all channels on log in
-        default: none
+        default: false
     TitanChat.create:
         description: Grants permission to channel creation
         default: op
@@ -35,11 +35,6 @@ permissions:
     TitanChat.mute.*:
         description: Grants permission to mute in all channels
         default: op
-    TitanChat.voice.*:
-        description: Grants voice in all channels
-        default: op
-        children:
-            TitanChat.speak.*: true
     TitanChat.admin:
         description: Grants all permissions
         default: op
@@ -55,7 +50,6 @@ permissions:
             TitanChat.kick.*: true
             TitanChat.place.*: true
             TitanChat.rank.*: true
-            TitanChat.voice.*: true
     TitanChat.update:
         description: Notified about updates
-        default: none
+        default: false

@@ -39,17 +39,9 @@ public final class ConsoleChannelParticipant extends Participant {
 	}
 	
 	@Override
-	public boolean isMuted(String channel) {
-		return false;
-	}
-	
-	@Override
 	public boolean isOnline() {
 		return true;
 	}
-	
-	@Override
-	public void mute(String channel, boolean mute) {}
 	
 	@Override
 	public void send(String... messages) {

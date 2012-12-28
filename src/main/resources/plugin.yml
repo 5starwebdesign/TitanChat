@@ -1,7 +1,7 @@
 name: TitanChat
 version: '4.0 Build #${build.number}'
 author: NodinChan
-website: http://dev.bukkit.org/server-mods/titanchat
+website: http://dev.bukkit.org/server-mods/titanchat/
 main: com.titankingdoms.nodinchan.titanchat.TitanChat
 prefix: TitanChat
 softdepend: [Vault]

@@ -60,9 +60,10 @@ public abstract class ChatHandler {
 		ChannelChatEvent event = new ChannelChatEvent(sender, recipients, channel, format, message);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
-		message = event.getMessage();
+		message = colourise(event.getMessage());
 		format = plugin.getFormatHandler().getVariableManager().parse(sender, channel, event.getFormat());
 		
-		
+		for (Participant participant : event.getRecipients())
+			participant.send(FormatUtils.splitAndFormat(format, "%message", event.getMessage()));
 	}
 }

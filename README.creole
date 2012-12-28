@@ -76,6 +76,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 21.12.12 - Made Vault an optional dependency and fixed some errors
 * 22.12.12 - Fixed default channel configs to use the new nodes
 * 23.12.12 - Fixed ParticipantManager being null
+* 28.12.12 - Fixed loading permissions
 
 -----------------------------------------------------------------------------------------------------------------------
 

@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 
 import com.titankingdoms.nodinchan.titanchat.TitanChat;
 import com.titankingdoms.nodinchan.titanchat.core.channel.Channel;
@@ -36,15 +37,12 @@ public abstract class Participant {
 	
 	private final String name;
 	
-	private final ParticipantConfig config;
-	
 	private Channel current;
 	private final Map<String, Channel> channels;
 	
 	public Participant(String name) {
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
-		this.config = new ParticipantConfig(this);
 		this.channels = new ConcurrentHashMap<String, Channel>();
 	}
 	
@@ -74,8 +72,8 @@ public abstract class Participant {
 	
 	public abstract CommandSender getCommandSender();
 	
-	public final ParticipantConfig getConfig() {
-		return config;
+	public ConfigurationSection getConfig() {
+		return plugin.getParticipantManager().getConfig().getConfigurationSection(name);
 	}
 	
 	public final Channel getCurrentChannel() {
@@ -83,7 +81,7 @@ public abstract class Participant {
 	}
 	
 	public String getDisplayName() {
-		return config.getString("display-name", getName());
+		return getConfig().getString("display-name");
 	}
 	
 	public final String getName() {
@@ -98,12 +96,6 @@ public abstract class Participant {
 	
 	public final boolean isDirectedAt(Channel channel) {
 		return (channel != null) ? isDirectedAt(channel.getName()) : current == null;
-	}
-	
-	public abstract boolean isMuted(String channel);
-	
-	public boolean isMuted(Channel channel) {
-		return isMuted(channel.getName());
 	}
 	
 	public abstract boolean isOnline();
@@ -140,12 +132,6 @@ public abstract class Participant {
 		
 		if (channel.isParticipating(this))
 			channel.leave(this);
-	}
-	
-	public abstract void mute(String channel, boolean mute);
-	
-	public void mute(Channel channel, boolean mute) {
-		mute(channel.getName(), mute);
 	}
 	
 	public abstract void send(String... messages);
