@@ -1,15 +1,2 @@
-tag: ''
-display-colour: ''
-loader-type: 'Standard'
-channel-type: 'none'
-aliases: []
-topic: ''
-setting:
-    colouring: false
-    range: 'channel'
-    whitelist: false
-password: ''
-format: ''
-admins: []
-blacklist: []
-whitelist: []
+loader-type: ''
+channel-type: ''

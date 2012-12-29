@@ -77,6 +77,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 22.12.12 - Fixed default channel configs to use the new nodes
 * 23.12.12 - Fixed ParticipantManager being null
 * 28.12.12 - Fixed loading permissions
+* 29.12.12 - Started work on help system and default commands
 
 -----------------------------------------------------------------------------------------------------------------------
 
