@@ -89,19 +89,18 @@ public final class ParticipantManager {
 				channel.leave(participant);
 		}
 		
-		if (participant.getConfig().get("channels") != null) {
-			for (String channel : participant.getConfig().getStringList("channels")) {
-				if (!plugin.getChannelManager().existingChannel(channel))
-					continue;
-				
-				plugin.getChannelManager().getChannel(channel).join(participant);
+		if (participant.getConfig() != null) {
+			if (participant.getConfig().get("channels") != null) {
+				for (String channel : participant.getConfig().getStringList("channels")) {
+					if (!plugin.getChannelManager().existingChannel(channel))
+						continue;
+					
+					plugin.getChannelManager().getChannel(channel).join(participant);
+				}
 			}
+			
+			participant.direct(plugin.getChannelManager().getChannel(participant.getConfig().getString("current-channel", "")));
 		}
-		
-		String current = participant.getConfig().getString("current-channel");
-		
-		if (current != null && plugin.getChannelManager().existingChannel(current))
-			participant.direct(plugin.getChannelManager().getChannel(current));
 		
 		return participant;
 	}

@@ -1,0 +1,12 @@
+topics:
+    general:
+        Version:
+            brief-desc: About the version of TitanChat
+            full-desc: You are running TitanChat v4.0
+    commands:
+        Join:
+            brief-desc: About the join command
+            full-desc: |
+                Description - Joins the specified channel
+                Aliases - 'join', 'j'
+                Usage - /titanchat join [channel] <password>
