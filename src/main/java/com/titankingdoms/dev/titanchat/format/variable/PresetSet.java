@@ -60,8 +60,8 @@ public final class PresetSet implements Comparable<PresetSet> {
 		return priority;
 	}
 	
-	public PresetVariable getVariable(String formatTag) {
-		return variables.get(formatTag);
+	public PresetVariable getVariable(String name) {
+		return variables.get(name);
 	}
 	
 	public boolean hasPermission(Participant sender) {
@@ -69,7 +69,7 @@ public final class PresetSet implements Comparable<PresetSet> {
 	}
 	
 	public void registerVariable(PresetVariable variable) {
-		if (!existingVariable(variable.getFormatTag()))
-			variables.put(variable.getFormatTag(), variable);
+		if (!existingVariable(variable.getName()))
+			variables.put(variable.getName(), variable);
 	}
 }

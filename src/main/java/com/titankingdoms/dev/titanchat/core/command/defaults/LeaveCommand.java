@@ -22,7 +22,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.Command;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
 import com.titankingdoms.dev.titanchat.util.C;
 
 public final class LeaveCommand extends Command {
@@ -33,7 +32,6 @@ public final class LeaveCommand extends Command {
 		setArgumentRange(1, 1);
 		setDescription("Leaves the channel");
 		setUsage("[channel]");
-		registerHelpTopic(new LeaveTopic());
 	}
 	
 	@Override
@@ -60,30 +58,5 @@ public final class LeaveCommand extends Command {
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return true;
-	}
-	
-	public final class LeaveTopic implements HelpTopic {
-		
-		public boolean canView(CommandSender sender) {
-			return true;
-		}
-		
-		public String getBriefDescription() {
-			return "Leaves the channel";
-		}
-		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Leaves the channel",
-						"Aliases: 'l'",
-						"Usage: /titanchat <@[channel]> leave [channel]"
-					}
-			};
-		}
-		
-		public String getName() {
-			return "Leave";
-		}
 	}
 }

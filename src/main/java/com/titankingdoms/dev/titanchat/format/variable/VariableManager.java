@@ -57,6 +57,14 @@ public final class VariableManager {
 		this.variables = new HashMap<String, FormatVariable>();
 	}
 	
+	private boolean existingVariable(String formatTag) {
+		return variables.containsKey(formatTag);
+	}
+	
+	private boolean existingVariable(FormatVariable variable) {
+		return existingVariable(getFormatTag(variable));
+	}
+	
 	public FileConfiguration getConfig() {
 		if (config == null)
 			reloadConfig();
@@ -66,6 +74,14 @@ public final class VariableManager {
 	
 	public String getDefaultVariableFormat() {
 		return getConfig().getString("formatting.default", "%var%");
+	}
+	
+	public String getFormatTag(FormatVariable variable) {
+		return getFormatTag(variable.getName(), variable.getDefaultFormatTag());
+	}
+	
+	private String getFormatTag(String name, String def) {
+		return getConfig().getString("variables." + name + ".tag", def);
 	}
 	
 	public PresetSet getPermissionPresets(String group) {
@@ -84,19 +100,11 @@ public final class VariableManager {
 		return getConfig().getString("formatting.variables." + formatTag, getDefaultVariableFormat());
 	}
 	
-	private boolean existingVariable(String formatTag) {
-		return variables.containsKey(formatTag);
-	}
-	
-	private boolean existingVariable(FormatVariable variable) {
-		return existingVariable(variable.getFormatTag());
-	}
-	
 	public void load() {
 		register(
+				new ChannelTagVariable(),
 				new DisplayNameVariable(),
-				new NameVariable(),
-				new TagVariable()
+				new NameVariable()
 		);
 		
 		ConfigurationSection userSection = getConfig().getConfigurationSection("presets.users");
@@ -195,7 +203,7 @@ public final class VariableManager {
 			if (existingVariable(variable))
 				continue;
 			
-			this.variables.put(variable.getFormatTag(), variable);
+			this.variables.put(getFormatTag(variable), variable);
 		}
 	}
 	

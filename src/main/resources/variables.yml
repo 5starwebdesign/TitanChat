@@ -1,7 +1,13 @@
-formatting:
-    default: '%var%'
-    variables:
-        tag: '[%var%]'
+variables:
+    DisplayName:
+        tag: '%display'
+        format: '%var%'
+    ChannelTag:
+        tag: '%tag'
+        format: '[%var%]'
+    Name:
+        tag: '%name'
+        format: '%var%'
 presets:
     users:
         TitanDev:

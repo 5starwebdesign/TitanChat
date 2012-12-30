@@ -23,7 +23,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.Command;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
 import com.titankingdoms.dev.titanchat.util.C;
 
 public class BanCommand extends Command {
@@ -34,7 +33,6 @@ public class BanCommand extends Command {
 		setArgumentRange(1, 1024);
 		setDescription("Bans the player(s) from the channel");
 		setUsage("[player]...");
-		registerHelpTopic(new BanTopic());
 	}
 	
 	@Override
@@ -83,30 +81,5 @@ public class BanCommand extends Command {
 			return true;
 		
 		return hasPermission(sender, "TitanChat.ban." + channel.getName());
-	}
-	
-	public final class BanTopic implements HelpTopic {
-		
-		public boolean canView(CommandSender sender) {
-			return true;
-		}
-		
-		public String getBriefDescription() {
-			return "Bans the player(s) from the channel";
-		}
-		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Bans the player(s) from the channel",
-						"Aliases: 'b', 'blacklist'",
-						"Usage: /titanchat <@[channel]> ban [player]..."
-					}
-			};
-		}
-		
-		public String getName() {
-			return "Ban";
-		}
 	}
 }

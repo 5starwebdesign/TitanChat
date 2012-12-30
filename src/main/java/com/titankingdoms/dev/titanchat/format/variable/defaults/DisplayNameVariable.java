@@ -24,8 +24,12 @@ import com.titankingdoms.dev.titanchat.format.variable.FormatVariable;
 
 public final class DisplayNameVariable implements FormatVariable {
 	
-	public String getFormatTag() {
+	public String getDefaultFormatTag() {
 		return "%display";
+	}
+	
+	public String getName() {
+		return "DisplayName";
 	}
 	
 	public String getVariable(Participant sender, Channel channel) {

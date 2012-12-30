@@ -25,7 +25,7 @@ import com.titankingdoms.dev.titanchat.core.command.Command;
 
 public final class PromoteCommand extends Command {
 	
-	public PromoteCommand(String name) {
+	public PromoteCommand() {
 		super("Promote");
 	}
 	

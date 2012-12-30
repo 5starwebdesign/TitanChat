@@ -23,7 +23,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.Command;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
 import com.titankingdoms.dev.titanchat.util.C;
 
 public final class KickCommand extends Command {
@@ -34,7 +33,6 @@ public final class KickCommand extends Command {
 		setArgumentRange(1, 1024);
 		setDescription("Kicks the player(s) from the channel");
 		setUsage("[player]...");
-		registerHelpTopic(new KickTopic());
 	}
 	
 	@Override
@@ -72,30 +70,5 @@ public final class KickCommand extends Command {
 			return true;
 		
 		return false;
-	}
-	
-	public final class KickTopic implements HelpTopic {
-		
-		public boolean canView(CommandSender sender) {
-			return true;
-		}
-		
-		public String getBriefDescription() {
-			return "Kicks the player(s) from the channel";
-		}
-		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Kicks the player(s) from the channel",
-						"Aliases: 'k'",
-						"Usage: /titanchat <@[channel]> kick [player]..."
-					}
-			};
-		}
-		
-		public String getName() {
-			return "Kick";
-		}
 	}
 }

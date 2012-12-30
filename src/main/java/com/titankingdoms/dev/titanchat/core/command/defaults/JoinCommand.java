@@ -23,7 +23,6 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.Type;
 import com.titankingdoms.dev.titanchat.core.command.Command;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
 import com.titankingdoms.dev.titanchat.util.C;
 
 public final class JoinCommand extends Command {
@@ -34,7 +33,6 @@ public final class JoinCommand extends Command {
 		setArgumentRange(1, 2);
 		setDescription("Joins the channel");
 		setUsage("[channel] <password>");
-		registerHelpTopic(new JoinTopic());
 	}
 	
 	@Override
@@ -94,30 +92,5 @@ public final class JoinCommand extends Command {
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return true;
-	}
-	
-	public final class JoinTopic implements HelpTopic {
-		
-		public boolean canView(CommandSender sender) {
-			return true;
-		}
-		
-		public String getBriefDescription() {
-			return "Joins the channel";
-		}
-		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Joins the channel",
-						"Aliases: 'j'",
-						"Usage: /titanchat <@[channel]> join [channel] <password>"
-					}
-			};
-		}
-		
-		public String getName() {
-			return "Join";
-		}
 	}
 }

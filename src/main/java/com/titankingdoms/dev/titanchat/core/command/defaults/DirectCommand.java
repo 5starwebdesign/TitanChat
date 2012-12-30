@@ -23,17 +23,15 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.Command;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
 import com.titankingdoms.dev.titanchat.util.C;
 
 public final class DirectCommand extends Command {
 	
-	public DirectCommand(String name) {
+	public DirectCommand() {
 		super("Direct");
 		setArgumentRange(1, 1);
 		setDescription("Sets your current channel to the specified channel");
 		setUsage("[channel]");
-		registerHelpTopic(new DirectTopic());
 	}
 	
 	@Override
@@ -64,29 +62,5 @@ public final class DirectCommand extends Command {
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return true;
-	}
-	
-	public final class DirectTopic implements HelpTopic {
-		
-		public boolean canView(CommandSender sender) {
-			return true;
-		}
-		
-		public String getBriefDescription() {
-			return "Sets your current channel";
-		}
-		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Sets your current channel to the specified channel",
-						"Usage: /titanchat <@[channel]> direct [channel]"
-					}
-			};
-		}
-		
-		public String getName() {
-			return "Direct";
-		}
 	}
 }

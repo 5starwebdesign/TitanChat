@@ -105,10 +105,14 @@ public final class CommandManager {
 				new BanCommand(),
 				new CreateCommand(),
 				new DeleteCommand(),
+				new DirectCommand(),
+				new HelpCommand(),
 				new JoinCommand(),
 				new KickCommand(),
 				new LeaveCommand(),
 				new PlaceCommand(),
+				new PromoteCommand(),
+				new SendCommand(),
 				new UnbanCommand()
 		);
 		

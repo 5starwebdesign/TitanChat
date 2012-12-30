@@ -23,7 +23,6 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.Type;
 import com.titankingdoms.dev.titanchat.core.command.Command;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
 import com.titankingdoms.dev.titanchat.util.C;
 
 public final class DeleteCommand extends Command {
@@ -56,30 +55,5 @@ public final class DeleteCommand extends Command {
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return hasPermission(sender, "TitanChat.delete");
-	}
-	
-	public final class DeleteTopic implements HelpTopic {
-		
-		public boolean canView(CommandSender sender) {
-			return true;
-		}
-		
-		public String getBriefDescription() {
-			return "Deletes the channel";
-		}
-		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Deletes the channel",
-						"Aliases: 'd'",
-						"Usage: /titanchat <@[channel]> delete [channel]"
-					}
-			};
-		}
-		
-		public String getName() {
-			return "Delete";
-		}
 	}
 }

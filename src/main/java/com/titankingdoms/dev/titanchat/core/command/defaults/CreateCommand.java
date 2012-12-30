@@ -25,7 +25,6 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.dev.titanchat.core.command.Command;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
 import com.titankingdoms.dev.titanchat.util.C;
 
 public final class CreateCommand extends Command {
@@ -36,7 +35,6 @@ public final class CreateCommand extends Command {
 		setArgumentRange(1, 2);
 		setDescription("Creates a channel with specified ChannelLoader or StandardLoader");
 		setUsage("[channel] <loader>");
-		registerHelpTopic(new CreateTopic());
 	}
 
 	@Override
@@ -86,30 +84,5 @@ public final class CreateCommand extends Command {
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return hasPermission(sender, "TitanChat.create");
-	}
-	
-	public final class CreateTopic implements HelpTopic {
-		
-		public boolean canView(CommandSender sender) {
-			return true;
-		}
-		
-		public String getBriefDescription() {
-			return "Creates a channel";
-		}
-		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Creates a channel with specified ChannelLoader or StandardLoader",
-						"Aliases: 'c'",
-						"Usage: /titanchat <@[channel]> create [channel] <loader>"
-					}
-			};
-		}
-		
-		public String getName() {
-			return "Create";
-		}
 	}
 }

@@ -23,7 +23,9 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 public interface FormatVariable {
 	
-	public String getFormatTag();
+	public String getDefaultFormatTag();
+	
+	public String getName();
 	
 	public String getVariable(Participant sender, Channel channel);
 }

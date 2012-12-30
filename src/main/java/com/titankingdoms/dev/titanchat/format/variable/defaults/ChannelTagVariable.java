@@ -22,10 +22,14 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.variable.FormatVariable;
 
-public final class TagVariable implements FormatVariable {
+public final class ChannelTagVariable implements FormatVariable {
 	
-	public String getFormatTag() {
+	public String getDefaultFormatTag() {
 		return "%tag";
+	}
+	
+	public String getName() {
+		return "ChannelTag";
 	}
 	
 	public String getVariable(Participant sender, Channel channel) {

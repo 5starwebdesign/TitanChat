@@ -26,7 +26,7 @@ public interface HelpTopic {
 	
 	public String getBriefDescription();
 	
-	public String[][] getFullDescription();
+	public String getFullDescription();
 	
 	public String getName();
 }

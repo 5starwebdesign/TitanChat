@@ -23,7 +23,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.Command;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
 import com.titankingdoms.dev.titanchat.util.C;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
@@ -35,7 +34,6 @@ public final class UnbanCommand extends Command {
 		setArgumentRange(1, 1024);
 		setDescription("Unbans the player(s) from the channel");
 		setUsage("[player]...");
-		registerHelpTopic(new UnbanTopic());
 	}
 	
 	@Override
@@ -81,30 +79,5 @@ public final class UnbanCommand extends Command {
 			return true;
 		
 		return false;
-	}
-	
-	public final class UnbanTopic implements HelpTopic {
-		
-		public boolean canView(CommandSender sender) {
-			return true;
-		}
-		
-		public String getBriefDescription() {
-			return "Unbans the player(s) from the channel";
-		}
-		
-		public String[][] getFullDescription() {
-			return new String[][] {
-					{
-						"Description: Unbans the player(s) from the channel",
-						"Aliases: 'ub', 'pardon'",
-						"Usage: /titanchat <@[channel]> unban [player]..."
-					}
-			};
-		}
-		
-		public String getName() {
-			return "Unban";
-		}
 	}
 }

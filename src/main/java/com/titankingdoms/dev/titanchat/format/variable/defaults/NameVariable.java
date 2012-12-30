@@ -24,8 +24,12 @@ import com.titankingdoms.dev.titanchat.format.variable.FormatVariable;
 
 public final class NameVariable implements FormatVariable {
 	
-	public String getFormatTag() {
+	public String getDefaultFormatTag() {
 		return "%name";
+	}
+	
+	public String getName() {
+		return "Name";
 	}
 	
 	public String getVariable(Participant sender, Channel channel) {
