@@ -72,6 +72,9 @@ public abstract class Participant {
 	public abstract CommandSender getCommandSender();
 	
 	public ConfigurationSection getConfig() {
+		if (plugin.getParticipantManager().getConfig().get(name) == null)
+			return plugin.getParticipantManager().getConfig().createSection(name);
+		
 		return plugin.getParticipantManager().getConfig().getConfigurationSection(name);
 	}
 	
@@ -80,7 +83,7 @@ public abstract class Participant {
 	}
 	
 	public String getDisplayName() {
-		return getConfig().getString("display-name");
+		return getConfig().getString("display-name", getName());
 	}
 	
 	public final String getName() {
