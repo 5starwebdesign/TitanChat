@@ -186,7 +186,7 @@ public final class VariableManager {
 			}
 			
 			if (!existingVariable(match.group())) {
-				match.appendReplacement(parsed, "");
+				match.appendReplacement(parsed, match.group());
 				continue;
 			}
 			
