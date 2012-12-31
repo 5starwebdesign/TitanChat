@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.Command;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 public final class SendCommand extends Command {
 	
@@ -19,9 +18,7 @@ public final class SendCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		Participant participant = plugin.getParticipantManager().getParticipant(sender);
-		String message = StringUtils.join(args, " ");
-		participant.chat(channel, message);
+		plugin.getParticipantManager().getParticipant(sender).chat(channel, StringUtils.join(args, " "));
 	}
 	
 	@Override

@@ -104,7 +104,11 @@ public final class VariableManager {
 		register(
 				new ChannelTagVariable(),
 				new DisplayNameVariable(),
-				new NameVariable()
+				new GroupPrefixVariable(),
+				new GroupSuffixVariable(),
+				new NameVariable(),
+				new PrefixVariable(),
+				new SuffixVariable()
 		);
 		
 		ConfigurationSection userSection = getConfig().getConfigurationSection("presets.users");
