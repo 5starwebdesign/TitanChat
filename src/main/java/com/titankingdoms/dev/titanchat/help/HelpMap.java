@@ -20,13 +20,16 @@ package com.titankingdoms.dev.titanchat.help;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.help.topic.HelpTopic;
 
 public final class HelpMap {
 	
@@ -53,13 +56,25 @@ public final class HelpMap {
 		return topics.get(topic.toLowerCase());
 	}
 	
+	public Set<HelpTopic> getHelpTopics() {
+		return new HashSet<HelpTopic>(topics.values());
+	}
+	
+	public boolean hasHelpTopic(HelpTopic topic) {
+		return hasHelpTopic(topic.getName());
+	}
+	
+	public boolean hasHelpTopic(String topic) {
+		return topics.containsKey(topic.toLowerCase());
+	}
+	
 	public void load() {
 		
 	}
 	
 	public void registerHelpTopics(HelpTopic... topics) {
 		for (HelpTopic topic : topics) {
-			if (this.topics.containsKey(topic.getName()))
+			if (hasHelpTopic(topic))
 				continue;
 			
 			this.topics.put(topic.getName().toLowerCase(), topic);

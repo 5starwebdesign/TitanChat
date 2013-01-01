@@ -32,7 +32,11 @@ public final class UnbanCommand extends Command {
 		super("Unban");
 		setAliases("ub", "pardon");
 		setArgumentRange(1, 1024);
-		setDescription("Unbans the player(s) from the channel");
+		setBriefDescription("Unbans the player(s)");
+		setFullDescription(
+				"Description: Unbans the player(s) from the specified channel\n" +
+				"Aliases: 'unban', 'ub', 'pardon'\n" +
+				"Usage: /titanchat <@[channel]> unban [player]...");
 		setUsage("[player]...");
 	}
 	
@@ -56,11 +60,11 @@ public final class UnbanCommand extends Command {
 					msg(player, C.RED + "You have been unbanned from " + channel.getName());
 					
 					if (!channel.isParticipating(sender.getName()))
-						msg(sender, C.GOLD + getDisplay(player) + " has been unbanned");
+						msg(sender, C.GOLD + getDisplayName(player.getName()) + " has been unbanned");
 					
-					Messaging.broadcast(channel, getDisplay(player) + " has been unbanned");
+					Messaging.broadcast(channel, getDisplayName(player.getName()) + " has been unbanned");
 					
-				} else { msg(sender, C.RED + getDisplay(player) + " was not banned"); }
+				} else { msg(sender, C.RED + getDisplayName(player.getName()) + " was not banned"); }
 			}
 			break;
 			

@@ -31,7 +31,11 @@ public class BanCommand extends Command {
 		super("Ban");
 		setAliases("b", "blacklist");
 		setArgumentRange(1, 1024);
-		setDescription("Bans the player(s) from the channel");
+		setBriefDescription("Bans the player(s)");
+		setFullDescription(
+				"Description: Bans the player(s) from the specified channel\n" +
+				"Aliases: 'ban', 'b', 'blacklist'\n" +
+				"Usage: /titanchat <@[channel]> ban [player]...");
 		setUsage("[player]...");
 	}
 	
@@ -61,11 +65,11 @@ public class BanCommand extends Command {
 					msg(player, C.RED + "You have been banned from " + channel.getName());
 					
 					if (!channel.isParticipating(sender.getName()))
-						msg(sender, C.RED + getDisplay(player) + " has been banned from the channel");
+						msg(sender, C.RED + getDisplayName(player.getName()) + " has been banned from the channel");
 					
-					broadcast(channel, C.RED + getDisplay(player) + " has been banned from the channel");
+					broadcast(channel, C.RED + getDisplayName(player.getName()) + " has been banned from the channel");
 					
-				} else { msg(sender, C.RED + getDisplay(player) + " was already banned"); }
+				} else { msg(sender, C.RED + getDisplayName(player.getName()) + " was already banned"); }
 			}
 			break;
 			

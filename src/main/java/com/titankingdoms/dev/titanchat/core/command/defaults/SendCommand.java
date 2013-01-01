@@ -12,7 +12,11 @@ public final class SendCommand extends Command {
 		super("Send");
 		setAliases("s");
 		setArgumentRange(1, 1024);
-		setDescription("Chats in the specified channel");
+		setBriefDescription("Sends the message to the channel");
+		setFullDescription(
+				"Description: Sends the message to the specified channel as if chatting in it\n" +
+				"Aliases: 'send', 's'\n" +
+				"Usage: /titanchat <@[channel]> send [message]");
 		setUsage("[message]");
 	}
 	

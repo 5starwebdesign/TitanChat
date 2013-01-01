@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
@@ -73,7 +74,7 @@ public abstract class Participant {
 	
 	public ConfigurationSection getConfig() {
 		if (plugin.getParticipantManager().getConfig().get(name) == null)
-			return plugin.getParticipantManager().getConfig().createSection(name);
+			return new YamlConfiguration();
 		
 		return plugin.getParticipantManager().getConfig().getConfigurationSection(name);
 	}
@@ -137,4 +138,11 @@ public abstract class Participant {
 	}
 	
 	public abstract void send(String... messages);
+	
+	public void setDisplayName(String displayName) {
+		if (plugin.getParticipantManager().getConfig().get(name) == null)
+			plugin.getParticipantManager().getConfig().createSection(name);
+		
+		plugin.getParticipantManager().getConfig().set(name + ".display-name", displayName);
+	}
 }

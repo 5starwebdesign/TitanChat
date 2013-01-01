@@ -31,7 +31,11 @@ public final class KickCommand extends Command {
 		super("Kick");
 		setAliases("k");
 		setArgumentRange(1, 1024);
-		setDescription("Kicks the player(s) from the channel");
+		setBriefDescription("Kicks the player(s)");
+		setFullDescription(
+				"Description: Kicks the player(s) from the specified channel\n" +
+				"Aliases: 'kick', 'k'\n" +
+				"Usage: /titanchat <@[channel]> kick [player]...");
 		setUsage("[player]...");
 	}
 	
@@ -51,11 +55,11 @@ public final class KickCommand extends Command {
 					msg(player, C.RED + "You have been kicked from " + channel.getName());
 					
 					if (!channel.isParticipating(sender.getName()))
-						msg(sender, C.RED + getDisplay(player) + " has been kicked from the channel");
+						msg(sender, C.RED + getDisplayName(player.getName()) + " has been kicked from the channel");
 					
-					broadcast(channel, C.RED + getDisplay(player) + " has been kicked from the channel");
+					broadcast(channel, C.RED + getDisplayName(player.getName()) + " has been kicked from the channel");
 					
-				} else { msg(sender, C.RED + getDisplay(player) + " is already in the channel"); }
+				} else { msg(sender, C.RED + getDisplayName(player.getName()) + " is already in the channel"); }
 				
 			} else { msg(sender, C.RED + "Player is not online"); }
 		}

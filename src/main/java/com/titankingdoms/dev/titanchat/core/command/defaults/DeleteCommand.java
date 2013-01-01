@@ -31,7 +31,11 @@ public final class DeleteCommand extends Command {
 		super("Delete");
 		setAliases("d");
 		setArgumentRange(1, 1);
-		setDescription("Deletes the channel");
+		setBriefDescription("Deletes the channel");
+		setFullDescription(
+				"Description: Deletes the specified channel\n" +
+				"Aliases: 'delete', 'd'\n" +
+				"Usage: /titanchat delete [channel]");
 		setUsage("[channel]");
 	}
 	

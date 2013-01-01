@@ -19,6 +19,7 @@
 package com.titankingdoms.dev.titanchat.core.participant;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.util.Debugger;
 
@@ -57,5 +58,12 @@ public final class ChannelParticipant extends Participant {
 			db.i("@" + getName() + ": " + message);
 		
 		getCommandSender().sendMessage(messages);
+	}
+	
+	public void setDisplayName(String displayName) {
+		super.setDisplayName(displayName);
+		
+		if (isOnline())
+			((Player) getCommandSender()).setDisplayName(displayName);
 	}
 }

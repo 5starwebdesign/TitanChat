@@ -33,7 +33,11 @@ public final class CreateCommand extends Command {
 		super("Create");
 		setAliases("c");
 		setArgumentRange(1, 2);
-		setDescription("Creates a channel with specified ChannelLoader or StandardLoader");
+		setBriefDescription("Creates a channel");
+		setFullDescription(
+				"Description: Creates a channel with the specified name and the ChannelLoader if specified\n" +
+				"Aliases: 'create', 'c'\n" +
+				"Usage: /titanchat create [channel] <loader>");
 		setUsage("[channel] <loader>");
 	}
 

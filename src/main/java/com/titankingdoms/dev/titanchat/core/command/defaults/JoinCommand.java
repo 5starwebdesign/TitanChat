@@ -31,7 +31,11 @@ public final class JoinCommand extends Command {
 		super("Join");
 		setAliases("j");
 		setArgumentRange(1, 2);
-		setDescription("Joins the channel");
+		setBriefDescription("Joins the channel");
+		setFullDescription(
+				"Description: Joins the specified channel\n" +
+				"Aliases: 'join', 'j'\n" +
+				"Usage: /titanchat join [channel] <password>");
 		setUsage("[channel] <password>");
 	}
 	

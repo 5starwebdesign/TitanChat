@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.help;
+package com.titankingdoms.dev.titanchat.help.topic;
 
 import org.bukkit.command.CommandSender;
 
@@ -29,4 +29,6 @@ public interface HelpTopic {
 	public String getFullDescription();
 	
 	public String getName();
+	
+	public boolean isIndex();
 }

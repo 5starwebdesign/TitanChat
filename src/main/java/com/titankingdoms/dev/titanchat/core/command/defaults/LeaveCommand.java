@@ -28,9 +28,13 @@ public final class LeaveCommand extends Command {
 	
 	public LeaveCommand() {
 		super("Leave");
-		setAliases("l");
+		setAliases("l", "part");
 		setArgumentRange(1, 1);
-		setDescription("Leaves the channel");
+		setBriefDescription("Leaves the channel");
+		setFullDescription(
+				"Description: Leaves the specified channel\n" +
+				"Aliases: 'leave', 'l', 'part'\n" +
+				"Usage: /titanchat leave [channel]");
 		setUsage("[channel]");
 	}
 	

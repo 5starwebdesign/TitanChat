@@ -71,15 +71,26 @@ public final class ParticipantManager {
 		return getParticipant(sender.getName());
 	}
 	
+	public void load() {
+		registerParticipant(new ConsoleChannelParticipant());
+		
+		for (Player player : plugin.getServer().getOnlinePlayers())
+			registerParticipant(player);
+	}
+	
 	public Participant registerParticipant(Player player) {
 		return registerParticipant(player.getName());
 	}
 	
 	private Participant registerParticipant(String name) {
-		if (!existingParticipant(name))
-			participants.put(name.toLowerCase(), new ChannelParticipant(name));
+		return registerParticipant(new ChannelParticipant(name));
+	}
+	
+	private Participant registerParticipant(Participant participant) {
+		if (!existingParticipant(participant.getName()))
+			participants.put(participant.getName().toLowerCase(), participant);
 		
-		Participant participant = getParticipant(name);
+		participant = getParticipant(participant.getName());
 		
 		for (Channel channel : plugin.getChannelManager().getChannels()) {
 			if (participant.hasPermission("TitanChat.autojoin." + channel.getName()))
@@ -122,5 +133,9 @@ public final class ParticipantManager {
 			return;
 		
 		try { config.save(configFile); } catch (Exception e) {}
+	}
+	
+	public void unload() {
+		this.participants.clear();
 	}
 }

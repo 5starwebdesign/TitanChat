@@ -194,6 +194,7 @@ public final class TitanChat extends JavaPlugin {
 		addonManager.unload();
 		channelManager.unload();
 		commandManager.unload();
+		participantManager.unload();
 		
 		log(Level.INFO, "is now disabled");
 	}
@@ -234,13 +235,11 @@ public final class TitanChat extends JavaPlugin {
 		addonManager.load();
 		channelManager.load();
 		commandManager.load();
+		participantManager.load();
 		formatHandler.getVariableManager().load();
 		
 		if (channelManager.getChannels(Type.DEFAULT).isEmpty())
 			log(Level.WARNING, "A default channel is not defined");
-		
-		for (Player player : getServer().getOnlinePlayers())
-			participantManager.registerParticipant(player);
 		
 		log(Level.INFO, "is now enabled");
 	}

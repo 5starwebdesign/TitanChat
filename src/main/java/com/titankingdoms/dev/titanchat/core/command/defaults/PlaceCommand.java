@@ -31,7 +31,11 @@ public final class PlaceCommand extends Command {
 		super("Place");
 		setAliases("p");
 		setArgumentRange(1, 1024);
-		setDescription("Places the player(s) in the channel");
+		setBriefDescription("Places the player(s)");
+		setFullDescription(
+				"Description: Places the player(s) in the specified channel\n" +
+				"Aliases: 'place', 'p'\n" +
+				"Usage: /titanchat <@[channel]> place [player]...");
 		setUsage("[player]...");
 	}
 	
@@ -51,11 +55,11 @@ public final class PlaceCommand extends Command {
 					msg(player, C.GOLD + "You have been placed into " + channel.getName());
 					
 					if (!channel.isParticipating(sender.getName()))
-						msg(sender, C.GOLD + getDisplay(player) + " has been placed into the channel");
+						msg(sender, C.GOLD + getDisplayName(player.getName()) + " has been placed into the channel");
 					
-					broadcast(channel, C.GOLD + getDisplay(player) + " has been placed into the channel");
+					broadcast(channel, C.GOLD + getDisplayName(player.getName()) + " has been placed into the channel");
 					
-				} else { msg(sender, C.RED + getDisplay(player) + " is already in the channel"); }
+				} else { msg(sender, C.RED + getDisplayName(player.getName()) + " is already in the channel"); }
 				
 			} else { msg(sender, C.RED + "Player is not online"); }
 		}

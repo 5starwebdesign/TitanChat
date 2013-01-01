@@ -26,7 +26,7 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.help.HelpTopic;
+import com.titankingdoms.dev.titanchat.help.topic.HelpTopic;
 import com.titankingdoms.dev.titanchat.loading.Loadable;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
@@ -35,7 +35,8 @@ public abstract class Command extends Loadable {
 	protected final TitanChat plugin;
 	
 	private String[] aliases;
-	private String description;
+	private String briefDesc;
+	private String fullDesc;
 	private String usage;
 	private String permission;
 	private int maxArgs;
@@ -45,7 +46,8 @@ public abstract class Command extends Loadable {
 		super(name);
 		this.plugin = TitanChat.getInstance();
 		this.aliases = new String[0];
-		this.description = "";
+		this.briefDesc = "";
+		this.fullDesc = "";
 		this.usage = "";
 		this.permission = "";
 		this.maxArgs = 0;
@@ -74,16 +76,20 @@ public abstract class Command extends Loadable {
 		return aliases;
 	}
 	
+	public String getBriefDescription() {
+		return briefDesc;
+	}
+	
 	protected final ConsoleCommandSender getConsoleSender() {
 		return plugin.getServer().getConsoleSender();
 	}
 	
-	public String getDescription() {
-		return description;
+	protected final String getDisplayName(String name) {
+		return plugin.getParticipantManager().getParticipant(name).getDisplayName();
 	}
 	
-	protected final String getDisplay(OfflinePlayer player) {
-		return "";
+	public String getFullDescription() {
+		return fullDesc;
 	}
 	
 	public int getMaxArguments() {
@@ -142,8 +148,12 @@ public abstract class Command extends Loadable {
 		this.minArgs = minimum;
 	}
 	
-	protected void setDescription(String description) {
-		this.description = description;
+	protected void setBriefDescription(String briefDesc) {
+		this.briefDesc = briefDesc;
+	}
+	
+	protected void setFullDescription(String fullDesc) {
+		this.fullDesc = fullDesc;
 	}
 	
 	protected void setPermission(String permission) {

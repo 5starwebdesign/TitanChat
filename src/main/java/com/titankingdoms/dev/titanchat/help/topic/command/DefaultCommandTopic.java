@@ -1,19 +1,18 @@
-package com.titankingdoms.dev.titanchat.help;
+package com.titankingdoms.dev.titanchat.help.topic.command;
 
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.command.Command;
 
-public final class CommandTopic implements HelpTopic {
+public final class DefaultCommandTopic extends CommandTopic {
 	
-	private final String name;
 	private final String briefDesc;
 	private final String fullDesc;
 	
-	public CommandTopic(Command command) {
-		this.name = command.getName();
-		this.briefDesc = "About the " + name + " command";
-		this.fullDesc = command.getDescription();
+	public DefaultCommandTopic(Command command) {
+		super(command.getName());
+		this.briefDesc = command.getBriefDescription();
+		this.fullDesc = command.getFullDescription();
 	}
 	
 	public boolean canView(CommandSender sender) {
@@ -26,9 +25,5 @@ public final class CommandTopic implements HelpTopic {
 	
 	public String getFullDescription() {
 		return fullDesc;
-	}
-	
-	public String getName() {
-		return name;
 	}
 }

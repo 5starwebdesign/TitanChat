@@ -30,7 +30,11 @@ public final class DirectCommand extends Command {
 	public DirectCommand() {
 		super("Direct");
 		setArgumentRange(1, 1);
-		setDescription("Sets your current channel to the specified channel");
+		setBriefDescription("Sets your current channel");
+		setFullDescription(
+				"Description: Sets your current channel to the specified channel\n" +
+				"Aliases: 'direct'\n" +
+				"Usage: /titanchat direct [channel]");
 		setUsage("[channel]");
 	}
 	
