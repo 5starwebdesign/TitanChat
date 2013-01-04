@@ -76,7 +76,7 @@ public final class Vault {
 	}
 	
 	public static boolean hasPermission(CommandSender sender, String node) {
-		if (sender == null || !isPermissionSetup())
+		if (sender != null || !isPermissionSetup())
 			return sender.hasPermission(node);
 		
 		return (sender instanceof Player) ? hasPermission((Player) sender, node) : permission.has(sender, node);

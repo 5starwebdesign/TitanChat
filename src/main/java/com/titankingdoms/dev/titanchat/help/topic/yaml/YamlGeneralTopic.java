@@ -1,9 +1,12 @@
-package com.titankingdoms.dev.titanchat.help.topic;
+package com.titankingdoms.dev.titanchat.help.topic.yaml;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-public final class YamlGeneralTopic implements HelpTopic {
+import com.titankingdoms.dev.titanchat.help.topic.Topic;
+import com.titankingdoms.dev.titanchat.vault.Vault;
+
+public final class YamlGeneralTopic implements Topic {
 	
 	private final String name;
 	private final String briefDesc;
@@ -18,7 +21,7 @@ public final class YamlGeneralTopic implements HelpTopic {
 	}
 	
 	public boolean canView(CommandSender sender) {
-		return (!permission.isEmpty()) ? sender.hasPermission(permission) : true;
+		return (!permission.isEmpty()) ? Vault.hasPermission(sender, permission) : true;
 	}
 	
 	public String getBriefDescription() {
@@ -31,6 +34,10 @@ public final class YamlGeneralTopic implements HelpTopic {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getParagraph(CommandSender sender) {
+		return getFullDescription();
 	}
 	
 	public boolean isIndex() {

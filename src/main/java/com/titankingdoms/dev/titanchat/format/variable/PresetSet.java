@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
 public final class PresetSet implements Comparable<PresetSet> {
 	
@@ -65,7 +66,7 @@ public final class PresetSet implements Comparable<PresetSet> {
 	}
 	
 	public boolean hasPermission(Participant sender) {
-		return permission.isEmpty() || sender.hasPermission(permission);
+		return permission.isEmpty() || Vault.hasPermission(sender.getCommandSender(), permission);
 	}
 	
 	public void registerVariable(PresetVariable variable) {

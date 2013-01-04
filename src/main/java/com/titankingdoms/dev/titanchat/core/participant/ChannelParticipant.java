@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.util.Debugger;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
 public final class ChannelParticipant extends Participant {
 	
@@ -41,7 +42,7 @@ public final class ChannelParticipant extends Participant {
 		if (!isOnline())
 			return false;
 		
-		return getCommandSender().hasPermission(permission);
+		return Vault.hasPermission(getCommandSender(), permission);
 	}
 	
 	@Override

@@ -1,7 +1,10 @@
-package com.titankingdoms.dev.titanchat.help.topic.command;
+package com.titankingdoms.dev.titanchat.help.topic.yaml;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+
+import com.titankingdoms.dev.titanchat.help.topic.CommandTopic;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
 
 public final class YamlCommandTopic extends CommandTopic {
@@ -18,7 +21,7 @@ public final class YamlCommandTopic extends CommandTopic {
 	}
 	
 	public boolean canView(CommandSender sender) {
-		return (!permission.isEmpty()) ? sender.hasPermission(permission) : true;
+		return (!permission.isEmpty()) ? Vault.hasPermission(sender, permission) : true;
 	}
 	
 	public String getBriefDescription() {

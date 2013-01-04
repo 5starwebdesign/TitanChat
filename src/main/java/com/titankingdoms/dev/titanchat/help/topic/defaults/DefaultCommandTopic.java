@@ -1,8 +1,9 @@
-package com.titankingdoms.dev.titanchat.help.topic.command;
+package com.titankingdoms.dev.titanchat.help.topic.defaults;
 
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.command.Command;
+import com.titankingdoms.dev.titanchat.help.topic.CommandTopic;
 
 public final class DefaultCommandTopic extends CommandTopic {
 	

@@ -24,7 +24,8 @@ import java.util.Set;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.event.ChannelChatEvent;
-import com.titankingdoms.dev.titanchat.format.FormatUtils;
+import com.titankingdoms.dev.titanchat.format.FormatHandler;
+import com.titankingdoms.dev.titanchat.util.ChatUtils;
 
 public abstract class ChatHandler {
 	
@@ -35,11 +36,11 @@ public abstract class ChatHandler {
 	}
 	
 	public final String colourise(String text) {
-		return FormatUtils.colourise(text);
+		return FormatHandler.colourise(text);
 	}
 	
 	public final String decolourise(String text) {
-		return FormatUtils.decolourise(text);
+		return FormatHandler.decolourise(text);
 	}
 	
 	public abstract String getFormat();
@@ -63,7 +64,7 @@ public abstract class ChatHandler {
 		message = colourise(event.getMessage());
 		format = plugin.getFormatHandler().getVariableManager().parse(sender, channel, event.getFormat());
 		
-		String[] lines = FormatUtils.splitAndFormat(format, "%message", message);
+		String[] lines = ChatUtils.wordWrap(format.replace("%message", message), 119);
 		
 		for (Participant participant : event.getRecipients())
 			participant.send(lines);

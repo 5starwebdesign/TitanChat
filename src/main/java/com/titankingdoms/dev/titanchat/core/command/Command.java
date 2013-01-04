@@ -26,9 +26,10 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.help.topic.HelpTopic;
+import com.titankingdoms.dev.titanchat.help.topic.Topic;
 import com.titankingdoms.dev.titanchat.loading.Loadable;
 import com.titankingdoms.dev.titanchat.util.Messaging;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
 public abstract class Command extends Loadable {
 	
@@ -117,7 +118,7 @@ public abstract class Command extends Loadable {
 	}
 	
 	protected final boolean hasPermission(CommandSender sender, String permission) {
-		return (sender instanceof ConsoleCommandSender) ? true : sender.hasPermission(permission);
+		return (sender instanceof ConsoleCommandSender) ? true : Vault.hasPermission(sender, permission);
 	}
 	
 	protected final boolean isOnline(String name) {
@@ -135,7 +136,7 @@ public abstract class Command extends Loadable {
 	
 	public abstract boolean permissionCheck(CommandSender sender, Channel channel);
 	
-	protected final void registerHelpTopic(HelpTopic topic) {
+	protected final void registerHelpTopic(Topic topic) {
 		
 	}
 	

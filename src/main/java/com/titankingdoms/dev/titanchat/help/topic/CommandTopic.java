@@ -1,9 +1,10 @@
-package com.titankingdoms.dev.titanchat.help.topic.command;
+package com.titankingdoms.dev.titanchat.help.topic;
 
-import com.titankingdoms.dev.titanchat.help.topic.HelpTopic;
+import org.bukkit.command.CommandSender;
 
 
-public abstract class CommandTopic implements HelpTopic {
+
+public abstract class CommandTopic implements Topic {
 	
 	private final String name;
 	
@@ -13,6 +14,10 @@ public abstract class CommandTopic implements HelpTopic {
 	
 	public final String getName() {
 		return name;
+	}
+	
+	public String getParagraph(CommandSender sender) {
+		return getFullDescription();
 	}
 	
 	public final boolean isCommandHelp() {

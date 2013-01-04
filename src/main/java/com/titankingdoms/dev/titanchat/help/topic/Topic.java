@@ -20,7 +20,7 @@ package com.titankingdoms.dev.titanchat.help.topic;
 
 import org.bukkit.command.CommandSender;
 
-public interface HelpTopic {
+public interface Topic {
 	
 	public boolean canView(CommandSender sender);
 	
@@ -29,6 +29,8 @@ public interface HelpTopic {
 	public String getFullDescription();
 	
 	public String getName();
+	
+	public String getParagraph(CommandSender sender);
 	
 	public boolean isIndex();
 }

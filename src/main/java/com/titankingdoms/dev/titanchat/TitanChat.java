@@ -46,7 +46,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Type;
 import com.titankingdoms.dev.titanchat.core.command.CommandManager;
 import com.titankingdoms.dev.titanchat.core.participant.ParticipantManager;
 import com.titankingdoms.dev.titanchat.format.FormatHandler;
-import com.titankingdoms.dev.titanchat.help.HelpMap;
+import com.titankingdoms.dev.titanchat.help.Help;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.util.C;
 import com.titankingdoms.dev.titanchat.util.Debugger;
@@ -68,7 +68,7 @@ public final class TitanChat extends JavaPlugin {
 	private ParticipantManager participantManager;
 	private FormatHandler formatHandler;
 	
-	private HelpMap helpMap;
+	private Help help;
 	
 	public void chatLog(String line) {
 		if (getConfig().getBoolean("logging.colouring"))
@@ -101,8 +101,8 @@ public final class TitanChat extends JavaPlugin {
 		return formatHandler;
 	}
 	
-	public HelpMap getHelpMap() {
-		return helpMap;
+	public Help getHelp() {
+		return help;
 	}
 	
 	public static TitanChat getInstance() {
@@ -260,7 +260,7 @@ public final class TitanChat extends JavaPlugin {
 		this.commandManager = new CommandManager();
 		this.participantManager = new ParticipantManager();
 		this.formatHandler = new FormatHandler();
-		this.helpMap = new HelpMap();
+		this.help = new Help();
 		
 		if (channelManager.getChannelDirectory().mkdirs()) {
 			log(Level.INFO, "Creating channel directory...");

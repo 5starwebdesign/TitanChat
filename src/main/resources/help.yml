@@ -1,5 +1,5 @@
 settings:
-    topics-per-page: 5
+    page-height: 7
 topics:
     general:
         Version:

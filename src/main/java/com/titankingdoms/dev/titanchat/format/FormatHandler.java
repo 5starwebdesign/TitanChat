@@ -18,6 +18,8 @@
 
 package com.titankingdoms.dev.titanchat.format;
 
+import java.util.regex.Pattern;
+
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.format.variable.VariableManager;
 import com.titankingdoms.dev.titanchat.util.Debugger;
@@ -28,6 +30,8 @@ public final class FormatHandler {
 	
 	protected static final Debugger db = new Debugger(5, "FormatHandler");
 	
+	private final static Pattern colour = Pattern.compile("(&)([a-fk-or0-9])", Pattern.CASE_INSENSITIVE);
+	
 	public static final String DEFAULT_FORMAT = "%tag %prefix%player%suffix&f: %message";
 	
 	private final VariableManager varManager;
@@ -37,12 +41,20 @@ public final class FormatHandler {
 		this.varManager = new VariableManager();
 	}
 	
+	public static String colourise(String text) {
+		return text.replaceAll(colour.toString(), "\u00A7$2");
+	}
+	
+	public static String decolourise(String text) {
+		return text.replaceAll(colour.toString(), "");
+	}
+	
 	public String getDefaultFormat() {
 		return DEFAULT_FORMAT;
 	}
 	
 	public String getFormat() {
-		return FormatUtils.colourise(plugin.getConfig().getString("formatting.format", DEFAULT_FORMAT));
+		return colourise(plugin.getConfig().getString("formatting.format", DEFAULT_FORMAT));
 	}
 	
 	public VariableManager getVariableManager() {

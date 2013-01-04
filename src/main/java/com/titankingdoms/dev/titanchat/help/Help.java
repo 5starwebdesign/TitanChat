@@ -20,29 +20,37 @@ package com.titankingdoms.dev.titanchat.help;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.help.topic.HelpTopic;
+import com.titankingdoms.dev.titanchat.help.topic.Topic;
+import com.titankingdoms.dev.titanchat.help.topic.defaults.DefaultIndex;
+import com.titankingdoms.dev.titanchat.help.topic.yaml.YamlCommandTopic;
+import com.titankingdoms.dev.titanchat.help.topic.yaml.YamlGeneralTopic;
+import com.titankingdoms.dev.titanchat.help.topic.yaml.YamlIndex;
 
-public final class HelpMap {
+public final class Help {
 	
 	private final TitanChat plugin;
 	
 	private File configFile;
 	private FileConfiguration config;
 	
-	private final Map<String, HelpTopic> topics;
+	private final DefaultIndex defaultIndex;
 	
-	public HelpMap() {
+	private final Map<String, Topic> topics;
+	
+	public Help() {
 		this.plugin = TitanChat.getInstance();
-		this.topics = new TreeMap<String, HelpTopic>();
+		this.defaultIndex = new DefaultIndex();
+		this.topics = new TreeMap<String, Topic>();
 	}
 	
 	public FileConfiguration getConfig() {
@@ -52,15 +60,19 @@ public final class HelpMap {
 		return config;
 	}
 	
-	public HelpTopic getHelpTopic(String topic) {
+	public Topic getDefaultTopic() {
+		return defaultIndex;
+	}
+	
+	public Topic getHelpTopic(String topic) {
 		return topics.get(topic.toLowerCase());
 	}
 	
-	public Set<HelpTopic> getHelpTopics() {
-		return new HashSet<HelpTopic>(topics.values());
+	public List<Topic> getHelpTopics() {
+		return new LinkedList<Topic>(topics.values());
 	}
 	
-	public boolean hasHelpTopic(HelpTopic topic) {
+	public boolean hasHelpTopic(Topic topic) {
 		return hasHelpTopic(topic.getName());
 	}
 	
@@ -69,11 +81,30 @@ public final class HelpMap {
 	}
 	
 	public void load() {
+		if (getConfig().get("topics.general") != null) {
+			ConfigurationSection generalTopicSection = getConfig().getConfigurationSection("topics.general");
+			
+			for (String name : generalTopicSection.getKeys(false))
+				registerHelpTopics(new YamlGeneralTopic(generalTopicSection.getConfigurationSection(name)));
+		}
 		
+		if (getConfig().get("topics.commands") != null) {
+			ConfigurationSection commandTopicSection = getConfig().getConfigurationSection("topics.commands");
+			
+			for (String name : commandTopicSection.getKeys(false))
+				registerHelpTopics(new YamlCommandTopic(commandTopicSection.getConfigurationSection(name)));
+		}
+		
+		if (getConfig().get("indexes") != null) {
+			ConfigurationSection indexSection = getConfig().getConfigurationSection("indexes");
+			
+			for (String name : indexSection.getKeys(false))
+				registerHelpTopics(new YamlIndex(indexSection.getConfigurationSection(name)));
+		}
 	}
 	
-	public void registerHelpTopics(HelpTopic... topics) {
-		for (HelpTopic topic : topics) {
+	public void registerHelpTopics(Topic... topics) {
+		for (Topic topic : topics) {
 			if (hasHelpTopic(topic))
 				continue;
 			
