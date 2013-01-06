@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.Command;
 import com.titankingdoms.dev.titanchat.help.Help;
-import com.titankingdoms.dev.titanchat.help.topic.Topic;
+import com.titankingdoms.dev.titanchat.help.Topic;
 import com.titankingdoms.dev.titanchat.util.C;
 import com.titankingdoms.dev.titanchat.util.ChatUtils;
 import com.titankingdoms.dev.titanchat.util.Messaging;

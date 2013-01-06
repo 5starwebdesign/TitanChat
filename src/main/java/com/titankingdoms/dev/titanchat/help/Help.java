@@ -30,7 +30,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.help.topic.Topic;
+import com.titankingdoms.dev.titanchat.core.command.Command;
+import com.titankingdoms.dev.titanchat.help.topic.defaults.DefaultCommandTopic;
 import com.titankingdoms.dev.titanchat.help.topic.defaults.DefaultIndex;
 import com.titankingdoms.dev.titanchat.help.topic.yaml.YamlCommandTopic;
 import com.titankingdoms.dev.titanchat.help.topic.yaml.YamlGeneralTopic;
@@ -49,7 +50,7 @@ public final class Help {
 	
 	public Help() {
 		this.plugin = TitanChat.getInstance();
-		this.defaultIndex = new DefaultIndex();
+		this.defaultIndex = new DefaultIndex(this);
 		this.topics = new TreeMap<String, Topic>();
 	}
 	
@@ -81,13 +82,6 @@ public final class Help {
 	}
 	
 	public void load() {
-		if (getConfig().get("topics.general") != null) {
-			ConfigurationSection generalTopicSection = getConfig().getConfigurationSection("topics.general");
-			
-			for (String name : generalTopicSection.getKeys(false))
-				registerHelpTopics(new YamlGeneralTopic(generalTopicSection.getConfigurationSection(name)));
-		}
-		
 		if (getConfig().get("topics.commands") != null) {
 			ConfigurationSection commandTopicSection = getConfig().getConfigurationSection("topics.commands");
 			
@@ -95,11 +89,21 @@ public final class Help {
 				registerHelpTopics(new YamlCommandTopic(commandTopicSection.getConfigurationSection(name)));
 		}
 		
+		for (Command command : plugin.getCommandManager().getCommands())
+			registerHelpTopics(new DefaultCommandTopic(command));
+		
+		if (getConfig().get("topics.general") != null) {
+			ConfigurationSection generalTopicSection = getConfig().getConfigurationSection("topics.general");
+			
+			for (String name : generalTopicSection.getKeys(false))
+				registerHelpTopics(new YamlGeneralTopic(generalTopicSection.getConfigurationSection(name)));
+		}
+		
 		if (getConfig().get("indexes") != null) {
 			ConfigurationSection indexSection = getConfig().getConfigurationSection("indexes");
 			
 			for (String name : indexSection.getKeys(false))
-				registerHelpTopics(new YamlIndex(indexSection.getConfigurationSection(name)));
+				registerHelpTopics(new YamlIndex(this, indexSection.getConfigurationSection(name)));
 		}
 	}
 	

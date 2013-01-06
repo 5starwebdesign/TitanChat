@@ -3,7 +3,7 @@ package com.titankingdoms.dev.titanchat.help.topic.yaml;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.titankingdoms.dev.titanchat.help.topic.Topic;
+import com.titankingdoms.dev.titanchat.help.Topic;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 public final class YamlGeneralTopic implements Topic {

@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.help.topic;
+package com.titankingdoms.dev.titanchat.help;
 
 import org.bukkit.command.CommandSender;
 

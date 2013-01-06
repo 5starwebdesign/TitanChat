@@ -1,25 +1,28 @@
 package com.titankingdoms.dev.titanchat.help.topic.yaml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.titankingdoms.dev.titanchat.help.topic.Index;
-import com.titankingdoms.dev.titanchat.help.topic.Topic;
+import com.titankingdoms.dev.titanchat.help.Help;
+import com.titankingdoms.dev.titanchat.help.Index;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 public final class YamlIndex extends Index {
 	
+	private final Help help;
 	private final String description;
 	private final String permission;
+	private final List<String> topics;
 	
-	public YamlIndex(ConfigurationSection section) {
+	public YamlIndex(Help help, ConfigurationSection section) {
 		super(section.getName());
+		this.help = help;
 		this.description = section.getString("description", "");
 		this.permission = section.getString("permission", "");
-		
-		if (section.get("topics") != null)
-			for (String topic : section.getStringList("topics"))
-				addTopic(topic);
+		this.topics = (section.get("topics") != null) ? section.getStringList("topics") : new ArrayList<String>();
 	}
 	
 	public boolean canView(CommandSender sender) {
@@ -31,22 +34,32 @@ public final class YamlIndex extends Index {
 	}
 	
 	public String getFullDescription() {
-		StringBuilder str = new StringBuilder();
-		
-		for (String name : getTopics()) {
-			if (!help.hasHelpTopic(name))
-				continue;
+		if (!topics.isEmpty()) {
+			for (String name : topics) {
+				if (!help.hasHelpTopic(name))
+					continue;
+				
+				addTopic(help.getHelpTopic(name));
+			}
 			
-			Topic topic = help.getHelpTopic(name);
-			
-			String line = topic.getName() + " - " + topic.getBriefDescription();
-			
-			if (line.length() >= 119)
-				line = line.substring(0, 116) + "...";
-			
-			str.append(line);
+			topics.clear();
 		}
 		
-		return str.toString();
+		return super.getFullDescription();
+	}
+	
+	public String getParagraph(CommandSender sender) {
+		if (!topics.isEmpty()) {
+			for (String name : topics) {
+				if (!help.hasHelpTopic(name))
+					continue;
+				
+				addTopic(help.getHelpTopic(name));
+			}
+			
+			topics.clear();
+		}
+		
+		return super.getParagraph(sender);
 	}
 }

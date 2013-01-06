@@ -1,14 +1,20 @@
 package com.titankingdoms.dev.titanchat.help.topic.defaults;
 
+import java.util.List;
+
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.help.topic.Index;
-import com.titankingdoms.dev.titanchat.help.topic.Topic;
+import com.titankingdoms.dev.titanchat.help.Help;
+import com.titankingdoms.dev.titanchat.help.Index;
+import com.titankingdoms.dev.titanchat.help.Topic;
 
 public final class DefaultIndex extends Index {
 	
-	public DefaultIndex() {
+	private final Help help;
+	
+	public DefaultIndex(Help help) {
 		super("TitanChat Help Index");
+		this.help = help;
 	}
 	
 	public boolean canView(CommandSender sender) {
@@ -19,25 +25,8 @@ public final class DefaultIndex extends Index {
 		return "Help Index of TitanChat";
 	}
 	
-	public String getFullDescription() {
-		StringBuilder str = new StringBuilder();
-		
-		for (String name : getTopics()) {
-			if (!help.hasHelpTopic(name))
-				continue;
-			
-			Topic topic = help.getHelpTopic(name);
-			
-			String line = topic.getName() + " - " + topic.getBriefDescription();
-			
-			if (line.length() >= 119)
-				line = line.substring(0, 116) + "...";
-			
-			str.append(line);
-		}
-		
-		return str.toString();
+	@Override
+	public List<Topic> getTopics() {
+		return help.getHelpTopics();
 	}
-	
-	
 }
