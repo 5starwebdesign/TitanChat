@@ -59,7 +59,9 @@ public final class CommandManager {
 			
 			if (args.length < command.getMinArguments() || args.length > command.getMaxArguments()) {
 				Messaging.sendMessage(sender, C.RED + "Invalid Argument Length");
-				Messaging.sendMessage(sender, C.GOLD + command.getUsage());
+				
+				String usage = "/titanchat <@[channel]> " + command.getName() + " " + command.getUsage();
+				Messaging.sendMessage(sender, C.GOLD + usage);
 				return;
 			}
 			

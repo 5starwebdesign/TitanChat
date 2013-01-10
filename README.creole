@@ -81,15 +81,14 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 31.12.12 - Fixed errors and added some default commands
 * 01.01.13 - Help system is near completion
 * 05.01.13 - Completed help system
+* 11.01.13 - Added in censoring
 
 -----------------------------------------------------------------------------------------------------------------------
 
 === Todo
 
 * v4.0
-** Complete Help System
 ** Complete default commands
-** Censoring
 
 * v4.1
 ** Ignore lists

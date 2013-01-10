@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.Command;
+import com.titankingdoms.dev.titanchat.util.C;
 
 public final class PromoteCommand extends Command {
 	
@@ -31,7 +32,10 @@ public final class PromoteCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		
+		if (channel == null) {
+			msg(sender, C.RED + "Please specify or join a channel to use the command");
+			return;
+		}
 	}
 	
 	@Override

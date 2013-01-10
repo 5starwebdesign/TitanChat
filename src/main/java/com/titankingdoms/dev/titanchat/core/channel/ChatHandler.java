@@ -19,12 +19,14 @@
 package com.titankingdoms.dev.titanchat.core.channel;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.event.ChannelChatEvent;
 import com.titankingdoms.dev.titanchat.format.FormatHandler;
+import com.titankingdoms.dev.titanchat.util.Censor;
 import com.titankingdoms.dev.titanchat.util.ChatUtils;
 
 public abstract class ChatHandler {
@@ -41,6 +43,13 @@ public abstract class ChatHandler {
 	
 	public final String decolourise(String text) {
 		return FormatHandler.decolourise(text);
+	}
+	
+	public final String filter(String text) {
+		List<String> phrases = plugin.getConfig().getStringList("filtering.phrases");
+		String censor = plugin.getConfig().getString("filtering.censor");
+		
+		return Censor.filter(text, phrases, censor);
 	}
 	
 	public abstract String getFormat();
@@ -61,7 +70,7 @@ public abstract class ChatHandler {
 		ChannelChatEvent event = new ChannelChatEvent(sender, recipients, channel, format, message);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
-		message = colourise(event.getMessage());
+		message = colourise(filter(event.getMessage()));
 		format = plugin.getFormatHandler().getVariableManager().parse(sender, channel, event.getFormat());
 		
 		String[] lines = ChatUtils.wordWrap(format.replace("%message", message), 119);
