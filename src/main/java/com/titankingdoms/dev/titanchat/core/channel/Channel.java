@@ -36,8 +36,12 @@ import com.titankingdoms.dev.titanchat.core.addon.Addon;
 import com.titankingdoms.dev.titanchat.core.channel.setting.SettingModifier;
 import com.titankingdoms.dev.titanchat.core.command.Command;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.event.ChannelChatEvent;
+import com.titankingdoms.dev.titanchat.format.FormatHandler;
 import com.titankingdoms.dev.titanchat.format.variable.FormatVariable;
 import com.titankingdoms.dev.titanchat.loading.Loadable;
+import com.titankingdoms.dev.titanchat.util.Censor;
+import com.titankingdoms.dev.titanchat.util.ChatUtils;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 
 public abstract class Channel extends Loadable implements Listener {
@@ -78,8 +82,6 @@ public abstract class Channel extends Loadable implements Listener {
 	
 	public abstract ChannelLoader getChannelLoader();
 	
-	public abstract ChatHandler getChatHandler();
-	
 	public final FileConfiguration getConfig() {
 		if (config == null)
 			reloadConfig();
@@ -96,6 +98,8 @@ public abstract class Channel extends Loadable implements Listener {
 	public abstract String getPassword();
 	
 	public abstract Range getRange();
+	
+	public abstract Set<Participant> getRecipients();
 	
 	public final boolean getSetting(String path, boolean def) {
 		return getConfig().getBoolean(path, def);
@@ -215,6 +219,32 @@ public abstract class Channel extends Loadable implements Listener {
 		
 		if (participant.isParticipating(this))
 			participant.leave(this);
+	}
+	
+	public final void processChat(Participant sender, String message) {
+		String format = FormatHandler.colourise(getFormat());
+		
+		if (format == null || format.isEmpty())
+			format = FormatHandler.colourise(plugin.getFormatHandler().getFormat());
+		
+		Set<Participant> recipients = getRecipients();
+		
+		if (recipients == null)
+			recipients = new HashSet<Participant>();
+		
+		ChannelChatEvent event = new ChannelChatEvent(sender, recipients, this, format, message);
+		plugin.getServer().getPluginManager().callEvent(event);
+		
+		List<String> phrases = plugin.getConfig().getStringList("filtering.phrases");
+		String censor = plugin.getConfig().getString("filtering.censor");
+		
+		message = FormatHandler.colourise(Censor.filter(event.getMessage(), phrases, censor));
+		format = plugin.getFormatHandler().getVariableManager().parse(sender, this, event.getFormat());
+		
+		String[] lines = ChatUtils.wordWrap(format.replace("%message", message), 119);
+		
+		for (Participant participant : event.getRecipients())
+			participant.send(lines);
 	}
 	
 	public final void register(Addon... addons) {

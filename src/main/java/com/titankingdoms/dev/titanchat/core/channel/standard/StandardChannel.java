@@ -18,21 +18,22 @@
 
 package com.titankingdoms.dev.titanchat.core.channel.standard;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
-import com.titankingdoms.dev.titanchat.core.channel.ChatHandler;
 import com.titankingdoms.dev.titanchat.core.channel.Range;
 import com.titankingdoms.dev.titanchat.core.channel.Type;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 public final class StandardChannel extends Channel {
 	
 	private final ChannelLoader loader;
-	private final ChatHandler chatHandler;
 	
 	public StandardChannel(String name, Type type, StandardLoader loader) {
 		super(name, type);
 		this.loader = loader;
-		this.chatHandler = new StandardChatHandler(this);
 	}
 	
 	@Override
@@ -43,11 +44,6 @@ public final class StandardChannel extends Channel {
 	@Override
 	public ChannelLoader getChannelLoader() {
 		return loader;
-	}
-	
-	@Override
-	public ChatHandler getChatHandler() {
-		return chatHandler;
 	}
 	
 	@Override
@@ -64,6 +60,16 @@ public final class StandardChannel extends Channel {
 	public Range getRange() {
 		Range range = Range.fromName(getSetting("range", "channel"));
 		return (range != null) ? range : Range.CHANNEL;
+	}
+	
+	@Override
+	public Set<Participant> getRecipients() {
+		Set<Participant> recipients = new HashSet<Participant>();
+		
+		for (String name : getParticipants())
+			recipients.add(plugin.getParticipantManager().getParticipant(name));
+		
+		return recipients;
 	}
 	
 	@Override

@@ -237,6 +237,7 @@ public final class TitanChat extends JavaPlugin {
 		commandManager.load();
 		participantManager.load();
 		formatHandler.getVariableManager().load();
+		help.load();
 		
 		if (channelManager.getChannels(Type.DEFAULT).isEmpty())
 			log(Level.WARNING, "A default channel is not defined");

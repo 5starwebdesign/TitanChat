@@ -18,21 +18,24 @@
 
 package com.titankingdoms.dev.titanchat.core.channel.server;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.bukkit.entity.Player;
+
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
-import com.titankingdoms.dev.titanchat.core.channel.ChatHandler;
 import com.titankingdoms.dev.titanchat.core.channel.Range;
 import com.titankingdoms.dev.titanchat.core.channel.Type;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 public final class ServerChannel extends Channel {
 	
 	private final ChannelLoader loader;
-	private final ChatHandler chatHandler;
 	
 	public ServerChannel() {
 		super("Server", Type.DEFAULT);
 		this.loader = new ServerLoader(this);
-		this.chatHandler = new ServerChatHandler(this);
 	}
 	
 	@Override
@@ -43,11 +46,6 @@ public final class ServerChannel extends Channel {
 	@Override
 	public ChannelLoader getChannelLoader() {
 		return loader;
-	}
-	
-	@Override
-	public ChatHandler getChatHandler() {
-		return chatHandler;
 	}
 	
 	@Override
@@ -63,6 +61,16 @@ public final class ServerChannel extends Channel {
 	@Override
 	public Range getRange() {
 		return Range.GLOBAL;
+	}
+	
+	@Override
+	public Set<Participant> getRecipients() {
+		Set<Participant> recipients = new HashSet<Participant>();
+		
+		for (Player player : plugin.getServer().getOnlinePlayers())
+			recipients.add(plugin.getParticipantManager().getParticipant(player.getName()));
+		
+		return recipients;
 	}
 	
 	@Override

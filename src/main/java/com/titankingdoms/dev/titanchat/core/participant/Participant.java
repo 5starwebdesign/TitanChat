@@ -56,7 +56,7 @@ public abstract class Participant {
 			return;
 		}
 		
-		channel.getChatHandler().processChat(this, channel, message);
+		channel.processChat(this, message);
 	}
 	
 	public final void direct(Channel channel) {

@@ -34,6 +34,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.command.defaults.*;
 import com.titankingdoms.dev.titanchat.loading.Loader;
 import com.titankingdoms.dev.titanchat.util.C;
+import com.titankingdoms.dev.titanchat.util.MessageProperties;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
 public final class CommandManager {
@@ -58,7 +59,7 @@ public final class CommandManager {
 			Command command = getCommand(label);
 			
 			if (args.length < command.getMinArguments() || args.length > command.getMaxArguments()) {
-				Messaging.sendMessage(sender, C.RED + "Invalid Argument Length");
+				Messaging.sendMessage(sender, C.RED + MessageProperties.getMessage("invalid_arg_legnth"));
 				
 				String usage = "/titanchat <@[channel]> " + command.getName() + " " + command.getUsage();
 				Messaging.sendMessage(sender, C.GOLD + usage);
@@ -66,7 +67,7 @@ public final class CommandManager {
 			}
 			
 			if (!command.permissionCheck(sender, channel)) {
-				Messaging.sendMessage(sender, C.RED + "You do not have permission");
+				Messaging.sendMessage(sender, C.RED + MessageProperties.getMessage("no_permission"));
 				return;
 			}
 			

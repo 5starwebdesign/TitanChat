@@ -36,6 +36,8 @@ public final class PromoteCommand extends Command {
 			msg(sender, C.RED + "Please specify or join a channel to use the command");
 			return;
 		}
+		
+		
 	}
 	
 	@Override

@@ -53,15 +53,17 @@ public final class HelpCommand extends Command {
 			return;
 		}
 		
-		String[][] pages = getPages(topic, help.getConfig().getInt("settings.page-height", 7));
+		String[][] pages = getPages(sender, topic, help.getConfig().getInt("settings.page-height", 7));
 		
-		String header = createHeader(topic.getName() + ((pages.length > 1) ? " (" + page + "/" + pages.length + ")" : ""), '=');
+		String pageNumber = (pages.length > 1) ? " (" + page + "/" + pages.length + ")" : "";
+		String header = createHeader(topic.getName() + pageNumber, '=');
+		
 		Messaging.sendMessage(sender, header);
 		Messaging.sendMessage(sender, pages[page - 1]);
 	}
 	
-	public String[][] getPages(Topic topic, int pageHeight) {
-		return ChatUtils.paginate(topic.getFullDescription(), 119, pageHeight);
+	public String[][] getPages(CommandSender sender, Topic topic, int pageHeight) {
+		return ChatUtils.paginate(topic.getParagraph(sender), 119, pageHeight);
 	}
 	
 	@Override
