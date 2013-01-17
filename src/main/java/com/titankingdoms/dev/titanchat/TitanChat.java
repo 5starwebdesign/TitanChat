@@ -50,6 +50,7 @@ import com.titankingdoms.dev.titanchat.help.Help;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.util.C;
 import com.titankingdoms.dev.titanchat.util.Debugger;
+import com.titankingdoms.dev.titanchat.util.MessageProperties;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
@@ -137,6 +138,11 @@ public final class TitanChat extends JavaPlugin {
 			return metrics.start();
 			
 		} catch (Exception e) { return false; }
+	}
+	
+	private void loadDefaultMessageProperties() {
+		MessageProperties.setDefault("invalid_arg_length", "Invalid Argument Length");
+		MessageProperties.setDefault("no_permission", "You do not have permission");
 	}
 	
 	public void log(Level level, String msg) {
@@ -282,6 +288,9 @@ public final class TitanChat extends JavaPlugin {
 			log(Level.INFO, "Loading default variables.yml...");
 			saveResource("variables.yml", false);
 		}
+		
+		MessageProperties.reloadProperties();
+		loadDefaultMessageProperties();
 	}
 	
 	public void registerListener(Listener... listeners) {

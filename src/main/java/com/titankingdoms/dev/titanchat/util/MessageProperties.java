@@ -37,6 +37,10 @@ public final class MessageProperties {
 				properties.setProperty(def.getKey(), def.getValue());
 	}
 	
+	public static void setDefault(String key, String message) {
+		defaults.put(key, message);
+	}
+	
 	public static void setMessage(String key, String message) {
 		properties.setProperty(key, message);
 	}
