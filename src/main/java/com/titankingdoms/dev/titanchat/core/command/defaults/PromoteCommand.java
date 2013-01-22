@@ -18,6 +18,7 @@
 
 package com.titankingdoms.dev.titanchat.core.command.defaults;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
@@ -28,6 +29,12 @@ public final class PromoteCommand extends Command {
 	
 	public PromoteCommand() {
 		super("Promote");
+		setArgumentRange(1, 1024);
+		setBriefDescription("Promotes the player(s)");
+		setFullDescription(
+				"Description: Promotes the player(s) in the specified channel\n" +
+				"Usage: /titanchat <@[channel]> promote [player]...");
+		setUsage("[player]...");
 	}
 	
 	@Override
@@ -37,7 +44,26 @@ public final class PromoteCommand extends Command {
 			return;
 		}
 		
-		
+		for (String playerName : args) {
+			OfflinePlayer player = getOfflinePlayer(playerName);
+			
+			if (channel.isBlacklisted(player)) {
+				msg(sender, C.RED + getDisplayName(player.getName()) + " is banned from the channel");
+				continue;
+			}
+			
+			if (!channel.isAdmin(player)) {
+				channel.getAdmins().add(player.getName());
+				
+				msg(player, C.RED + "You have been promoted in " + channel.getName());
+				
+				if (!channel.isParticipating(sender.getName()))
+					msg(sender, C.RED + getDisplayName(player.getName()) + " has been promoted in the channel");
+				
+				broadcast(channel, C.RED + getDisplayName(player.getName()) + " has been promoted in the channel");
+				
+			} else { msg(sender, C.RED + getDisplayName(player.getName()) + " is already an admin"); }
+		}
 	}
 	
 	@Override
