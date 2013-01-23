@@ -1,0 +1,9 @@
+groups:
+    Member:
+        permissions:
+        - TitanChat.join.*
+        - TitanChat.speak.*
+    Admin:
+        permissions:
+        - TitanChat.ban.<channel>
+        - TitanChat.kick.<channel>
