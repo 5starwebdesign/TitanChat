@@ -1,6 +1,7 @@
 package com.titankingdoms.dev.titanchat.next.update;
 
-import java.util.Map.Entry;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permission;
@@ -19,23 +20,62 @@ public final class PlayerParticipant extends Participant {
 		super(player.getName());
 		this.permissions = player.addAttachment(plugin);
 	}
+	
+	@Override
+	public Map<String, Boolean> getPermissions() {
+		if (permissions == null)
+			return new HashMap<String, Boolean>();
+		
+		return new HashMap<String, Boolean>(permissions.getPermissions());
+	}
 
 	@Override
 	public void recalculatePermissions() {
 		if (permissions == null)
 			return;
 		
-		permissions.getPermissions().clear();
+		for (String node : getPermissions().keySet())
+			if (node.startsWith("TitanChat.group."))
+				unsetPermission(node);
 		
-		for (Entry<Permission, Boolean> permission : getPermissions().entrySet())
-			permissions.setPermission(permission.getKey(), permission.getValue());
-		
-		for (Entry<Permission, Boolean> permission : getChatGroup().getPermissions().entrySet())
-			permissions.setPermission(permission.getKey(), permission.getValue());
+		if (getCurrentChannel() != null)
+			setPermission("TitanChat.group." + getChatGroup(getCurrentChannel()).getName(), true);
 	}
 
 	@Override
 	public void sendMessage(String message) {
 		
+	}
+	
+	@Override
+	public void setPermission(Permission permission, boolean value) {
+		if (permissions == null)
+			return;
+		
+		permissions.setPermission(permission, value);
+	}
+	
+	@Override
+	public void setPermission(String node, boolean value) {
+		if (permissions == null)
+			return;
+		
+		permissions.setPermission(node, value);
+	}
+	
+	@Override
+	public void unsetPermission(Permission permission) {
+		if (permissions == null)
+			return;
+		
+		permissions.unsetPermission(permission);
+	}
+	
+	@Override
+	public void unsetPermission(String node) {
+		if (permissions == null)
+			return;
+		
+		permissions.unsetPermission(node);
 	}
 }

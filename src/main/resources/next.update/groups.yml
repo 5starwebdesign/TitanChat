@@ -1,9 +1,11 @@
 groups:
     Member:
+      default: true
         permissions:
-        - TitanChat.join.*
-        - TitanChat.speak.*
+            TitanChat.join.<channel>: true
+            TitanChat.speak.<channel>: true
     Admin:
+        inheritence: Member
         permissions:
-        - TitanChat.ban.<channel>
-        - TitanChat.kick.<channel>
+            TitanChat.ban.<channel>: true
+            TitanChat.kick.<channel>: true

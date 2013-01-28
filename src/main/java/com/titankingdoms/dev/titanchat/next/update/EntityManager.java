@@ -3,22 +3,18 @@ package com.titankingdoms.dev.titanchat.next.update;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ChatEntityManager {
+public final class EntityManager {
 	
-	private final Map<String, ChatEntitySearcher> searchers;
+	private static final Map<String, ChatEntitySearcher> searchers= new HashMap<String, ChatEntitySearcher>();
 	
-	public ChatEntityManager() {
-		this.searchers = new HashMap<String, ChatEntitySearcher>();
-	}
-	
-	public ChatEntity getEntity(String type, String name) {
+	public static ChatEntity getEntity(String type, String name) {
 		if (!searchers.containsKey(type.toLowerCase()))
 			return null;
 		
 		return searchers.get(type.toLowerCase()).getEntity(name);
 	}
 	
-	public void registerSearcher(ChatEntitySearcher searcher) {
+	public static void registerSearcher(ChatEntitySearcher searcher) {
 		if (!searchers.containsKey(searcher.getEntityType().toLowerCase()))
 			searchers.put(searcher.getEntityType().toLowerCase(), searcher);
 	}
