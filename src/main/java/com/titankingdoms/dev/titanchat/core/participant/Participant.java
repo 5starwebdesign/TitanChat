@@ -1,107 +1,124 @@
-/*
- *     TitanChat
- *     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
- *     
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *     
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *     
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package com.titankingdoms.dev.titanchat.core.participant;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
-import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.ChatEntity;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.util.C;
+import com.titankingdoms.dev.titanchat.event.ChannelChatEvent;
+import com.titankingdoms.dev.titanchat.format.Censor;
+import com.titankingdoms.dev.titanchat.format.ChatUtils;
+import com.titankingdoms.dev.titanchat.format.Format;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
-public abstract class Participant {
+public class Participant extends ChatEntity {
 	
-	protected final TitanChat plugin;
+	private volatile Channel current;
 	
-	private final String name;
-	
-	private Channel current;
 	private final Map<String, Channel> channels;
 	
 	public Participant(String name) {
-		this.plugin = TitanChat.getInstance();
-		this.name = name;
-		this.channels = new ConcurrentHashMap<String, Channel>();
+		super("Participant", name);
+		this.channels = new HashMap<String, Channel>();
+	}
+	
+	public CommandSender asCommandSender() {
+		return null;
+	}
+	
+	public final void chat(Channel channel, String message) {
+		if (channel == null)
+			return;
+		
+		String format = channel.getFormat();
+		
+		if (format == null || format.isEmpty())
+			format = Format.getFormat();
+		
+		Set<Participant> recipients = channel.getParticipants();
+		
+		ChannelChatEvent event = new ChannelChatEvent(this, recipients, channel, format, message);
+		plugin.getServer().getPluginManager().callEvent(event);
+		
+		List<String> phrases = plugin.getConfig().getStringList("filtering.phrases");
+		String censor = plugin.getConfig().getString("filtering.censor");
+		
+		message = Format.colourise(Censor.filter(event.getMessage(), phrases, censor));
+		format = Format.colourise(event.getFormat());
+		
+		String[] lines = ChatUtils.wordWrap(format.replace("%message", message), 119);
+		
+		for (Participant recipient : event.getRecipients())
+			recipient.sendMessage(lines);
+		
+		ConsoleCommandSender console = plugin.getServer().getConsoleSender();
+		String log = event.getFormat().replace("%message", event.getMessage());
+		
+		if (plugin.getConfig().getBoolean("logging.colouring"))
+			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 119));
+		else
+			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 119));
 	}
 	
 	public final void chat(String message) {
 		chat(current, message);
 	}
 	
-	public final void chat(Channel channel, String message) {
-		if (channel == null) {
-			send(C.GOLD + "You must be in a channel to speak");
-			return;
-		}
-		
-		channel.processChat(this, message);
-	}
-	
 	public final void direct(Channel channel) {
 		this.current = channel;
 		
-		if (!isParticipating(channel))
+		if (channel != null && !isParticipating(channel))
 			join(channel);
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Participant)
+			return ((Participant) object).getName().equals(getName());
+		
+		return false;
 	}
 	
 	public final Set<Channel> getChannels() {
 		return new HashSet<Channel>(channels.values());
 	}
 	
-	public abstract CommandSender getCommandSender();
-	
-	public ConfigurationSection getConfig() {
-		if (plugin.getParticipantManager().getConfig().get(name) == null)
-			return new YamlConfiguration();
-		
-		return plugin.getParticipantManager().getConfig().getConfigurationSection(name);
+	@Override
+	public FileConfiguration getConfig() {
+		throw new UnsupportedOperationException("Participants do not have config files");
 	}
 	
-	public final Channel getCurrentChannel() {
+	public final Channel getCurrent() {
 		return current;
 	}
 	
-	public String getDisplayName() {
-		return getConfig().getString("display-name", getName());
+	@Override
+	public ConfigurationSection getDataSection() {
+		FileConfiguration config = plugin.getParticipantManager().getConfig();
+		return config.getConfigurationSection(getName().toLowerCase() + ".data");
 	}
 	
-	public final String getName() {
-		return name;
+	public final boolean hasPermission(String node) {
+		return Vault.hasPermission(asCommandSender(), node);
 	}
 	
-	public abstract boolean hasPermission(String permission);
-	
-	public final boolean isDirectedAt(String channel) {
-		return (current != null) ? current.getName().equalsIgnoreCase(channel) : false;
+	@Override
+	public final void init() {
+		
 	}
 	
-	public final boolean isDirectedAt(Channel channel) {
-		return (channel != null) ? isDirectedAt(channel.getName()) : current == null;
+	public final boolean isOnline() {
+		return asCommandSender() != null;
 	}
-	
-	public abstract boolean isOnline();
 	
 	public final boolean isParticipating(String channel) {
 		return channels.containsKey(channel.toLowerCase());
@@ -117,11 +134,11 @@ public abstract class Participant {
 		
 		this.channels.put(channel.getName().toLowerCase(), channel);
 		
-		if (this.current == null || !this.current.equals(channel))
-			direct(channel);
-		
 		if (!channel.isParticipating(this))
 			channel.join(this);
+		
+		if (!channel.equals(current))
+			direct(channel);
 	}
 	
 	public final void leave(Channel channel) {
@@ -130,19 +147,41 @@ public abstract class Participant {
 		
 		this.channels.remove(channel.getName().toLowerCase());
 		
-		if (this.current != null && this.current.equals(channel))
-			direct(getChannels().iterator().hasNext() ? getChannels().iterator().next() : null);
-		
 		if (channel.isParticipating(this))
 			channel.leave(this);
+		
+		if (channel.equals(current))
+			direct(getChannels().iterator().hasNext() ? getChannels().iterator().next() : null);
 	}
 	
-	public abstract void send(String... messages);
+	@Override
+	public void reloadConfig() {
+		throw new UnsupportedOperationException("Participants do not have config files");
+	}
 	
-	public void setDisplayName(String displayName) {
-		if (plugin.getParticipantManager().getConfig().get(name) == null)
-			plugin.getParticipantManager().getConfig().createSection(name);
+	@Override
+	public void save() {
+		plugin.getParticipantManager().getConfig().set(getName() + ".channels.current", current.getName());
+		plugin.getParticipantManager().getConfig().set(getName() + ".channels.all", channels.keySet());
+	}
+	
+	@Override
+	public void saveConfig() {
+		throw new UnsupportedOperationException("Participants do not have config files");
+	}
+	
+	@Override
+	public void sendMessage(String... messages) {
+		if (isOnline())
+			asCommandSender().sendMessage(messages);
+	}
+	
+	public Participant toParticipant() {
+		Player player = plugin.getServer().getPlayer(getName());
 		
-		plugin.getParticipantManager().getConfig().set(name + ".display-name", displayName);
+		if (player == null)
+			return this;
+		
+		return plugin.getParticipantManager().getParticipant(player.getName());
 	}
 }

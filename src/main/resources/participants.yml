@@ -1,5 +1,6 @@
 CONSOLE:
-    display-name: '&4Server'
-    current-channel: 'Staff'
     channels:
-    - Staff
+        current: ''
+        all: []
+    data:
+        display-name: '&4Server'

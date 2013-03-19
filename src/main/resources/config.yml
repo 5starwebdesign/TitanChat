@@ -1,11 +1,10 @@
 channels:
     enable: true
     limit: -1
-    server-channel:
-        tag: ''
-        display-colour: ''
 logging:
-    colouring: true
+    chat:
+        log: true
+        colour: true
     debug: []
 metrics-statistics: true
 formatting:

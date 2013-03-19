@@ -1,5 +1,4 @@
 /*
- *     TitanChat
  *     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
  *     
  *     This program is free software: you can redistribute it and/or modify
@@ -21,27 +20,23 @@ package com.titankingdoms.dev.titanchat.event;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.format.FormatHandler;
 
-public final class ChannelChatEvent extends Event {
+public final class ChannelChatEvent extends ChannelEvent {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
 	private final Participant sender;
 	private final Set<Participant> recipients;
 	
-	private final Channel channel;
-	
 	private String format;
 	private String message;
 	
 	public ChannelChatEvent(Participant sender, Channel channel, String message) {
-		this(sender, new HashSet<Participant>(), channel, FormatHandler.DEFAULT_FORMAT, message);
+		this(sender, new HashSet<Participant>(), channel, "", message);
 	}
 	
 	public ChannelChatEvent(Participant sender, Channel channel, String format, String message) {
@@ -49,13 +44,13 @@ public final class ChannelChatEvent extends Event {
 	}
 	
 	public ChannelChatEvent(Participant sender, Set<Participant> recipients, Channel channel, String message) {
-		this(sender, recipients, channel, FormatHandler.DEFAULT_FORMAT, message);
+		this(sender, recipients, channel, "", message);
 	}
 	
 	public ChannelChatEvent(Participant sender, Set<Participant> recipients, Channel channel, String format, String message) {
+		super(channel);
 		this.sender = sender;
 		this.recipients = recipients;
-		this.channel = channel;
 		this.format = format;
 		this.message = message;
 	}
@@ -65,10 +60,6 @@ public final class ChannelChatEvent extends Event {
 			return false;
 		
 		return (!this.recipients.contains(recipient)) ? this.recipients.add(recipient) : false;
-	}
-	
-	public Channel getChannel() {
-		return channel;
 	}
 	
 	public String getFormat() {

@@ -1,27 +1,10 @@
-/*
- *     TitanChat
- *     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
- *     
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *     
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *     
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package com.titankingdoms.dev.titanchat.core.participant;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,7 +12,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
 
 public final class ParticipantManager {
 	
@@ -38,19 +20,11 @@ public final class ParticipantManager {
 	private File configFile;
 	private FileConfiguration config;
 	
-	private Map<String, Participant> participants;
+	private final Map<String, Participant> participants;
 	
 	public ParticipantManager() {
 		this.plugin = TitanChat.getInstance();
 		this.participants = new HashMap<String, Participant>();
-	}
-	
-	public boolean existingParticipant(String name) {
-		return participants.containsKey(name.toLowerCase());
-	}
-	
-	public boolean existingParticipant(Player player) {
-		return existingParticipant(player.getName());
 	}
 	
 	public FileConfiguration getConfig() {
@@ -60,60 +34,66 @@ public final class ParticipantManager {
 		return config;
 	}
 	
+	public ConsoleParticipant getConsoleParticipant() {
+		return (ConsoleParticipant) getParticipant("CONSOLE");
+	}
+	
 	public Participant getParticipant(String name) {
-		if (!existingParticipant(name))
-			registerParticipant(name);
+		if (!hasParticipant(name)) {
+			Player player = plugin.getServer().getPlayer(name);
+			
+			if (player != null)
+				return getParticipant(player);
+			
+			return new Participant(plugin.getServer().getOfflinePlayer(name).getName());
+		}
 		
 		return participants.get(name.toLowerCase());
 	}
 	
 	public Participant getParticipant(CommandSender sender) {
-		return getParticipant(sender.getName());
+		if (!hasParticipant(sender.getName()))
+			registerParticipants(new PlayerParticipant((Player) sender));
+		
+		return participants.get(sender.getName());
+	}
+	
+	public boolean hasParticipant(String name) {
+		return participants.containsKey(name.toLowerCase());
+	}
+	
+	public boolean hasParticipant(Participant participant) {
+		return hasParticipant(participant.getName());
 	}
 	
 	public void load() {
-		registerParticipant(new ConsoleChannelParticipant());
+		registerParticipants(new ConsoleParticipant());
 		
 		for (Player player : plugin.getServer().getOnlinePlayers())
-			registerParticipant(player);
+			registerParticipants(new PlayerParticipant(player));
 	}
 	
-	public Participant registerParticipant(Player player) {
-		return registerParticipant(player.getName());
-	}
-	
-	private Participant registerParticipant(String name) {
-		return registerParticipant(new ChannelParticipant(name));
-	}
-	
-	private Participant registerParticipant(Participant participant) {
-		if (!existingParticipant(participant.getName()))
-			participants.put(participant.getName().toLowerCase(), participant);
-		
-		participant = getParticipant(participant.getName());
-		
-		for (Channel channel : plugin.getChannelManager().getChannels()) {
-			if (participant.hasPermission("TitanChat.autojoin." + channel.getName()))
-				channel.join(participant);
+	public void registerParticipants(Participant... participants) {
+		for (Participant participant : participants) {
+			if (participant == null)
+				continue;
 			
-			if (participant.hasPermission("TitanChat.autoleave." + channel.getName()))
-				channel.leave(participant);
-		}
-		
-		if (participant.getConfig() != null) {
-			if (participant.getConfig().get("channels") != null) {
-				for (String channel : participant.getConfig().getStringList("channels")) {
-					if (!plugin.getChannelManager().existingChannel(channel))
-						continue;
-					
-					plugin.getChannelManager().getChannel(channel).join(participant);
-				}
+			if (hasParticipant(participant)) {
+				plugin.log(Level.WARNING, "Duplicate participant: " + participant.getName());
+				continue;
 			}
 			
-			participant.direct(plugin.getChannelManager().getChannel(participant.getConfig().getString("current-channel", "")));
+			this.participants.put(participant.getName().toLowerCase(), participant);
 		}
+	}
+	
+	public void reload() {
+		this.participants.clear();
 		
-		return participant;
+		registerParticipants(new ConsoleParticipant());
+		
+		for (Player player : plugin.getServer().getOnlinePlayers())
+			registerParticipants(new PlayerParticipant(player));
 	}
 	
 	public void reloadConfig() {

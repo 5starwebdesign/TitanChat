@@ -1,21 +1,3 @@
-/*
- *     TitanChat
- *     Copyright (C) 2012  Nodin Chan <nodinchan@live.com>
- *     
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *     
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *     
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package com.titankingdoms.dev.titanchat.loading;
 
 import java.io.File;
@@ -23,10 +5,11 @@ import java.io.InputStream;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 
-public class Loadable implements Comparable<Loadable> {
+public class Loadable implements Comparable<Loadable>, Listener {
 	
 	protected final TitanChat plugin;
 	
@@ -61,8 +44,16 @@ public class Loadable implements Comparable<Loadable> {
 		return config;
 	}
 	
+	public File getConfigFile() {
+		return new File(getDataFolder(), "config.yml");
+	}
+	
 	public File getDataFolder() {
 		return dataFolder;
+	}
+	
+	public InputStream getDefaultConfigStream() {
+		return getResource("config.yml");
 	}
 	
 	protected final File getFile() {
@@ -77,7 +68,7 @@ public class Loadable implements Comparable<Loadable> {
 		return loader.getResourceAsStream(name);
 	}
 	
-	public InitResult init() {
+	public InitResult initialise() {
 		return new InitResult(true);
 	}
 	
@@ -91,18 +82,20 @@ public class Loadable implements Comparable<Loadable> {
 		this.initialised = true;
 	}
 	
+	public final void registerListener(Listener listener) {
+		plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+	}
+	
 	public void reloadConfig() {
 		if (configFile == null)
-			configFile = new File(dataFolder, "config.yml");
+			configFile = getConfigFile();
 		
 		config = YamlConfiguration.loadConfiguration(configFile);
 		
-		InputStream defConfigStream = getResource("config.yml");
+		InputStream defConfigStream = getDefaultConfigStream();
 		
-		if (defConfigStream != null) {
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			config.setDefaults(defConfig);
-		}
+		if (defConfigStream != null)
+			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
 	}
 	
 	public void saveConfig() {

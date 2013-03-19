@@ -6,9 +6,6 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 === Features
 
-* Settings
-** Can be edited in game with commands
-** Can be edited in the config and reload to apply
 * Channels
 ** Create or delete channels with ease
 ** Administrate with ban, kick and mute commands
@@ -33,7 +30,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 === Dependecies
 
-* CraftBukkit 1.4.7-R0.1
+* CraftBukkit 1.4.7-R1.0
 * Vault (OPTIONAL)
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -48,42 +45,9 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 === Changelog
 
-* 07.07.12 - Started rewrite for v4.0, accepting ideas for improvement
-* 31.07.12 - Rewrote channel management and added basics for future improvements in flexibility
-* 02.08.12 - Changed how commands work, improved the line-regrouper and added in standard commands
-* 03.08.12 - Added CommandHandlers and SettingHandlers in ServerChannel to override standard commands and settings when channels are disabled
-* 08.08.12 - Chat processing is multithreaded and updated for 1.3.1-R1.0
-* 12.08.12 - Full days of testing and fixing
-* 13.08.12 - Added an InfoHandler to handle info, yet to implement it
-* 14.08.12 - InfoHandler implemented, adding back permission support with Vault optional
-* 15.08.12 - Made Vault a dependency
-* 16.08.12 - Vault is now optional again, fixed empty chat lines and fully implemented InfoHandler
-* 17.08.12 - Documentation and some fixes
-* 18.08.12 - Fixed infinite permission loop
-* 19.08.12 - Added some new permissions
-* 28.09.12 - Started rewriting my rewrite since release has been delayed
-* 07.10.12 - NC-BukkitLib is no longer a dependency
-* 10.10.12 - Channel system completely scraped and rewritten, now working on participants
-* 11.10.12 - Slowly removing unneeded code
-* 17.10.12 - Added new UtilityChannels
-* 19.10.12 - Added new ConsoleChannelParticipant
-* 24.10.12 - Package renaming and command system rewrite
-* 10.11.12 - Adding back commands and a help system
-* 17.11.12 - Removed all old broken code and started adding new code
-* 03.12.12 - Made some changes
-* 05.12.12 - Started work on chat handling
-* 06.12.12 - Completed format variable handling
-* 21.12.12 - Made Vault an optional dependency and fixed some errors
-* 22.12.12 - Fixed default channel configs to use the new nodes
-* 23.12.12 - Fixed ParticipantManager being null
-* 28.12.12 - Fixed loading permissions
-* 29.12.12 - Started work on help system and default commands
-* 31.12.12 - Fixed errors and added some default commands
-* 01.01.13 - Help system is near completion
-* 05.01.13 - Completed help system
-* 11.01.13 - Added in censoring
-* 16.01.13 - Adding in localisation
-* 23.01.13 - Added in default commands
+* 17.03.13 - Scraped v4.0 and rewrite from scratch
+* 18.03.13 - Completed half of the rewrite
+* 19.03.13 - Completed most of the rewrite, awaiting Bukkit 1.5 Beta Build
 
 -----------------------------------------------------------------------------------------------------------------------
 
