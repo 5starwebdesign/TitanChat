@@ -15,34 +15,31 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.event;
+package com.titankingdoms.dev.titanchat.command.defaults;
 
-import org.bukkit.event.HandlerList;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
 
+import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
-public final class ChannelLeaveEvent extends ChannelEvent {
+public final class SendCommand extends Command {
 	
-	private static final HandlerList handlers = new HandlerList();
-	
-	private final Participant participant;
-	
-	public ChannelLeaveEvent(Participant participant, Channel channel) {
-		super(channel);
-		this.participant = participant;
-	}
-	
-	public static HandlerList getHandlerList() {
-		return handlers;
+	public SendCommand() {
+		super("Send");
+		setAliases("s");
+		setArgumentRange(1, 1024);
+		setUsage("[message]");
 	}
 	
 	@Override
-	public HandlerList getHandlers() {
-		return handlers;
+	public void execute(CommandSender sender, Channel channel, String[] args) {
+		plugin.getParticipantManager().getParticipant(sender).chat(channel, StringUtils.join(args, " "));
 	}
 	
-	public Participant getParticipant() {
-		return participant;
+	@Override
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
+		return Vault.hasPermission(sender, "TitanChat.speak." + channel.getName());
 	}
 }

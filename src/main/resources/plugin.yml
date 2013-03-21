@@ -1,5 +1,5 @@
 name: TitanChat
-version: '4.0 Build #${build.number}'
+version: '4.0 Build #${BUILD_NUMBER}'
 author: NodinChan
 website: http://dev.bukkit.org/server-mods/titanchat/
 main: com.titankingdoms.dev.titanchat.TitanChat
@@ -19,10 +19,10 @@ permissions:
         default: op
         children:
             TitanChat.speak.*: true
-    TitanChat.autojoin.*:
+    TitanChat.auto.join.*:
         description: Autojoins all channels on log in
         default: false
-    TitanChat.autoleave.*:
+    TitanChat.auto.leave.*:
         description: Autoleaves all channels on log in
         default: false
     TitanChat.create:
@@ -36,9 +36,6 @@ permissions:
         default: op
     TitanChat.kick.*:
         description: Grants permission to kick in all channels
-        default: op
-    TitanChat.place.*:
-        description: Grants permission to place in all channels
         default: op
     TitanChat.rank.*:
         description: Grants permission to rank in all channels
@@ -55,8 +52,8 @@ permissions:
             TitanChat.delete: true
             TitanChat.blaclist.*: true
             TitanChat.kick.*: true
-            TitanChat.place.*: true
             TitanChat.rank.*: true
+            TitanChat.mute.*: true
     TitanChat.update:
         description: Notified about updates
         default: false

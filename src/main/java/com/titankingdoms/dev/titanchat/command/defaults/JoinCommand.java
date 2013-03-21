@@ -1,9 +1,27 @@
+/*
+ *     Copyright (C) 2013  Nodin Chan <nodinchan@live.com>
+ *     
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *     
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *     
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.titankingdoms.dev.titanchat.command.defaults;
 
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 public final class JoinCommand extends Command {
@@ -29,25 +47,30 @@ public final class JoinCommand extends Command {
 			return;
 		}
 		
+		if (channel.getStatus().equals(Status.STAFF) && !Vault.hasPermission(sender, "TitanChat.staff")) {
+			sendMessage(sender, "§4You do not have permission to join staff channels");
+			return;
+		}
+		
 		if (channel.getBlacklist().contains(sender.getName())) {
 			sendMessage(sender, "§4You are blacklisted from the channel");
 			return;
 		}
 		
-		if (channel.getData("whitelist", "false").asBoolean()) {
+		if (channel.getData("whitelist", false).asBoolean()) {
 			if (!channel.getWhitelist().contains(sender.getName())) {
 				sendMessage(sender, "§4You are not whitelisted for the channel");
 				return;
 			}
 		}
 		
-		if (channel.getPassword() != null && !channel.getPassword().isEmpty()) {
+		if (!channel.getData("password", "").asString().isEmpty()) {
 			if (args.length < 2) {
 				sendMessage(sender, "§4Please enter a password");
 				return;
 			}
 			
-			if (!channel.getPassword().equals(args[1])) {
+			if (!channel.getData("password").equals(args[1])) {
 				sendMessage(sender, "§4Incorrect password");
 				return;
 			}

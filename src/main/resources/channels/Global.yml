@@ -1,0 +1,12 @@
+type: 'Standard'
+status: 'none'
+aliases: [ g ]
+display-colour: ''
+format: ''
+password: ''
+range: 'global'
+whitelist: false
+data:
+blacklist: []
+whitelist: []
+participants: []

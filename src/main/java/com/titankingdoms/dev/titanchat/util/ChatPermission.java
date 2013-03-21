@@ -15,18 +15,31 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.util;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
 
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
-import com.titankingdoms.dev.titanchat.loading.Loadable;
-
-public abstract class ChannelLoader extends Loadable {
+public enum ChatPermission {
+	AUTO_JOIN("auto.join"),
+	AUTO_LEAVE("auto.leave"),
+	BLACKLIST("blacklist"),
+	KICK("kick"),
+	MUTE("mute"),
+	PARTICIPATE("participate"),
+	RANK("rank"),
+	SPEAK("speak");
 	
-	public ChannelLoader(String name) {
-		super(name);
+	private String name;
+	
+	private ChatPermission(String name) {
+		this.name = name;
 	}
 	
-	public abstract Channel load(String name, Status status, FileConfiguration config);
+	public String getChannelPermission(Channel channel) {
+		return "TitanChat." + name + "." + channel.getName();
+	}
+	
+	public String getGlobalPermission() {
+		return "TitanChat." + name + ".*";
+	}
 }

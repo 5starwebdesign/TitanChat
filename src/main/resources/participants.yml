@@ -4,3 +4,21 @@ CONSOLE:
         all: []
     data:
         display-name: '&4Server'
+NodinChan:
+    channels:
+        current: ''
+        all: []
+    data:
+        prefix: '&4Dev&f'
+Notch:
+    channels:
+        current: ''
+        all: []
+    data:
+        suffix: ' &fthe &6Creator&f'
+Steve:
+    channels:
+        current: ''
+        all: []
+    data:
+        suffix: ' &fthe &4Adventurer&f'

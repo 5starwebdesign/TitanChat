@@ -1,0 +1,12 @@
+type: 'Standard'
+status: 'none'
+aliases: [ l ]
+display-colour: ''
+format: ''
+password: ''
+range: 'local'
+whitelist: false
+data:
+blacklist: []
+whitelist: []
+participants: []

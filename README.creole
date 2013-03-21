@@ -45,16 +45,18 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 === Changelog
 
-* 17.03.13 - Scraped v4.0 and rewrite from scratch
-* 18.03.13 - Completed half of the rewrite
-* 19.03.13 - Completed most of the rewrite, awaiting Bukkit 1.5 Beta Build
+* 16.03.13 - Scraped v4.0 and rewrite from scratch
+* 18.03.13 - Completed some of the rewrite
+* 20.03.13 - Completed half of the rewrite, awaiting Bukkit 1.5 Beta Build
+* 22.03.13 - Completed most of the rewrite, completing commands
 
 -----------------------------------------------------------------------------------------------------------------------
 
 === Todo
 
 * v4.0
-** Update and improve former addons
+** Complete update
+** Create addons
 
 * v4.1
 ** Ignore lists
@@ -69,13 +71,12 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 * Author: NodinChan
 * Contributor: SLiPCoR
-* Tester: gwinans, SLiPCoR, gabizou, Patolord
+* Tester: gwinans, gabizou
 
 ==== Thank you
 
-* Thanks to SLiPCoR for adding the debugger and testing TitanChat with me
 * Thanks to gwinans for making such a good suggestion
-* Thanks to chrisward for providing me with a Jenkins
+* Thanks to my friends online for contributing
 * Thanks to all users who are willing to bear with the occassional bugs
 
 -----------------------------------------------------------------------------------------------------------------------

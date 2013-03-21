@@ -15,18 +15,26 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.command.defaults;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
-import com.titankingdoms.dev.titanchat.loading.Loadable;
+import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
 
-public abstract class ChannelLoader extends Loadable {
+public final class MuteCommand extends Command {
 	
-	public ChannelLoader(String name) {
-		super(name);
+	public MuteCommand() {
+		super("Mute");
 	}
 	
-	public abstract Channel load(String name, Status status, FileConfiguration config);
+	@Override
+	public void execute(CommandSender sender, Channel channel, String[] args) {
+		
+	}
+	
+	@Override
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
+		return false;
+	}
 }

@@ -15,18 +15,31 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.format.tag;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
-import com.titankingdoms.dev.titanchat.loading.Loadable;
-
-public abstract class ChannelLoader extends Loadable {
+public abstract class Tag {
 	
-	public ChannelLoader(String name) {
-		super(name);
+	private final TitanChat plugin;
+	
+	private final String tag;
+	
+	public Tag(String tag) {
+		this.plugin = TitanChat.getInstance();
+		this.tag = tag;
 	}
 	
-	public abstract Channel load(String name, Status status, FileConfiguration config);
+	public String getFormat() {
+		String format = plugin.getConfig().getString("formatting.tag-format.tags." + tag.substring(1), "");
+		return (format != null && !format.isEmpty()) ? format : plugin.getTagManager().getDefaultTagFormat();
+	}
+	
+	public final String getTag() {
+		return tag;
+	}
+	
+	public abstract String getVariable(Participant participant, Channel channel);
 }

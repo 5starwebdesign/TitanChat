@@ -1,0 +1,12 @@
+type: 'Standard'
+status: 'staff'
+aliases: [ s ]
+display-colour: '&4'
+format: ''
+password: ''
+range: 'channel'
+whitelist: false
+data:
+blacklist: []
+whitelist: []
+participants: []

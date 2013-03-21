@@ -1,5 +1,23 @@
+/*
+ *     Copyright (C) 2013  Nodin Chan <nodinchan@live.com>
+ *     
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *     
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *     
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.titankingdoms.dev.titanchat;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,6 +32,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.ParticipantManager;
+import com.titankingdoms.dev.titanchat.format.tag.TagManager;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.vault.Vault;
@@ -28,6 +47,7 @@ public final class TitanChat extends JavaPlugin {
 	private ChannelManager channel;
 	private CommandManager command;
 	private ParticipantManager participant;
+	private TagManager tag;
 	
 	public AddonManager getAddonManager() {
 		return addon;
@@ -47,6 +67,10 @@ public final class TitanChat extends JavaPlugin {
 	
 	public static TitanChat getInstance() {
 		return instance;
+	}
+	
+	public TagManager getTagManager() {
+		return tag;
 	}
 	
 	private boolean initMetrics() {
@@ -187,10 +211,35 @@ public final class TitanChat extends JavaPlugin {
 		
 		instance = this;
 		
+		log(Level.INFO, "Initialising managers...");
+		
 		this.addon = new AddonManager();
 		this.channel = new ChannelManager();
 		this.command = new CommandManager();
 		this.participant = new ParticipantManager();
+		this.tag = new TagManager();
+		
+		if (!new File(getDataFolder(), "config.yml").exists())
+			log(Level.INFO, "Generating default config.yml...");
+		
+		reloadConfig();
+		saveConfig();
+		
+		if (channel.getChannelDirectory().listFiles().length == 0) {
+			log(Level.INFO, "Generating default channel configs...");
+			saveResource("channels/Default.yml", false);
+			saveResource("channels/Global.yml", false);
+			saveResource("channels/Local.yml", false);
+			saveResource("channels/Staff.yml", false);
+			saveResource("channels/World.yml", false);
+			saveResource("channels/README.txt", false);
+		}
+		
+		if (!new File(getDataFolder(), "participants.yml").exists())
+			log(Level.INFO, "Generating default participants.yml...");
+		
+		participant.reloadConfig();
+		participant.saveConfig();
 		
 		log(Level.INFO, "TitanChat is now loaded");
 	}

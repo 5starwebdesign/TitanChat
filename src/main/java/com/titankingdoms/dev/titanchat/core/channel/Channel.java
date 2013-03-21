@@ -1,3 +1,20 @@
+/*
+ *     Copyright (C) 2013  Nodin Chan <nodinchan@live.com>
+ *     
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *     
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *     
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 package com.titankingdoms.dev.titanchat.core.channel;
 
 import java.io.File;
@@ -64,13 +81,13 @@ public abstract class Channel extends ChatEntity {
 		return plugin.getResource("channel.yml");
 	}
 	
+	public abstract String getDisplayColour();
+	
 	public abstract String getFormat();
 	
 	public final Set<Participant> getParticipants() {
 		return new HashSet<Participant>(participants.values());
 	}
-	
-	public abstract String getPassword();
 	
 	public abstract Range getRange();
 	
@@ -137,7 +154,7 @@ public abstract class Channel extends ChatEntity {
 	}
 	
 	public final void register(ChannelLoader... loaders) {
-		plugin.getChannelManager().registerChannelLoaders(loaders);
+		plugin.getChannelManager().registerLoaders(loaders);
 	}
 	
 	public final void register(Command... commands) {

@@ -15,18 +15,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.util;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
-import com.titankingdoms.dev.titanchat.loading.Loadable;
-
-public abstract class ChannelLoader extends Loadable {
+public final class Debugger {
 	
-	public ChannelLoader(String name) {
-		super(name);
+	public Debugger() {
+		
 	}
-	
-	public abstract Channel load(String name, Status status, FileConfiguration config);
 }

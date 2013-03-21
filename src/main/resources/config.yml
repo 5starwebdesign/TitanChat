@@ -1,14 +1,19 @@
 channels:
     enable: true
     limit: -1
+    range: 15
 logging:
     chat:
-        log: true
+        log: false
         colour: true
     debug: []
 metrics-statistics: true
 formatting:
-    format: '%tag %prefix%display%suffix: %message'
+    format: '%prefix%display%suffix: %colour%message'
+    tag-format:
+        default: '%tag%'
+        tags:
+            prefix: '[%tag%]'
 filtering:
     censor: '*'
     phrases: []

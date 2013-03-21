@@ -1,0 +1,12 @@
+type: 'Standard'
+status: 'default'
+aliases: [ d ]
+display-colour: '&f'
+format: ''
+password: ''
+range: 'channel'
+whitelist: false
+data:
+blacklist: []
+whitelist: []
+participants: []
