@@ -31,10 +31,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.util.Debugger;
 
 public final class ParticipantManager {
 	
 	private final TitanChat plugin;
+	
+	private final Debugger db = new Debugger(4, "ParticipantManager");
 	
 	private File configFile;
 	private FileConfiguration config;
@@ -54,10 +57,16 @@ public final class ParticipantManager {
 	}
 	
 	public ConsoleParticipant getConsoleParticipant() {
+		if (!hasParticipant("CONSOLE"))
+			registerParticipants(new ConsoleParticipant());
+		
 		return (ConsoleParticipant) getParticipant("CONSOLE");
 	}
 	
 	public Participant getParticipant(String name) {
+		if (name.equals("CONSOLE"))
+			return getConsoleParticipant();
+		
 		if (!hasParticipant(name)) {
 			Player player = plugin.getServer().getPlayer(name);
 			
@@ -71,6 +80,9 @@ public final class ParticipantManager {
 	}
 	
 	public Participant getParticipant(CommandSender sender) {
+		if (sender.getName().equals("CONSOLE"))
+			return getConsoleParticipant();
+		
 		if (!hasParticipant(sender.getName()))
 			registerParticipants(new PlayerParticipant((Player) sender));
 		
@@ -107,6 +119,7 @@ public final class ParticipantManager {
 			}
 			
 			this.participants.put(participant.getName().toLowerCase(), participant);
+			db.debug(Level.INFO, "Registered participant: " + participant.getName());
 		}
 	}
 	
@@ -140,5 +153,13 @@ public final class ParticipantManager {
 	
 	public void unload() {
 		this.participants.clear();
+	}
+	
+	public void unregisterParticipant(Participant participant) {
+		if (participant == null || !hasParticipant(participant))
+			return;
+		
+		this.participants.remove(participant.getName().toLowerCase());
+		db.debug(Level.INFO, "Unregistered participant: " + participant.getName());
 	}
 }

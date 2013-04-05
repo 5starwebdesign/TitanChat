@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.command.defaults.*;
 import com.titankingdoms.dev.titanchat.loading.Loader;
+import com.titankingdoms.dev.titanchat.util.Debugger;
 
 /**
  * {@link CommandManager} - Manages {@link Command}s
@@ -40,6 +41,8 @@ import com.titankingdoms.dev.titanchat.loading.Loader;
 public final class CommandManager {
 	
 	private final TitanChat plugin;
+	
+	private final Debugger db = new Debugger(2, "CommandManager");
 	
 	private final Map<String, Command> commands;
 	private final Map<String, Command> labels;
@@ -123,9 +126,9 @@ public final class CommandManager {
 		registerCommands(
 				new CreateCommand(), new DeleteCommand(),
 				new BlacklistCommand(), new KickCommand(), new PardonCommand(),
-				new DemoteCommand(), new PromoteCommand(),
+				new DemoteCommand(), new PromoteCommand(), new WhitelistCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
-				new ReloadCommand(),
+				new DebugCommand(), new ReloadCommand(),
 				new SendCommand(),
 				new WhoCommand()
 		);
@@ -160,6 +163,8 @@ public final class CommandManager {
 			for (String alias : command.getAliases())
 				if (!hasLabel(alias))
 					labels.put(alias.toLowerCase(), command);
+			
+			db.debug(Level.INFO, "Registered command: " + command.getName());
 		}
 	}
 	
@@ -168,14 +173,16 @@ public final class CommandManager {
 	 */
 	public void reload() {
 		this.commands.clear();
+		this.labels.clear();
 		
 		registerCommands(
 				new CreateCommand(), new DeleteCommand(),
 				new BlacklistCommand(), new KickCommand(), new PardonCommand(),
-				new DemoteCommand(), new PromoteCommand(),
-				new JoinCommand(), new LeaveCommand(),
-				new ReloadCommand(),
-				new SendCommand()
+				new DemoteCommand(), new PromoteCommand(), new WhitelistCommand(),
+				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
+				new DebugCommand(), new ReloadCommand(),
+				new SendCommand(),
+				new WhoCommand()
 		);
 		
 		registerCommands(Loader.load(Command.class, getCommandDirectory()).toArray(new Command[0]));
@@ -189,6 +196,7 @@ public final class CommandManager {
 	 */
 	public void unload() {
 		this.commands.clear();
+		this.labels.clear();
 	}
 	
 	/**
@@ -206,5 +214,7 @@ public final class CommandManager {
 		for (String alias : command.getAliases())
 			if (hasLabel(alias) && !hasCommand(alias))
 				this.labels.remove(alias.toLowerCase());
+		
+		db.debug(Level.INFO, "Unregistered command: " + command.getName());
 	}
 }

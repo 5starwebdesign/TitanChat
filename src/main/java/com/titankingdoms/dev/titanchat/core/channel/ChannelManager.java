@@ -40,6 +40,7 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.loading.Loader;
 import com.titankingdoms.dev.titanchat.loading.Loader.ExtensionFilter;
 import com.titankingdoms.dev.titanchat.util.ChatPermission;
+import com.titankingdoms.dev.titanchat.util.Debugger;
 
 /**
  * {@link ChannelManager} - Manages {@link Channel}s
@@ -51,6 +52,8 @@ public final class ChannelManager {
 	
 	private final TitanChat plugin;
 	
+	private final Debugger db = new Debugger(3, "ChannelManager");
+	
 	private final Map<String, Channel> channels;
 	private final Map<String, Channel> labels;
 	private final Map<String, ChannelLoader> loaders;
@@ -61,6 +64,9 @@ public final class ChannelManager {
 		
 		if (getChannelDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating channel directory...");
+		
+		if (getLoaderDirectory().mkdirs())
+			plugin.log(Level.INFO, "Creating loader directory...");
 		
 		this.channels = new TreeMap<String, Channel>();
 		this.labels = new HashMap<String, Channel>();
@@ -280,6 +286,8 @@ public final class ChannelManager {
 			
 			this.statuses.get(channel.getStatus()).put(channel.getName().toLowerCase(), channel);
 			
+			db.debug(Level.INFO, "Registered channel: " + channel.getName());
+			
 			for (ChatPermission chPerm : EnumSet.allOf(ChatPermission.class)) {
 				String node = chPerm.getChannelPermission(channel);
 				
@@ -287,6 +295,7 @@ public final class ChannelManager {
 				permission.addParent(chPerm.getGlobalPermission(), true);
 				
 				plugin.getServer().getPluginManager().addPermission(permission);
+				db.debug(Level.INFO, "Registered " + permission.getName() + " for " + channel.getName());
 			}
 		}
 	}
@@ -310,6 +319,7 @@ public final class ChannelManager {
 			}
 			
 			this.loaders.put(loader.getName().toLowerCase(), loader);
+			db.debug(Level.INFO, "Registered loader: " + loader.getName());
 		}
 	}
 	
@@ -381,7 +391,9 @@ public final class ChannelManager {
 		for (Channel channel : channels.values())
 			channel.save();
 		
-		this.channels.clear();
+		for (Channel channel : getChannels())
+			unregisterChannel(channel);
+		
 		this.loaders.clear();
 		
 		for (Map<String, Channel> status : this.statuses.values())
@@ -406,8 +418,13 @@ public final class ChannelManager {
 		
 		this.statuses.get(channel.getStatus()).remove(channel.getName().toLowerCase());
 		
-		for (ChatPermission chPerm : EnumSet.allOf(ChatPermission.class))
-			plugin.getServer().getPluginManager().removePermission(chPerm.getChannelPermission(channel));
+		db.debug(Level.INFO, "Unregistered channel: " + channel.getName());
+		
+		for (ChatPermission chPerm : EnumSet.allOf(ChatPermission.class)) {
+			String permission = chPerm.getChannelPermission(channel);
+			plugin.getServer().getPluginManager().removePermission(permission);
+			db.debug(Level.INFO, "Unregistered " + permission + " for " + channel.getName());
+		}
 	}
 	
 	/**
@@ -420,5 +437,6 @@ public final class ChannelManager {
 			return;
 		
 		this.loaders.remove(loader.getName().toLowerCase());
+		db.debug(Level.INFO, "Unregistered loader: " + loader.getName());
 	}
 }

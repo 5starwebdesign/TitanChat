@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.loading.Loader;
+import com.titankingdoms.dev.titanchat.util.Debugger;
 
 /**
  * AddonManager - Manages {@link ChatAddon}s
@@ -38,6 +39,8 @@ import com.titankingdoms.dev.titanchat.loading.Loader;
 public final class AddonManager {
 	
 	private final TitanChat plugin;
+	
+	private final Debugger db = new Debugger(1, "AddonManager");
 	
 	private final Map<String, ChatAddon> addons;
 	
@@ -130,6 +133,7 @@ public final class AddonManager {
 			}
 			
 			this.addons.put(addon.getName().toLowerCase(), addon);
+			db.debug(Level.INFO, "Registered addon: " + addon.getName());
 		}
 	}
 	
@@ -162,5 +166,6 @@ public final class AddonManager {
 			return;
 		
 		this.addons.remove(addon.getName().toLowerCase());
+		db.debug(Level.INFO, "Unregistered addon: " + addon.getName());
 	}
 }

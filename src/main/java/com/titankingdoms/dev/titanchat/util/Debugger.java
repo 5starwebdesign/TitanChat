@@ -50,6 +50,10 @@ public final class Debugger {
 			log.log(level, "[TitanDebug] " + ((!prefix.isEmpty()) ? prefix + ": " : "") + message);
 	}
 	
+	public static Set<Integer> getDebugging() {
+		return new HashSet<Integer>(debugging);
+	}
+	
 	public int getId() {
 		return id;
 	}

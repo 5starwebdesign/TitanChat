@@ -23,10 +23,13 @@ import java.util.logging.Level;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.format.tag.defaults.*;
+import com.titankingdoms.dev.titanchat.util.Debugger;
 
 public class TagManager {
 	
 	private final TitanChat plugin;
+	
+	private final Debugger db = new Debugger(5, "TagManager");
 	
 	private final Map<String, Tag> tags;
 	
@@ -75,7 +78,12 @@ public class TagManager {
 			}
 			
 			this.tags.put(tag.getTag().toLowerCase(), tag);
+			db.debug(Level.INFO, "Registered tag: " + tag.getTag());
 		}
+	}
+	
+	public void unload() {
+		this.tags.clear();
 	}
 	
 	public void unregisterTag(Tag tag) {
@@ -83,9 +91,6 @@ public class TagManager {
 			return;
 		
 		this.tags.remove(tag.getTag().toLowerCase());
-	}
-	
-	public void unload() {
-		this.tags.clear();
+		db.debug(Level.INFO, "Unregistered tag: " + tag.getTag());
 	}
 }
