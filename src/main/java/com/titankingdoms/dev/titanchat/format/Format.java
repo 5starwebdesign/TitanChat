@@ -27,7 +27,7 @@ public final class Format {
 	
 	private final static Pattern colour = Pattern.compile("(?i)(&)([a-fk-or0-9])");
 	
-	public static final String DEFAULT_FORMAT = "%prefix%player%suffix§f: %message";
+	public static final String DEFAULT_FORMAT = "%prefix%player%suffix\u00A7f: %message";
 	
 	public static String colourise(String text) {
 		return text.replaceAll(colour.toString(), "\u00A7$2");

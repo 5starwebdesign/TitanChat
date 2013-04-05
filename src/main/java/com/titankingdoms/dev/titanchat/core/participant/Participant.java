@@ -106,7 +106,7 @@ public class Participant extends ChatEntity {
 		
 		if (!hasPermission("TitanChat.speak." + channel.getName())) {
 			if (!channel.getOperators().contains(getName())) {
-				sendMessage("şıYou do not have permission");
+				sendMessage("&4You do not have permission");
 				return;
 			}
 		}
@@ -182,7 +182,7 @@ public class Participant extends ChatEntity {
 			recipient.sendMessage(lines);
 		
 		if (event.getRecipients().size() <= 1)
-			sendMessage("şıNobody heard you...");
+			sendMessage("&6Nobody heard you...");
 		
 		if (!plugin.getConfig().getBoolean("logging.chat.log", false))
 			return;
