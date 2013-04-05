@@ -22,6 +22,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.loading.Loadable;
 
+/**
+ * {@link ChannelLoader} - Loads {@link Channel}s
+ * 
+ * @author NodinChan
+ *
+ */
 public abstract class ChannelLoader extends Loadable {
 	
 	public ChannelLoader(String name) {

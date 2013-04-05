@@ -37,6 +37,12 @@ import com.titankingdoms.dev.titanchat.core.participant.PlayerParticipant;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
+/**
+ * {@link TitanChatListener} - The listener of TitanChat
+ * 
+ * @author NodinChan
+ *
+ */
 public final class TitanChatListener implements Listener {
 	
 	private final TitanChat plugin;
@@ -49,6 +55,11 @@ public final class TitanChatListener implements Listener {
 		this.plugin = TitanChat.getInstance();
 	}
 	
+	/**
+	 * Processes chat
+	 * 
+	 * @param event {@link AsyncPlayerChatEvent}
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		event.setCancelled(true);
@@ -60,7 +71,7 @@ public final class TitanChatListener implements Listener {
 			Channel channel = plugin.getChannelManager().getChannel(message.split(" ")[0].substring(1));
 			
 			if (channel == null) {
-				Messaging.sendMessage(event.getPlayer(), "§4Channel does not exist");
+				Messaging.sendMessage(event.getPlayer(), "&4Channel does not exist");
 				return;
 			}
 			
@@ -69,29 +80,43 @@ public final class TitanChatListener implements Listener {
 		} else { participant.chat(message); }
 	}
 	
+	/**
+	 * Registers {@link Player}s on join
+	 * 
+	 * @param event {@link PlayerJoinEvent}
+	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (plugin.getParticipantManager().hasParticipant(event.getPlayer().getName()))
-			return;
+		if (!plugin.getParticipantManager().hasParticipant(event.getPlayer().getName()))
+			plugin.getParticipantManager().registerParticipants(new PlayerParticipant(event.getPlayer()));
 		
-		Participant participant = new PlayerParticipant(event.getPlayer());
-		plugin.getParticipantManager().registerParticipants(participant);
+		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
 		if (participant.hasPermission("TitanChat.update")) {
 			if (updateCheck() > currentVer) {
-				participant.sendMessage("§6" + newVer + " §5is out!");
-				participant.sendMessage("§5You are running §6" + currentVer);
-				participant.sendMessage("§5Update at §9" + site);
+				participant.sendMessage("&6" + newVer + " &5is out!");
+				participant.sendMessage("&5You are running &6" + currentVer);
+				participant.sendMessage("&5Update at &9" + site);
 			}
 		}
 	}
 	
+	/**
+	 * Colourises text on signs
+	 * 
+	 * @param event {@link SignChangeEvent}
+	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
 		for (int line = 0; line < 4; line++)
 			event.setLine(line, Format.colourise(event.getLine(line)));
 	}
 	
+	/**
+	 * Checks for updates
+	 * 
+	 * @return The latest version
+	 */
 	private double updateCheck() {
 		try {
 			URL url = new URL("http://dev.bukkit.org/server-mods/titanchat/files.rss");

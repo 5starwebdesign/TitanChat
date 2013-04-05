@@ -78,6 +78,13 @@ public class TagManager {
 		}
 	}
 	
+	public void unregisterTag(Tag tag) {
+		if (tag == null || !hasTag(tag))
+			return;
+		
+		this.tags.remove(tag.getTag().toLowerCase());
+	}
+	
 	public void unload() {
 		this.tags.clear();
 	}

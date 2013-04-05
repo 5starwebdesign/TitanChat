@@ -17,6 +17,8 @@
 
 package com.titankingdoms.dev.titanchat.core.participant;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -40,8 +42,15 @@ import com.titankingdoms.dev.titanchat.format.Censor;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
+import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
+/**
+ * {@link Participant} - Represents a {@link CommandSender}
+ * 
+ * @author NodinChan
+ *
+ */
 public class Participant extends ChatEntity {
 	
 	private Channel current;
@@ -75,13 +84,32 @@ public class Participant extends ChatEntity {
 		init();
 	}
 	
+	/**
+	 * Gets the {@link CommandSender} represented by this {@link Participant}
+	 * 
+	 * @return The {@link CommandSender} if online
+	 */
 	public CommandSender asCommandSender() {
 		return null;
 	}
 	
+	/**
+	 * Chats in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to chat in
+	 * 
+	 * @param message The message
+	 */
 	public final void chat(Channel channel, String message) {
 		if (channel == null || !isOnline())
 			return;
+		
+		if (!hasPermission("TitanChat.speak." + channel.getName())) {
+			if (!channel.getOperators().contains(getName())) {
+				sendMessage("þýYou do not have permission");
+				return;
+			}
+		}
 		
 		String format = channel.getFormat();
 		
@@ -154,7 +182,7 @@ public class Participant extends ChatEntity {
 			recipient.sendMessage(lines);
 		
 		if (event.getRecipients().size() <= 1)
-			sendMessage("§6Nobody heard you...");
+			sendMessage("þýNobody heard you...");
 		
 		if (!plugin.getConfig().getBoolean("logging.chat.log", false))
 			return;
@@ -168,10 +196,20 @@ public class Participant extends ChatEntity {
 			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 119));
 	}
 	
+	/**
+	 * Chats in the current {@link Channel}
+	 * 
+	 * @param message The message
+	 */
 	public final void chat(String message) {
 		chat(current, message);
 	}
 	
+	/**
+	 * Directs the focus of the {@link Participant} to the specified {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to direct to
+	 */
 	public final void direct(Channel channel) {
 		this.current = channel;
 		
@@ -187,6 +225,22 @@ public class Participant extends ChatEntity {
 		return false;
 	}
 	
+	/**
+	 * Gets a list of all joined {@link Channel}s
+	 * 
+	 * @return A list of all joined {@link Channel}s
+	 */
+	public final List<String> getChannelList() {
+		List<String> list = new ArrayList<String>(channels.keySet());
+		Collections.sort(list);
+		return list;
+	}
+	
+	/**
+	 * Gets all joined {@link Channel}s
+	 * 
+	 * @return All joined {@link Channel}s
+	 */
 	public final Set<Channel> getChannels() {
 		return new HashSet<Channel>(channels.values());
 	}
@@ -196,6 +250,11 @@ public class Participant extends ChatEntity {
 		throw new UnsupportedOperationException("Participants do not have config files");
 	}
 	
+	/**
+	 * Gets the current {@link Channel}
+	 * 
+	 * @return The current {@link Channel}
+	 */
 	public final Channel getCurrent() {
 		return current;
 	}
@@ -206,18 +265,40 @@ public class Participant extends ChatEntity {
 		return config.getConfigurationSection(getName().toLowerCase() + ".data");
 	}
 	
+	/**
+	 * Gets the display name of the {@link Participant}
+	 * 
+	 * @return The display name
+	 */
 	public String getDisplayName() {
 		return getData("display-name", getName()).asString();
 	}
 	
+	/**
+	 * Gets the prefix of the {@link Participant}
+	 * 
+	 * @return The prefix
+	 */
 	public String getPrefix() {
 		return getData("prefix", "").asString();
 	}
 	
+	/**
+	 * Gets the suffix of the {@link Participant}
+	 * 
+	 * @return The suffix
+	 */
 	public String getSuffix() {
 		return getData("suffix", "").asString();
 	}
 	
+	/**
+	 * Checks the permission of the {@link Participant}
+	 * 
+	 * @param node The permission node
+	 * 
+	 * @return True if the {@link Participant} has the permission
+	 */
 	public final boolean hasPermission(String node) {
 		return Vault.hasPermission(asCommandSender(), node);
 	}
@@ -227,18 +308,67 @@ public class Participant extends ChatEntity {
 		loadData();
 	}
 	
+	/**
+	 * Checks if the {@link Participant} is focused at the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if focused at the {@link Channel}
+	 */
+	public final boolean isDirected(String channel) {
+		if ((channel == null || channel.isEmpty()) && current == null)
+			return true;
+		
+		return current.getName().equalsIgnoreCase(channel);
+	}
+	
+	/**
+	 * CHecks if the {@link Participant} is focused at the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if focused at the {@link Channel}
+	 */
+	public final boolean isDirected(Channel channel) {
+		return isDirected(channel.getName());
+	}
+	
+	/**
+	 * Checks if the {@link Participant} is online
+	 * 
+	 * @return True if the {@link Participant} is online
+	 */
 	public final boolean isOnline() {
 		return asCommandSender() != null;
 	}
 	
+	/**
+	 * Checks if the {@link Participant} is participating in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if participating in the {@link Channel}
+	 */
 	public final boolean isParticipating(String channel) {
 		return channels.containsKey(channel.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link Participant} is participating in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if participating in the {@link Channel}
+	 */
 	public final boolean isParticipating(Channel channel) {
 		return (channel != null) ? isParticipating(channel.getName()) : false;
 	}
 	
+	/**
+	 * Joins the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to join
+	 */
 	public final void join(Channel channel) {
 		if (channel == null)
 			return;
@@ -252,6 +382,11 @@ public class Participant extends ChatEntity {
 			direct(channel);
 	}
 	
+	/**
+	 * Leaves the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to leave
+	 */
 	public final void leave(Channel channel) {
 		if (channel == null)
 			return;
@@ -285,14 +420,27 @@ public class Participant extends ChatEntity {
 	@Override
 	public void sendMessage(String... messages) {
 		if (isOnline())
-			asCommandSender().sendMessage(messages);
+			Messaging.sendMessage(asCommandSender(), messages);
 	}
 	
+	/**
+	 * Sets the display name of the {@link Participant}
+	 * 
+	 * @param name The new display name
+	 */
 	public void setDisplayName(String name) {
 		setData("display-name", name);
 	}
 	
+	/**
+	 * Gets the {@link Participant}
+	 * 
+	 * @return The {@link Participant} if online, otherwise this
+	 */
 	public Participant toParticipant() {
+		if (getName().equals("CONSOLE"))
+			return plugin.getParticipantManager().getConsoleParticipant();
+		
 		Player player = plugin.getServer().getPlayer(getName());
 		
 		if (player == null)

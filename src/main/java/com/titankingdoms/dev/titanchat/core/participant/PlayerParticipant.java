@@ -36,10 +36,15 @@ public final class PlayerParticipant extends Participant {
 	public String getDisplayName() {
 		String name = super.getDisplayName();
 		
-		if (isOnline() && asCommandSender().getDisplayName().equals(getName()))
-			asCommandSender().setDisplayName(name);
-		else
-			setDisplayName(asCommandSender().getDisplayName());
+		if (isOnline()) {
+			if (asCommandSender().getDisplayName().equals(getName()) && !getName().equals(name)) {
+				asCommandSender().setDisplayName(name);
+				asCommandSender().setPlayerListName(name);
+			}
+			
+			if (!asCommandSender().getDisplayName().equals(name))
+				setDisplayName(asCommandSender().getDisplayName());
+		}
 		
 		return super.getDisplayName();
 	}
@@ -60,8 +65,10 @@ public final class PlayerParticipant extends Participant {
 	public void setDisplayName(String name) {
 		super.setDisplayName(name);
 		
-		if (isOnline() && !asCommandSender().getDisplayName().equals(name))
+		if (isOnline() && !asCommandSender().getDisplayName().equals(name)) {
 			asCommandSender().setDisplayName(name);
+			asCommandSender().setPlayerListName(name);
+		}
 	}
 	
 	@Override

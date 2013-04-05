@@ -24,14 +24,20 @@ import org.bukkit.command.ConsoleCommandSender;
 import com.titankingdoms.dev.titanchat.addon.ChatAddon;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.loading.Loadable;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
+/**
+ * {@link Command} - Commands of TitanChat
+ * 
+ * @author NodinChan
+ *
+ */
 public abstract class Command extends Loadable {
 	
 	private String[] aliases;
 	private String usage;
-	private String permission;
 	private int maxArgs;
 	private int minArgs;
 	
@@ -39,88 +45,203 @@ public abstract class Command extends Loadable {
 		super(name);
 		this.aliases = new String[0];
 		this.usage = "";
-		this.permission = "";
 		this.maxArgs = 0;
 		this.minArgs = 0;
 	}
 	
+	/**
+	 * Broadcasts the messages globally
+	 * 
+	 * @param messages The messages the broadcast
+	 */
 	public final void broadcast(String... messages) {
 		Messaging.broadcast(messages);
 	}
 	
+	/**
+	 * Broadcasts the messages in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to broadcast in
+	 * 
+	 * @param messages The messages to broadcast
+	 */
 	public final void broadcast(Channel channel, String... messages) {
 		Messaging.broadcast(channel, messages);
 	}
 	
+	/**
+	 * Broadcasts the messages in the {@link World}
+	 * 
+	 * @param world The {@link World} to broadcast in
+	 * 
+	 * @param messages The messages to broadcast
+	 */
 	public final void broadcast(World world, String... messages) {
 		Messaging.broadcast(world, messages);
 	}
 	
+	/**
+	 * Broadcasts the messages to {@link Player}s around the sender
+	 * 
+	 * @param sender The sender of the message
+	 * 
+	 * @param radius The radius around the sender
+	 * 
+	 * @param messages The messages to broadcast
+	 */
 	public final void broadcast(CommandSender sender, double radius, String... messages) {
 		Messaging.broadcast(sender, radius, messages);
 	}
 	
+	/**
+	 * Executes the {@link Command}
+	 * 
+	 * @param sender The {@link CommandSender}
+	 * 
+	 * @param channel The targetted {@link Channel}
+	 * 
+	 * @param args The arguments of the command
+	 */
 	public abstract void execute(CommandSender sender, Channel channel, String[] args);
 	
+	/**
+	 * Gets the aliases of the {@link Command}
+	 * 
+	 * @return The aliases
+	 */
 	public String[] getAliases() {
 		return aliases;
 	}
 	
+	/**
+	 * Gets the {@link ConsoleCommandSender}
+	 * 
+	 * @return The {@link ConsoleCommandSender}
+	 */
 	protected final ConsoleCommandSender getConsoleSender() {
 		return plugin.getServer().getConsoleSender();
 	}
 	
+	/**
+	 * Gets the maximum amount of arguments
+	 * 
+	 * @return The maximum amount
+	 */
 	public int getMaxArguments() {
 		return maxArgs;
 	}
 	
+	/**
+	 * Gets the minimum amount of arguments
+	 * 
+	 * @return The minimum amount
+	 */
 	public int getMinArguments() {
 		return minArgs;
 	}
 	
-	public String getPermission() {
-		return permission;
-	}
-	
+	/**
+	 * Gets the usage
+	 * 
+	 * @return The usage
+	 */
 	public String getUsage() {
 		return usage;
 	}
 	
+	/**
+	 * Checks if the {@link CommandSender} has permission to use the {@link Command}
+	 * 
+	 * @param sender The {@link CommandSender}
+	 * 
+	 * @param channel The targetted {@link Channel}
+	 * 
+	 * @return True if the {@link CommandSender} has permission
+	 */
 	public abstract boolean permissionCheck(CommandSender sender, Channel channel);
 	
+	/**
+	 * Registers the {@link ChatAddon}s
+	 * 
+	 * @param addons The {@link ChatAddon}s to register
+	 */
 	public final void register(ChatAddon... addons) {
 		plugin.getAddonManager().registerAddons(addons);
 	}
 	
+	/**
+	 * Registers the {@link Channel}s
+	 * 
+	 * @param channels The {@link Channel}s to register
+	 */
 	public final void register(Channel... channels) {
 		plugin.getChannelManager().registerChannels(channels);
 	}
 	
+	/**
+	 * Registers the {@link ChannelLoader}s
+	 * 
+	 * @param loaders The {@link ChannelLoader}s to register
+	 */
 	public final void register(ChannelLoader... loaders) {
 		plugin.getChannelManager().registerLoaders(loaders);
 	}
 	
+	/**
+	 * Registers the {@link Command}s
+	 * 
+	 * @param commands The {@link Command}s to register
+	 */
 	public final void register(Command... commands) {
 		plugin.getCommandManager().registerCommands(commands);
 	}
 	
+	/**
+	 * Registers the {@link Tag}s
+	 * 
+	 * @param tags The {@link Tag}s to register
+	 */
+	public final void register(Tag... tags) {
+		plugin.getTagManager().registerTags(tags);
+	}
+	
+	/**
+	 * Sends the messages to the {@link CommandSender}
+	 * 
+	 * @param sender The {@link CommandSender} to send to
+	 * 
+	 * @param messages The messages to send
+	 */
 	public final void sendMessage(CommandSender sender, String... messages) {
 		Messaging.sendMessage(sender, messages);
 	}
 	
+	/**
+	 * Sets the aliases of the {@link Command}
+	 * 
+	 * @param aliases The new aliases
+	 */
 	protected void setAliases(String... aliases) {
 		this.aliases = aliases;
 	}
 	
+	/**
+	 * Sets the argument range of the {@link Command}
+	 * 
+	 * @param minimum The minimum amount of arguments
+	 * 
+	 * @param maximum The maximum amount of arguments
+	 */
 	protected void setArgumentRange(int minimum, int maximum) {
 		this.maxArgs = maximum;
 		this.minArgs = minimum;
 	}
 	
-	protected void setPermission(String permission) {
-		this.permission = permission;
-	}
-	
+	/**
+	 * Sets the usage
+	 * 
+	 * @param usage The usage
+	 */
 	protected void setUsage(String usage) {
 		this.usage = usage;
 	}

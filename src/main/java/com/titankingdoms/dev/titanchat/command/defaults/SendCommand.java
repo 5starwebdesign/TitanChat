@@ -24,6 +24,12 @@ import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
+/**
+ * {@link SendCommand} - Command for sending messages to channels
+ * 
+ * @author NodinChan
+ *
+ */
 public final class SendCommand extends Command {
 	
 	public SendCommand() {
@@ -35,11 +41,19 @@ public final class SendCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
+		if (channel == null) {
+			sendMessage(sender, "&4Channel not defined");
+			return;
+		}
+		
 		plugin.getParticipantManager().getParticipant(sender).chat(channel, StringUtils.join(args, " "));
 	}
 	
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
+		if (channel.getOperators().contains(sender.getName()))
+			return true;
+		
 		return Vault.hasPermission(sender, "TitanChat.speak." + channel.getName());
 	}
 }

@@ -36,7 +36,7 @@ public final class ChannelJoinEvent extends ChannelEvent {
 	public static HandlerList getHandlerList() {
 		return handlers;
 	}
-
+	
 	@Override
 	public HandlerList getHandlers() {
 		return handlers;

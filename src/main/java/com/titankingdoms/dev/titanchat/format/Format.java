@@ -30,7 +30,7 @@ public final class Format {
 	public static final String DEFAULT_FORMAT = "%prefix%player%suffix§f: %message";
 	
 	public static String colourise(String text) {
-		return text.replaceAll(colour.toString(), "§$2");
+		return text.replaceAll(colour.toString(), "\u00A7$2");
 	}
 	
 	public static String decolourise(String text) {

@@ -17,15 +17,19 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
-import java.util.Arrays;
-
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
+/**
+ * {@link PardonCommand} - Command for pardoning in channels
+ * 
+ * @author NodinChan
+ *
+ */
 public final class PardonCommand extends Command {
 	
 	public PardonCommand() {
@@ -38,31 +42,31 @@ public final class PardonCommand extends Command {
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
 		if (channel == null) {
-			sendMessage(sender, "§4Channel not defined");
+			sendMessage(sender, "&4Channel not defined");
 			return;
 		}
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
 		if (!channel.getBlacklist().contains(participant.getName())) {
-			sendMessage(sender, "§4" + participant.getDisplayName() + " has not been banned from the channel");
+			sendMessage(sender, "&4" + participant.getDisplayName() + " has not been banned from the channel");
 			return;
 		}
 		
-		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
-		
 		channel.getBlacklist().remove(participant.getName());
-		participant.sendMessage("§bYou have been banned from " + channel.getName() + ": " + reason);
+		participant.sendMessage("&6You have been unbanned from " + channel.getName());
 		
 		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "§6" + participant.getDisplayName() + " has been unbanned");
+			sendMessage(sender, "&6" + participant.getDisplayName() + " has been unbanned");
 		
-		broadcast(channel, "§6" + participant.getDisplayName() + " has been unbanned");
+		broadcast(channel, "&6" + participant.getDisplayName() + " has been unbanned");
 	}
 	
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
-		// TODO Auto-generated method stub
-		return false;
+		if (channel.getOperators().contains(sender.getName()))
+			return true;
+		
+		return Vault.hasPermission(sender, "TitanChat.blacklist." + channel.getName());
 	}
 }

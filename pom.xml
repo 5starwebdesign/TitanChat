@@ -12,6 +12,7 @@
     <description>TitanChat, a chat management and formatting plugin.</description>
     
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
     
@@ -20,9 +21,8 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.0.2</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
                     <source>1.5</source>
                     <target>1.5</target>
                 </configuration>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.4.7-R1.0</version>
+            <version>1.5.1-R0.1</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

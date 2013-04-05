@@ -27,6 +27,12 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
+/**
+ * {@link BlacklistCommand} - Command for blacklisting in channels
+ * 
+ * @author NodinChan
+ *
+ */
 public final class BlacklistCommand extends Command {
 	
 	public BlacklistCommand() {
@@ -39,14 +45,14 @@ public final class BlacklistCommand extends Command {
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
 		if (channel == null) {
-			sendMessage(sender, "§4Channel not defined");
+			sendMessage(sender, "&4Channel not defined");
 			return;
 		}
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
 		if (channel.getBlacklist().contains(participant.getName())) {
-			sendMessage(sender, "§4" + participant.getDisplayName() + " is already banned from the channel");
+			sendMessage(sender, "&4" + participant.getDisplayName() + " is already banned from the channel");
 			return;
 		}
 		
@@ -54,16 +60,19 @@ public final class BlacklistCommand extends Command {
 		
 		channel.leave(participant);
 		channel.getBlacklist().add(participant.getName());
-		participant.sendMessage("§4You have been banned from " + channel.getName() + ": " + reason);
+		participant.sendMessage("&4You have been banned from " + channel.getName() + ": " + reason);
 		
 		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "§6" + participant.getDisplayName() + " has been banned");
+			sendMessage(sender, "&6" + participant.getDisplayName() + " has been banned");
 		
-		broadcast(channel, "§6" + participant.getDisplayName() + " has been banned");
+		broadcast(channel, "&6" + participant.getDisplayName() + " has been banned");
 	}
 	
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
+		if (channel.getOperators().contains(sender.getName()))
+			return true;
+		
 		return Vault.hasPermission(sender, "TitanChat.blacklist." + channel.getName());
 	}
 }

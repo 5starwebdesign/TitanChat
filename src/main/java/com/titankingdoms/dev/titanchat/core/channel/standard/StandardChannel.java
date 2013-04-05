@@ -22,6 +22,12 @@ import com.titankingdoms.dev.titanchat.core.channel.info.Range;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.format.Format;
 
+/**
+ * {@link StandardChannel} - Standard channels for communication
+ * 
+ * @author NodinChan
+ *
+ */
 public class StandardChannel extends Channel {
 	
 	public StandardChannel(String name, Status status) {

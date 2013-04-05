@@ -23,6 +23,12 @@ import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
+/**
+ * {@link LeaveCommand} - Command for leaving channels
+ * 
+ * @author NodinChan
+ *
+ */
 public final class LeaveCommand extends Command {
 	
 	public LeaveCommand() {
@@ -35,23 +41,30 @@ public final class LeaveCommand extends Command {
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
 		if (!plugin.getChannelManager().hasAlias(args[0])) {
-			sendMessage(sender, "§4Channel does not exist");
+			sendMessage(sender, "&4Channel does not exist");
 			return;
 		}
 		
 		channel = plugin.getChannelManager().getChannel(args[0]);
 		
+		if (!channel.getOperators().contains(sender.getName())) {
+			if (!Vault.hasPermission(sender, "TitanChat.leave." + channel.getName())) {
+				sendMessage(sender, "&4You do not have permission");
+				return;
+			}
+		}
+		
 		if (!channel.isParticipating(sender.getName())) {
-			sendMessage(sender, "§4You have not joined the channel");
+			sendMessage(sender, "&4You have not joined the channel");
 			return;
 		}
 		
 		channel.leave(plugin.getParticipantManager().getParticipant(sender));
-		sendMessage(sender, "§6You have left " + channel.getName());
+		sendMessage(sender, "&6You have left " + channel.getName());
 	}
 	
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
-		return Vault.hasPermission(sender, "TitanChat.participate." + channel.getName());
+		return true;
 	}
 }

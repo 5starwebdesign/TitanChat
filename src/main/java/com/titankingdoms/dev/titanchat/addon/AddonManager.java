@@ -29,6 +29,12 @@ import org.apache.commons.lang.StringUtils;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.loading.Loader;
 
+/**
+ * AddonManager - Manages {@link ChatAddon}s
+ * 
+ * @author NodinChan
+ *
+ */
 public final class AddonManager {
 	
 	private final TitanChat plugin;
@@ -44,26 +50,60 @@ public final class AddonManager {
 		this.addons = new TreeMap<String, ChatAddon>();
 	}
 	
+	/**
+	 * Gets the specified {@link ChatAddon}
+	 * 
+	 * @param name The name of the {@link ChatAddon}
+	 * 
+	 * @return The specified {@link ChatAddon} if found, otherwise null
+	 */
 	public ChatAddon getAddon(String name) {
 		return addons.get(name);
 	}
 	
+	/**
+	 * Gets the directory that holds the {@link ChatAddon}s
+	 * 
+	 * @return The directory of the {@link ChatAddon}s
+	 */
 	public File getAddonDirectory() {
 		return new File(plugin.getDataFolder(), "addons");
 	}
 	
+	/**
+	 * Gets all {@link ChatAddon}s
+	 * 
+	 * @return All registered {@link ChatAddon}s
+	 */
 	public List<ChatAddon> getAddons() {
 		return new ArrayList<ChatAddon>(addons.values());
 	}
 	
+	/**
+	 * Checks if the {@link ChatAddon} has been registered
+	 * 
+	 * @param name The name of the {@link ChatAddon}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasAddon(String name) {
 		return addons.containsKey(name.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link ChatAddon} has been registered
+	 * 
+	 * @param addon The {@link ChatAddon}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasAddon(ChatAddon addon) {
 		return hasAddon(addon.getName());
 	}
 	
+	/**
+	 * Loads the manager
+	 */
 	public void load() {
 		registerAddons(Loader.load(ChatAddon.class, getAddonDirectory()).toArray(new ChatAddon[0]));
 		
@@ -71,6 +111,11 @@ public final class AddonManager {
 			plugin.log(Level.INFO, "Addons loaded: " + StringUtils.join(addons.keySet(), ", "));
 	}
 	
+	/**
+	 * Registers the {@link ChatAddon}s
+	 * 
+	 * @param addons The {@link ChatAddon}s to register
+	 */
 	public void registerAddons(ChatAddon... addons) {
 		if (addons == null)
 			return;
@@ -88,6 +133,9 @@ public final class AddonManager {
 		}
 	}
 	
+	/**
+	 * Reloads the manager
+	 */
 	public void reload() {
 		addons.clear();
 		
@@ -97,7 +145,22 @@ public final class AddonManager {
 			plugin.log(Level.INFO, "Addons loaded: " + StringUtils.join(addons.keySet(), ", "));
 	}
 	
+	/**
+	 * Unloads the manager
+	 */
 	public void unload() {
 		addons.clear();
+	}
+	
+	/**
+	 * Unregisters the {@link ChatAddon}
+	 * 
+	 * @param addon The {@link ChatAddon} to unregister
+	 */
+	public void unregisterAddon(ChatAddon addon) {
+		if (addon == null || !hasAddon(addon))
+			return;
+		
+		this.addons.remove(addon.getName().toLowerCase());
 	}
 }

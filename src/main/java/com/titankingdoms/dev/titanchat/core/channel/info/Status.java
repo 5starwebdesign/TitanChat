@@ -21,6 +21,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * {@link Status} - The {@link Channel} status
+ * 
+ * @author NodinChan
+ *
+ */
 public enum Status {
 	DEFAULT("default"),
 	NONE("none"),

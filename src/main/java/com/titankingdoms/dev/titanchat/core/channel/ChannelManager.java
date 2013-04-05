@@ -29,14 +29,24 @@ import java.util.logging.Level;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionDefault;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.core.channel.standard.ServerChannel;
 import com.titankingdoms.dev.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.loading.Loader;
-import com.titankingdoms.dev.titanchat.loading.Loader.ExtensionFilter;;
+import com.titankingdoms.dev.titanchat.loading.Loader.ExtensionFilter;
+import com.titankingdoms.dev.titanchat.util.ChatPermission;
 
+/**
+ * {@link ChannelManager} - Manages {@link Channel}s
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChannelManager {
 	
 	private final TitanChat plugin;
@@ -58,57 +68,153 @@ public final class ChannelManager {
 		this.statuses = new HashMap<Status, Map<String, Channel>>();
 	}
 	
+	/**
+	 * Gets the specified {@link Channel}
+	 * 
+	 * @param name The name of the {@link Channel}
+	 * 
+	 * @return The specified {@link Channel} if found, otherwise null
+	 */
 	public Channel getChannel(String name) {
 		return labels.get(name.toLowerCase());
 	}
 	
+	/**
+	 * Gets the directory that holds the configs of {@link Channel}s
+	 * 
+	 * @return The directory of the configs of {@link Channel}s
+	 */
 	public File getChannelDirectory() {
 		return new File(plugin.getDataFolder(), "channels");
 	}
 	
+	/**
+	 * Gets all {@link Channel}s
+	 * 
+	 * @return All registered {@link Channel}s
+	 */
 	public List<Channel> getChannels() {
 		return new ArrayList<Channel>(channels.values());
 	}
 	
+	/**
+	 * Gets the {@link Channel}s with the specified {@link Status}
+	 * 
+	 * @param status The {@link Status} of the channels
+	 * 
+	 * @return The {@link Channel}s with the specified {@link Status}
+	 */
 	public Map<String, Channel> getChannels(Status status) {
 		return new HashMap<String, Channel>(statuses.get(status));
 	}
 	
+	/**
+	 * Gets the limit to the number of {@link Channel}s
+	 * 
+	 * @return The limit of {@link Channel}s allowed to be registered
+	 */
+	public int getLimit() {
+		if (!plugin.getConfig().getBoolean("channels.enable", true))
+			return 1;
+		
+		return plugin.getConfig().getInt("channels.limit", -1);
+	}
+	
+	/**
+	 * Gets the specified {@link ChannelLoader}
+	 * 
+	 * @param name The name of the {@link ChannelLoader}
+	 * 
+	 * @return The specified {@link ChannelLoader} if found, otherwise null
+	 */
 	public ChannelLoader getLoader(String name) {
 		return loaders.get(name.toLowerCase());
 	}
 	
+	/**
+	 * Gets the directory that holds the {@link ChannelLoader}s
+	 * 
+	 * @return The directory of the {@link ChannelLoader}s
+	 */
 	public File getLoaderDirectory() {
 		return new File(plugin.getAddonManager().getAddonDirectory(), "loaders");
 	}
 	
+	/**
+	 * Gets all {@link ChannelLoader}s
+	 * 
+	 * @return All registered {@link ChannelLoader}s
+	 */
 	public List<ChannelLoader> getLoaders() {
 		return new ArrayList<ChannelLoader>(loaders.values());
 	}
 	
+	/**
+	 * Checks if the alias has been registered for a {@link Channel}
+	 * 
+	 * @param alias The alias
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasAlias(String alias) {
 		return labels.containsKey(alias.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link Channel} has been registered
+	 * 
+	 * @param name The name of the {@link Channel}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasChannel(String name) {
 		return channels.containsKey(name.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link Channel} has been registered
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasChannel(Channel channel) {
 		return hasChannel(channel.getName());
 	}
 	
+	/**
+	 * Checks if the {@link ChannelLoader} has been registered
+	 * 
+	 * @param name The name of the {@link ChannelLoader}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasLoader(String name) {
 		return loaders.containsKey(name.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link ChannelLoader} has been registered
+	 * 
+	 * @param loader The {@link ChannelLoader}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasLoader(ChannelLoader loader) {
 		return hasLoader(loader.getName());
 	}
 	
+	/**
+	 * Loads the manager
+	 */
 	public void load() {
 		for (Status status : EnumSet.allOf(Status.class))
 			this.statuses.put(status, new HashMap<String, Channel>());
+		
+		if (!plugin.getConfig().getBoolean("channels.enable", true)) {
+			registerChannels(new ServerChannel());
+			return;
+		}
 		
 		registerLoaders(new StandardLoader());
 		
@@ -144,6 +250,11 @@ public final class ChannelManager {
 			plugin.log(Level.INFO, "Channels loaded: " + StringUtils.join(channels.keySet(), ", "));
 	}
 	
+	/**
+	 * Registers the {@link Channel}s
+	 * 
+	 * @param channels The {@link Channel}s to register
+	 */
 	public void registerChannels(Channel... channels) {
 		if (channels == null)
 			return;
@@ -151,6 +262,9 @@ public final class ChannelManager {
 		for (Channel channel : channels) {
 			if (channel == null)
 				continue;
+			
+			if (getLimit() >= 0 && this.channels.size() >= getLimit())
+				return;
 			
 			if (hasChannel(channel)) {
 				plugin.log(Level.WARNING, "Duplicate channel: " + channel.getName());
@@ -165,9 +279,23 @@ public final class ChannelManager {
 					this.labels.put(alias.toLowerCase(), channel);
 			
 			this.statuses.get(channel.getStatus()).put(channel.getName().toLowerCase(), channel);
+			
+			for (ChatPermission chPerm : EnumSet.allOf(ChatPermission.class)) {
+				String node = chPerm.getChannelPermission(channel);
+				
+				Permission permission = new Permission(node, PermissionDefault.FALSE);
+				permission.addParent(chPerm.getGlobalPermission(), true);
+				
+				plugin.getServer().getPluginManager().addPermission(permission);
+			}
 		}
 	}
 	
+	/**
+	 * Registers the {@link ChannelLoader}s
+	 * 
+	 * @param loaders The {@link ChannelLoader}s to register
+	 */
 	public void registerLoaders(ChannelLoader... loaders) {
 		if (loaders == null)
 			return;
@@ -185,20 +313,70 @@ public final class ChannelManager {
 		}
 	}
 	
+	/**
+	 * Reloads the manager
+	 */
 	public void reload() {
+		loaders.clear();
+		
+		if (!plugin.getConfig().getBoolean("channels.enable", true)) {
+			channels.clear();
+			registerChannels(new ServerChannel());
+			return;
+		}
+		
+		registerLoaders(new StandardLoader());
+		
+		registerLoaders(Loader.load(ChannelLoader.class, getLoaderDirectory()).toArray(new ChannelLoader[0]));
+		
+		if (!loaders.isEmpty())
+			plugin.log(Level.INFO, "ChannelLoaders loaded: " + StringUtils.join(loaders.keySet(), ", "));
+		
 		for (Channel channel : getChannels()) {
 			if (!channel.getConfigFile().exists()) {
 				for (Participant participant : channel.getParticipants())
 					channel.leave(participant);
 				
-				channels.remove(channel.getName().toLowerCase());
+				unregisterChannel(channel);
 				continue;
 			}
 			
 			channel.reload();
 		}
+		
+		for (File file : getChannelDirectory().listFiles(new ExtensionFilter(".yml"))) {
+			String name = file.getName().substring(0, file.getName().lastIndexOf(".yml"));
+			FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+			
+			if (hasChannel(name))
+				continue;
+			
+			ChannelLoader loader = getLoader(config.getString("type", ""));
+			
+			if (loader == null)
+				continue;
+			
+			Status status = Status.fromName(config.getString("status", ""));
+			
+			if (status == null)
+				continue;
+			
+			Channel channel = loader.load(name, status, config);
+			
+			if (channel == null)
+				continue;
+			
+			channel.init();
+			registerChannels(channel);
+		}
+		
+		if (!channels.isEmpty())
+			plugin.log(Level.INFO, "Channels loaded: " + StringUtils.join(channels.keySet(), ", "));
 	}
 	
+	/**
+	 * Unloads the manager
+	 */
 	public void unload() {
 		for (Channel channel : channels.values())
 			channel.save();
@@ -208,5 +386,39 @@ public final class ChannelManager {
 		
 		for (Map<String, Channel> status : this.statuses.values())
 			status.clear();
+	}
+	
+	/**
+	 * Unregisters the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to unregister
+	 */
+	public void unregisterChannel(Channel channel) {
+		if (channel == null || !hasChannel(channel))
+			return;
+		
+		this.channels.remove(channel.getName().toLowerCase());
+		this.labels.remove(channel.getName().toLowerCase());
+		
+		for (String alias : channel.getAliases())
+			if (hasAlias(alias) && !hasChannel(alias))
+				this.labels.remove(alias.toLowerCase());
+		
+		this.statuses.get(channel.getStatus()).remove(channel.getName().toLowerCase());
+		
+		for (ChatPermission chPerm : EnumSet.allOf(ChatPermission.class))
+			plugin.getServer().getPluginManager().removePermission(chPerm.getChannelPermission(channel));
+	}
+	
+	/**
+	 * Unregisters the {@link ChannelLoader}
+	 * 
+	 * @param loader The {@link ChannelLoader} to unregister
+	 */
+	public void unregisterLoader(ChannelLoader loader) {
+		if (loader == null || !hasLoader(loader))
+			return;
+		
+		this.loaders.remove(loader.getName().toLowerCase());
 	}
 }

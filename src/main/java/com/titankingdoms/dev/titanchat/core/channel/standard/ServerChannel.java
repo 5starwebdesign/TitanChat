@@ -20,6 +20,12 @@ package com.titankingdoms.dev.titanchat.core.channel.standard;
 import com.titankingdoms.dev.titanchat.core.channel.info.Range;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 
+/**
+ * {@link ServerChannel} - Global default channel
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ServerChannel extends StandardChannel {
 	
 	public ServerChannel() {

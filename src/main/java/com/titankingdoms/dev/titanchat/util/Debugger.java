@@ -17,9 +17,74 @@
 
 package com.titankingdoms.dev.titanchat.util;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public final class Debugger {
 	
-	public Debugger() {
+	private final Logger log = Logger.getLogger("TitanDebug");
+	
+	private final int id;
+	
+	private final String prefix;
+	
+	private static final Set<Integer> debuggers = new HashSet<Integer>();
+	private static final Set<Integer> debugging = new HashSet<Integer>();
+	
+	public Debugger(int id, String prefix) {
+		this.id = id;
+		this.prefix = (prefix != null) ? prefix : "";
 		
+		if (!debuggers.contains(id))
+			debuggers.add(id);
+	}
+	
+	public Debugger(int id) {
+		this(id, "");
+	}
+	
+	public void debug(Level level, String message) {
+		if (isDebugging())
+			log.log(level, "[TitanDebug] " + ((!prefix.isEmpty()) ? prefix + ": " : "") + message);
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public String getPrefix() {
+		return prefix;
+	}
+	
+	public boolean isDebugging() {
+		return isDebugging(id);
+	}
+	
+	public static boolean isDebugging(int id) {
+		return debugging.contains(id);
+	}
+	
+	public void startDebug() {
+		startDebug(id);
+	}
+	
+	public static void startDebug(int id) {
+		if (id < 0)
+			debugging.addAll(debuggers);
+		else
+			debugging.add(id);
+	}
+	
+	public void stopDebug() {
+		stopDebug(id);
+	}
+	
+	public static void stopDebug(int id) {
+		if (id < 0)
+			debugging.clear();
+		else
+			debugging.remove(id);
 	}
 }

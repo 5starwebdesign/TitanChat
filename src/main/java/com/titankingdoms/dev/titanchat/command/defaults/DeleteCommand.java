@@ -17,61 +17,55 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
-import java.util.Arrays;
-
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.event.ChannelDeletionEvent;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link KickCommand} - Command for kicking in channels
+ * {@link DeleteCommand} - Command for channel deletion
  * 
  * @author NodinChan
  *
  */
-public final class KickCommand extends Command {
+public final class DeleteCommand extends Command {
 	
-	public KickCommand() {
-		super("Kick");
-		setAliases("k");
-		setArgumentRange(1, 1024);
-		setUsage("[player] <reason>");
+	public DeleteCommand() {
+		super("Delete");
+		setAliases("d");
+		setArgumentRange(1, 1);
+		setUsage("[channel]");
 	}
-	
+
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		if (channel == null) {
-			sendMessage(sender, "&4Channel not defined");
+		if (!plugin.getChannelManager().hasChannel(args[0])) {
+			sendMessage(sender, "&4Channel does not exist");
 			return;
 		}
 		
-		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
+		channel = plugin.getChannelManager().getChannel(args[0]);
+		plugin.getChannelManager().unregisterChannel(channel);
 		
-		if (!channel.isParticipating(participant)) {
-			sendMessage(sender, "&4" + participant.getDisplayName() + " is not on the channel");
-			return;
-		}
-		
-		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
-		
-		channel.leave(participant);
-		participant.sendMessage("&4You have been kicked from " + channel.getName() + ": " + reason);
+		ChannelDeletionEvent event = new ChannelDeletionEvent(channel);
+		plugin.getServer().getPluginManager().callEvent(event);
 		
 		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "&6" + participant.getDisplayName() + " has been kicked");
+			sendMessage(sender, "&6" + channel.getName() + " has been deleted");
 		
-		broadcast(channel, "&6" + participant.getDisplayName() + " has been kicked");
+		broadcast(channel, "&6" + channel.getName() + " has been deleted");
+		
+		for (Participant participant : channel.getParticipants())
+			channel.leave(participant);
+		
+		channel.getConfigFile().delete();
 	}
-	
+
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
-		if (channel.getOperators().contains(sender.getName()))
-			return true;
-		
-		return Vault.hasPermission(sender, "TitanChat.kick." + channel.getName());
+		return Vault.hasPermission(sender, "TitanChat.delete");
 	}
 }

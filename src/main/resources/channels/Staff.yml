@@ -9,4 +9,5 @@ whitelist: false
 data:
 blacklist: []
 whitelist: []
+operators: []
 participants: []

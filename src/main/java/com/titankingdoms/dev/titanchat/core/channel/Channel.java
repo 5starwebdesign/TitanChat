@@ -35,6 +35,12 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.event.ChannelJoinEvent;
 import com.titankingdoms.dev.titanchat.event.ChannelLeaveEvent;
 
+/**
+ * {@link Channel} - Channels for communication
+ * 
+ * @author NodinChan
+ *
+ */
 public abstract class Channel extends ChatEntity {
 	
 	private final String type;
@@ -42,6 +48,7 @@ public abstract class Channel extends ChatEntity {
 	private final Status status;
 	
 	private final Set<String> blacklist;
+	private final Set<String> operators;
 	private final Set<String> whitelist;
 	
 	private final Map<String, Participant> participants;
@@ -51,6 +58,7 @@ public abstract class Channel extends ChatEntity {
 		this.type = type;
 		this.status = status;
 		this.blacklist = new HashSet<String>();
+		this.operators = new HashSet<String>();
 		this.whitelist = new HashSet<String>();
 		this.participants = new HashMap<String, Participant>();
 	}
@@ -89,6 +97,10 @@ public abstract class Channel extends ChatEntity {
 		return new HashSet<Participant>(participants.values());
 	}
 	
+	public final Set<String> getOperators() {
+		return operators;
+	}
+	
 	public abstract Range getRange();
 	
 	public final Status getStatus() {
@@ -105,8 +117,10 @@ public abstract class Channel extends ChatEntity {
 	
 	@Override
 	public void init() {
+		super.init();
 		blacklist.addAll(getConfig().getStringList("blacklist"));
 		whitelist.addAll(getConfig().getStringList("whitelist"));
+		operators.addAll(getConfig().getStringList("operators"));
 	}
 	
 	public boolean isParticipating(String name) {
@@ -167,8 +181,10 @@ public abstract class Channel extends ChatEntity {
 	
 	@Override
 	public void save() {
+		super.save();
 		getConfig().set("blacklist", getBlacklist());
 		getConfig().set("whitelist", getWhitelist());
+		getConfig().set("operators", getOperators());
 		saveConfig();
 	}
 	

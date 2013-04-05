@@ -21,6 +21,12 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * {@link Range} - The {@link Channel} communication range
+ * 
+ * @author NodinChan
+ *
+ */
 public enum Range {
 	CHANNEL("channel"),
 	GLOBAL("global"),

@@ -23,11 +23,13 @@ public enum ChatPermission {
 	AUTO_JOIN("auto.join"),
 	AUTO_LEAVE("auto.leave"),
 	BLACKLIST("blacklist"),
+	JOIN("join"),
 	KICK("kick"),
-	MUTE("mute"),
+	LEAVE("leave"),
 	PARTICIPATE("participate"),
 	RANK("rank"),
-	SPEAK("speak");
+	SPEAK("speak"),
+	WHITELIST("whitelist");
 	
 	private String name;
 	

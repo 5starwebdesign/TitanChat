@@ -18,14 +18,25 @@
 package com.titankingdoms.dev.titanchat.command;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.command.defaults.*;
 import com.titankingdoms.dev.titanchat.loading.Loader;
 
+/**
+ * {@link CommandManager} - Manages {@link Command}s
+ * 
+ * @author NodinChan
+ *
+ */
 public final class CommandManager {
 	
 	private final TitanChat plugin;
@@ -39,41 +50,97 @@ public final class CommandManager {
 		if (getCommandDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating commands directory...");
 		
-		this.commands = new HashMap<String, Command>();
+		this.commands = new TreeMap<String, Command>();
 		this.labels = new HashMap<String, Command>();
 	}
 	
+	/**
+	 * Gets the specified {@link Command}
+	 * 
+	 * @param label The label of the {@link Command}
+	 * 
+	 * @return The specified {@link Command} if found, otherwise null
+	 */
 	public Command getCommand(String label) {
 		return labels.get(label.toLowerCase());
 	}
 	
+	/**
+	 * Gets the directory that holds the {@link Command}s
+	 * 
+	 * @return The directory of the {@link Command}s
+	 */
 	public File getCommandDirectory() {
 		return new File(plugin.getAddonManager().getAddonDirectory(), "commands");
 	}
 	
+	/**
+	 * Gets all {@link Command}s
+	 * 
+	 * @return All registered {@link Command}s
+	 */
+	public List<Command> getCommands() {
+		return new ArrayList<Command>(commands.values());
+	}
+	
+	/**
+	 * Checks if the {@link Command} has been registered
+	 * 
+	 * @param name The name of the {@link Command}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasCommand(String name) {
 		return commands.containsKey(name.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link Command} has been registered
+	 * 
+	 * @param command The {@link Command}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasCommand(Command command) {
 		return hasCommand(command.getName());
 	}
 	
+	/**
+	 * Checks if the label has been registered for a {@link Command}
+	 * 
+	 * @param label The label
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasLabel(String label) {
 		return labels.containsKey(label.toLowerCase());
 	}
 	
+	/**
+	 * Loads the manager
+	 */
 	public void load() {
 		registerCommands(
+				new CreateCommand(), new DeleteCommand(),
 				new BlacklistCommand(), new KickCommand(), new PardonCommand(),
-				new InviteCommand(),
-				new JoinCommand(), new LeaveCommand(),
-				new SendCommand()
+				new DemoteCommand(), new PromoteCommand(),
+				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
+				new ReloadCommand(),
+				new SendCommand(),
+				new WhoCommand()
 		);
 		
 		registerCommands(Loader.load(Command.class, getCommandDirectory()).toArray(new Command[0]));
+		
+		if (!commands.isEmpty())
+			plugin.log(Level.INFO, "Commands loaded: " + StringUtils.join(commands.keySet(), ", "));
 	}
 	
+	/**
+	 * Registers the {@link Command}s
+	 * 
+	 * @param commands The {@link Command}s to register
+	 */
 	public void registerCommands(Command... commands) {
 		if (commands == null)
 			return;
@@ -96,17 +163,48 @@ public final class CommandManager {
 		}
 	}
 	
+	/**
+	 * Reloads the manager
+	 */
 	public void reload() {
 		this.commands.clear();
 		
 		registerCommands(
-				new InviteCommand(),
-				new JoinCommand(),
-				new LeaveCommand()
+				new CreateCommand(), new DeleteCommand(),
+				new BlacklistCommand(), new KickCommand(), new PardonCommand(),
+				new DemoteCommand(), new PromoteCommand(),
+				new JoinCommand(), new LeaveCommand(),
+				new ReloadCommand(),
+				new SendCommand()
 		);
+		
+		registerCommands(Loader.load(Command.class, getCommandDirectory()).toArray(new Command[0]));
+		
+		if (!commands.isEmpty())
+			plugin.log(Level.INFO, "Commands loaded: " + StringUtils.join(commands.keySet(), ", "));
 	}
 	
+	/**
+	 * Unloads the manager
+	 */
 	public void unload() {
 		this.commands.clear();
+	}
+	
+	/**
+	 * Unregisters the {@link Command}
+	 * 
+	 * @param command The {@link Command} to unregister
+	 */
+	public void unregisterCommand(Command command) {
+		if (command == null || !hasCommand(command))
+			return;
+		
+		this.commands.remove(command.getName().toLowerCase());
+		this.labels.remove(command.getName().toLowerCase());
+		
+		for (String alias : command.getAliases())
+			if (hasLabel(alias) && !hasCommand(alias))
+				this.labels.remove(alias.toLowerCase());
 	}
 }

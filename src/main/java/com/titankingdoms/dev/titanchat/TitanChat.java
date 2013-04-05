@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,14 +35,23 @@ import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.ParticipantManager;
 import com.titankingdoms.dev.titanchat.format.tag.TagManager;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
+import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
+/**
+ * {@link TitanChat} - Main Class of TitanChat
+ * 
+ * @author NodinChan
+ * 
+ */
 public final class TitanChat extends JavaPlugin {
 	
 	private static TitanChat instance;
 	
 	private final Logger log = Logger.getLogger("TitanLog");
+	
+	private final Debugger db = new Debugger(0, "TitanChat");
 	
 	private AddonManager addon;
 	private ChannelManager channel;
@@ -49,30 +59,65 @@ public final class TitanChat extends JavaPlugin {
 	private ParticipantManager participant;
 	private TagManager tag;
 	
+	/**
+	 * Gets the {@link AddonManager}
+	 * 
+	 * @return The {@link AddonManager}
+	 */
 	public AddonManager getAddonManager() {
 		return addon;
 	}
 	
+	/**
+	 * Gets the {@link ChannelManager}
+	 * 
+	 * @return The {@link ChannelManager}
+	 */
 	public ChannelManager getChannelManager() {
 		return channel;
 	}
 	
+	/**
+	 * Gets the {@link CommandManager}
+	 * 
+	 * @return The {@link CommandManager}
+	 */
 	public CommandManager getCommandManager() {
 		return command;
 	}
 	
+	/**
+	 * Gets the {@link ParticipantManager}
+	 * 
+	 * @return The {@link ParticipantManager}
+	 */
 	public ParticipantManager getParticipantManager() {
 		return participant;
 	}
 	
+	/**
+	 * Gets the instance of {@link TitanChat}
+	 * 
+	 * @return The instance of {@link TitanChat}
+	 */
 	public static TitanChat getInstance() {
 		return instance;
 	}
 	
+	/**
+	 * Gets the {@link TagManager}
+	 * 
+	 * @return The {@link TagManager}
+	 */
 	public TagManager getTagManager() {
 		return tag;
 	}
 	
+	/**
+	 * Initialises {@link Metrics} for {@link TitanChat}
+	 * 
+	 * @return True if no errors occured
+	 */
 	private boolean initMetrics() {
 		if (!getConfig().getBoolean("metrics-statistics", true))
 			return true;
@@ -88,6 +133,13 @@ public final class TitanChat extends JavaPlugin {
 		} catch (Exception e) { return false; }
 	}
 	
+	/**
+	 * Sends the message with a prefix to the console
+	 * 
+	 * @param level The {@link Level} of log
+	 * 
+	 * @param message The message to send
+	 */
 	public void log(Level level, String message) {
 		log.log(level, "[TitanChat v4.0] " + message);
 	}
@@ -95,9 +147,12 @@ public final class TitanChat extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String lbl, String[] args) {
 		if (cmd.getName().equals("titanchat")) {
-			if (args.length < 1 || (args[0].startsWith("@") && args.length < 2)) {
-				Messaging.sendMessage(sender, "§5You are running §6" + this);
-				Messaging.sendMessage(sender, "§6\"/titanchat help [page]\" for help");
+			db.debug(Level.INFO, "Command by " + sender.getName() + ":");
+			db.debug(Level.INFO, lbl + " " + StringUtils.join(args, " "));
+			
+			if (args.length < 1) {
+				Messaging.sendMessage(sender, "&5You are running &6" + this);
+				Messaging.sendMessage(sender, "&6\"/titanchat help [page]\" for help");
 				return true;
 			}
 			
@@ -105,9 +160,16 @@ public final class TitanChat extends JavaPlugin {
 			String chName = "";
 			
 			if (args[0].startsWith("@")) {
-				cmdName = args[1];
-				chName = args[0].substring(1);
-				args = Arrays.copyOfRange(args, 2, args.length);
+				if (args.length < 2) {
+					cmdName = "join";
+					chName = args[0].substring(1);
+					args = new String[] { args[0].substring(1) };
+					
+				} else {
+					cmdName = args[1];
+					chName = args[0].substring(1);
+					args = Arrays.copyOfRange(args, 2, args.length);
+				}
 				
 			} else {
 				cmdName = args[0];
@@ -118,7 +180,7 @@ public final class TitanChat extends JavaPlugin {
 			
 			if (!chName.isEmpty()) {
 				if (!channel.hasChannel(chName)) {
-					Messaging.sendMessage(sender, "§4Channel does not exist");
+					Messaging.sendMessage(sender, "&4Channel does not exist");
 					return true;
 				}
 				
@@ -133,20 +195,31 @@ public final class TitanChat extends JavaPlugin {
 		return false;
 	}
 	
+	/**
+	 * Processes the command
+	 * 
+	 * @param sender The {@link CommandSender}
+	 * 
+	 * @param ch The targetted {@link Channel}
+	 * 
+	 * @param label The label of the {@link Command} used
+	 * 
+	 * @param args The arguments of the command
+	 */
 	private void onCommand(CommandSender sender, Channel ch, String label, String[] args) {
 		if (command.hasLabel(label)) {
 			Command cmd = command.getCommand(label);
 			
 			if (args.length < cmd.getMinArguments() || args.length > cmd.getMaxArguments()) {
-				Messaging.sendMessage(sender, "§4Invalid argument length");
+				Messaging.sendMessage(sender, "&4Invalid argument length");
 				
 				String usage = "/titanchat <@[channel]> " + cmd.getName() + " " + cmd.getUsage();
-				Messaging.sendMessage(sender, "§6" + usage);
+				Messaging.sendMessage(sender, "&6" + usage);
 				return;
 			}
 			
 			if (!cmd.permissionCheck(sender, ch)) {
-				Messaging.sendMessage(sender, "§4You do not have permission");
+				Messaging.sendMessage(sender, "&4You do not have permission");
 				return;
 			}
 			
@@ -154,7 +227,7 @@ public final class TitanChat extends JavaPlugin {
 			return;
 		}
 		
-		Messaging.sendMessage(sender, "§4Invalid command", "§6\"/titanchat help [page]\" for help");
+		Messaging.sendMessage(sender, "&4Invalid command", "&6\"/titanchat help [page]\" for help");
 	}
 	
 	@Override
@@ -182,6 +255,9 @@ public final class TitanChat extends JavaPlugin {
 		
 		if (!Vault.initialise(getServer()))
 			log(Level.WARNING, "Failed to hook into Vault");
+		
+		for (int id : getConfig().getIntegerList("logging.debug"))
+			Debugger.startDebug(id);
 		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
 		
@@ -244,6 +320,9 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "TitanChat is now loaded");
 	}
 	
+	/**
+	 * Called when {@link TitanChat} is to be reloaded
+	 */
 	public void onReload() {
 		log(Level.INFO, "TitanChat is now reloading...");
 		

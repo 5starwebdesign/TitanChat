@@ -21,20 +21,29 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
-public final class UnmuteCommand extends Command {
+/**
+ * {@link ReloadCommand} - Command for reloading TitanChat
+ * 
+ * @author NodinChan
+ *
+ */
+public final class ReloadCommand extends Command {
 	
-	public UnmuteCommand() {
-		super("Unmute");
+	public ReloadCommand() {
+		super("Reload");
 	}
-
+	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		
+		sendMessage(sender, "&6TitanChat is now reloading...");
+		plugin.onReload();
+		sendMessage(sender, "&6TitanChat is now reloaded");
 	}
 	
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
-		return false;
+		return Vault.hasPermission(sender, "TitanChat.reload");
 	}
 }

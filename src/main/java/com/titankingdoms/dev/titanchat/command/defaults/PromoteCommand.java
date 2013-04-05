@@ -22,42 +22,51 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
-public final class InviteCommand extends Command {
+/**
+ * {@link PromoteCommand} - Command for promotion in channels
+ * 
+ * @author NodinChan
+ *
+ */
+public final class PromoteCommand extends Command {
 	
-	public InviteCommand() {
-		super("Invite");
-		setAliases("inv");
+	public PromoteCommand() {
+		super("Promote");
+		setAliases("pro");
 		setArgumentRange(1, 1);
 		setUsage("[player]");
 	}
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
+		if (channel == null) {
+			sendMessage(sender, "&4Channel not defined");
+			return;
+		}
 		
+		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
+		
+		if (channel.getOperators().contains(participant.getName())) {
+			sendMessage(sender, "&4" + participant.getDisplayName() + " is already an operator");
+			return;
+		}
+		
+		channel.getOperators().add(participant.getName());
+		participant.sendMessage("&6You have been promoted in " + channel.getName());
+		
+		if (!channel.isParticipating(sender.getName()))
+			sendMessage(sender, "&6" + participant.getDisplayName() + " has been promoted");
+		
+		broadcast(channel, "&6" + participant.getDisplayName() + " has been promoted");
 	}
 	
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
-		return true;
-	}
-	
-	public final class Invitation {
+		if (channel.getOperators().contains(sender.getName()))
+			return true;
 		
-		private final Channel channel;
-		private final Participant participant;
-		
-		public Invitation(Channel channel, Participant participant) {
-			this.channel = channel;
-			this.participant = participant;
-		}
-		
-		public Channel getChannel() {
-			return channel;
-		}
-		
-		public Participant getParticipant() {
-			return participant;
-		}
+		return Vault.hasPermission(sender, "TitanChat.rank." + channel.getName());
 	}
 }

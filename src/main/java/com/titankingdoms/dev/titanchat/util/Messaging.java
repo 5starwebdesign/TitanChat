@@ -17,6 +17,10 @@
 
 package com.titankingdoms.dev.titanchat.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -25,28 +29,45 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.ChatUtils;
+import com.titankingdoms.dev.titanchat.format.Format;
 
 public final class Messaging {
 	
 	public static void broadcast(String... messages) {
+		List<String> lines = new ArrayList<String>();
+		
 		for (String message : messages)
-			TitanChat.getInstance().getServer().broadcastMessage(message);
+			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 119)));
+		
+		for (String line : lines)
+			TitanChat.getInstance().getServer().broadcastMessage(line);
 	}
 	
 	public static void broadcast(World world, String... messages) {
 		if (world == null)
 			return;
 		
+		List<String> lines = new ArrayList<String>();
+		
+		for (String message : messages)
+			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 119)));
+		
 		for (Player player : world.getPlayers())
-			player.sendMessage(messages);
+			player.sendMessage(lines.toArray(new String[0]));
 	}
 	
 	public static void broadcast(Channel channel, String... messages) {
 		if (channel == null)
 			return;
 		
+		List<String> lines = new ArrayList<String>();
+		
+		for (String message : messages)
+			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 119)));
+		
 		for (Participant participant : channel.getParticipants())
-			participant.sendMessage(messages);
+			participant.sendMessage(lines.toArray(new String[0]));
 	}
 	
 	public static void broadcast(CommandSender sender, double radius, String... messages) {
@@ -65,6 +86,11 @@ public final class Messaging {
 		if (sender == null)
 			return;
 		
-		sender.sendMessage(messages);
+		List<String> lines = new ArrayList<String>();
+		
+		for (String message : messages)
+			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 119)));
+		
+		sender.sendMessage(lines.toArray(new String[0]));
 	}
 }

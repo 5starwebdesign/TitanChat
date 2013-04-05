@@ -17,9 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
-import java.util.Arrays;
-
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
@@ -28,18 +25,18 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link KickCommand} - Command for kicking in channels
+ * {@link DemoteCommand} - Command for demotion in channels
  * 
  * @author NodinChan
  *
  */
-public final class KickCommand extends Command {
+public final class DemoteCommand extends Command {
 	
-	public KickCommand() {
-		super("Kick");
-		setAliases("k");
-		setArgumentRange(1, 1024);
-		setUsage("[player] <reason>");
+	public DemoteCommand() {
+		super("Demote");
+		setAliases("de");
+		setArgumentRange(1, 1);
+		setUsage("[player]");
 	}
 	
 	@Override
@@ -51,20 +48,18 @@ public final class KickCommand extends Command {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
-		if (!channel.isParticipating(participant)) {
-			sendMessage(sender, "&4" + participant.getDisplayName() + " is not on the channel");
+		if (!channel.getOperators().contains(participant.getName())) {
+			sendMessage(sender, "&4" + participant.getDisplayName() + " has not been an operator");
 			return;
 		}
 		
-		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
-		
-		channel.leave(participant);
-		participant.sendMessage("&4You have been kicked from " + channel.getName() + ": " + reason);
+		channel.getOperators().remove(participant.getName());
+		participant.sendMessage("&4You have been demoted in " + channel.getName());
 		
 		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "&6" + participant.getDisplayName() + " has been kicked");
+			sendMessage(sender, "&6" + participant.getDisplayName() + " has been demoted");
 		
-		broadcast(channel, "&6" + participant.getDisplayName() + " has been kicked");
+		broadcast(channel, "&6" + participant.getDisplayName() + " has been demoted");
 	}
 	
 	@Override
@@ -72,6 +67,6 @@ public final class KickCommand extends Command {
 		if (channel.getOperators().contains(sender.getName()))
 			return true;
 		
-		return Vault.hasPermission(sender, "TitanChat.kick." + channel.getName());
+		return Vault.hasPermission(sender, "TitanChat.rank." + channel.getName());
 	}
 }

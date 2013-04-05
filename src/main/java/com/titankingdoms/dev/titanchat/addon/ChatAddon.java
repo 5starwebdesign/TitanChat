@@ -21,8 +21,15 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.loading.Loadable;
 
+/**
+ * {@link ChatAddon} - Extensions of TitanChat
+ * 
+ * @author NodinChan
+ *
+ */
 public class ChatAddon extends Loadable {
 	
 	protected final TitanChat plugin;
@@ -40,20 +47,49 @@ public class ChatAddon extends Loadable {
 		return false;
 	}
 	
+	/**
+	 * Registers the {@link ChatAddon}s
+	 * 
+	 * @param addons The {@link ChatAddon}s to register
+	 */
 	public final void register(ChatAddon... addons) {
 		plugin.getAddonManager().registerAddons(addons);
 	}
 	
+	/**
+	 * Registers the {@link Channel}s
+	 * 
+	 * @param channels The {@link Channel}s to register
+	 */
 	public final void register(Channel... channels) {
 		plugin.getChannelManager().registerChannels(channels);
 	}
 	
+	/**
+	 * Registers the {@link ChannelLoader}s
+	 * 
+	 * @param loaders The {@link ChannelLoader}s to register
+	 */
 	public final void register(ChannelLoader... loaders) {
 		plugin.getChannelManager().registerLoaders(loaders);
 	}
 	
+	/**
+	 * Registers the {@link Command}s
+	 * 
+	 * @param commands The {@link Command}s to register
+	 */
 	public final void register(Command... commands) {
 		plugin.getCommandManager().registerCommands(commands);
+	}
+	
+	/**
+	 * Registers the {@link Tag}s
+	 * 
+	 * @param tags The {@link Tag}s to register
+	 */
+	public final void register(Tag... tags) {
+		plugin.getTagManager().registerTags(tags);
 	}
 	
 	@Override
