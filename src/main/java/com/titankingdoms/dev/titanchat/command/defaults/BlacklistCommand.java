@@ -38,8 +38,8 @@ public final class BlacklistCommand extends Command {
 	public BlacklistCommand() {
 		super("Blaclist");
 		setAliases("ban", "b");
-		setArgumentRange(1, 1024);
-		setUsage("[player] <reason>");
+		setArgumentRange(2, 1024);
+		setUsage("[add/remove/list] <player> <reason>");
 	}
 	
 	@Override
@@ -51,21 +51,52 @@ public final class BlacklistCommand extends Command {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
-		if (channel.getBlacklist().contains(participant.getName())) {
-			sendMessage(sender, "&4" + participant.getDisplayName() + " is already banned from the channel");
-			return;
+		if (args[0].equalsIgnoreCase("add")) {
+			if (channel.getBlacklist().contains(participant.getName())) {
+				sendMessage(sender, "&4" + participant.getDisplayName() + " is already on the blacklist");
+				return;
+			}
+			
+			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
+			
+			channel.leave(participant);
+			channel.getBlacklist().add(participant.getName());
+			participant.sendMessage("&4You have been added to the blacklist of " + channel.getName());
+			
+			if (!reason.isEmpty())
+				participant.sendMessage("&4Reason: " + reason);
+			
+			if (!channel.isParticipating(sender.getName()))
+				sendMessage(sender, "&6" + participant.getDisplayName() + " has been added to blacklist");
+			
+			broadcast(channel, "&6" + participant.getDisplayName() + " has been added to blacklist");
+			
+		} else if (args[0].equalsIgnoreCase("remove")) {
+			if (!channel.getBlacklist().contains(participant.getName())) {
+				sendMessage(sender, "&4" + participant.getDisplayName() + " is not on the blacklist");
+				return;
+			}
+			
+			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
+			
+			channel.getBlacklist().remove(participant.getName());
+			participant.sendMessage("&6You have been removed from the blacklist of " + channel.getName());
+			
+			if (!reason.isEmpty())
+				participant.sendMessage("&6Reason: " + reason);
+			
+			if (!channel.isParticipating(sender.getName()))
+				sendMessage(sender, "&6" + participant.getDisplayName() + " has been removed from blacklist");
+			
+			broadcast(channel, "&6" + participant.getDisplayName() + " has been removed from blacklist");
+			
+		} else if (args[0].equalsIgnoreCase("list")) {
+			String list = StringUtils.join(channel.getBlacklist(), ", ");
+			sendMessage(sender, "&6" + channel.getName() + " Blacklist: " + list);
+			
+		} else {
+			sendMessage(sender, "&4Incorrect usage: /titanchat @[channel] blacklist " + getUsage());
 		}
-		
-		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
-		
-		channel.leave(participant);
-		channel.getBlacklist().add(participant.getName());
-		participant.sendMessage("&4You have been banned from " + channel.getName() + ": " + reason);
-		
-		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "&6" + participant.getDisplayName() + " has been banned");
-		
-		broadcast(channel, "&6" + participant.getDisplayName() + " has been banned");
 	}
 	
 	@Override

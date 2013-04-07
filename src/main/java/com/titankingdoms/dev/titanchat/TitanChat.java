@@ -37,6 +37,7 @@ import com.titankingdoms.dev.titanchat.format.tag.TagManager;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Messaging;
+import com.titankingdoms.dev.titanchat.util.Permissions;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
@@ -119,8 +120,10 @@ public final class TitanChat extends JavaPlugin {
 	 * @return True if no errors occured
 	 */
 	private boolean initMetrics() {
-		if (!getConfig().getBoolean("metrics-statistics", true))
+		if (!getConfig().getBoolean("metrics-statistics", true)) {
+			log(Level.INFO, "Metrics Disabled");
 			return true;
+		}
 		
 		try {
 			Metrics metrics = new Metrics(this);
@@ -255,6 +258,10 @@ public final class TitanChat extends JavaPlugin {
 		
 		if (!Vault.initialise(getServer()))
 			log(Level.WARNING, "Failed to hook into Vault");
+		
+		log(Level.INFO, "Registering permissions...");
+		
+		Permissions.load();
 		
 		for (int id : getConfig().getIntegerList("logging.debug"))
 			Debugger.startDebug(id);

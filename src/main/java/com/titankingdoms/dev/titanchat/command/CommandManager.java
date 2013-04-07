@@ -125,8 +125,8 @@ public final class CommandManager {
 	public void load() {
 		registerCommands(
 				new CreateCommand(), new DeleteCommand(),
-				new BlacklistCommand(), new KickCommand(), new PardonCommand(),
-				new DemoteCommand(), new PromoteCommand(), new WhitelistCommand(),
+				new BlacklistCommand(), new KickCommand(), new WhitelistCommand(),
+				new DemoteCommand(), new PromoteCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new ReloadCommand(),
 				new SendCommand(),
@@ -177,8 +177,8 @@ public final class CommandManager {
 		
 		registerCommands(
 				new CreateCommand(), new DeleteCommand(),
-				new BlacklistCommand(), new KickCommand(), new PardonCommand(),
-				new DemoteCommand(), new PromoteCommand(), new WhitelistCommand(),
+				new BlacklistCommand(), new KickCommand(), new WhitelistCommand(),
+				new DemoteCommand(), new PromoteCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new ReloadCommand(),
 				new SendCommand(),

@@ -1,0 +1,62 @@
+join_<channel>:
+    description: Grants permission to join
+    default: op
+leave_<channel>:
+    description: Grants permission to leave
+    default: op
+speak_<channel>:
+    description: Grants permission to speak
+    default: op
+participate_<channel>:
+    description: Grants permission to participate
+    default: op
+    children:
+        join_<channel>: true
+        leave_<channel>: true
+        speak_<channel>: true
+blacklist_<channel>:
+    description: Grants permission to edit and view the blacklist
+    default: op
+whitelist_<channel>:
+    description: Grants permission to edit and view the whitelist
+    default: op
+kick_<channel>:
+    description: Grants permission to kick
+    default: op
+rank_<channel>:
+    description: Grants permission to rank
+    default: op
+create:
+    description: Grants permission to channel creation
+    default: op
+delete:
+    description: Grants permission to channel deletion
+    default: op
+reload:
+    description: Grants permission to reload TitanChat
+    default: op
+debug:
+    description: Grants permission to debug TitanChat
+    default: op
+staff:
+    description: Grants all permissions
+    default: op
+    children:
+        participate_<channel>: true
+        create: true
+        delete: true
+        blacklist_<channel>: true
+        whitelist_<channel>: true
+        kick_<channel>: true
+        rank_<channel>: true
+        reload: true
+        debug: true
+auto_join:
+    description: Auto-joins on login
+    default: false
+auto_leave:
+    description: Auto-leaves on login
+    default: false
+update:
+    description: Notifies about updates
+    default: false

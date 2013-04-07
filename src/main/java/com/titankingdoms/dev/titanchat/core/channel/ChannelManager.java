@@ -29,8 +29,6 @@ import java.util.logging.Level;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
@@ -39,8 +37,8 @@ import com.titankingdoms.dev.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.loading.Loader;
 import com.titankingdoms.dev.titanchat.loading.Loader.ExtensionFilter;
-import com.titankingdoms.dev.titanchat.util.ChatPermission;
 import com.titankingdoms.dev.titanchat.util.Debugger;
+import com.titankingdoms.dev.titanchat.util.Permissions;
 
 /**
  * {@link ChannelManager} - Manages {@link Channel}s
@@ -288,15 +286,8 @@ public final class ChannelManager {
 			
 			db.debug(Level.INFO, "Registered channel: " + channel.getName());
 			
-			for (ChatPermission chPerm : EnumSet.allOf(ChatPermission.class)) {
-				String node = chPerm.getChannelPermission(channel);
-				
-				Permission permission = new Permission(node, PermissionDefault.FALSE);
-				permission.addParent(chPerm.getGlobalPermission(), true);
-				
-				plugin.getServer().getPluginManager().addPermission(permission);
-				db.debug(Level.INFO, "Registered " + permission.getName() + " for " + channel.getName());
-			}
+			Permissions.load(channel);
+			db.debug(Level.INFO, "Registered permissions for " + channel.getName());
 		}
 	}
 	
@@ -420,11 +411,8 @@ public final class ChannelManager {
 		
 		db.debug(Level.INFO, "Unregistered channel: " + channel.getName());
 		
-		for (ChatPermission chPerm : EnumSet.allOf(ChatPermission.class)) {
-			String permission = chPerm.getChannelPermission(channel);
-			plugin.getServer().getPluginManager().removePermission(permission);
-			db.debug(Level.INFO, "Unregistered " + permission + " for " + channel.getName());
-		}
+		Permissions.unload(channel);
+		db.debug(Level.INFO, "Unregistered permissions for " + channel.getName());
 	}
 	
 	/**

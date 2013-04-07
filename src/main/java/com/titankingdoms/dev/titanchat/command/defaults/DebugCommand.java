@@ -68,7 +68,7 @@ public final class DebugCommand extends Command {
 			sendMessage(sender, "&6Stopped debugging: " + StringUtils.join(ids, ", "));
 			
 		} else {
-			sendMessage(sender, "&4Invalid action");
+			sendMessage(sender, "&4Incorrect usage: /titanchat debug " + getUsage());
 		}
 	}
 	
