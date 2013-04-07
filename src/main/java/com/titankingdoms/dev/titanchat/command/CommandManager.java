@@ -128,7 +128,7 @@ public final class CommandManager {
 				new BlacklistCommand(), new KickCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
-				new DebugCommand(), new ReloadCommand(),
+				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
 				new SendCommand(),
 				new WhoCommand()
 		);
@@ -180,7 +180,7 @@ public final class CommandManager {
 				new BlacklistCommand(), new KickCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
-				new DebugCommand(), new ReloadCommand(),
+				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
 				new SendCommand(),
 				new WhoCommand()
 		);
