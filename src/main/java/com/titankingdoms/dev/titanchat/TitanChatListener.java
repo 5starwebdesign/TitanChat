@@ -33,7 +33,6 @@ import org.w3c.dom.Node;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.core.participant.PlayerParticipant;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
@@ -87,9 +86,6 @@ public final class TitanChatListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if (!plugin.getParticipantManager().hasParticipant(event.getPlayer().getName()))
-			plugin.getParticipantManager().registerParticipants(new PlayerParticipant(event.getPlayer()));
-		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
 		if (participant.hasPermission("TitanChat.update")) {

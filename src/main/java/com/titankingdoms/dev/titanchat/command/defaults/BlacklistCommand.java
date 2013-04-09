@@ -25,6 +25,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
@@ -36,9 +37,9 @@ import com.titankingdoms.dev.titanchat.vault.Vault;
 public final class BlacklistCommand extends Command {
 	
 	public BlacklistCommand() {
-		super("Blaclist");
+		super("Blacklist");
 		setAliases("ban", "b");
-		setArgumentRange(2, 1024);
+		setArgumentRange(1, 1024);
 		setUsage("[add/remove/list] <player> <reason>");
 	}
 	
@@ -49,7 +50,17 @@ public final class BlacklistCommand extends Command {
 			return;
 		}
 		
-		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
+		if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove")) {
+			if (args.length < 2) {
+				Messaging.sendMessage(sender, "&4Invalid argument length");
+				
+				String usage = "/titanchat <@[channel]> " + getName().toLowerCase() + " " + getUsage();
+				Messaging.sendMessage(sender, "&6" + usage);
+				return;
+			}
+		}
+		
+		Participant participant = plugin.getParticipantManager().getParticipant(args[1]);
 		
 		if (args[0].equalsIgnoreCase("add")) {
 			if (channel.getBlacklist().contains(participant.getName())) {

@@ -216,7 +216,7 @@ public final class TitanChat extends JavaPlugin {
 			if (args.length < cmd.getMinArguments() || args.length > cmd.getMaxArguments()) {
 				Messaging.sendMessage(sender, "&4Invalid argument length");
 				
-				String usage = "/titanchat <@[channel]> " + cmd.getName() + " " + cmd.getUsage();
+				String usage = "/titanchat <@[channel]> " + cmd.getName().toLowerCase() + " " + cmd.getUsage();
 				Messaging.sendMessage(sender, "&6" + usage);
 				return;
 			}
@@ -243,6 +243,7 @@ public final class TitanChat extends JavaPlugin {
 		channel.unload();
 		command.unload();
 		participant.unload();
+		tag.unload();
 		
 		log(Level.INFO, "TitanChat is now disabled");
 	}
@@ -252,7 +253,7 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "TitanChat is now enabling...");
 		
 		if (instance == null)
-			instance = this; 
+			instance = this;
 		
 		log(Level.INFO, "Attempting to hook into Vault...");
 		
@@ -281,6 +282,7 @@ public final class TitanChat extends JavaPlugin {
 		channel.load();
 		command.load();
 		participant.load();
+		tag.load();
 		
 		if (channel.getChannels(Status.DEFAULT).isEmpty())
 			log(Level.WARNING, "No default channel has been defined");
@@ -305,7 +307,7 @@ public final class TitanChat extends JavaPlugin {
 		if (!new File(getDataFolder(), "config.yml").exists())
 			log(Level.INFO, "Generating default config.yml...");
 		
-		reloadConfig();
+		getConfig().options().copyDefaults(true);
 		saveConfig();
 		
 		if (channel.getChannelDirectory().listFiles().length == 0) {
@@ -321,7 +323,7 @@ public final class TitanChat extends JavaPlugin {
 		if (!new File(getDataFolder(), "participants.yml").exists())
 			log(Level.INFO, "Generating default participants.yml...");
 		
-		participant.reloadConfig();
+		participant.getConfig().options().copyDefaults(true);
 		participant.saveConfig();
 		
 		log(Level.INFO, "TitanChat is now loaded");

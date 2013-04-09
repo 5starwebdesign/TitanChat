@@ -60,7 +60,7 @@ public final class ParticipantManager {
 		if (!hasParticipant("CONSOLE"))
 			registerParticipants(new ConsoleParticipant());
 		
-		return (ConsoleParticipant) getParticipant("CONSOLE");
+		return (ConsoleParticipant) participants.get("CONSOLE".toLowerCase());
 	}
 	
 	public Participant getParticipant(String name) {
@@ -86,7 +86,7 @@ public final class ParticipantManager {
 		if (!hasParticipant(sender.getName()))
 			registerParticipants(new PlayerParticipant((Player) sender));
 		
-		return participants.get(sender.getName());
+		return participants.get(sender.getName().toLowerCase());
 	}
 	
 	public Set<Participant> getParticipants() {
