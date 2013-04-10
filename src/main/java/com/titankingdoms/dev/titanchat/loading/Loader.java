@@ -35,10 +35,25 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.loading.Loadable.InitResult;
 
+/**
+ * {@link Loader} - Loads {@link Loadable}s
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Loader {
 	
 	private static final Logger log = Logger.getLogger("LoadingLog");
 	
+	/**
+	 * Loads the {@link Loadable}s in the specified directory
+	 * 
+	 * @param clazz The {@link Class} to load as
+	 * 
+	 * @param directory The directory to load from
+	 * 
+	 * @return The list of loaded {@link Loadable}s
+	 */
 	public static <T extends Loadable> List<T> load(Class<T> clazz, File directory) {
 		List<T> loadables = new ArrayList<T>();
 		
@@ -73,11 +88,11 @@ public final class Loader {
 				
 				loadable.initialise(loader, file, dataFolder);
 				
-				InitResult result = loadable.initialise();
+				InitResult result = loadable.onInitialise();
 				
 				Level level = Level.INFO;
 				
-				if (result.getResult())
+				if (result.isSuccessful())
 					loadables.add(loadable);
 				else
 					level = Level.WARNING;
@@ -85,7 +100,7 @@ public final class Loader {
 				if (!result.getMessage().isEmpty())
 					log.log(level, result.getMessage());
 				
-				if (!result.getResult())
+				if (!result.isSuccessful())
 					throw new Exception();
 				
 			} catch (Exception e) {

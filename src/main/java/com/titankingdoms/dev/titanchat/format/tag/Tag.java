@@ -21,6 +21,12 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
+/**
+ * {@link Tag} - Tag for formatting
+ * 
+ * @author NodinChan
+ *
+ */
 public abstract class Tag {
 	
 	private final TitanChat plugin;
@@ -32,14 +38,33 @@ public abstract class Tag {
 		this.tag = tag;
 	}
 	
+	/**
+	 * Gets the format for the variable
+	 * 
+	 * @return The variable format
+	 */
 	public String getFormat() {
-		String format = plugin.getConfig().getString("formatting.tag-format.tags." + tag.substring(1), "");
+		String format = plugin.getConfig().getString("formatting.tag-format.tags." + tag.substring(1), "%var%");
 		return (format != null && !format.isEmpty()) ? format : plugin.getTagManager().getDefaultTagFormat();
 	}
 	
+	/**
+	 * Gets the tag
+	 * 
+	 * @return The tag
+	 */
 	public final String getTag() {
 		return tag;
 	}
 	
+	/**
+	 * Gets the variable represented by the tag
+	 * 
+	 * @param participant The {@link Participant} chatting
+	 * 
+	 * @param channel The {@link Channel} being chat in
+	 * 
+	 * @return The variable
+	 */
 	public abstract String getVariable(Participant participant, Channel channel);
 }

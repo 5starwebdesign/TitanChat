@@ -25,6 +25,12 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.format.tag.defaults.*;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 
+/**
+ * {@link TagManager} - Manages {@link Tag}s
+ * 
+ * @author NodinChan
+ *
+ */
 public class TagManager {
 	
 	private final TitanChat plugin;
@@ -38,22 +44,51 @@ public class TagManager {
 		this.tags = new HashMap<String, Tag>();
 	}
 	
+	/**
+	 * Gets the default format for variables
+	 * 
+	 * @return The default format for variables
+	 */
 	public String getDefaultTagFormat() {
-		return plugin.getConfig().getString("formatting.tag-format.default", "");
+		return plugin.getConfig().getString("formatting.tag-format.default", "%var%");
 	}
 	
+	/**
+	 * Gets the specified {@link Tag}
+	 * 
+	 * @param tag The name of the {@link Tag}
+	 * 
+	 * @return The specified {@link Tag} if found, otherwise null
+	 */
 	public Tag getTag(String tag) {
 		return tags.get(tag.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link Tag} is registered
+	 * 
+	 * @param tag The name of the {@link Tag}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasTag(String tag) {
 		return tags.containsKey(tag.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link Tag} is registered
+	 * 
+	 * @param tag The {@link Tag}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasTag(Tag tag) {
 		return hasTag(tag.getTag());
 	}
 	
+	/**
+	 * Loads the manager
+	 */
 	public void load() {
 		registerTags(
 				new ColourTag(),
@@ -64,6 +99,11 @@ public class TagManager {
 		);
 	}
 	
+	/**
+	 * Registers the {@link Tag}s
+	 * 
+	 * @param tags The {@link Tag}s to register
+	 */
 	public void registerTags(Tag... tags) {
 		if (tags == null)
 			return;
@@ -82,10 +122,18 @@ public class TagManager {
 		}
 	}
 	
+	/**
+	 * Unloads the manager
+	 */
 	public void unload() {
 		this.tags.clear();
 	}
 	
+	/**
+	 * Unregisters the {@link Tag}
+	 * 
+	 * @param tag The {@link Tag} to unregister
+	 */
 	public void unregisterTag(Tag tag) {
 		if (tag == null || !hasTag(tag))
 			return;

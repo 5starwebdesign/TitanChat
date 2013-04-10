@@ -22,6 +22,12 @@ import org.bukkit.event.HandlerList;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
+/**
+ * {@link ChannelJoinEvent} - Called when a {@link Participant} joins a {@link Channel}
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChannelJoinEvent extends ChannelEvent {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -42,6 +48,11 @@ public final class ChannelJoinEvent extends ChannelEvent {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the {@link Participant} invloved
+	 * 
+	 * @return The {@link Participant}
+	 */
 	public Participant getParticipant() {
 		return participant;
 	}

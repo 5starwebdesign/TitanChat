@@ -11,8 +11,17 @@ import org.bukkit.permissions.PermissionDefault;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 
+/**
+ * {@link Permissions} - Loads permissions
+ * 
+ * @author NodinChan
+ *
+ */
 public class Permissions {
 	
+	/**
+	 * Loads all default TitanChat permissions
+	 */
 	public static void load() {
 		TitanChat plugin = TitanChat.getInstance();
 		
@@ -45,6 +54,11 @@ public class Permissions {
 		}
 	}
 	
+	/**
+	 * Loads all channel permissions for the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to load for
+	 */
 	public static void load(Channel channel) {
 		TitanChat plugin = TitanChat.getInstance();
 		
@@ -83,6 +97,11 @@ public class Permissions {
 		}
 	}
 	
+	/**
+	 * Unloads all channel permissions for the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to unload for
+	 */
 	public static void unload(Channel channel) {
 		TitanChat plugin = TitanChat.getInstance();
 		

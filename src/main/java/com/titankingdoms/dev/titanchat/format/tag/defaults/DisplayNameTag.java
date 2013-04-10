@@ -21,6 +21,12 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
+/**
+ * {@link DisplayNameTag} - {@link Tag} for the display name of the {@link Participant}
+ * 
+ * @author NodinChan
+ *
+ */
 public final class DisplayNameTag extends Tag {
 	
 	public DisplayNameTag() {

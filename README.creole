@@ -8,8 +8,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 * Channels
 ** Create or delete channels with ease
-** Administrate with ban, kick and mute commands
-** Follow channels to receive their chat without having them see yours
+** Administrate with blacklist and kick commands
 * Supports
 ** Colour codes
 ** Prefixes and suffixes
@@ -50,6 +49,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 20.03.13 - Completed half of the rewrite, awaiting Bukkit 1.5 Beta Build
 * 22.03.13 - Completed most of the rewrite, completing commands
 * 05.04.13 - Ensure that code is compatible with Jenkins
+* 11.04.13 - JavaDocs
 
 -----------------------------------------------------------------------------------------------------------------------
 

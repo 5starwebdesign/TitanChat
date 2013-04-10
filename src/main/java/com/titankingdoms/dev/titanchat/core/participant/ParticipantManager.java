@@ -49,6 +49,11 @@ public final class ParticipantManager {
 		this.participants = new HashMap<String, Participant>();
 	}
 	
+	/**
+	 * Gets the configuration for {@link Participant}s
+	 * 
+	 * @return The configuration
+	 */
 	public FileConfiguration getConfig() {
 		if (config == null)
 			reloadConfig();
@@ -56,6 +61,11 @@ public final class ParticipantManager {
 		return config;
 	}
 	
+	/**
+	 * Gets the {@link ConsoleParticipant}
+	 * 
+	 * @return The {@link ConsoleParticipant}
+	 */
 	public ConsoleParticipant getConsoleParticipant() {
 		if (!hasParticipant("CONSOLE"))
 			registerParticipants(new ConsoleParticipant());
@@ -63,12 +73,19 @@ public final class ParticipantManager {
 		return (ConsoleParticipant) participants.get("CONSOLE".toLowerCase());
 	}
 	
+	/**
+	 * Gets the specified {@link Participant}
+	 * 
+	 * @param name The name of the {@link Participant}
+	 * 
+	 * @return The specified {@link Participant}
+	 */
 	public Participant getParticipant(String name) {
 		if (name.equals("CONSOLE"))
 			return getConsoleParticipant();
 		
 		if (!hasParticipant(name)) {
-			Player player = plugin.getServer().getPlayer(name);
+			Player player = plugin.getServer().getPlayerExact(name);
 			
 			if (player != null)
 				return getParticipant(player);
@@ -79,6 +96,13 @@ public final class ParticipantManager {
 		return participants.get(name.toLowerCase());
 	}
 	
+	/**
+	 * Gets the specified {@link Participant}
+	 * 
+	 * @param sender The {@link CommandSender} represented by the {@link Participant}
+	 * 
+	 * @return The specified {@link Participant}
+	 */
 	public Participant getParticipant(CommandSender sender) {
 		if (sender.getName().equals("CONSOLE"))
 			return getConsoleParticipant();
@@ -89,18 +113,40 @@ public final class ParticipantManager {
 		return participants.get(sender.getName().toLowerCase());
 	}
 	
+	/**
+	 * Gets all {@link Participant}s
+	 * 
+	 * @return All registered {@link Participant}s
+	 */
 	public Set<Participant> getParticipants() {
 		return new HashSet<Participant>(participants.values());
 	}
 	
+	/**
+	 * Checks if the {@link Participant} has been registered
+	 * 
+	 * @param name The name of the {@link Participant}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasParticipant(String name) {
 		return participants.containsKey(name.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the {@link Participant} has been registered
+	 * 
+	 * @param participant The {@link Participant}
+	 * 
+	 * @return True if found
+	 */
 	public boolean hasParticipant(Participant participant) {
 		return hasParticipant(participant.getName());
 	}
 	
+	/**
+	 * Loads the manager
+	 */
 	public void load() {
 		registerParticipants(new ConsoleParticipant());
 		
@@ -108,7 +154,15 @@ public final class ParticipantManager {
 			registerParticipants(new PlayerParticipant(player));
 	}
 	
+	/**
+	 * Registers the {@link Participant}s
+	 * 
+	 * @param participants The {@link Participant}s to register
+	 */
 	public void registerParticipants(Participant... participants) {
+		if (participants == null)
+			return;
+		
 		for (Participant participant : participants) {
 			if (participant == null)
 				continue;
@@ -123,6 +177,9 @@ public final class ParticipantManager {
 		}
 	}
 	
+	/**
+	 * Reloads the manager
+	 */
 	public void reload() {
 		this.participants.clear();
 		
@@ -132,6 +189,9 @@ public final class ParticipantManager {
 			registerParticipants(new PlayerParticipant(player));
 	}
 	
+	/**
+	 * Reloads the configuration for {@link Participant}s
+	 */
 	public void reloadConfig() {
 		if (configFile == null)
 			configFile = new File(plugin.getDataFolder(), "participants.yml");
@@ -144,6 +204,9 @@ public final class ParticipantManager {
 			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
 	}
 	
+	/**
+	 * Saves the configuration for {@link Participant}s
+	 */
 	public void saveConfig() {
 		if (configFile == null || config == null)
 			return;
@@ -151,10 +214,18 @@ public final class ParticipantManager {
 		try { config.save(configFile); } catch (Exception e) {}
 	}
 	
+	/**
+	 * Unloads the manager
+	 */
 	public void unload() {
 		this.participants.clear();
 	}
 	
+	/**
+	 * Unregisters the {@link Participant}
+	 * 
+	 * @param participant The {@link Participant} to unregister
+	 */
 	public void unregisterParticipant(Participant participant) {
 		if (participant == null || !hasParticipant(participant))
 			return;

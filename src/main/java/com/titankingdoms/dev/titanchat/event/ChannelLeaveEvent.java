@@ -22,6 +22,12 @@ import org.bukkit.event.HandlerList;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
+/**
+ * {@link ChannelLeaveEvent} - Called when a {@link Participant} leaves a {@link Channel}
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChannelLeaveEvent extends ChannelEvent {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -42,6 +48,11 @@ public final class ChannelLeaveEvent extends ChannelEvent {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the {@link Participant} involved
+	 * 
+	 * @return The {@link Participant}
+	 */
 	public Participant getParticipant() {
 		return participant;
 	}

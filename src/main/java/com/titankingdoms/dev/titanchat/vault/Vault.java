@@ -27,11 +27,24 @@ import org.bukkit.plugin.ServicesManager;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
+/**
+ * {@link Vault} - Vault bridge
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Vault {
 	
 	private static Chat chat;
 	private static Permission permission;
 	
+	/**
+	 * Gets the group prefix of the {@link Player}
+	 * 
+	 * @param player The {@link Player} to get for
+	 * 
+	 * @return The prefix if found
+	 */
 	public static String getGroupPrefix(Player player) {
 		if (player == null || !isPermissionSetup() || !isChatSetup())
 			return "";
@@ -45,6 +58,13 @@ public final class Vault {
 		return (prefix != null) ? prefix : "";
 	}
 	
+	/**
+	 * Gets the group suffix of the {@link Player}
+	 * 
+	 * @param player The {@link Player} to get for
+	 * 
+	 * @return The suffix if found
+	 */
 	public static String getGroupSuffix(Player player) {
 		if (player == null || !isPermissionSetup() || !isChatSetup())
 			return "";
@@ -58,6 +78,13 @@ public final class Vault {
 		return (suffix != null) ? suffix : "";
 	}
 	
+	/**
+	 * Gets the player prefix of the {@link Player}
+	 * 
+	 * @param player The {@link Player} to get for
+	 * 
+	 * @return The prefix if found
+	 */
 	public static String getPlayerPrefix(Player player) {
 		if (player == null || !isChatSetup())
 			return "";
@@ -66,6 +93,13 @@ public final class Vault {
 		return (prefix != null) ? prefix : "";
 	}
 	
+	/**
+	 * Gets the player suffix of the {@link Player}
+	 * 
+	 * @param player The {@link Player} to get for
+	 * 
+	 * @return The suffix if found
+	 */
 	public static String getPlayerSuffix(Player player) {
 		if (player == null || !isChatSetup())
 			return "";
@@ -74,6 +108,15 @@ public final class Vault {
 		return (suffix != null) ? suffix : "";
 	}
 	
+	/**
+	 * Checks if the {@link CommandSender} has the permission node
+	 * 
+	 * @param sender The {@link CommandSender} to check
+	 * 
+	 * @param node The permission node
+	 * 
+	 * @return True if the {@link CommandSender} has permission
+	 */
 	public static boolean hasPermission(CommandSender sender, String node) {
 		if (sender != null || !isPermissionSetup())
 			return sender.hasPermission(node);
@@ -81,10 +124,30 @@ public final class Vault {
 		return (sender instanceof Player) ? hasPermission((Player) sender, node) : permission.has(sender, node);
 	}
 	
+	/**
+	 * Checks if the {@link Player} has the permission node
+	 * 
+	 * @param player The {@link Player} to check
+	 * 
+	 * @param node The permission node
+	 * 
+	 * @return True if the {@link Player} has permission
+	 */
 	public static boolean hasPermission(Player player, String node) {
 		return hasPermission(player.getWorld(), player, node);
 	}
 	
+	/**
+	 * Checks if the {@link Player} has the permission node in the specified {@link World}
+	 * 
+	 * @param world The {@link World}
+	 * 
+	 * @param player The {@link Player} to check
+	 * 
+	 * @param node The permission node
+	 * 
+	 * @return True if the {@link Player} has permission
+	 */
 	public static boolean hasPermission(World world, Player player, String node) {
 		if (player == null)
 			return false;
@@ -92,6 +155,13 @@ public final class Vault {
 		return (isPermissionSetup()) ? permission.playerHas(world, player.getName(), node) : player.hasPermission(node);
 	}
 	
+	/**
+	 * Initialises the Vault bridge
+	 * 
+	 * @param server The {@link Server}
+	 * 
+	 * @return True if initialised
+	 */
 	public static boolean initialise(Server server) {
 		if (server == null)
 			return false;
@@ -114,10 +184,20 @@ public final class Vault {
 		return true;
 	}
 	
+	/**
+	 * Checks if {@link Chat} is set up
+	 * 
+	 * @return True if is set up
+	 */
 	public static boolean isChatSetup() {
 		return chat != null;
 	}
 	
+	/**
+	 * Checks if {@link Permission} is set up
+	 * 
+	 * @return True if is set up
+	 */
 	public static boolean isPermissionSetup() {
 		return permission != null;
 	}

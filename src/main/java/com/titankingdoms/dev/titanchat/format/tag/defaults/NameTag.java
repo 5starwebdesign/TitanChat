@@ -21,6 +21,12 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
+/**
+ * {@link NameTag} - {@link Tag} for the name of the {@link Participant}
+ * 
+ * @author NodinChan
+ *
+ */
 public final class NameTag extends Tag {
 	
 	public NameTag() {

@@ -4,6 +4,12 @@ import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 
+/**
+ * {@link ChannelCreationEvent} - Called when a {@link Channel} is created
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChannelCreationEvent extends ChannelEvent {
 	
 	private static final HandlerList handlers = new HandlerList();

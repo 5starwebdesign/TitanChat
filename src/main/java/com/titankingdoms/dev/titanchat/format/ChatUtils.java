@@ -23,20 +23,52 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 
+/**
+ * {@link ChatUtils} - Utilities for ordering {@link String}s
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChatUtils {
 	
+	/**
+	 * Gets specified page of the paginated paragraph with the specified width and height
+	 * 
+	 * @param paragraph The paragraph
+	 * 
+	 * @param pageNumber The page
+	 * 
+	 * @param lineLength The width
+	 * 
+	 * @param pageHeight The height
+	 * 
+	 * @return The specified page if within range, otherwise an empty array
+	 */
 	public static String[] paginate(String paragraph, int pageNumber, int lineLength, int pageHeight) {
 		String[] lines = wordWrap(paragraph, lineLength);
 		
 		int totalPages = lines.length / pageHeight + ((lines.length % pageHeight != 0) ? 1 : 0);
-		int page = (pageNumber > totalPages) ? totalPages : pageNumber;
 		
-		int from = (page - 1) * pageHeight;
+		if (pageNumber > totalPages)
+			return lines;
+		
+		int from = (pageNumber - 1) * pageHeight;
 		int to = ((from + pageHeight) > lines.length) ? lines.length : from + pageHeight;
 		
 		return Arrays.copyOfRange(lines, from, to);
 	}
 	
+	/**
+	 * Paginates the paragraph with the specified width and height
+	 * 
+	 * @param paragraph The paragraph to paginate
+	 * 
+	 * @param lineLength The width
+	 * 
+	 * @param pageHeight The height
+	 * 
+	 * @return The pages of lines
+	 */
 	public static String[][] paginate(String paragraph, int lineLength, int pageHeight) {
 		List<String[]> pages = new LinkedList<String[]>();
 		
@@ -54,6 +86,15 @@ public final class ChatUtils {
 		return pages.toArray(new String[0][0]);
 	}
 	
+	/**
+	 * Splits the line into lines of words within the width
+	 * 
+	 * @param line The line to split
+	 * 
+	 * @param lineLength The width
+	 * 
+	 * @return The lines
+	 */
 	public static String[] wordWrap(String line, int lineLength) {
 		List<String> lines = new LinkedList<String>();
 		

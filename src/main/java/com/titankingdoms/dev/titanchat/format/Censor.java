@@ -23,8 +23,25 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
+/**
+ * {@link Censor} - Used for censoring
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Censor {
 	
+	/**
+	 * Filters the text for phrases and censors the phrases with the censor
+	 * 
+	 * @param text The text to filter
+	 * 
+	 * @param phrases The phrases to censor
+	 * 
+	 * @param censor The censor to use
+	 * 
+	 * @return The filtered text
+	 */
 	public static String filter(String text, List<String> phrases, String censor) {
 		if (text == null)
 			return "";

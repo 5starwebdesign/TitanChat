@@ -25,6 +25,12 @@ import org.bukkit.event.HandlerList;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
+/**
+ * {@link ChannelChatEvent} - Called when {@link Participant}s chat in {@link Channel}s
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ChannelChatEvent extends ChannelEvent {
 	
 	private static final HandlerList handlers = new HandlerList();
@@ -55,6 +61,13 @@ public final class ChannelChatEvent extends ChannelEvent {
 		this.message = message;
 	}
 	
+	/**
+	 * Adds the {@link Participant} to the recipients
+	 * 
+	 * @param recipient The {@link Participant} to add
+	 * 
+	 * @return True if successfully added
+	 */
 	public boolean addRecipient(Participant recipient) {
 		if (recipient == null)
 			return false;
@@ -62,6 +75,11 @@ public final class ChannelChatEvent extends ChannelEvent {
 		return (!this.recipients.contains(recipient)) ? this.recipients.add(recipient) : false;
 	}
 	
+	/**
+	 * Gets the format to be used
+	 * 
+	 * @return The format
+	 */
 	public String getFormat() {
 		return format;
 	}
@@ -75,18 +93,40 @@ public final class ChannelChatEvent extends ChannelEvent {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the message to be sent
+	 * 
+	 * @return The message
+	 */
 	public String getMessage() {
 		return message;
 	}
 	
+	/**
+	 * Gets the recipients of the message
+	 * 
+	 * @return The recipients
+	 */
 	public Set<Participant> getRecipients() {
 		return new HashSet<Participant>(recipients);
 	}
 	
+	/**
+	 * Gets the sender of the message
+	 * 
+	 * @return The sender
+	 */
 	public Participant getSender() {
 		return sender;
 	}
 	
+	/**
+	 * Removes the {@link Participant} from the recipients
+	 * 
+	 * @param recipient The {@link Participant} to remove
+	 * 
+	 * @return True if successfully removed
+	 */
 	public boolean removeRecipient(Participant recipient) {
 		if (recipient == null)
 			return false;
@@ -94,10 +134,20 @@ public final class ChannelChatEvent extends ChannelEvent {
 		return (this.recipients.contains(recipient)) ? this.recipients.remove(recipient) : false;
 	}
 	
+	/**
+	 * Sets the format to be used
+	 * 
+	 * @param format The new format
+	 */
 	public void setFormat(String format) {
 		this.format = format;
 	}
 	
+	/**
+	 * Sets the message to be sent
+	 * 
+	 * @param message The new message
+	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}

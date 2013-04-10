@@ -21,6 +21,12 @@ import org.bukkit.event.Event;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 
+/**
+ * {@link ChannelEvent} - Base for {@link ChannelEvent}s
+ * 
+ * @author NodinChan
+ *
+ */
 public abstract class ChannelEvent extends Event {
 	
 	protected final Channel channel;
@@ -29,6 +35,11 @@ public abstract class ChannelEvent extends Event {
 		this.channel = channel;
 	}
 	
+	/**
+	 * Gets the {@link Channel} involved
+	 * 
+	 * @return The {@link Channel}
+	 */
 	public final Channel getChannel() {
 		return channel;
 	}

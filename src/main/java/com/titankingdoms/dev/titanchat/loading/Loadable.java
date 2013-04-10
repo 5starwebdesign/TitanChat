@@ -26,7 +26,13 @@ import org.bukkit.event.Listener;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 
-public class Loadable implements Comparable<Loadable>, Listener {
+/**
+ * {@link Loadable} - Loadable by the {@link Loader}
+ * 
+ * @author NodinChan
+ *
+ */
+public abstract class Loadable implements Comparable<Loadable>, Listener {
 	
 	protected final TitanChat plugin;
 	
@@ -50,10 +56,20 @@ public class Loadable implements Comparable<Loadable>, Listener {
 		return getName().compareTo(loadable.getName());
 	}
 	
+	/**
+	 * Gets the {@link ClassLoader} that loaded the {@link Loadable}
+	 * 
+	 * @return The {@link ClassLoader}
+	 */
 	public final ClassLoader getClassLoader() {
 		return loader;
 	}
 	
+	/**
+	 * Gets the configuration
+	 * 
+	 * @return The configuration
+	 */
 	public FileConfiguration getConfig() {
 		if (config == null)
 			reloadConfig();
@@ -61,34 +77,80 @@ public class Loadable implements Comparable<Loadable>, Listener {
 		return config;
 	}
 	
+	/**
+	 * Gets the configuration {@link File}
+	 * 
+	 * @return The {@link File} with the configuration
+	 */
 	public File getConfigFile() {
 		return new File(getDataFolder(), "config.yml");
 	}
 	
+	/**
+	 * Gets the data folder of the {@link Loadable}
+	 * 
+	 * @return The data folder
+	 */
 	public File getDataFolder() {
 		return dataFolder;
 	}
 	
+	/**
+	 * Gets the {@link InputStream} for the default configuration
+	 * 
+	 * @return The {@link InputStream} for default configuration
+	 */
 	public InputStream getDefaultConfigStream() {
 		return getResource("config.yml");
 	}
 	
+	/**
+	 * Gets the Jar {@link File} that the {@link Loadable} was loaded from
+	 * 
+	 * @return The Jar {@link File}
+	 */
 	protected final File getFile() {
 		return file;
 	}
 	
+	/**
+	 * Gets the name of the {@link Loadable}
+	 * 
+	 * @return The name
+	 */
 	public final String getName() {
 		return name;
 	}
 	
+	/**
+	 * Gets the resource from the {@link JarFile} of the {@link Loadable}
+	 * 
+	 * @param name The name of the resource
+	 * 
+	 * @return The {@link InputStream} of the resource if found, otherwise null
+	 */
 	public InputStream getResource(String name) {
 		return loader.getResourceAsStream(name);
 	}
 	
-	public InitResult initialise() {
+	/**
+	 * Called after initialising the {@link Loadable}
+	 * 
+	 * @return The {@link InitResult}
+	 */
+	public InitResult onInitialise() {
 		return new InitResult(true);
 	}
 	
+	/**
+	 * Called to initialise the {@link Loadable}
+	 * 
+	 * @param loader The {@link ClassLoader} that loaded the {@link Loadable}
+	 * 
+	 * @param file The {@link File} that the {@link Loadable} was loaded from
+	 * 
+	 * @param dataFolder The data folder of the {@link Loadable
+	 */
 	protected final void initialise(ClassLoader loader, File file, File dataFolder) {
 		if (initialised)
 			return;
@@ -99,10 +161,18 @@ public class Loadable implements Comparable<Loadable>, Listener {
 		this.initialised = true;
 	}
 	
+	/**
+	 * Registers the {@link Listener}
+	 * 
+	 * @param listener The {@link Listener} to register
+	 */
 	public final void registerListener(Listener listener) {
 		plugin.getServer().getPluginManager().registerEvents(listener, plugin);
 	}
 	
+	/**
+	 * Reloads the configuration
+	 */
 	public void reloadConfig() {
 		if (configFile == null)
 			configFile = getConfigFile();
@@ -115,6 +185,9 @@ public class Loadable implements Comparable<Loadable>, Listener {
 			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
 	}
 	
+	/**
+	 * Saves the configuration
+	 */
 	public void saveConfig() {
 		if (configFile == null || config == null)
 			return;
@@ -122,6 +195,12 @@ public class Loadable implements Comparable<Loadable>, Listener {
 		try { config.save(configFile); } catch (Exception e) {}
 	}
 	
+	/**
+	 * {@link InitResult} - Result of initialisation
+	 * 
+	 * @author NodinChan
+	 *
+	 */
 	public final class InitResult {
 		
 		private final boolean success;
@@ -133,14 +212,24 @@ public class Loadable implements Comparable<Loadable>, Listener {
 		
 		public InitResult(boolean success, String message) {
 			this.success = success;
-			this.message = message;
+			this.message = (message != null) ? message : "";
 		}
 		
+		/**
+		 * Gets the message of the result
+		 * 
+		 * @return The message
+		 */
 		public String getMessage() {
 			return message;
 		}
 		
-		public boolean getResult() {
+		/**
+		 * Gets the result of the the initialisation
+		 * 
+		 * @return True if successful
+		 */
+		public boolean isSuccessful() {
 			return success;
 		}
 	}

@@ -19,6 +19,7 @@ package com.titankingdoms.dev.titanchat.core.channel;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -182,9 +183,9 @@ public abstract class Channel extends ChatEntity {
 	@Override
 	public void save() {
 		super.save();
-		getConfig().set("blacklist", getBlacklist());
-		getConfig().set("whitelist", getWhitelist());
-		getConfig().set("operators", getOperators());
+		getConfig().set("blacklist", new ArrayList<String>(getBlacklist()));
+		getConfig().set("whitelist", new ArrayList<String>(getWhitelist()));
+		getConfig().set("operators", new ArrayList<String>(getOperators()));
 		saveConfig();
 	}
 	

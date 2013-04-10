@@ -21,6 +21,12 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
+/**
+ * {@link SuffixTag} - {@link Tag} for {@link Participant} suffix
+ * 
+ * @author NodinChan
+ *
+ */
 public final class SuffixTag extends Tag {
 	
 	public SuffixTag() {

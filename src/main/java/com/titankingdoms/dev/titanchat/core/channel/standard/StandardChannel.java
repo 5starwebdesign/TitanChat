@@ -36,6 +36,9 @@ public class StandardChannel extends Channel {
 	
 	@Override
 	public String[] getAliases() {
+		if (getConfig().get("aliases", null) == null)
+			return new String[0];
+		
 		return getConfig().getStringList("aliases").toArray(new String[0]);
 	}
 	

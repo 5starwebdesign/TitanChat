@@ -23,24 +23,54 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 
+/**
+ * {@link Format} - Formatting util
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Format {
 	
-	private final static Pattern colour = Pattern.compile("(?i)(&)([a-fk-or0-9])");
+	private static final Pattern colour = Pattern.compile("(?i)(&)([a-fk-or0-9])");
 	
-	public static final String DEFAULT_FORMAT = "%prefix%display%suffix\u00A7f: %message";
+	private static final String DEFAULT_FORMAT = "%prefix%display%suffix\u00A7f: %colour%message";
 	
+	/**
+	 * Colourises the text
+	 * 
+	 * @param text The text to colourise
+	 * 
+	 * @return The colourised text
+	 */
 	public static String colourise(String text) {
 		return text.replaceAll(colour.toString(), "\u00A7$2");
 	}
 	
+	/**
+	 * Decolourises the text
+	 * 
+	 * @param text The text to decolourise
+	 * 
+	 * @return The decolourised text
+	 */
 	public static String decolourise(String text) {
 		return text.replaceAll(colour.toString(), "");
 	}
 	
+	/**
+	 * Gets the default format
+	 * 
+	 * @return The default format
+	 */
 	public static String getDefaultFormat() {
 		return DEFAULT_FORMAT;
 	}
 	
+	/**
+	 * Gets the format
+	 * 
+	 * @return The format
+	 */
 	public static String getFormat() {
 		FileConfiguration config = TitanChat.getInstance().getConfig();
 		return colourise(config.getString("formatting.format", DEFAULT_FORMAT));

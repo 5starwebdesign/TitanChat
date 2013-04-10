@@ -139,7 +139,7 @@ public final class TitanChat extends JavaPlugin {
 	/**
 	 * Sends the message with a prefix to the console
 	 * 
-	 * @param level The {@link Level} of log
+	 * @param level The {@link Level} of importance
 	 * 
 	 * @param message The message to send
 	 */
@@ -264,8 +264,10 @@ public final class TitanChat extends JavaPlugin {
 		
 		Permissions.load();
 		
-		for (int id : getConfig().getIntegerList("logging.debug"))
-			Debugger.startDebug(id);
+		if (getConfig().get("logging.debug", null) != null) {
+			for (int id : getConfig().getIntegerList("logging.debug"))
+				Debugger.startDebug(id);
+		}
 		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
 		

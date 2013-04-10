@@ -21,6 +21,12 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
+/**
+ * {@link PrefixTag} - {@link Tag} for {@link Participant} prefix
+ * 
+ * @author NodinChan
+ *
+ */
 public final class PrefixTag extends Tag {
 	
 	public PrefixTag() {

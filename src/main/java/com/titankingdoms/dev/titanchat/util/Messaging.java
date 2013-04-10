@@ -32,8 +32,19 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
 
+/**
+ * {@link Messaging} - Messaging util
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Messaging {
 	
+	/**
+	 * Broadcasts the message
+	 * 
+	 * @param messages The messages to broadcast
+	 */
 	public static void broadcast(String... messages) {
 		List<String> lines = new ArrayList<String>();
 		
@@ -44,6 +55,13 @@ public final class Messaging {
 			TitanChat.getInstance().getServer().broadcastMessage(line);
 	}
 	
+	/**
+	 * Broadcasts the message to the {@link World}
+	 * 
+	 * @param world The {@link World} to broadcast to
+	 * 
+	 * @param messages The messages to broadcast
+	 */
 	public static void broadcast(World world, String... messages) {
 		if (world == null)
 			return;
@@ -57,6 +75,13 @@ public final class Messaging {
 			player.sendMessage(lines.toArray(new String[0]));
 	}
 	
+	/**
+	 * Broadcasts the message to the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to broadcast to
+	 * 
+	 * @param messages The messages to broadcast
+	 */
 	public static void broadcast(Channel channel, String... messages) {
 		if (channel == null)
 			return;
@@ -70,6 +95,15 @@ public final class Messaging {
 			participant.sendMessage(lines.toArray(new String[0]));
 	}
 	
+	/**
+	 * Broadcasts the message to the area around the {@link CommandSender}
+	 * 
+	 * @param sender The {@link CommandSender}
+	 * 
+	 * @param radius The radius around the {@link CommandSender}
+	 * 
+	 * @param messages The messages to broadcast
+	 */
 	public static void broadcast(CommandSender sender, double radius, String... messages) {
 		if (sender == null)
 			return;
@@ -82,6 +116,13 @@ public final class Messaging {
 				sendMessage((Player) entity, messages);
 	}
 	
+	/**
+	 * Sends the message to the {@link CommandSender}
+	 * 
+	 * @param sender The {@link CommandSender} to broadcast to
+	 * 
+	 * @param messages The messages to broadcast
+	 */
 	public static void sendMessage(CommandSender sender, String... messages) {
 		if (sender == null)
 			return;

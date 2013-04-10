@@ -21,6 +21,12 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
+/**
+ * {@link ColourTag} - {@link Tag} for the chat display colour of the {@link Channel}
+ * 
+ * @author NodinChan
+ *
+ */
 public final class ColourTag extends Tag {
 	
 	public ColourTag() {

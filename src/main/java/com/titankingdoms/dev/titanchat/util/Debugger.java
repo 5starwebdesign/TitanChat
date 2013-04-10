@@ -22,6 +22,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * {@link Debugger} - Debugs the plugin
+ * 
+ * @author NodinChan
+ *
+ */
 public final class Debugger {
 	
 	private final Logger log = Logger.getLogger("TitanDebug");
@@ -45,35 +51,77 @@ public final class Debugger {
 		this(id, "");
 	}
 	
+	/**
+	 * Logs the message
+	 * 
+	 * @param level The {@link Level} of importance
+	 * 
+	 * @param message The message to log
+	 */
 	public void debug(Level level, String message) {
 		if (isDebugging())
 			log.log(level, "[TitanDebug] " + ((!prefix.isEmpty()) ? prefix + ": " : "") + message);
 	}
 	
+	/**
+	 * Gets the IDs of debugging {@link Debugger}s
+	 * 
+	 * @return The IDs
+	 */
 	public static Set<Integer> getDebugging() {
 		return new HashSet<Integer>(debugging);
 	}
 	
+	/**
+	 * Gets the ID of the {@link Debugger}
+	 * 
+	 * @return The ID
+	 */
 	public int getId() {
 		return id;
 	}
 	
+	/**
+	 * Gets the prefix used in log messages
+	 * 
+	 * @return The prefix
+	 */
 	public String getPrefix() {
 		return prefix;
 	}
 	
+	/**
+	 * Checks if the {@link Debugger} is debugging
+	 * 
+	 * @return True if is debugging
+	 */
 	public boolean isDebugging() {
 		return isDebugging(id);
 	}
 	
+	/**
+	 * Checks if the {@link Debugger} with the specified ID is debugging
+	 * 
+	 * @param id The ID of the {@link Debugger}
+	 * 
+	 * @return True if is debugging
+	 */
 	public static boolean isDebugging(int id) {
 		return debugging.contains(id);
 	}
 	
+	/**
+	 * Starts debugging with the {@link Debugger}
+	 */
 	public void startDebug() {
 		startDebug(id);
 	}
 	
+	/**
+	 * Starts debugging with the {@link Debugger} with the specified ID
+	 * 
+	 * @param id The ID of the {@link Debugger}
+	 */
 	public static void startDebug(int id) {
 		if (id < 0)
 			debugging.addAll(debuggers);
@@ -81,10 +129,18 @@ public final class Debugger {
 			debugging.add(id);
 	}
 	
+	/**
+	 * Stops debugging with the {@link Debugger}
+	 */
 	public void stopDebug() {
 		stopDebug(id);
 	}
 	
+	/**
+	 * Stops debugging with the {@link Debugger} with the specified ID
+	 * 
+	 * @param id The ID of the {@link Debugger}
+	 */
 	public static void stopDebug(int id) {
 		if (id < 0)
 			debugging.clear();

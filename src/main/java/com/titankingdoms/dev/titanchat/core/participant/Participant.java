@@ -176,10 +176,8 @@ public class Participant extends ChatEntity {
 		
 		format = Format.colourise(tagMatch.appendTail(parsedFormat).toString());
 		
-		String[] lines = ChatUtils.wordWrap(format.replace("%message", message), 119);
-		
 		for (Participant recipient : event.getRecipients())
-			recipient.sendMessage(lines);
+			recipient.sendMessage(format.replace("%message", message));
 		
 		if (event.getRecipients().size() <= 1)
 			sendMessage("&6Nobody heard you...");
@@ -262,7 +260,7 @@ public class Participant extends ChatEntity {
 	@Override
 	public ConfigurationSection getDataSection() {
 		FileConfiguration config = plugin.getParticipantManager().getConfig();
-		return config.getConfigurationSection(getName().toLowerCase() + ".data");
+		return config.getConfigurationSection(getName() + ".data");
 	}
 	
 	/**
