@@ -255,11 +255,20 @@ public class Participant extends ChatEntity {
 	}
 	
 	/**
+	 * Gets the name of the current (@link Channel}
+	 * 
+	 * @return The name of the current {@link Channel}
+	 */
+	public final String getCurrent() {
+		return (current != null) ? current.getName() : "";
+	}
+	
+	/**
 	 * Gets the current {@link Channel}
 	 * 
 	 * @return The current {@link Channel}
 	 */
-	public final Channel getCurrent() {
+	public final Channel getCurrentChannel() {
 		return current;
 	}
 	
@@ -334,7 +343,7 @@ public class Participant extends ChatEntity {
 	 * @return True if focused at the {@link Channel}
 	 */
 	public final boolean isDirected(Channel channel) {
-		return isDirected(channel.getName());
+		return isDirected((channel != null) ? channel.getName() : "");
 	}
 	
 	/**
@@ -411,9 +420,10 @@ public class Participant extends ChatEntity {
 	
 	@Override
 	public void save() {
-		plugin.getParticipantManager().getConfig().set(getName() + ".channels.current", current.getName());
-		plugin.getParticipantManager().getConfig().set(getName() + ".channels.all", channels.keySet());
-		saveData();
+		super.save();
+		plugin.getParticipantManager().getConfig().set(getName() + ".channels.current", getCurrent());
+		plugin.getParticipantManager().getConfig().set(getName() + ".channels.all", getChannelList());
+		plugin.getParticipantManager().saveConfig();
 	}
 	
 	@Override

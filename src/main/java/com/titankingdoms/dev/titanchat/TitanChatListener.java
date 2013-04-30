@@ -27,6 +27,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -95,6 +96,17 @@ public final class TitanChatListener implements Listener {
 				participant.sendMessage("&5Update at &9" + site);
 			}
 		}
+	}
+	
+	/**
+	 * Unregisters the {@link Player}s on quit
+	 * 
+	 * @param event {@link PlayerQuitEvent}
+	 */
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
+		plugin.getParticipantManager().unregisterParticipant(participant);
 	}
 	
 	/**

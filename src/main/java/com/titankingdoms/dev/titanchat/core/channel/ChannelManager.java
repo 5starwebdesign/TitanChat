@@ -379,9 +379,6 @@ public final class ChannelManager {
 	 * Unloads the manager
 	 */
 	public void unload() {
-		for (Channel channel : channels.values())
-			channel.save();
-		
 		for (Channel channel : getChannels())
 			unregisterChannel(channel);
 		
@@ -399,6 +396,8 @@ public final class ChannelManager {
 	public void unregisterChannel(Channel channel) {
 		if (channel == null || !hasChannel(channel))
 			return;
+		
+		channel.save();
 		
 		this.channels.remove(channel.getName().toLowerCase());
 		this.labels.remove(channel.getName().toLowerCase());

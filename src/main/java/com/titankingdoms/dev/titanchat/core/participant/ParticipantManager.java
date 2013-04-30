@@ -218,7 +218,10 @@ public final class ParticipantManager {
 	 * Unloads the manager
 	 */
 	public void unload() {
-		this.participants.clear();
+		for (Participant participant : getParticipants())
+			unregisterParticipant(participant);
+		
+		saveConfig();
 	}
 	
 	/**
@@ -229,6 +232,8 @@ public final class ParticipantManager {
 	public void unregisterParticipant(Participant participant) {
 		if (participant == null || !hasParticipant(participant))
 			return;
+		
+		participant.save();
 		
 		this.participants.remove(participant.getName().toLowerCase());
 		db.debug(Level.INFO, "Unregistered participant: " + participant.getName());

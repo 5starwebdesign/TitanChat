@@ -189,7 +189,7 @@ public final class TitanChat extends JavaPlugin {
 				
 				ch = channel.getChannel(chName);
 				
-			} else { ch = participant.getParticipant(sender).getCurrent(); }
+			} else { ch = participant.getParticipant(sender).getCurrentChannel(); }
 			
 			onCommand(sender, ch, cmdName, args);
 			return true;
