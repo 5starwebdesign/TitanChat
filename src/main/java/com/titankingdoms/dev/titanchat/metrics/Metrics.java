@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Tyler Blair. All rights reserved.
+ * Copyright 2011-2013 Tyler Blair. All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
@@ -9,7 +9,7 @@
  *     
  *  2. Redistributions in binary form must reproduce the above copyright notice, this list
  *     of conditions and the following disclaimer in the documentation and/or other materials
- *     provided with the distribution
+ *     provided with the distribution.
  *  
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
@@ -76,7 +76,7 @@ public class Metrics {
 	/**
 	 * The base url of the metrics domain
 	 */
-	private static final String BASE_URL = "http://mcstats.org/";
+	private static final String BASE_URL = "http://mcstats.org";
 	
 	/**
 	 * The url used to report a server's status
@@ -85,7 +85,7 @@ public class Metrics {
 	
 	/**
 	 * The separator to use for custom data. This MUST NOT change unless you are hosting your own
-	 * version of metrics
+	 * version of metrics and want to change it
 	 */
 	private static final String CUSTOM_DATA_SEPARATOR = "~~";
 	
@@ -100,7 +100,7 @@ public class Metrics {
 	private final Plugin plugin;
 	
 	/**
-	 * All the custom graphs to submit to metrics
+	 * All of the custom graphs to submit to metrics
 	 */
 	private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
 	
@@ -153,7 +153,7 @@ public class Metrics {
 		configuration.addDefault("debug", false);
 		
 		if (configuration.get("guid", null) == null) {
-			configuration.options().header("http://mcstats.org/").copyDefaults(true);
+			configuration.options().header("http://mcstats.org").copyDefaults(true);
 			configuration.save(configurationFile);
 		}
 		
@@ -187,7 +187,7 @@ public class Metrics {
 	}
 	
 	/**
-	 * Construct a {@link Graph} that can be used to seperate specific {@link Plotter}s to their own {@link Graph}s
+	 * Construct a {@link Graph} that can be used to separate specific {@link Plotter}s to their own {@link Graph}s
 	 * on the metrics website. {@link Plotter}s can be added to the graph object returned
 	 * 
 	 * @param name the name of the {@link Graph}
@@ -355,6 +355,7 @@ public class Metrics {
 		String osname = System.getProperty("os.name");
 		String osarch = System.getProperty("os.arch");
 		String osversion = System.getProperty("os.version");
+		String java_version = System.getProperty("java.version");
 		int coreCount = Runtime.getRuntime().availableProcessors();
 		
 		if (osarch.equals("amd64"))
@@ -365,6 +366,7 @@ public class Metrics {
 		encodeDataPair(data, "osversion", osversion);
 		encodeDataPair(data, "cores", Integer.toString(coreCount));
 		encodeDataPair(data, "online-mode", Boolean.toString(onlineMode));
+		encodeDataPair(data, "java_version", java_version);
 		
 		if (isPing)
 			encodeDataPair(data, "ping", "true");

@@ -44,7 +44,7 @@ public abstract class Tag {
 	 * @return The variable format
 	 */
 	public String getFormat() {
-		String format = plugin.getConfig().getString("formatting.tag-format.tags." + tag.substring(1), "%var%");
+		String format = plugin.getConfig().getString("formatting.tag-format.tags." + tag.substring(1), "%tag%");
 		return (format != null && !format.isEmpty()) ? format : plugin.getTagManager().getDefaultTagFormat();
 	}
 	

@@ -64,6 +64,12 @@ public class Participant extends ChatEntity {
 		FileConfiguration config = plugin.getParticipantManager().getConfig();
 		ConfigurationSection section = config.getConfigurationSection(getName());
 		
+		if (section == null) {
+			section = config.createSection(getName());
+			section.set("channels.all", new ArrayList<String>());
+			section.set("channels.current", "");
+		}
+		
 		if (section.get("channels.all") != null) {
 			for (String channelName : section.getStringList("channels.all")) {
 				if (!plugin.getChannelManager().hasChannel(channelName))
