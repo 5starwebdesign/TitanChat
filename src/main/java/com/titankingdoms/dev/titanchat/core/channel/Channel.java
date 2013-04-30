@@ -178,6 +178,7 @@ public abstract class Channel extends ChatEntity {
 	
 	public void reload() {
 		reloadConfig();
+		init();
 	}
 	
 	@Override

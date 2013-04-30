@@ -181,7 +181,10 @@ public final class ParticipantManager {
 	 * Reloads the manager
 	 */
 	public void reload() {
-		this.participants.clear();
+		for (Participant participant : getParticipants())
+			unregisterParticipant(participant);
+		
+		saveConfig();
 		
 		registerParticipants(new ConsoleParticipant());
 		

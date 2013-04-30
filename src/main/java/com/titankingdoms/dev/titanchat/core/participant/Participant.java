@@ -141,6 +141,9 @@ public class Participant extends ChatEntity {
 				for (Entity entity : ((Player) asCommandSender()).getNearbyEntities(radius, radius, radius))
 					if (entity instanceof Player)
 						recipients.add(plugin.getParticipantManager().getParticipant((Player) entity));
+				
+			} else {
+				recipients.add(plugin.getParticipantManager().getConsoleParticipant());
 			}
 			break;
 			
@@ -192,7 +195,7 @@ public class Participant extends ChatEntity {
 			return;
 		
 		ConsoleCommandSender console = plugin.getServer().getConsoleSender();
-		String log = event.getFormat().replace("%message", event.getMessage());
+		String log = format.replace("%message", event.getMessage());
 		
 		if (plugin.getConfig().getBoolean("logging.chat.colour", true))
 			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 119));
@@ -386,7 +389,8 @@ public class Participant extends ChatEntity {
 		if (channel == null)
 			return;
 		
-		this.channels.put(channel.getName().toLowerCase(), channel);
+		if (!isParticipating(channel))
+			this.channels.put(channel.getName().toLowerCase(), channel);
 		
 		if (!channel.isParticipating(this))
 			channel.join(this);
@@ -404,7 +408,8 @@ public class Participant extends ChatEntity {
 		if (channel == null)
 			return;
 		
-		this.channels.remove(channel.getName().toLowerCase());
+		if (isParticipating(channel))
+			this.channels.remove(channel.getName().toLowerCase());
 		
 		if (channel.isParticipating(this))
 			channel.leave(this);
