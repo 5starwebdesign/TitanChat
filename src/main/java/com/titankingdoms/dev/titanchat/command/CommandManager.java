@@ -94,7 +94,7 @@ public final class CommandManager {
 	 * @return True if found
 	 */
 	public boolean hasCommand(String name) {
-		return commands.containsKey(name.toLowerCase());
+		return commands.containsKey((name != null) ? name.toLowerCase() : "");
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public final class CommandManager {
 	 * @return True if found
 	 */
 	public boolean hasCommand(Command command) {
-		return hasCommand(command.getName());
+		return hasCommand((command != null) ? command.getName() : "");
 	}
 	
 	/**
@@ -128,7 +128,7 @@ public final class CommandManager {
 				new BlacklistCommand(), new KickCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
-				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
+				new DebugCommand(), new InfoCommand(), new ReloadCommand(),
 				new SendCommand(),
 				new WhoCommand()
 		);
@@ -180,7 +180,7 @@ public final class CommandManager {
 				new BlacklistCommand(), new KickCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
-				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
+				new DebugCommand(), new InfoCommand(), new ReloadCommand(),
 				new SendCommand(),
 				new WhoCommand()
 		);

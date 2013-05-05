@@ -90,7 +90,7 @@ public final class AddonManager {
 	 * @return True if found
 	 */
 	public boolean hasAddon(String name) {
-		return addons.containsKey(name.toLowerCase());
+		return addons.containsKey((name != null) ? name.toLowerCase() : "");
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public final class AddonManager {
 	 * @return True if found
 	 */
 	public boolean hasAddon(ChatAddon addon) {
-		return hasAddon(addon.getName());
+		return hasAddon((addon != null) ? addon.getName() : "");
 	}
 	
 	/**
@@ -141,7 +141,8 @@ public final class AddonManager {
 	 * Reloads the manager
 	 */
 	public void reload() {
-		addons.clear();
+		for (ChatAddon addon : getAddons())
+			unregisterAddon(addon);
 		
 		registerAddons(Loader.load(ChatAddon.class, getAddonDirectory()).toArray(new ChatAddon[0]));
 		
@@ -153,7 +154,8 @@ public final class AddonManager {
 	 * Unloads the manager
 	 */
 	public void unload() {
-		addons.clear();
+		for (ChatAddon addon : getAddons())
+			unregisterAddon(addon);
 	}
 	
 	/**

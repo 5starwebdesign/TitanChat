@@ -37,6 +37,7 @@ import com.titankingdoms.dev.titanchat.util.Messaging;
 public abstract class Command extends Loadable {
 	
 	private String[] aliases;
+	private String description;
 	private String usage;
 	private int maxArgs;
 	private int minArgs;
@@ -44,6 +45,7 @@ public abstract class Command extends Loadable {
 	public Command(String name) {
 		super(name);
 		this.aliases = new String[0];
+		this.description = "";
 		this.usage = "";
 		this.maxArgs = 0;
 		this.minArgs = 0;
@@ -120,6 +122,15 @@ public abstract class Command extends Loadable {
 	 */
 	protected final ConsoleCommandSender getConsoleSender() {
 		return plugin.getServer().getConsoleSender();
+	}
+	
+	/**
+	 * Gets the description of the {@link Command}
+	 * 
+	 * @return The description
+	 */
+	public String getDescription() {
+		return description;
 	}
 	
 	/**
@@ -222,27 +233,36 @@ public abstract class Command extends Loadable {
 	 * @param aliases The new aliases
 	 */
 	protected void setAliases(String... aliases) {
-		this.aliases = aliases;
+		this.aliases = (aliases != null) ? aliases : new String[0];
 	}
 	
 	/**
 	 * Sets the argument range of the {@link Command}
 	 * 
-	 * @param minimum The minimum amount of arguments
+	 * @param minimum The new minimum amount of arguments
 	 * 
-	 * @param maximum The maximum amount of arguments
+	 * @param maximum The new maximum amount of arguments
 	 */
 	protected void setArgumentRange(int minimum, int maximum) {
-		this.maxArgs = maximum;
-		this.minArgs = minimum;
+		this.maxArgs = (maximum >= 0) ? maximum : 0;
+		this.minArgs = (minimum >= 0) ? minimum : 0;
 	}
 	
 	/**
-	 * Sets the usage
+	 * Sets the description of the {@link Command}
 	 * 
-	 * @param usage The usage
+	 * @param description The new description
+	 */
+	protected void setDescription(String description) {
+		this.description = (description != null) ? description : "";
+	}
+	
+	/**
+	 * Sets the usage of the {@link Command}
+	 * 
+	 * @param usage The new usage
 	 */
 	protected void setUsage(String usage) {
-		this.usage = usage;
+		this.usage = (usage != null) ? usage : "";
 	}
 }

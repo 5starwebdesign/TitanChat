@@ -161,7 +161,7 @@ public final class ChannelManager {
 	 * @return True if found
 	 */
 	public boolean hasAlias(String alias) {
-		return labels.containsKey(alias.toLowerCase());
+		return labels.containsKey((alias != null) ? alias.toLowerCase() : "");
 	}
 	
 	/**
@@ -172,7 +172,7 @@ public final class ChannelManager {
 	 * @return True if found
 	 */
 	public boolean hasChannel(String name) {
-		return channels.containsKey(name.toLowerCase());
+		return channels.containsKey((name != null) ? name.toLowerCase() : "");
 	}
 	
 	/**
@@ -183,7 +183,7 @@ public final class ChannelManager {
 	 * @return True if found
 	 */
 	public boolean hasChannel(Channel channel) {
-		return hasChannel(channel.getName());
+		return hasChannel((channel != null) ? channel.getName() : "");
 	}
 	
 	/**
@@ -194,7 +194,7 @@ public final class ChannelManager {
 	 * @return True if found
 	 */
 	public boolean hasLoader(String name) {
-		return loaders.containsKey(name.toLowerCase());
+		return loaders.containsKey((name != null) ? name.toLowerCase() : "");
 	}
 	
 	/**
@@ -205,7 +205,7 @@ public final class ChannelManager {
 	 * @return True if found
 	 */
 	public boolean hasLoader(ChannelLoader loader) {
-		return hasLoader(loader.getName());
+		return hasLoader((loader != null) ? loader.getName() : "");
 	}
 	
 	/**

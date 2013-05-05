@@ -130,7 +130,7 @@ public final class ParticipantManager {
 	 * @return True if found
 	 */
 	public boolean hasParticipant(String name) {
-		return participants.containsKey(name.toLowerCase());
+		return participants.containsKey((name != null) ? name.toLowerCase() : "");
 	}
 	
 	/**
@@ -141,7 +141,7 @@ public final class ParticipantManager {
 	 * @return True if found
 	 */
 	public boolean hasParticipant(Participant participant) {
-		return hasParticipant(participant.getName());
+		return hasParticipant((participant != null) ? participant.getName() : "");
 	}
 	
 	/**

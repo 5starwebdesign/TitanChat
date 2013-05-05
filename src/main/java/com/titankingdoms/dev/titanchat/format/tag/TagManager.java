@@ -72,7 +72,7 @@ public class TagManager {
 	 * @return True if found
 	 */
 	public boolean hasTag(String tag) {
-		return tags.containsKey(tag.toLowerCase());
+		return tags.containsKey((tag != null) ? tag.toLowerCase() : "");
 	}
 	
 	/**
@@ -83,7 +83,7 @@ public class TagManager {
 	 * @return True if found
 	 */
 	public boolean hasTag(Tag tag) {
-		return hasTag(tag.getTag());
+		return hasTag((tag != null) ? tag.getTag() : "");
 	}
 	
 	/**
