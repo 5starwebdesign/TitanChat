@@ -1,6 +1,6 @@
 type: 'Standard'
 status: 'staff'
-aliases: [ s ]
+aliases: [s]
 display-colour: '&4'
 format: ''
 password: ''

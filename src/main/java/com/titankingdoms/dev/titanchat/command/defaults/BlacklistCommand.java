@@ -40,6 +40,7 @@ public final class BlacklistCommand extends Command {
 		super("Blacklist");
 		setAliases("ban", "b");
 		setArgumentRange(1, 1024);
+		setDescription("Edit the blacklist of the channel");
 		setUsage("[add/remove/list] <player> <reason>");
 	}
 	

@@ -34,6 +34,7 @@ import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.ParticipantManager;
 import com.titankingdoms.dev.titanchat.format.tag.TagManager;
+import com.titankingdoms.dev.titanchat.info.TopicManager;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Messaging;
@@ -57,6 +58,7 @@ public final class TitanChat extends JavaPlugin {
 	private AddonManager addon;
 	private ChannelManager channel;
 	private CommandManager command;
+	private TopicManager topic;
 	private ParticipantManager participant;
 	private TagManager tag;
 	
@@ -85,6 +87,15 @@ public final class TitanChat extends JavaPlugin {
 	 */
 	public CommandManager getCommandManager() {
 		return command;
+	}
+	
+	/**
+	 * Gets the {@link TopicManager}
+	 * 
+	 * @return The {@link TopicManager}
+	 */
+	public TopicManager getTopicManager() {
+		return topic;
 	}
 	
 	/**
@@ -216,8 +227,9 @@ public final class TitanChat extends JavaPlugin {
 			if (args.length < cmd.getMinArguments() || args.length > cmd.getMaxArguments()) {
 				Messaging.sendMessage(sender, "&4Invalid argument length");
 				
-				String usage = "/titanchat <@[channel]> " + cmd.getName().toLowerCase() + " " + cmd.getUsage();
-				Messaging.sendMessage(sender, "&6" + usage);
+				String pre = "/titanchat <@[channel]> " + cmd.getName();
+				String suf = (!cmd.getUsage().isEmpty()) ? " " + cmd.getUsage() : "";
+				Messaging.sendMessage(sender, "&6" + pre + suf);
 				return;
 			}
 			
@@ -242,6 +254,7 @@ public final class TitanChat extends JavaPlugin {
 		addon.unload();
 		channel.unload();
 		command.unload();
+		topic.unload();
 		participant.unload();
 		tag.unload();
 		
@@ -283,6 +296,7 @@ public final class TitanChat extends JavaPlugin {
 		addon.load();
 		channel.load();
 		command.load();
+		topic.load();
 		participant.load();
 		tag.load();
 		
@@ -303,6 +317,7 @@ public final class TitanChat extends JavaPlugin {
 		this.addon = new AddonManager();
 		this.channel = new ChannelManager();
 		this.command = new CommandManager();
+		this.topic = new TopicManager();
 		this.participant = new ParticipantManager();
 		this.tag = new TagManager();
 		
@@ -328,6 +343,12 @@ public final class TitanChat extends JavaPlugin {
 		participant.getConfig().options().copyDefaults(true);
 		participant.saveConfig();
 		
+		if (!new File(getDataFolder(), "topic.yml").exists())
+			log(Level.INFO, "Generating default topic.yml...");
+		
+		topic.getConfig().options().copyDefaults(true);
+		topic.saveConfig();
+		
 		log(Level.INFO, "TitanChat is now loaded");
 	}
 	
@@ -342,6 +363,7 @@ public final class TitanChat extends JavaPlugin {
 		addon.reload();
 		channel.reload();
 		command.reload();
+		topic.reload();
 		participant.reload();
 		
 		log(Level.INFO, "TitanChat is now reloaded");

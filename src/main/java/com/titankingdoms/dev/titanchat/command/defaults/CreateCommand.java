@@ -42,6 +42,7 @@ public final class CreateCommand extends Command {
 		super("Create");
 		setAliases("c");
 		setArgumentRange(1, 2);
+		setDescription("Create a channel");
 		setUsage("[channel] <type>");
 	}
 

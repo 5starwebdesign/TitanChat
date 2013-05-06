@@ -35,6 +35,7 @@ public final class WhoCommand extends Command {
 	public WhoCommand() {
 		super("Who");
 		setArgumentRange(0, 1);
+		setDescription("Get information about the player");
 		setUsage("<player>");
 	}
 	

@@ -37,6 +37,7 @@ public final class DeleteCommand extends Command {
 		super("Delete");
 		setAliases("d");
 		setArgumentRange(1, 1);
+		setDescription("Delete a channel");
 		setUsage("[channel]");
 	}
 

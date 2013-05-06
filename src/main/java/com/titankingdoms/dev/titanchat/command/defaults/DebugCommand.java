@@ -42,6 +42,7 @@ public final class DebugCommand extends Command {
 		super("Debug");
 		setAliases("db");
 		setArgumentRange(2, 1024);
+		setDescription("Enable/Disable the debugger");
 		setUsage("[start/stop] [id]...");
 	}
 	

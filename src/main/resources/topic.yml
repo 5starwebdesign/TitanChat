@@ -1,0 +1,19 @@
+page-height: 7
+topics:
+    About:
+        description: "About TitanChat"
+        information: >
+            "TitanChat is a chat management and formatting plugin, "
+            "its high flexibility is what makes it special. "
+            "Instead of having a large bulk of hardcoded supports for other plugins, "
+            "I implemented an addon system so that addons, "
+            "custom channels and external commands can be coded to support other plugins and add new features. "
+            "The built in commands in TitanChat help make your chat management task easier. "
+            "Channels can also be disabled to have your old global Minecraft chat, "
+            "but giving you more control over chat."
+commands:
+    Info:
+        information: |
+            "Gives information about TitanChat through various topics."
+            "Alias: '?'"
+            "Usage: /tc ? <topic/page>..."

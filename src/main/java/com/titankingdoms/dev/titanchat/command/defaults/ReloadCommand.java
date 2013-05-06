@@ -33,6 +33,8 @@ public final class ReloadCommand extends Command {
 	
 	public ReloadCommand() {
 		super("Reload");
+		setAliases("r");
+		setDescription("Reload TitanChat");
 	}
 	
 	@Override

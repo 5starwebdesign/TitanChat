@@ -52,6 +52,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 11.04.13 - JavaDocs
 * 30.04.13 - Fixed bugs
 * 06.05.13 - Working on help for TitanChat
+* 07.05.13 - Completed help for TitanChat
 
 -----------------------------------------------------------------------------------------------------------------------
 

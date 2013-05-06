@@ -1,6 +1,6 @@
 type: 'Standard'
 status: 'default'
-aliases: [ d ]
+aliases: [d]
 display-colour: '&f'
 format: ''
 password: ''

@@ -34,6 +34,7 @@ public final class DirectCommand extends Command {
 	public DirectCommand() {
 		super("Direct");
 		setArgumentRange(1, 1);
+		setDescription("Direct focus to the channel");
 		setUsage("[channel]");
 	}
 	

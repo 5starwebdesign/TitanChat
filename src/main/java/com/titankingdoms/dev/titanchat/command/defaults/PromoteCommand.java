@@ -36,6 +36,7 @@ public final class PromoteCommand extends Command {
 		super("Promote");
 		setAliases("pro");
 		setArgumentRange(1, 1);
+		setDescription("Promote the player in the channel");
 		setUsage("[player]");
 	}
 	

@@ -36,6 +36,7 @@ public final class SendCommand extends Command {
 		super("Send");
 		setAliases("s");
 		setArgumentRange(1, 1024);
+		setDescription("Send the message to the channel");
 		setUsage("[message]");
 	}
 	
