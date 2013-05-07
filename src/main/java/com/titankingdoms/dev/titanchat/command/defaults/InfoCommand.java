@@ -74,8 +74,14 @@ public final class InfoCommand extends Command {
 		String[][] pages = ChatUtils.paginate(Format.colourise(topic.getInformation()), 119, pageHeight);
 		String header = topic.getName() + " (" + page + "/" + pages.length + ")";
 		
+		if (page < 1)
+			page = 1;
+		
+		if (page > pages.length)
+			page = pages.length;
+		
 		sendMessage(sender, ChatColor.AQUA + StringUtils.center(" " + header + " ", 119, '='));
-		sendMessage(sender, pages[page]);
+		sendMessage(sender, pages[page - 1]);
 	}
 	
 	@Override

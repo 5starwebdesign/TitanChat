@@ -17,9 +17,13 @@
 
 package com.titankingdoms.dev.titanchat.format.tag;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.format.tag.defaults.*;
@@ -65,6 +69,15 @@ public class TagManager {
 	}
 	
 	/**
+	 * Gets all {@link Tag}s
+	 * 
+	 * @return All registered {@link Tag}s
+	 */
+	public List<Tag> getTags() {
+		return new ArrayList<Tag>(tags.values());
+	}
+	
+	/**
 	 * Checks if the {@link Tag} is registered
 	 * 
 	 * @param tag The name of the {@link Tag}
@@ -97,6 +110,9 @@ public class TagManager {
 				new PrefixTag(),
 				new SuffixTag()
 		);
+		
+		if (!tags.isEmpty())
+			plugin.log(Level.INFO, "Tags loaded: " + StringUtils.join(tags.keySet(), ", "));
 	}
 	
 	/**
@@ -123,10 +139,30 @@ public class TagManager {
 	}
 	
 	/**
+	 * Reloads the manager
+	 */
+	public void reload() {
+		for (Tag tag : getTags())
+			unregisterTag(tag);
+		
+		registerTags(
+				new ColourTag(),
+				new DisplayNameTag(),
+				new NameTag(),
+				new PrefixTag(),
+				new SuffixTag()
+		);
+		
+		if (!tags.isEmpty())
+			plugin.log(Level.INFO, "Tags loaded: " + StringUtils.join(tags.keySet(), ", "));
+	}
+	
+	/**
 	 * Unloads the manager
 	 */
 	public void unload() {
-		this.tags.clear();
+		for (Tag tag : getTags())
+			unregisterTag(tag);
 	}
 	
 	/**

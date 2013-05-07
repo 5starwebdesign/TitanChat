@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -146,6 +147,9 @@ public final class TopicManager {
 				registerTopics(topic);
 			}
 		}
+		
+		if (!topics.isEmpty())
+			plugin.log(Level.INFO, "Topics loaded: " + StringUtils.join(topics.keySet(), ", "));
 	}
 	
 	/**
@@ -197,6 +201,9 @@ public final class TopicManager {
 				registerTopics(topic);
 			}
 		}
+		
+		if (!topics.isEmpty())
+			plugin.log(Level.INFO, "Topics loaded: " + StringUtils.join(topics.keySet(), ", "));
 	}
 	
 	/**
