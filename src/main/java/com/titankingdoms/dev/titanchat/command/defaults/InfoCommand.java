@@ -47,7 +47,8 @@ public final class InfoCommand extends Command {
 		
 		Topic topic = manager.getGeneralIndex();
 		int page = 1;
-		int pageHeight = manager.getConfig().getInt("page-height", 7);
+		int pageWidth = manager.getConfig().getInt("page.width", 65);
+		int pageHeight = manager.getConfig().getInt("page.height", 9);
 		
 		if (args.length > 0) {
 			for (String arg : args) {
@@ -71,7 +72,7 @@ public final class InfoCommand extends Command {
 			}
 		}
 		
-		String[][] pages = ChatUtils.paginate(Format.colourise(topic.getInformation()), 119, pageHeight);
+		String[][] pages = ChatUtils.paginate(Format.colourise(topic.getInformation()), pageWidth, pageHeight);
 		String header = topic.getName() + " (" + page + "/" + pages.length + ")";
 		
 		if (page < 1)
@@ -80,7 +81,7 @@ public final class InfoCommand extends Command {
 		if (page > pages.length)
 			page = pages.length;
 		
-		sendMessage(sender, ChatColor.AQUA + StringUtils.center(" " + header + " ", 119, '='));
+		sendMessage(sender, ChatColor.AQUA + StringUtils.center(" " + header + " ", 65, '='));
 		sendMessage(sender, pages[page - 1]);
 	}
 	

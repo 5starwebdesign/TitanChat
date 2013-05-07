@@ -49,7 +49,7 @@ public final class Messaging {
 		List<String> lines = new ArrayList<String>();
 		
 		for (String message : messages)
-			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 119)));
+			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 65)));
 		
 		for (String line : lines)
 			TitanChat.getInstance().getServer().broadcastMessage(line);
@@ -69,7 +69,7 @@ public final class Messaging {
 		List<String> lines = new ArrayList<String>();
 		
 		for (String message : messages)
-			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 119)));
+			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 65)));
 		
 		for (Player player : world.getPlayers())
 			player.sendMessage(lines.toArray(new String[0]));
@@ -89,7 +89,7 @@ public final class Messaging {
 		List<String> lines = new ArrayList<String>();
 		
 		for (String message : messages)
-			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 119)));
+			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 65)));
 		
 		for (Participant participant : channel.getParticipants())
 			participant.sendMessage(lines.toArray(new String[0]));
@@ -130,7 +130,7 @@ public final class Messaging {
 		List<String> lines = new ArrayList<String>();
 		
 		for (String message : messages)
-			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 119)));
+			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 65)));
 		
 		sender.sendMessage(lines.toArray(new String[0]));
 	}

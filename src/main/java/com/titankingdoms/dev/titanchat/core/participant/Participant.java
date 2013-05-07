@@ -198,9 +198,9 @@ public class Participant extends ChatEntity {
 		String log = format.replace("%message", event.getMessage());
 		
 		if (plugin.getConfig().getBoolean("logging.chat.colour", true))
-			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 119));
+			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 65));
 		else
-			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 119));
+			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 65));
 	}
 	
 	/**

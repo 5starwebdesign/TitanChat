@@ -106,7 +106,7 @@ public final class ChatUtils {
 				int end = line.indexOf("\n");
 				
 				lines.add(line.substring(0, end));
-				line = (ChatColor.getLastColors(lines.get(lines.size() - 1)) + line.substring(end)).trim();
+				line = (ChatColor.getLastColors(lines.get(lines.size() - 1)) + line.substring(end + 1)).trim();
 				
 			} else {
 				int end = line.lastIndexOf(' ', lineLength);
