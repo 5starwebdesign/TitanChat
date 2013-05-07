@@ -40,7 +40,7 @@ public final class KickCommand extends Command {
 		setAliases("k");
 		setArgumentRange(1, 1024);
 		setDescription("Kick the player from the channel");
-		setUsage("[player] <reason>");
+		setUsage("<player> [reason]");
 	}
 	
 	@Override

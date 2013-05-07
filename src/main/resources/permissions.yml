@@ -32,6 +32,9 @@ create:
 delete:
     description: Grants permission to channel deletion
     default: op
+privmsg:
+    description: Grants permission to private messaging
+    default: op
 reload:
     description: Grants permission to reload TitanChat
     default: op
@@ -49,6 +52,7 @@ staff:
         whitelist_<channel>: true
         kick_<channel>: true
         rank_<channel>: true
+        privmsg: true
         reload: true
         debug: true
 auto_join:

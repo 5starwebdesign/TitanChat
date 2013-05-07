@@ -36,7 +36,7 @@ public final class WhoCommand extends Command {
 		super("Who");
 		setArgumentRange(0, 1);
 		setDescription("Get information about the player");
-		setUsage("<player>");
+		setUsage("[player]");
 	}
 	
 	@Override

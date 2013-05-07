@@ -35,7 +35,7 @@ public final class DirectCommand extends Command {
 		super("Direct");
 		setArgumentRange(1, 1);
 		setDescription("Direct focus to the channel");
-		setUsage("[channel]");
+		setUsage("<channel>");
 	}
 	
 	@Override

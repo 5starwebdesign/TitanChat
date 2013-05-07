@@ -38,7 +38,7 @@ public final class DeleteCommand extends Command {
 		setAliases("d");
 		setArgumentRange(1, 1);
 		setDescription("Delete a channel");
-		setUsage("[channel]");
+		setUsage("<channel>");
 	}
 
 	@Override

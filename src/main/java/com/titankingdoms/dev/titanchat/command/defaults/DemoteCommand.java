@@ -37,7 +37,7 @@ public final class DemoteCommand extends Command {
 		setAliases("de");
 		setArgumentRange(1, 1);
 		setDescription("Demote the player in the channel");
-		setUsage("[player]");
+		setUsage("<player>");
 	}
 	
 	@Override

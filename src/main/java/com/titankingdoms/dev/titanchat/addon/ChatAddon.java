@@ -23,6 +23,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.loading.Loadable;
+import com.titankingdoms.dev.titanchat.topic.Topic;
 
 /**
  * {@link ChatAddon} - Extensions of TitanChat
@@ -90,6 +91,15 @@ public class ChatAddon extends Loadable {
 	 */
 	public final void register(Tag... tags) {
 		plugin.getTagManager().registerTags(tags);
+	}
+	
+	/**
+	 * Registers the {@link Topic}s
+	 * 
+	 * @param topics The {@link Topic}s to register
+	 */
+	public final void register(Topic... topics) {
+		plugin.getTopicManager().registerTopics(topics);
 	}
 	
 	@Override

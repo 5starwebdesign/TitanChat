@@ -17,57 +17,47 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.core.channel.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
-/**
- * {@link PromoteCommand} - Command for promotion in channels
- * 
- * @author NodinChan
- *
- */
-public final class PromoteCommand extends Command {
-	
-	public PromoteCommand() {
-		super("Promote");
-		setAliases("pro");
-		setArgumentRange(1, 1);
-		setDescription("Promote the player in the channel");
-		setUsage("<player>");
+public final class PMCommand extends Command {
+
+	public PMCommand() {
+		super("PM");
+		setAliases("msg", "privmsg");
+		setArgumentRange(1, 1024);
+		setDescription("Private messaging");
+		setUsage("<player> [message]");
 	}
-	
+
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		if (channel == null) {
-			sendMessage(sender, "&4Channel not defined");
+		Participant target = plugin.getParticipantManager().getParticipant(args[0]);
+		
+		if (!target.isOnline()) {
+			sendMessage(sender, "&4" + target.getDisplayName() + " is currently offline");
 			return;
 		}
 		
-		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
+		Participant participant = plugin.getParticipantManager().getParticipant(sender);
 		
-		if (channel.getOperators().contains(participant.getName())) {
-			sendMessage(sender, "&4" + participant.getDisplayName() + " is already an operator");
-			return;
-		}
+		Conversation conversation = new Conversation();
+		conversation.join(target);
 		
-		channel.getOperators().add(participant.getName());
-		participant.sendMessage("&6You have been promoted in " + channel.getName());
-		
-		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "&6" + participant.getDisplayName() + " has been promoted");
-		
-		broadcast(channel, "&6" + participant.getDisplayName() + " has been promoted");
+		if (args.length > 1)
+			participant.chat(conversation, StringUtils.join(args, " "));
+		else
+			participant.direct(conversation);
 	}
-	
+
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
-		if (channel.getOperators().contains(sender.getName()))
-			return true;
-		
-		return Vault.hasPermission(sender, "TitanChat.rank." + channel.getName());
+		return Vault.hasPermission(sender, "TitanChat.privmsg");
 	}
 }

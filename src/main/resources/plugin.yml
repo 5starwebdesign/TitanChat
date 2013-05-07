@@ -9,4 +9,8 @@ commands:
     titanchat:
         description: TitanChat Commands
         aliases: [tchat, chat, tc, ch]
-        usage: /<command> <@[channel]> [sub-command] [arguments]
+        usage: /<command> [@<channel>] <sub-command> <arguments>
+    pm:
+        description: Private messaging
+        aliases: [msg, privmsg]
+        usage: /<command> <player> [message]

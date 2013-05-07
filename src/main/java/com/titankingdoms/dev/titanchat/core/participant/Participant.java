@@ -79,13 +79,13 @@ public class Participant extends ChatEntity {
 			}
 		}
 		
-		if (!section.getString("channels.current", "").isEmpty())
-			direct(plugin.getChannelManager().getChannel(section.getString("channels.current", "")));
-		
 		if (channels.isEmpty()) {
 			for (Channel channel : plugin.getChannelManager().getChannels(Status.DEFAULT).values())
 				join(channel);
 		}
+		
+		if (!section.getString("channels.current", "").isEmpty())
+			direct(plugin.getChannelManager().getChannel(section.getString("channels.current", "")));
 		
 		init();
 	}
@@ -389,7 +389,7 @@ public class Participant extends ChatEntity {
 		if (channel == null)
 			return;
 		
-		if (!isParticipating(channel))
+		if (!isParticipating(channel) && !channel.getStatus().equals(Status.CONVERSATION))
 			this.channels.put(channel.getName().toLowerCase(), channel);
 		
 		if (!channel.isParticipating(this))
@@ -408,7 +408,7 @@ public class Participant extends ChatEntity {
 		if (channel == null)
 			return;
 		
-		if (isParticipating(channel))
+		if (isParticipating(channel) && !channel.getStatus().equals(Status.CONVERSATION))
 			this.channels.remove(channel.getName().toLowerCase());
 		
 		if (channel.isParticipating(this))
@@ -460,7 +460,7 @@ public class Participant extends ChatEntity {
 		if (getName().equals("CONSOLE"))
 			return plugin.getParticipantManager().getConsoleParticipant();
 		
-		Player player = plugin.getServer().getPlayer(getName());
+		Player player = plugin.getServer().getPlayerExact(getName());
 		
 		if (player == null)
 			return this;

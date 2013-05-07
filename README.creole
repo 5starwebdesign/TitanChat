@@ -51,7 +51,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 05.04.13 - Ensure that code is compatible with Jenkins
 * 11.04.13 - JavaDocs
 * 30.04.13 - Fixed bugs
-* 07.05.13 - Added help section
+* 07.05.13 - Added help section and private messaging
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -64,7 +64,6 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * v4.1
 ** Customisable messages
 ** Ignore lists
-** Private messaging
 ** Broadcasting
 ** Emoting
 ** Chat groups

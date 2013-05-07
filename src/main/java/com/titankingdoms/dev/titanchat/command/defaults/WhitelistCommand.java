@@ -41,7 +41,7 @@ public final class WhitelistCommand extends Command {
 		setAliases("w");
 		setArgumentRange(2, 2);
 		setDescription("Edit the whitelist of the channel");
-		setUsage("[add/list/remove] <player> <reason>");
+		setUsage("<add/list/remove> [player] [reason]");
 	}
 	
 	@Override
@@ -60,7 +60,7 @@ public final class WhitelistCommand extends Command {
 			if (args.length < 2) {
 				Messaging.sendMessage(sender, "&4Invalid argument length");
 				
-				String usage = "/titanchat <@[channel]> " + getName().toLowerCase() + " " + getUsage();
+				String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
 				Messaging.sendMessage(sender, "&6" + usage);
 				return;
 			}

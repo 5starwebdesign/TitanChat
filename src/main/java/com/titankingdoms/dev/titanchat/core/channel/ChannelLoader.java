@@ -34,5 +34,16 @@ public abstract class ChannelLoader extends Loadable {
 		super(name);
 	}
 	
+	/**
+	 * Loads the {@link Channel} from configuration
+	 * 
+	 * @param name The name of the {@link Channel}
+	 * 
+	 * @param status The {@link Status} of the {@link Channel}
+	 * 
+	 * @param config The configuration to load from
+	 * 
+	 * @return The loaded {@link Channel}
+	 */
 	public abstract Channel load(String name, Status status, FileConfiguration config);
 }

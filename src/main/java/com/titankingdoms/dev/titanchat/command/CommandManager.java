@@ -129,7 +129,7 @@ public final class CommandManager {
 				new DemoteCommand(), new PromoteCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new InfoCommand(), new ReloadCommand(),
-				new SendCommand(),
+				new PMCommand(), new SendCommand(),
 				new WhoCommand()
 		);
 		
@@ -181,7 +181,7 @@ public final class CommandManager {
 				new DemoteCommand(), new PromoteCommand(),
 				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new InfoCommand(), new ReloadCommand(),
-				new SendCommand(),
+				new PMCommand(), new SendCommand(),
 				new WhoCommand()
 		);
 		

@@ -37,7 +37,7 @@ public final class JoinCommand extends Command {
 		setAliases("j");
 		setArgumentRange(1, 2);
 		setDescription("Join the channel");
-		setUsage("[channel] <password>");
+		setUsage("<channel> [password]");
 	}
 	
 	@Override

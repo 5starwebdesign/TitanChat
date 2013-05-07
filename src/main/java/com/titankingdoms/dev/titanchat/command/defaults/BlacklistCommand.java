@@ -41,7 +41,7 @@ public final class BlacklistCommand extends Command {
 		setAliases("ban", "b");
 		setArgumentRange(1, 1024);
 		setDescription("Edit the blacklist of the channel");
-		setUsage("[add/remove/list] <player> <reason>");
+		setUsage("<add/remove/list> [player] [reason]");
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public final class BlacklistCommand extends Command {
 			if (args.length < 2) {
 				Messaging.sendMessage(sender, "&4Invalid argument length");
 				
-				String usage = "/titanchat <@[channel]> " + getName().toLowerCase() + " " + getUsage();
+				String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
 				Messaging.sendMessage(sender, "&6" + usage);
 				return;
 			}

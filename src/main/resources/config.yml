@@ -2,6 +2,9 @@ channels:
     enable: true
     limit: -1
     range: 15
+pm:
+    display-colour: ''
+    format: ''
 logging:
     chat:
         log: false

@@ -35,6 +35,8 @@ import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.event.ChannelJoinEvent;
 import com.titankingdoms.dev.titanchat.event.ChannelLeaveEvent;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
+import com.titankingdoms.dev.titanchat.topic.Topic;
 
 /**
  * {@link Channel} - Channels for communication
@@ -64,8 +66,18 @@ public abstract class Channel extends ChatEntity {
 		this.participants = new HashMap<String, Participant>();
 	}
 	
+	/**
+	 * Gets the aliases of the {@link Channel}
+	 * 
+	 * @return The aliases
+	 */
 	public abstract String[] getAliases();
 	
+	/**
+	 * Gets the blacklist of the {@link Channel}
+	 * 
+	 * @return The blacklist
+	 */
 	public final Set<String> getBlacklist() {
 		return blacklist;
 	}
@@ -90,28 +102,68 @@ public abstract class Channel extends ChatEntity {
 		return plugin.getResource("channel.yml");
 	}
 	
+	/**
+	 * Gets the chat display colour of the {@link Channel}
+	 * 
+	 * @return The chat dislay colour
+	 */
 	public abstract String getDisplayColour();
 	
+	/**
+	 * Gets the format of the {@link Channel}
+	 * 
+	 * @return The format
+	 */
 	public abstract String getFormat();
 	
-	public final Set<Participant> getParticipants() {
+	/**
+	 * Gets the {@link Participant}s of the {@link Channel}
+	 * 
+	 * @return The {@link Participant}s
+	 */
+	public Set<Participant> getParticipants() {
 		return new HashSet<Participant>(participants.values());
 	}
 	
+	/**
+	 * Gets the operators of the {@link Channel}
+	 * 
+	 * @return The operators
+	 */
 	public final Set<String> getOperators() {
 		return operators;
 	}
 	
+	/**
+	 * Gets the {@link Range} of the {@link Channel}
+	 * 
+	 * @return The {@link Range}
+	 */
 	public abstract Range getRange();
 	
+	/**
+	 * Gets the {@link Status} of the {@link Channel}
+	 * 
+	 * @return The {@link Status}
+	 */
 	public final Status getStatus() {
 		return status;
 	}
 	
+	/**
+	 * Gets the type of the {@link Channel}
+	 * 
+	 * @return The type
+	 */
 	public final String getType() {
 		return type;
 	}
 	
+	/**
+	 * Gets the whitelist of the {@link Channel}
+	 * 
+	 * @return The whitelist
+	 */
 	public final Set<String> getWhitelist() {
 		return whitelist;
 	}
@@ -124,14 +176,33 @@ public abstract class Channel extends ChatEntity {
 		operators.addAll(getConfig().getStringList("operators"));
 	}
 	
+	/**
+	 * Checks if the specified {@link Participant} is participating in the {@link Channel}
+	 * 
+	 * @param name The name of the {@link Participant}
+	 * 
+	 * @return True if found
+	 */
 	public boolean isParticipating(String name) {
 		return participants.containsKey(name.toLowerCase());
 	}
 	
+	/**
+	 * Checks if the speicified {@link Participant} is participating in the {@link Channel}
+	 * 
+	 * @param participant The {@link Participant}
+	 * 
+	 * @return True if found
+	 */
 	public boolean isParticipating(Participant participant) {
 		return isParticipating(participant.getName());
 	}
 	
+	/**
+	 * Joins the {@link Channel}
+	 * 
+	 * @param participant The {@link Participant} to join
+	 */
 	public void join(Participant participant) {
 		if (participant == null)
 			return;
@@ -146,6 +217,11 @@ public abstract class Channel extends ChatEntity {
 		plugin.getServer().getPluginManager().callEvent(event);
 	}
 	
+	/**
+	 * Leaves the {@link Channel}
+	 * 
+	 * @param participant The {@link Participant} to leave
+	 */
 	public void leave(Participant participant) {
 		if (participant == null)
 			return;
@@ -160,20 +236,58 @@ public abstract class Channel extends ChatEntity {
 		plugin.getServer().getPluginManager().callEvent(event);
 	}
 	
+	/**
+	 * Registers the {@link ChatAddon}s
+	 * 
+	 * @param addons The {@link ChatAddon}s to register
+	 */
 	public final void register(ChatAddon... addons) {
 		plugin.getAddonManager().registerAddons(addons);
 	}
 	
+	/**
+	 * Registers the {@link Channel}s
+	 * 
+	 * @param channels The {@link Channel}s to register
+	 */
 	public final void register(Channel... channels) {
 		plugin.getChannelManager().registerChannels(channels);
 	}
 	
+	/**
+	 * Registers the {@link ChannelLoader}s
+	 * 
+	 * @param loaders The {@link ChannelLoader}s to register
+	 */
 	public final void register(ChannelLoader... loaders) {
 		plugin.getChannelManager().registerLoaders(loaders);
 	}
 	
+	/**
+	 * Registers the {@link Command}s
+	 * 
+	 * @param commands The {@link Command}s to register
+	 */
 	public final void register(Command... commands) {
 		plugin.getCommandManager().registerCommands(commands);
+	}
+	
+	/**
+	 * Registers the {@link Tag}s
+	 * 
+	 * @param tags The {@link Tag}s to register
+	 */
+	public final void register(Tag... tags) {
+		plugin.getTagManager().registerTags(tags);
+	}
+	
+	/**
+	 * Registers the {@link Topic}s
+	 * 
+	 * @param topics The {@link Topic}s to register
+	 */
+	public final void register(Topic... topics) {
+		plugin.getTopicManager().registerTopics(topics);
 	}
 	
 	public void reload() {

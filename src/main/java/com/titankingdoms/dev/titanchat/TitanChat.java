@@ -204,6 +204,10 @@ public final class TitanChat extends JavaPlugin {
 			
 			onCommand(sender, ch, cmdName, args);
 			return true;
+			
+		} else if (cmd.getName().equalsIgnoreCase("pm")) {
+			onCommand(sender, (Channel) null, "pm", Arrays.copyOfRange(args, 1, args.length));
+			return true;
 		}
 		
 		return false;
@@ -227,7 +231,7 @@ public final class TitanChat extends JavaPlugin {
 			if (args.length < cmd.getMinArguments() || args.length > cmd.getMaxArguments()) {
 				Messaging.sendMessage(sender, "&4Invalid argument length");
 				
-				String pre = "/titanchat <@[channel]> " + cmd.getName();
+				String pre = "/titanchat [@<channel>] " + cmd.getName();
 				String suf = (!cmd.getUsage().isEmpty()) ? " " + cmd.getUsage() : "";
 				Messaging.sendMessage(sender, "&6" + pre + suf);
 				return;
@@ -242,7 +246,7 @@ public final class TitanChat extends JavaPlugin {
 			return;
 		}
 		
-		Messaging.sendMessage(sender, "&4Invalid command", "&6\"/titanchat help [page]\" for help");
+		Messaging.sendMessage(sender, "&4Invalid command", "&6\"/titanchat info [page]\" for help");
 	}
 	
 	@Override

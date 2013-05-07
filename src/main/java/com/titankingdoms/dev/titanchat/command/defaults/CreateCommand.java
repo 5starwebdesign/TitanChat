@@ -43,7 +43,7 @@ public final class CreateCommand extends Command {
 		setAliases("c");
 		setArgumentRange(1, 2);
 		setDescription("Create a channel");
-		setUsage("[channel] <type>");
+		setUsage("<channel> [type]");
 	}
 
 	@Override

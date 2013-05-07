@@ -29,7 +29,7 @@ public final class PlayerParticipant extends Participant {
 	
 	@Override
 	public Player asCommandSender() {
-		return plugin.getServer().getPlayer(getName());
+		return plugin.getServer().getPlayerExact(getName());
 	}
 	
 	@Override

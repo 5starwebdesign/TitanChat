@@ -36,7 +36,7 @@ public final class LeaveCommand extends Command {
 		setAliases("l");
 		setArgumentRange(1, 1);
 		setDescription("Leave the channel");
-		setUsage("[channel]");
+		setUsage("<channel>");
 	}
 	
 	@Override
