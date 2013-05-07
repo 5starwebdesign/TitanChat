@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.info;
+package com.titankingdoms.dev.titanchat.topic;
 
 import java.io.File;
 import java.io.InputStream;
@@ -30,11 +30,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.info.commands.CommandsIndex;
-import com.titankingdoms.dev.titanchat.info.general.GeneralIndex;
-import com.titankingdoms.dev.titanchat.info.general.GeneralTopic;
-import com.titankingdoms.dev.titanchat.info.permissions.PermissionsIndex;
+import com.titankingdoms.dev.titanchat.topic.commands.CommandsIndex;
+import com.titankingdoms.dev.titanchat.topic.general.GeneralIndex;
+import com.titankingdoms.dev.titanchat.topic.general.GeneralTopic;
+import com.titankingdoms.dev.titanchat.topic.permissions.PermissionsIndex;
 import com.titankingdoms.dev.titanchat.util.Debugger;
+import com.titankingdoms.dev.titanchat.util.Permissions;
 
 /**
  * {@link TopicManager} - Manages topics
@@ -165,6 +166,8 @@ public final class TopicManager {
 				continue;
 			}
 			
+			Permissions.load(topic);
+			
 			this.topics.put(topic.getName().toLowerCase(), topic);
 			db.debug(Level.INFO, "Registered topic: " + topic.getName());
 		}
@@ -237,6 +240,8 @@ public final class TopicManager {
 	public void unregisterTopic(Topic topic) {
 		if (topic == null || !hasTopic(topic))
 			return;
+		
+		Permissions.unload(topic);
 		
 		this.topics.remove(topic.getName().toLowerCase());
 		db.debug(Level.INFO, "Unregistered topic: " + topic.getName());

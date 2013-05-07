@@ -1,9 +1,9 @@
-package com.titankingdoms.dev.titanchat.info.general;
+package com.titankingdoms.dev.titanchat.topic.general;
 
 import java.util.List;
 
-import com.titankingdoms.dev.titanchat.info.Index;
-import com.titankingdoms.dev.titanchat.info.Topic;
+import com.titankingdoms.dev.titanchat.topic.Index;
+import com.titankingdoms.dev.titanchat.topic.Topic;
 
 /**
  * {@link GeneralIndex} - The general index for all topics

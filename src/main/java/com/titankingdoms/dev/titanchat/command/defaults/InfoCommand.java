@@ -26,9 +26,10 @@ import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
-import com.titankingdoms.dev.titanchat.info.Index;
-import com.titankingdoms.dev.titanchat.info.Topic;
-import com.titankingdoms.dev.titanchat.info.TopicManager;
+import com.titankingdoms.dev.titanchat.topic.Index;
+import com.titankingdoms.dev.titanchat.topic.Topic;
+import com.titankingdoms.dev.titanchat.topic.TopicManager;
+import com.titankingdoms.dev.titanchat.vault.Vault;
 
 public final class InfoCommand extends Command {
 	
@@ -49,15 +50,22 @@ public final class InfoCommand extends Command {
 		int pageHeight = manager.getConfig().getInt("page-height", 7);
 		
 		if (args.length > 0) {
-			for (int arg = 0; arg < args.length; arg++) {
-				if (!NumberUtils.isNumber(args[arg])) {
-					if (topic instanceof Index)
-						topic = ((Index) topic).getTopic(args[arg]);
-					else
+			for (String arg : args) {
+				if (!NumberUtils.isNumber(arg)) {
+					if (topic instanceof Index) {
+						topic = ((Index) topic).getTopic(arg);
+						
+						if (!Vault.hasPermission(sender, "TitanChat.topic." + topic.getName())) {
+							sendMessage(sender, "&4You do not have permission to view this topic");
+							return;
+						}
+						
+					} else {
 						break;
+					}
 					
 				} else {
-					page = NumberUtils.toInt(args[arg]);
+					page = NumberUtils.toInt(arg);
 					break;
 				}
 			}

@@ -10,6 +10,8 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.topic.Index;
+import com.titankingdoms.dev.titanchat.topic.Topic;
 
 /**
  * {@link Permissions} - Loads permissions
@@ -62,7 +64,7 @@ public class Permissions {
 	public static void load(Channel channel) {
 		TitanChat plugin = TitanChat.getInstance();
 		
-		if (plugin == null)
+		if (plugin == null || channel == null)
 			return;
 		
 		String chName = channel.getName();
@@ -98,6 +100,34 @@ public class Permissions {
 	}
 	
 	/**
+	 * Loads all topic permissions for the {@link Topic}
+	 * 
+	 * @param topic The {@link Topic} to load for
+	 */
+	public static void load(Topic topic) {
+		TitanChat plugin = TitanChat.getInstance();
+		
+		if (plugin == null || topic == null)
+			return;
+		
+		String node = "TitanChat.topic." + topic.getName();
+		
+		if (plugin.getServer().getPluginManager().getPermission(node) != null)
+			return;
+		
+		String description = "View Topic: " + topic.getName();
+		PermissionDefault def = PermissionDefault.TRUE;
+		
+		Permission permission = new Permission(node, description, def);
+		plugin.getServer().getPluginManager().addPermission(permission);
+		
+		if (topic instanceof Index) {
+			for (Topic subTopic : ((Index) topic).getTopics())
+				load(subTopic);
+		}
+	}
+	
+	/**
 	 * Unloads all channel permissions for the {@link Channel}
 	 * 
 	 * @param channel The {@link Channel} to unload for
@@ -105,7 +135,7 @@ public class Permissions {
 	public static void unload(Channel channel) {
 		TitanChat plugin = TitanChat.getInstance();
 		
-		if (plugin == null)
+		if (plugin == null || channel == null)
 			return;
 		
 		String chName = channel.getName();
@@ -122,6 +152,30 @@ public class Permissions {
 				continue;
 			
 			plugin.getServer().getPluginManager().removePermission(node);
+		}
+	}
+	
+	/**
+	 * Unloads all topic permissions for the {@link Topic}
+	 * 
+	 * @param topic The {@link Topic} to unload for
+	 */
+	public static void unload(Topic topic) {
+		TitanChat plugin = TitanChat.getInstance();
+		
+		if (plugin == null || topic == null)
+			return;
+		
+		String node = "TitanChat.topic." + topic.getName();
+		
+		if (plugin.getServer().getPluginManager().getPermission(node) == null)
+			return;
+		
+		plugin.getServer().getPluginManager().removePermission(node);
+		
+		if (topic instanceof Index) {
+			for (Topic subTopic : ((Index) topic).getTopics())
+				unload(subTopic);
 		}
 	}
 }

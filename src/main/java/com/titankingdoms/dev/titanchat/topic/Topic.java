@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.info;
+package com.titankingdoms.dev.titanchat.topic;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 

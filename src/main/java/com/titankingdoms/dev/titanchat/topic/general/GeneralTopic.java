@@ -15,9 +15,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.info.general;
+package com.titankingdoms.dev.titanchat.topic.general;
 
-import com.titankingdoms.dev.titanchat.info.Topic;
+import com.titankingdoms.dev.titanchat.topic.Topic;
 
 /**
  * {@link GeneralTopic} - General topics from configuration

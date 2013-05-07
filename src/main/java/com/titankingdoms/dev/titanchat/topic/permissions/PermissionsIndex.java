@@ -15,11 +15,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.info.permissions;
+package com.titankingdoms.dev.titanchat.topic.permissions;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.titankingdoms.dev.titanchat.info.Index;
+import com.titankingdoms.dev.titanchat.topic.Index;
 
 /**
  * {@link PermissionsIndex} - Index of permissions

@@ -15,13 +15,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.info.commands;
+package com.titankingdoms.dev.titanchat.topic.commands;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.info.Index;
-import com.titankingdoms.dev.titanchat.info.Topic;
+import com.titankingdoms.dev.titanchat.topic.Index;
+import com.titankingdoms.dev.titanchat.topic.Topic;
 
 /**
  * {@link CommandsIndex} - Index of {@link Command}s

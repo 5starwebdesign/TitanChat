@@ -15,19 +15,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.info.permissions;
+package com.titankingdoms.dev.titanchat.topic.commands;
 
-import com.titankingdoms.dev.titanchat.info.Topic;
+import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.topic.Topic;
 
 /**
- * {@link PermissionTopic} - Topics about permissions
+ * {@link CommandTopic} - Topics about {@link Command}s
  * 
  * @author NodinChan
  *
  */
-public final class PermissionTopic extends Topic {
+public final class CommandTopic extends Topic {
 	
-	public PermissionTopic(String name, String description) {
-		super(name, description);
+	public CommandTopic(Command command) {
+		super(command.getName(), command.getDescription());
 	}
 }
