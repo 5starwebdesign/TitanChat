@@ -161,11 +161,11 @@ public abstract class ChatEntity extends Loadable {
 	}
 	
 	/**
-	 * Sends the messages to the ChatEntity
+	 * Sends the message to the ChatEntity
 	 * 
-	 * @param messages The messages
+	 * @param message The message
 	 */
-	public abstract void sendMessage(String... messages);
+	public abstract void sendMessage(String message);
 	
 	/**
 	 * Sets the {@link Data} in the cache

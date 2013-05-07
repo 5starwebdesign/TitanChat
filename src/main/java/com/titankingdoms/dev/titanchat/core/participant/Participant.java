@@ -437,9 +437,9 @@ public class Participant extends ChatEntity {
 	}
 	
 	@Override
-	public void sendMessage(String... messages) {
+	public void sendMessage(String message) {
 		if (isOnline())
-			Messaging.sendMessage(asCommandSender(), messages);
+			Messaging.sendMessage(asCommandSender(), message);
 	}
 	
 	/**

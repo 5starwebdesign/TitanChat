@@ -53,47 +53,47 @@ public abstract class Command extends Loadable {
 	}
 	
 	/**
-	 * Broadcasts the messages globally
+	 * Broadcasts the message globally
 	 * 
-	 * @param messages The messages the broadcast
+	 * @param message The message the broadcast
 	 */
-	public final void broadcast(String... messages) {
-		Messaging.broadcast(messages);
+	public final void broadcast(String message) {
+		Messaging.broadcast(message);
 	}
 	
 	/**
-	 * Broadcasts the messages in the {@link Channel}
-	 * 
-	 * @param channel The {@link Channel} to broadcast in
-	 * 
-	 * @param messages The messages to broadcast
-	 */
-	public final void broadcast(Channel channel, String... messages) {
-		Messaging.broadcast(channel, messages);
-	}
-	
-	/**
-	 * Broadcasts the messages in the {@link World}
+	 * Broadcasts the message in the {@link World}
 	 * 
 	 * @param world The {@link World} to broadcast in
 	 * 
-	 * @param messages The messages to broadcast
+	 * @param message The message to broadcast
 	 */
-	public final void broadcast(World world, String... messages) {
-		Messaging.broadcast(world, messages);
+	public final void broadcast(World world, String message) {
+		Messaging.broadcast(world, message);
 	}
 	
 	/**
-	 * Broadcasts the messages to {@link Player}s around the sender
+	 * Broadcasts the message in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to broadcast in
+	 * 
+	 * @param message The message to broadcast
+	 */
+	public final void broadcast(Channel channel, String message) {
+		Messaging.broadcast(channel, message);
+	}
+	
+	/**
+	 * Broadcasts the message to {@link Player}s around the sender
 	 * 
 	 * @param sender The sender of the message
 	 * 
 	 * @param radius The radius around the sender
 	 * 
-	 * @param messages The messages to broadcast
+	 * @param message The message to broadcast
 	 */
-	public final void broadcast(CommandSender sender, double radius, String... messages) {
-		Messaging.broadcast(sender, radius, messages);
+	public final void broadcast(CommandSender sender, double radius, String message) {
+		Messaging.broadcast(sender, radius, message);
 	}
 	
 	/**
@@ -227,14 +227,14 @@ public abstract class Command extends Loadable {
 	}
 	
 	/**
-	 * Sends the messages to the {@link CommandSender}
+	 * Sends the message to the {@link CommandSender}
 	 * 
 	 * @param sender The {@link CommandSender} to send to
 	 * 
-	 * @param messages The messages to send
+	 * @param message The message to send
 	 */
-	public final void sendMessage(CommandSender sender, String... messages) {
-		Messaging.sendMessage(sender, messages);
+	public final void sendMessage(CommandSender sender, String message) {
+		Messaging.sendMessage(sender, message);
 	}
 	
 	/**

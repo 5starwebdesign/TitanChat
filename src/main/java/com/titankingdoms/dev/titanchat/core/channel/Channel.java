@@ -305,8 +305,8 @@ public abstract class Channel extends ChatEntity {
 	}
 	
 	@Override
-	public void sendMessage(String... messages) {
+	public void sendMessage(String message) {
 		for (Participant participant : participants.values())
-			participant.sendMessage(messages);
+			participant.sendMessage(message);
 	}
 }

@@ -246,7 +246,8 @@ public final class TitanChat extends JavaPlugin {
 			return;
 		}
 		
-		Messaging.sendMessage(sender, "&4Invalid command", "&6\"/titanchat info [page]\" for help");
+		Messaging.sendMessage(sender, "&4Invalid command");
+		Messaging.sendMessage(sender, "&6\"/titanchat info [topic/page]\" for help");
 	}
 	
 	@Override

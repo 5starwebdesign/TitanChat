@@ -35,10 +35,10 @@ public final class InfoCommand extends Command {
 	
 	public InfoCommand() {
 		super("Info");
-		setAliases("?");
+		setAliases("?", "help");
 		setArgumentRange(0, 1024);
 		setDescription("Information about TitanChat");
-		setUsage("<topic/page>...");
+		setUsage("[topic/page]...");
 	}
 	
 	@Override
@@ -82,7 +82,7 @@ public final class InfoCommand extends Command {
 			page = pages.length;
 		
 		sendMessage(sender, ChatColor.AQUA + StringUtils.center(" " + header + " ", 65, '='));
-		sendMessage(sender, pages[page - 1]);
+		sendMessage(sender, StringUtils.join(pages[page - 1], " "));
 	}
 	
 	@Override

@@ -17,10 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -43,15 +39,10 @@ public final class Messaging {
 	/**
 	 * Broadcasts the message
 	 * 
-	 * @param messages The messages to broadcast
+	 * @param message The message to broadcast
 	 */
-	public static void broadcast(String... messages) {
-		List<String> lines = new ArrayList<String>();
-		
-		for (String message : messages)
-			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 65)));
-		
-		for (String line : lines)
+	public static void broadcast(String message) {
+		for (String line : ChatUtils.wordWrap(Format.colourise(message), 65))
 			TitanChat.getInstance().getServer().broadcastMessage(line);
 	}
 	
@@ -60,19 +51,14 @@ public final class Messaging {
 	 * 
 	 * @param world The {@link World} to broadcast to
 	 * 
-	 * @param messages The messages to broadcast
+	 * @param message The message to broadcast
 	 */
-	public static void broadcast(World world, String... messages) {
+	public static void broadcast(World world, String message) {
 		if (world == null)
 			return;
 		
-		List<String> lines = new ArrayList<String>();
-		
-		for (String message : messages)
-			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 65)));
-		
 		for (Player player : world.getPlayers())
-			player.sendMessage(lines.toArray(new String[0]));
+			player.sendMessage(ChatUtils.wordWrap(Format.colourise(message), 65));
 	}
 	
 	/**
@@ -80,19 +66,14 @@ public final class Messaging {
 	 * 
 	 * @param channel The {@link Channel} to broadcast to
 	 * 
-	 * @param messages The messages to broadcast
+	 * @param message The message to broadcast
 	 */
-	public static void broadcast(Channel channel, String... messages) {
+	public static void broadcast(Channel channel, String message) {
 		if (channel == null)
 			return;
 		
-		List<String> lines = new ArrayList<String>();
-		
-		for (String message : messages)
-			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 65)));
-		
 		for (Participant participant : channel.getParticipants())
-			participant.sendMessage(lines.toArray(new String[0]));
+			participant.sendMessage(message);
 	}
 	
 	/**
@@ -102,36 +83,31 @@ public final class Messaging {
 	 * 
 	 * @param radius The radius around the {@link CommandSender}
 	 * 
-	 * @param messages The messages to broadcast
+	 * @param message The message to broadcast
 	 */
-	public static void broadcast(CommandSender sender, double radius, String... messages) {
+	public static void broadcast(CommandSender sender, double radius, String message) {
 		if (sender == null)
 			return;
 		
 		if (!(sender instanceof Player))
-			sendMessage(sender, messages);
+			sender.sendMessage(ChatUtils.wordWrap(Format.colourise(message), 65));
 		
 		for (Entity entity : ((Player) sender).getNearbyEntities(radius, radius, radius))
 			if (entity instanceof Player)
-				sendMessage((Player) entity, messages);
+				((Player) entity).sendMessage(ChatUtils.wordWrap(Format.colourise(message), 65));
 	}
 	
 	/**
 	 * Sends the message to the {@link CommandSender}
 	 * 
-	 * @param sender The {@link CommandSender} to broadcast to
+	 * @param sender The {@link CommandSender} to send to
 	 * 
-	 * @param messages The messages to broadcast
+	 * @param message The message to send
 	 */
-	public static void sendMessage(CommandSender sender, String... messages) {
+	public static void sendMessage(CommandSender sender, String message) {
 		if (sender == null)
 			return;
 		
-		List<String> lines = new ArrayList<String>();
-		
-		for (String message : messages)
-			lines.addAll(Arrays.asList(ChatUtils.wordWrap(Format.colourise(message), 65)));
-		
-		sender.sendMessage(lines.toArray(new String[0]));
+		sender.sendMessage(ChatUtils.wordWrap(Format.colourise(message), 65));
 	}
 }
