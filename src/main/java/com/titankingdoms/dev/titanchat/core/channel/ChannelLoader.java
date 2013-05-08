@@ -35,6 +35,15 @@ public abstract class ChannelLoader extends Loadable {
 	}
 	
 	/**
+	 * Constructs the {@link Channel}
+	 * 
+	 * @param name The name of the {@link Channel}
+	 * 
+	 * @return The constructed {@link Channel}
+	 */
+	public abstract Channel construct(String name);
+	
+	/**
 	 * Loads the {@link Channel} from configuration
 	 * 
 	 * @param name The name of the {@link Channel}

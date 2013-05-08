@@ -65,6 +65,9 @@ public final class DemoteCommand extends Command {
 	
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
+		if (channel == null)
+			return false;
+		
 		if (channel.getOperators().contains(sender.getName()))
 			return true;
 		

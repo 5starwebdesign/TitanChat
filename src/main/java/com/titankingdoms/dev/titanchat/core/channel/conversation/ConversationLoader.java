@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel.standard;
+package com.titankingdoms.dev.titanchat.core.channel.conversation;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -23,25 +23,19 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 
-/**
- * {@link StandardLoader} - Loads {@link StandardChannel}s
- * 
- * @author NodinChan
- *
- */
-public final class StandardLoader extends ChannelLoader {
+public final class ConversationLoader extends ChannelLoader {
 	
-	public StandardLoader() {
-		super("Standard");
+	public ConversationLoader() {
+		super("Conversation");
 	}
 	
 	@Override
 	public Channel construct(String name) {
-		return new StandardChannel(name, Status.NONE);
+		return new Conversation();
 	}
-
+	
 	@Override
 	public Channel load(String name, Status status, FileConfiguration config) {
-		return new StandardChannel(name, status);
+		return new Conversation();
 	}
 }

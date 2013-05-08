@@ -31,6 +31,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.channel.conversation.ConversationLoader;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.channel.standard.ServerChannel;
 import com.titankingdoms.dev.titanchat.core.channel.standard.StandardLoader;
@@ -220,7 +221,7 @@ public final class ChannelManager {
 			return;
 		}
 		
-		registerLoaders(new StandardLoader());
+		registerLoaders(new StandardLoader(), new ConversationLoader());
 		
 		registerLoaders(Loader.load(ChannelLoader.class, getLoaderDirectory()).toArray(new ChannelLoader[0]));
 		
@@ -326,10 +327,11 @@ public final class ChannelManager {
 				unregisterChannel(channel);
 			
 			registerChannels(new ServerChannel());
+			registerLoaders(new ConversationLoader());
 			return;
 		}
 		
-		registerLoaders(new StandardLoader());
+		registerLoaders(new StandardLoader(), new ConversationLoader());
 		
 		registerLoaders(Loader.load(ChannelLoader.class, getLoaderDirectory()).toArray(new ChannelLoader[0]));
 		

@@ -21,12 +21,10 @@ import java.io.File;
 import java.io.IOException;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.event.ChannelCreationEvent;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
@@ -70,18 +68,15 @@ public final class CreateCommand extends Command {
 			return;
 		}
 		
-		String type = "Standard";
-		
-		if (args.length > 1)
-			type = args[1];
+		String type = (args.length > 1) ? args[1] : "Standard";
 		
 		if (!plugin.getChannelManager().hasLoader(type)) {
-			sendMessage(sender, "&4" + "ChannelLoader does not exist");
+			sendMessage(sender, "&4ChannelLoader does not exist");
 			return;
 		}
 		
 		ChannelLoader loader = plugin.getChannelManager().getLoader(type);
-		channel = loader.load(args[0], Status.NONE, YamlConfiguration.loadConfiguration(validate));
+		channel = loader.construct(args[0]);
 		plugin.getChannelManager().registerChannels(channel);
 		
 		ChannelCreationEvent event = new ChannelCreationEvent(channel);
@@ -90,7 +85,10 @@ public final class CreateCommand extends Command {
 		channel.getOperators().add(sender.getName());
 		channel.join(plugin.getParticipantManager().getParticipant(sender));
 		channel.getOperators().add(sender.getName());
-		sendMessage(sender, "&6" + channel.getName() + "has been created");
+		sendMessage(sender, "&6" + channel.getName() + " has been created");
+		
+		channel.getConfig().options().copyDefaults(true);
+		channel.saveConfig();
 	}
 
 	@Override

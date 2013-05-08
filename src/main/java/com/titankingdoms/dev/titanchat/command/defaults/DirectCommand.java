@@ -54,7 +54,7 @@ public final class DirectCommand extends Command {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);
 		
-		if (participant.getCurrentChannel().equals(channel)) {
+		if (channel.equals(participant.getCurrentChannel())) {
 			sendMessage(sender, "&4You are already speaking in the channel");
 			return;
 		}

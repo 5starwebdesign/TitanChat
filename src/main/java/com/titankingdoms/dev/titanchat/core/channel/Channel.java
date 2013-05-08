@@ -211,8 +211,10 @@ public abstract class Channel extends ChatEntity {
 		if (participant == null)
 			return;
 		
-		if (!isParticipating(participant))
+		if (!isParticipating(participant)) {
+			sendMessage("&6" + participant.getDisplayName() + " has joined the channel");
 			participants.put(participant.getName().toLowerCase(), participant);
+		}
 		
 		if (!participant.isParticipating(this))
 			participant.join(this);
@@ -232,8 +234,10 @@ public abstract class Channel extends ChatEntity {
 		if (participant == null)
 			return;
 		
-		if (isParticipating(participant))
+		if (isParticipating(participant)) {
 			participants.remove(participant.getName().toLowerCase());
+			sendMessage("&6" + participant.getDisplayName() + " has left the channel");
+		}
 		
 		if (participant.isParticipating(this))
 			participant.leave(this);

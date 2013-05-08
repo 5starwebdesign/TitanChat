@@ -8,7 +8,7 @@ softdepend: [Vault]
 commands:
     titanchat:
         description: TitanChat Commands
-        aliases: [tchat, chat, tc]
+        aliases: [tchat, tc]
         usage: /<command> [@<channel>] <sub-command> <arguments>
     chat:
         description: Chatting
