@@ -31,6 +31,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 
 public final class ParticipantManager {
@@ -240,5 +241,8 @@ public final class ParticipantManager {
 		
 		this.participants.remove(participant.getName().toLowerCase());
 		db.debug(Level.INFO, "Unregistered participant: " + participant.getName());
+		
+		for (Channel channel : participant.getChannels())
+			channel.leave(participant);
 	}
 }
