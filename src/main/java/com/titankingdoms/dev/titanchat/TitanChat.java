@@ -155,11 +155,15 @@ public final class TitanChat extends JavaPlugin {
 	 * @param message The message to send
 	 */
 	public void log(Level level, String message) {
-		log.log(level, "[TitanChat v4.0] " + message);
+		if (message != null && !message.isEmpty())
+			log.log((level != null) ? level : Level.INFO, "[TitanChat v4.0] " + message);
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command cmd, String lbl, String[] args) {
+		if (sender == null || cmd == null || lbl == null || args == null)
+			return false;
+		
 		if (cmd.getName().equals("titanchat")) {
 			db.debug(Level.INFO, "Command by " + sender.getName() + ":");
 			db.debug(Level.INFO, lbl + " " + StringUtils.join(args, " "));
@@ -341,14 +345,18 @@ public final class TitanChat extends JavaPlugin {
 			saveResource("channels/README.txt", false);
 		}
 		
-		if (!new File(getDataFolder(), "participants.yml").exists())
+		if (!new File(getDataFolder(), "participants.yml").exists()) {
 			log(Level.INFO, "Generating default participants.yml...");
+			saveResource("participants.yml", false);
+		}
 		
 		participant.getConfig().options().copyDefaults(true);
 		participant.saveConfig();
 		
-		if (!new File(getDataFolder(), "topic.yml").exists())
+		if (!new File(getDataFolder(), "topic.yml").exists()) {
 			log(Level.INFO, "Generating default topic.yml...");
+			saveResource("topic.yml", false);
+		}
 		
 		topic.getConfig().options().copyDefaults(true);
 		topic.saveConfig();

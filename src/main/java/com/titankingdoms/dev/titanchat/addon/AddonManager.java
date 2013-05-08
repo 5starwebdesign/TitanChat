@@ -61,7 +61,7 @@ public final class AddonManager {
 	 * @return The specified {@link ChatAddon} if found, otherwise null
 	 */
 	public ChatAddon getAddon(String name) {
-		return addons.get(name);
+		return addons.get((name != null) ? name.toLowerCase() : "");
 	}
 	
 	/**

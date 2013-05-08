@@ -25,7 +25,6 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.format.Colour;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
@@ -56,7 +55,7 @@ public final class BlacklistCommand extends Command {
 				sendMessage(sender, "&4Invalid argument length");
 				
 				String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
-				sendMessage(sender, Colour.GOLD + usage);
+				sendMessage(sender, "&6" + usage);
 				return;
 			}
 		}

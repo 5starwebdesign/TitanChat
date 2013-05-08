@@ -34,7 +34,6 @@ import org.w3c.dom.Node;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.format.Colour;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
@@ -63,6 +62,9 @@ public final class TitanChatListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+		if (event == null)
+			return;
+		
 		event.setCancelled(true);
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
@@ -72,7 +74,7 @@ public final class TitanChatListener implements Listener {
 			Channel channel = plugin.getChannelManager().getChannel(message.split(" ")[0].substring(1));
 			
 			if (channel == null) {
-				Messaging.sendMessage(event.getPlayer(), Colour.RED + "Channel does not exist");
+				Messaging.sendMessage(event.getPlayer(), "&4Channel does not exist");
 				return;
 			}
 			
@@ -88,13 +90,16 @@ public final class TitanChatListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (event == null)
+			return;
+		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
 		if (participant.hasPermission("TitanChat.update")) {
 			if (updateCheck() > currentVer) {
-				participant.sendMessage(Colour.GOLD + "" + newVer + Colour.PURPLE + " is out!");
-				participant.sendMessage(Colour.PURPLE + "You are running " + Colour.GOLD + currentVer);
-				participant.sendMessage(Colour.PURPLE + "Update at " + Colour.LIGHT_BLUE + site);
+				participant.sendMessage("&6" + newVer + " &5is out!");
+				participant.sendMessage("&5You are running &6" + currentVer);
+				participant.sendMessage("&5Update at &9" + site);
 			}
 		}
 	}
@@ -106,6 +111,9 @@ public final class TitanChatListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (event == null)
+			return;
+		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		plugin.getParticipantManager().unregisterParticipant(participant);
 	}
@@ -117,6 +125,9 @@ public final class TitanChatListener implements Listener {
 	 */
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onSignChange(SignChangeEvent event) {
+		if (event == null)
+			return;
+		
 		for (int line = 0; line < 4; line++)
 			event.setLine(line, Format.colourise(event.getLine(line)));
 	}

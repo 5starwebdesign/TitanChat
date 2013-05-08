@@ -92,7 +92,7 @@ public final class TopicManager {
 	 * @return The {@link Topic} if found, otherwise null
 	 */
 	public Topic getTopic(String name) {
-		return topics.get(name.toLowerCase());
+		return topics.get((name != null) ? name.toLowerCase() : "");
 	}
 	
 	/**

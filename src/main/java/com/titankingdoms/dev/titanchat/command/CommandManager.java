@@ -65,7 +65,7 @@ public final class CommandManager {
 	 * @return The specified {@link Command} if found, otherwise null
 	 */
 	public Command getCommand(String label) {
-		return labels.get(label.toLowerCase());
+		return labels.get((label != null) ? label.toLowerCase() : "");
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public final class CommandManager {
 	 * @return True if found
 	 */
 	public boolean hasLabel(String label) {
-		return labels.containsKey(label.toLowerCase());
+		return labels.containsKey((label != null) ? label.toLowerCase() : "");
 	}
 	
 	/**

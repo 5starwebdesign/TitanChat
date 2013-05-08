@@ -46,7 +46,7 @@ public final class InfoCommand extends Command {
 		
 		Topic topic = manager.getGeneralIndex();
 		int page = 1;
-		int pageWidth = manager.getConfig().getInt("page.width", 65);
+		int pageWidth = manager.getConfig().getInt("page.width", 55);
 		int pageHeight = manager.getConfig().getInt("page.height", 9);
 		
 		if (args.length > 0) {
@@ -81,9 +81,7 @@ public final class InfoCommand extends Command {
 			page = pages.length;
 		
 		sendMessage(sender, "&b" + StringUtils.center(" " + header + " ", 55, '='));
-		
-		for (String line : pages[page - 1])
-			sendMessage(sender, line);
+		sendMessage(sender, pages[page - 1]);
 	}
 	
 	@Override
