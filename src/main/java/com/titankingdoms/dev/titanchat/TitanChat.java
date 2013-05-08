@@ -209,6 +209,10 @@ public final class TitanChat extends JavaPlugin {
 			onCommand(sender, ch, cmdName, args);
 			return true;
 			
+		} else if (cmd.getName().equalsIgnoreCase("chat")) {
+			onCommand(sender, participant.getParticipant(sender).getCurrentChannel(), "chat", args);
+			return true;
+			
 		} else if (cmd.getName().equalsIgnoreCase("pm")) {
 			onCommand(sender, (Channel) null, "pm", args);
 			return true;

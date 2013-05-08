@@ -25,16 +25,16 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link SendCommand} - Command for sending messages to channels
+ * {@link ChatCommand} - Command for sending messages to channels
  * 
  * @author NodinChan
  *
  */
-public final class SendCommand extends Command {
+public final class ChatCommand extends Command {
 	
-	public SendCommand() {
-		super("Send");
-		setAliases("s");
+	public ChatCommand() {
+		super("Chat");
+		setAliases("ch");
 		setArgumentRange(1, 1024);
 		setDescription("Send the message to the channel");
 		setUsage("<message>");
