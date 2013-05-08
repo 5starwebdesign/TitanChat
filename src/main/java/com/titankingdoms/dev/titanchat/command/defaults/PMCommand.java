@@ -17,6 +17,8 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
@@ -51,7 +53,7 @@ public final class PMCommand extends Command {
 		conversation.join(target);
 		
 		if (args.length > 1)
-			participant.chat(conversation, StringUtils.join(args, " "));
+			participant.chat(conversation, StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
 		else
 			participant.direct(conversation);
 	}
