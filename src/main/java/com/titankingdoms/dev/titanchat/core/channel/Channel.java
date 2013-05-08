@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -37,6 +38,7 @@ import com.titankingdoms.dev.titanchat.event.ChannelJoinEvent;
 import com.titankingdoms.dev.titanchat.event.ChannelLeaveEvent;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.topic.Topic;
+import com.titankingdoms.dev.titanchat.util.Debugger;
 
 /**
  * {@link Channel} - Channels for communication
@@ -45,6 +47,8 @@ import com.titankingdoms.dev.titanchat.topic.Topic;
  *
  */
 public abstract class Channel extends ChatEntity {
+	
+	private final Debugger db = new Debugger(3, "Channel");
 	
 	private final String type;
 	
@@ -215,6 +219,8 @@ public abstract class Channel extends ChatEntity {
 		
 		ChannelJoinEvent event = new ChannelJoinEvent(participant, this);
 		plugin.getServer().getPluginManager().callEvent(event);
+		
+		db.debug(Level.INFO, getName() + " Channel Join: " + participant.getName());
 	}
 	
 	/**
@@ -234,6 +240,8 @@ public abstract class Channel extends ChatEntity {
 		
 		ChannelLeaveEvent event = new ChannelLeaveEvent(participant, this);
 		plugin.getServer().getPluginManager().callEvent(event);
+		
+		db.debug(Level.INFO, getName() + " Channel Leave: " + participant.getName());
 	}
 	
 	/**

@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +43,7 @@ import com.titankingdoms.dev.titanchat.format.Censor;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
+import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
@@ -52,6 +54,8 @@ import com.titankingdoms.dev.titanchat.vault.Vault;
  *
  */
 public class Participant extends ChatEntity {
+	
+	private final Debugger db = new Debugger(4, "Participant");
 	
 	private Channel current;
 	
@@ -117,6 +121,8 @@ public class Participant extends ChatEntity {
 			}
 		}
 		
+		db.debug(Level.INFO, getName() + " Chat: " + message);
+		
 		String format = channel.getFormat();
 		
 		if (format == null || format.isEmpty())
@@ -159,6 +165,20 @@ public class Participant extends ChatEntity {
 		
 		ChannelChatEvent event = new ChannelChatEvent(this, recipients, channel, format, message);
 		plugin.getServer().getPluginManager().callEvent(event);
+		
+		db.debug(Level.INFO, getName() + " Chat Message: " + event.getMessage());
+		db.debug(Level.INFO, getName() + " Chat Format: " + event.getFormat());
+		
+		StringBuilder recipientList = new StringBuilder();
+		
+		for (Participant recipient : event.getRecipients()) {
+			if (recipientList.length() > 0)
+				recipientList.append(", ");
+			
+			recipientList.append(recipient.getName());
+		}
+		
+		db.debug(Level.INFO, getName() + " Chat Recipients: " + recipientList.toString());
 		
 		List<String> phrases = plugin.getConfig().getStringList("filtering.phrases");
 		String censor = plugin.getConfig().getString("filtering.censor");

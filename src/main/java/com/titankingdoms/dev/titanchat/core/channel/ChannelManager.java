@@ -318,10 +318,13 @@ public final class ChannelManager {
 	 * Reloads the manager
 	 */
 	public void reload() {
-		loaders.clear();
+		for (ChannelLoader loader : getLoaders())
+			unregisterLoader(loader);
 		
 		if (!plugin.getConfig().getBoolean("channels.enable", true)) {
-			channels.clear();
+			for (Channel channel : getChannels())
+				unregisterChannel(channel);
+			
 			registerChannels(new ServerChannel());
 			return;
 		}
