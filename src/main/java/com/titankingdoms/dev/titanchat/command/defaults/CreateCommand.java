@@ -89,6 +89,7 @@ public final class CreateCommand extends Command {
 		
 		channel.getOperators().add(sender.getName());
 		channel.join(plugin.getParticipantManager().getParticipant(sender));
+		channel.getOperators().add(sender.getName());
 		sendMessage(sender, "&6" + channel.getName() + "has been created");
 	}
 

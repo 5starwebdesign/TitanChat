@@ -34,6 +34,7 @@ import org.w3c.dom.Node;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.Colour;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
@@ -71,7 +72,7 @@ public final class TitanChatListener implements Listener {
 			Channel channel = plugin.getChannelManager().getChannel(message.split(" ")[0].substring(1));
 			
 			if (channel == null) {
-				Messaging.sendMessage(event.getPlayer(), "&4Channel does not exist");
+				Messaging.sendMessage(event.getPlayer(), Colour.RED + "Channel does not exist");
 				return;
 			}
 			
@@ -91,9 +92,9 @@ public final class TitanChatListener implements Listener {
 		
 		if (participant.hasPermission("TitanChat.update")) {
 			if (updateCheck() > currentVer) {
-				participant.sendMessage("&6" + newVer + " &5is out!");
-				participant.sendMessage("&5You are running &6" + currentVer);
-				participant.sendMessage("&5Update at &9" + site);
+				participant.sendMessage(Colour.GOLD + "" + newVer + Colour.PURPLE + " is out!");
+				participant.sendMessage(Colour.PURPLE + "You are running " + Colour.GOLD + currentVer);
+				participant.sendMessage(Colour.PURPLE + "Update at " + Colour.LIGHT_BLUE + site);
 			}
 		}
 	}

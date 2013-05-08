@@ -206,7 +206,7 @@ public final class TitanChat extends JavaPlugin {
 			return true;
 			
 		} else if (cmd.getName().equalsIgnoreCase("pm")) {
-			onCommand(sender, (Channel) null, "pm", Arrays.copyOfRange(args, 1, args.length));
+			onCommand(sender, (Channel) null, "pm", args);
 			return true;
 		}
 		
@@ -246,8 +246,7 @@ public final class TitanChat extends JavaPlugin {
 			return;
 		}
 		
-		Messaging.sendMessage(sender, "&4Invalid command");
-		Messaging.sendMessage(sender, "&6\"/titanchat info [topic/page]\" for help");
+		Messaging.sendMessage(sender, "&4Invalid command", "&6\"/titanchat info [topic/page]\" for help");
 	}
 	
 	@Override

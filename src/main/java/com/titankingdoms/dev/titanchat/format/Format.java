@@ -17,8 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.format;
 
-import java.util.regex.Pattern;
-
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
@@ -31,8 +29,6 @@ import com.titankingdoms.dev.titanchat.TitanChat;
  */
 public final class Format {
 	
-	private static final Pattern colour = Pattern.compile("(?i)(&)([a-fk-or0-9])");
-	
 	private static final String DEFAULT_FORMAT = "%prefix%display%suffix\u00A7f: %colour%message";
 	
 	/**
@@ -43,7 +39,23 @@ public final class Format {
 	 * @return The colourised text
 	 */
 	public static String colourise(String text) {
-		return text.replaceAll(colour.toString(), "\u00A7$2");
+		return Colour.translateAlternateColourCodes('&', text);
+	}
+	
+	/**
+	 * Colourises the texts
+	 * 
+	 * @param texts The texts to colourise
+	 * 
+	 * @return The colourised texts
+	 */
+	public static String[] colourise(String... texts) {
+		String[] colourised = new String[texts.length];
+		
+		for (int text = 0; text < texts.length; text++)
+			colourised[text] = colourise(texts[text]);
+		
+		return colourised;
 	}
 	
 	/**
@@ -54,7 +66,23 @@ public final class Format {
 	 * @return The decolourised text
 	 */
 	public static String decolourise(String text) {
-		return text.replaceAll(colour.toString(), "");
+		return Colour.stripColour(Colour.translateAlternateColourCodes('&', text));
+	}
+	
+	/**
+	 * Decolourises the texts
+	 * 
+	 * @param texts The texts to decolourise
+	 * 
+	 * @return The decolourised texts
+	 */
+	public static String[] decolourise(String... texts) {
+		String[] decolourised = new String[texts.length];
+		
+		for (int text = 0; text < texts.length; text++)
+			decolourised[text] = decolourise(texts[text]);
+		
+		return decolourised;
 	}
 	
 	/**

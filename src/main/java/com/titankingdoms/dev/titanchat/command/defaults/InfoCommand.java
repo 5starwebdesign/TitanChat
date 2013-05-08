@@ -19,7 +19,6 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
@@ -81,8 +80,10 @@ public final class InfoCommand extends Command {
 		if (page > pages.length)
 			page = pages.length;
 		
-		sendMessage(sender, ChatColor.AQUA + StringUtils.center(" " + header + " ", 65, '='));
-		sendMessage(sender, StringUtils.join(pages[page - 1], " "));
+		sendMessage(sender, "&b" + StringUtils.center(" " + header + " ", 55, '='));
+		
+		for (String line : pages[page - 1])
+			sendMessage(sender, line);
 	}
 	
 	@Override

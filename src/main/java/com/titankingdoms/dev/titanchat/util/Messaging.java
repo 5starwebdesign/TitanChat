@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
 
 /**
@@ -37,77 +36,86 @@ import com.titankingdoms.dev.titanchat.format.Format;
 public final class Messaging {
 	
 	/**
-	 * Broadcasts the message
+	 * Broadcasts the messages
 	 * 
-	 * @param message The message to broadcast
+	 * @param messages The messages to broadcast
 	 */
-	public static void broadcast(String message) {
-		for (String line : ChatUtils.wordWrap(Format.colourise(message), 65))
-			TitanChat.getInstance().getServer().broadcastMessage(line);
+	public static void broadcast(String... messages) {
+		if (messages == null)
+			return;
+		
+		for (String message : Format.colourise(messages))
+			TitanChat.getInstance().getServer().broadcastMessage(message);
 	}
 	
 	/**
-	 * Broadcasts the message to the {@link World}
+	 * Broadcasts the messages to the {@link World}
 	 * 
 	 * @param world The {@link World} to broadcast to
 	 * 
-	 * @param message The message to broadcast
+	 * @param messages The messages to broadcast
 	 */
-	public static void broadcast(World world, String message) {
-		if (world == null)
+	public static void broadcast(World world, String... messages) {
+		if (world == null || messages == null)
 			return;
 		
+		messages = Format.colourise(messages);
+		
 		for (Player player : world.getPlayers())
-			player.sendMessage(ChatUtils.wordWrap(Format.colourise(message), 65));
+			player.sendMessage(messages);
 	}
 	
 	/**
-	 * Broadcasts the message to the {@link Channel}
+	 * Broadcasts the messages to the {@link Channel}
 	 * 
 	 * @param channel The {@link Channel} to broadcast to
 	 * 
-	 * @param message The message to broadcast
+	 * @param messages The messages to broadcast
 	 */
-	public static void broadcast(Channel channel, String message) {
-		if (channel == null)
+	public static void broadcast(Channel channel, String... messages) {
+		if (channel == null || messages == null)
 			return;
 		
+		messages = Format.colourise(messages);
+		
 		for (Participant participant : channel.getParticipants())
-			participant.sendMessage(message);
+			participant.sendMessage(messages);
 	}
 	
 	/**
-	 * Broadcasts the message to the area around the {@link CommandSender}
+	 * Broadcasts the messages to the area around the {@link CommandSender}
 	 * 
 	 * @param sender The {@link CommandSender}
 	 * 
 	 * @param radius The radius around the {@link CommandSender}
 	 * 
-	 * @param message The message to broadcast
+	 * @param messages The messages to broadcast
 	 */
-	public static void broadcast(CommandSender sender, double radius, String message) {
-		if (sender == null)
+	public static void broadcast(CommandSender sender, double radius, String... messages) {
+		if (sender == null || radius == 0 || messages == null)
 			return;
 		
+		messages = Format.colourise(messages);
+		
 		if (!(sender instanceof Player))
-			sender.sendMessage(ChatUtils.wordWrap(Format.colourise(message), 65));
+			sender.sendMessage(messages);
 		
 		for (Entity entity : ((Player) sender).getNearbyEntities(radius, radius, radius))
 			if (entity instanceof Player)
-				((Player) entity).sendMessage(ChatUtils.wordWrap(Format.colourise(message), 65));
+				((Player) entity).sendMessage(messages);
 	}
 	
 	/**
-	 * Sends the message to the {@link CommandSender}
+	 * Sends the messages to the {@link CommandSender}
 	 * 
 	 * @param sender The {@link CommandSender} to send to
 	 * 
-	 * @param message The message to send
+	 * @param messages The messages to send
 	 */
-	public static void sendMessage(CommandSender sender, String message) {
-		if (sender == null)
+	public static void sendMessage(CommandSender sender, String... messages) {
+		if (sender == null || messages == null)
 			return;
 		
-		sender.sendMessage(ChatUtils.wordWrap(Format.colourise(message), 65));
+		sender.sendMessage(Format.colourise(messages));
 	}
 }
