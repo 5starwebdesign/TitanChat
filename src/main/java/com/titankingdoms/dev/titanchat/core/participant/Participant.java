@@ -126,7 +126,7 @@ public class Participant extends ChatEntity {
 			}
 		}
 		
-		db.debug(Level.INFO, getName() + " Chat: " + message);
+		db.debug(Level.INFO, getName() + " Chat: " + channel.getName() + ":" + message);
 		
 		String format = channel.getFormat();
 		

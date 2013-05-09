@@ -387,7 +387,8 @@ public final class ChannelManager {
 		for (Channel channel : getChannels())
 			unregisterChannel(channel);
 		
-		this.loaders.clear();
+		for (ChannelLoader loader : getLoaders())
+			unregisterLoader(loader);
 		
 		for (Map<String, Channel> status : this.statuses.values())
 			status.clear();
