@@ -111,8 +111,13 @@ public class Participant extends ChatEntity {
 	 * @param message The message
 	 */
 	public final void chat(Channel channel, String message) {
-		if (channel == null || !isOnline())
+		if (!isOnline())
 			return;
+		
+		if (channel == null) {
+			sendMessage("&4Please join a channel to speak");
+			return;
+		}
 		
 		if (!hasPermission("TitanChat.speak." + channel.getName())) {
 			if (!channel.getOperators().contains(getName())) {
