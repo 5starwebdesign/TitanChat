@@ -25,7 +25,7 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link DemoteCommand} - Command for demotion in channels
+ * {@link DemoteCommand} - Command for demotion in {@link Channel}s
  * 
  * @author NodinChan
  *

@@ -29,8 +29,8 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 === Dependecies
 
-* CraftBukkit 1.5.1-R0.1
-* Vault (OPTIONAL)
+* CraftBukkit 1.5.2-R0.1
+* Vault (OPTIONAL PERMISSIONS-WISE)
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 * 11.04.13 - JavaDocs
 * 30.04.13 - Fixed bugs
 * 07.05.13 - Added help section and private messaging
-* 09.05.13 - Improved private messaging and made actions more descriptive
+* 09.05.13 - Improved private messaging, made commands more descriptive and added emoting
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -60,14 +60,12 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 * v4.0
 ** Complete update
+** Thorough test
 ** Create addons
 
 * v4.1
 ** Customisable messages
 ** Ignore lists
-** Broadcasting
-** Emoting
-** Chat groups
 
 -----------------------------------------------------------------------------------------------------------------------
 

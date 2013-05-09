@@ -26,7 +26,7 @@ import com.titankingdoms.dev.titanchat.event.ChannelDeletionEvent;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link DeleteCommand} - Command for channel deletion
+ * {@link DeleteCommand} - Command for {@link Channel} deletion
  * 
  * @author NodinChan
  *

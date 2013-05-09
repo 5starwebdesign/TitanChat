@@ -5,6 +5,9 @@ channels:
 pm:
     display-colour: ''
     format: '%chtag%prefix%display%suffix whispers: %colour%message'
+emote:
+    display-colour: ''
+    format: '* %prefix%display%suffix %colour%message'
 logging:
     chat:
         log: false

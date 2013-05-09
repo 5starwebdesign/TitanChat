@@ -25,7 +25,7 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link PromoteCommand} - Command for promotion in channels
+ * {@link PromoteCommand} - Command for promotion in {@link Channel}s
  * 
  * @author NodinChan
  *

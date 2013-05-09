@@ -27,6 +27,12 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
+/**
+ * {@link PMCommand} - Command for private messaging
+ * 
+ * @author NodinChan
+ *
+ */
 public final class PMCommand extends Command {
 
 	public PMCommand() {

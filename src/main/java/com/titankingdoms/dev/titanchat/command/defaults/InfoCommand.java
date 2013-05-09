@@ -30,6 +30,12 @@ import com.titankingdoms.dev.titanchat.topic.Topic;
 import com.titankingdoms.dev.titanchat.topic.TopicManager;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
+/**
+ * {@link InfoCommand} - Command for getting information about TitanChat
+ * 
+ * @author NodinChan
+ *
+ */
 public final class InfoCommand extends Command {
 	
 	public InfoCommand() {

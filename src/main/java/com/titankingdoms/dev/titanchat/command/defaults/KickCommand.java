@@ -28,7 +28,7 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link KickCommand} - Command for kicking in channels
+ * {@link KickCommand} - Command for kicking in {@link Channel}s
  * 
  * @author NodinChan
  *

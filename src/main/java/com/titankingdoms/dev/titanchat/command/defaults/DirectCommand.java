@@ -24,7 +24,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 /**
- * {@link DirectCommand} - Command for directing attention to another channel
+ * {@link DirectCommand} - Command for directing attention to another {@link Channel}
  * 
  * @author NodinChan
  *

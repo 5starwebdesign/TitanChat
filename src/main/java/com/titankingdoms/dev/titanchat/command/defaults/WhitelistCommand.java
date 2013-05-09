@@ -28,7 +28,7 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link WhitelistCommand} - Command for editting whitelist in channels
+ * {@link WhitelistCommand} - Command for editting and view the whitelist in {@link Channel}s
  * 
  * @author NodinChan
  *

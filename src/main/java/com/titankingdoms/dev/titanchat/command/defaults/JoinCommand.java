@@ -25,7 +25,7 @@ import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link JoinCommand} - Command for joining channels
+ * {@link JoinCommand} - Command for joining {@link Channel}s
  * 
  * @author NodinChan
  *

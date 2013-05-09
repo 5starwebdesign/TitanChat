@@ -40,6 +40,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.privmsg.PrivateMessage;
 import com.titankingdoms.dev.titanchat.event.ChannelChatEvent;
+import com.titankingdoms.dev.titanchat.event.ChannelEmoteEvent;
 import com.titankingdoms.dev.titanchat.format.Censor;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
@@ -59,9 +60,10 @@ public class Participant extends ChatEntity {
 	private final Debugger db = new Debugger(4, "Participant");
 	
 	private Channel current;
-	private PrivateMessage pm;
 	
 	private final Map<String, Channel> channels;
+	
+	private final PrivateMessage pm;
 	
 	public Participant(String name) {
 		super("Participant", name);
@@ -252,6 +254,139 @@ public class Participant extends ChatEntity {
 		
 		if (channel != null && !isParticipating(channel))
 			join(channel);
+	}
+	
+	/**
+	 * Emotes in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to emote in
+	 * 
+	 * @param emote The emote
+	 */
+	public final void emote(Channel channel, String emote) {
+		if (!isOnline())
+			return;
+		
+		if (channel == null) {
+			sendMessage("&4Please join a channel to speak");
+			return;
+		}
+		
+		if (!channel.getStatus().equals(Status.CONVERSATION)) {
+			if (!hasPermission("TitanChat.speak." + channel.getName())) {
+				if (!channel.getOperators().contains(getName())) {
+					sendMessage("&4You do not have permission");
+					return;
+				}
+			}
+		}
+		
+		db.debug(Level.INFO, getName() + " Emote: " + channel.getName() + ":" + emote);
+		
+		String format = plugin.getConfig().getString("emote.format", "* %prefix%display%suffix %colour%message");
+		
+		Set<Participant> recipients = new HashSet<Participant>();
+		
+		switch (channel.getRange()) {
+		
+		case CHANNEL:
+			recipients.addAll(channel.getParticipants());
+			break;
+			
+		case GLOBAL:
+			recipients.addAll(plugin.getParticipantManager().getParticipants());
+			break;
+			
+		case LOCAL:
+			if (asCommandSender() instanceof Player) {
+				double radius = plugin.getConfig().getDouble("channels.range", 15.0);
+				
+				for (Entity entity : ((Player) asCommandSender()).getNearbyEntities(radius, radius, radius))
+					if (entity instanceof Player)
+						recipients.add(plugin.getParticipantManager().getParticipant((Player) entity));
+				
+			} else {
+				recipients.add(plugin.getParticipantManager().getConsoleParticipant());
+			}
+			break;
+			
+		case WORLD:
+			if (asCommandSender() instanceof Player)
+				for (Player player : ((Player) asCommandSender()).getWorld().getEntitiesByClass(Player.class))
+					recipients.add(plugin.getParticipantManager().getParticipant(player));
+			break;
+		}
+		
+		if (!recipients.contains(this))
+			recipients.add(this);
+		
+		ChannelEmoteEvent event = new ChannelEmoteEvent(this, recipients, channel, format, emote);
+		plugin.getServer().getPluginManager().callEvent(event);
+		
+		db.debug(Level.INFO, getName() + " Emote Action: " + event.getEmote());
+		db.debug(Level.INFO, getName() + " Emote Format: " + event.getFormat());
+		
+		StringBuilder recipientList = new StringBuilder();
+		
+		for (Participant recipient : event.getRecipients()) {
+			if (recipientList.length() > 0)
+				recipientList.append(", ");
+			
+			recipientList.append(recipient.getName());
+		}
+		
+		db.debug(Level.INFO, getName() + " Emote Recipients: " + recipientList.toString());
+		
+		List<String> phrases = plugin.getConfig().getStringList("filtering.phrases");
+		String censor = plugin.getConfig().getString("filtering.censor");
+		
+		emote = Format.colourise(Censor.filter(event.getEmote(), phrases, censor));
+		
+		StringBuffer parsedFormat = new StringBuffer();
+		
+		Pattern tagPattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
+		Matcher tagMatch = tagPattern.matcher(event.getFormat());
+		
+		while (tagMatch.find()) {
+			String replacement = tagMatch.group();
+			
+			if (plugin.getTagManager().hasTag(tagMatch.group())) {
+				Tag tag = plugin.getTagManager().getTag(tagMatch.group());
+				
+				String var = tag.getVariable(this, channel);
+				replacement = (var != null && !var.isEmpty()) ? tag.getFormat().replace("%tag%", var) : "";
+			}
+			
+			tagMatch.appendReplacement(parsedFormat, replacement);
+		}
+		
+		format = Format.colourise(tagMatch.appendTail(parsedFormat).toString());
+		
+		for (Participant recipient : event.getRecipients())
+			recipient.sendMessage(format.replace("%message", emote));
+		
+		if (event.getRecipients().size() <= 1)
+			sendMessage("&6Nobody else saw you...");
+		
+		if (!plugin.getConfig().getBoolean("logging.chat.log", false))
+			return;
+		
+		ConsoleCommandSender console = plugin.getServer().getConsoleSender();
+		String log = format.replace("%message", event.getEmote());
+		
+		if (plugin.getConfig().getBoolean("logging.chat.colour", true))
+			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 55));
+		else
+			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 55));
+	}
+	
+	/**
+	 * Emotes in the current {@link Channel}
+	 * 
+	 * @param emote The emote
+	 */
+	public final void emote(String emote) {
+		emote(current, emote);
 	}
 	
 	@Override

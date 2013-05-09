@@ -25,7 +25,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link ChatCommand} - Command for sending messages to channels
+ * {@link ChatCommand} - Command for sending messages to {@link Channel}s
  * 
  * @author NodinChan
  *

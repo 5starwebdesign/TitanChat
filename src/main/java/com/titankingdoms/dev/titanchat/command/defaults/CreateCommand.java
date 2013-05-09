@@ -29,7 +29,7 @@ import com.titankingdoms.dev.titanchat.event.ChannelCreationEvent;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link CreateCommand} - Command for channel creation
+ * {@link CreateCommand} - Command for {@link Channel} creation
  * 
  * @author NodinChan
  *

@@ -17,6 +17,7 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
@@ -24,48 +25,39 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link LeaveCommand} - Command for leaving {@link Channel}s
+ * {@link EmoteCommand} - Command for emoting in {@link Channel}s
  * 
  * @author NodinChan
  *
  */
-public final class LeaveCommand extends Command {
+public final class EmoteCommand extends Command {
 	
-	public LeaveCommand() {
-		super("Leave");
-		setAliases("l");
-		setArgumentRange(1, 1);
-		setDescription("Leave the channel");
-		setUsage("<channel>");
+	public EmoteCommand() {
+		super("Emote");
+		setAliases("em", "me");
+		setArgumentRange(1, 1024);
+		setDescription("Emote in the channel");
+		setUsage("[emote]");
 	}
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		if (!plugin.getChannelManager().hasAlias(args[0])) {
-			sendMessage(sender, "&4Channel does not exist");
+		if (channel == null) {
+			sendMessage(sender, "&4Channel not defined");
 			return;
 		}
 		
-		channel = plugin.getChannelManager().getChannel(args[0]);
-		
-		if (!channel.getOperators().contains(sender.getName())) {
-			if (!Vault.hasPermission(sender, "TitanChat.leave." + channel.getName())) {
-				sendMessage(sender, "&4You do not have permission");
-				return;
-			}
-		}
-		
-		if (!channel.isParticipating(sender.getName())) {
-			sendMessage(sender, "&4You have not joined the channel");
-			return;
-		}
-		
-		channel.leave(plugin.getParticipantManager().getParticipant(sender));
-		sendMessage(sender, "&6You have left " + channel.getName());
+		plugin.getParticipantManager().getParticipant(sender).emote(channel, StringUtils.join(args, " "));
 	}
 	
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
-		return true;
+		if (channel == null)
+			return false;
+		
+		if (channel.getOperators().contains(sender.getName()))
+			return true;
+		
+		return Vault.hasPermission(sender, "TitanChat.speak." + channel.getName());
 	}
 }

@@ -25,7 +25,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 /**
- * {@link WhoCommand} - Command for getting info about a player
+ * {@link WhoCommand} - Command for getting information about a player
  * 
  * @author NodinChan
  *

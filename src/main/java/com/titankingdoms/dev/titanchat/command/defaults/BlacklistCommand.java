@@ -28,7 +28,7 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link BlacklistCommand} - Command for blacklisting in channels
+ * {@link BlacklistCommand} - Command for editting and viewing the blacklist in {@link Channel}s
  * 
  * @author NodinChan
  *

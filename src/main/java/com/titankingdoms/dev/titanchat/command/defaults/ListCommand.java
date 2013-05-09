@@ -17,51 +17,58 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link LeaveCommand} - Command for leaving {@link Channel}s
+ * {@link ListCommand} - Command for listing permitted {@link Channel}s
  * 
  * @author NodinChan
  *
  */
-public final class LeaveCommand extends Command {
+public final class ListCommand extends Command {
 	
-	public LeaveCommand() {
-		super("Leave");
-		setAliases("l");
-		setArgumentRange(1, 1);
-		setDescription("Leave the channel");
-		setUsage("<channel>");
+	public ListCommand() {
+		super("List");
+		setAliases("channellist", "chlist", "chl");
+		setDescription("Give the list of permitted channels");
 	}
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		if (!plugin.getChannelManager().hasAlias(args[0])) {
-			sendMessage(sender, "&4Channel does not exist");
-			return;
+		String header = "&b" + StringUtils.center(" Channel List ", 55, '=');
+		
+		StringBuilder list = new StringBuilder();
+		
+		for (Channel ch : plugin.getChannelManager().getChannels()) {
+			if (!ch.getOperators().contains(sender.getName()))
+				if (!Vault.hasPermission(sender, "TitanChat.join." + ch.getName()))
+					continue;
+			
+			if (ch.getStatus().equals(Status.STAFF) && !Vault.hasPermission(sender, "TitanChat.staff"))
+				continue;
+			
+			if (ch.getBlacklist().contains(sender.getName()))
+				continue;
+			
+			if (ch.getConfig().getBoolean("whitelist", false))
+				if (!ch.getWhitelist().contains(sender.getName()))
+					continue;
+			
+			if (list.length() > 0)
+				list.append(", ");
+			
+			list.append(ch.getName() + " (" + ch.getParticipants().size() + ")");
 		}
 		
-		channel = plugin.getChannelManager().getChannel(args[0]);
-		
-		if (!channel.getOperators().contains(sender.getName())) {
-			if (!Vault.hasPermission(sender, "TitanChat.leave." + channel.getName())) {
-				sendMessage(sender, "&4You do not have permission");
-				return;
-			}
-		}
-		
-		if (!channel.isParticipating(sender.getName())) {
-			sendMessage(sender, "&4You have not joined the channel");
-			return;
-		}
-		
-		channel.leave(plugin.getParticipantManager().getParticipant(sender));
-		sendMessage(sender, "&6You have left " + channel.getName());
+		sender.sendMessage(header);
+		sender.sendMessage(ChatUtils.wordWrap(list.toString(), 55));
 	}
 	
 	@Override
