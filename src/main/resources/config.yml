@@ -4,7 +4,7 @@ channels:
     range: 15
 pm:
     display-colour: ''
-    format: '%prefix%display%suffix whispers: %colour%message'
+    format: '%chtag%prefix%display%suffix whispers: %colour%message'
 logging:
     chat:
         log: false
@@ -12,11 +12,11 @@ logging:
     debug: []
 metrics-statistics: true
 formatting:
-    format: '%prefix%display%suffix: %colour%message'
+    format: '%chtag%prefix%display%suffix: %colour%message'
     tag-format:
         default: '%tag%'
         tags:
-            prefix: '[%tag%]'
+            chtag: '[%tag%]'
 filtering:
     censor: '*'
     phrases: []
