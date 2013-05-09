@@ -68,6 +68,8 @@ public class Participant extends ChatEntity {
 		this.pm = new PrivateMessage(this);
 		this.channels = new HashMap<String, Channel>();
 		
+		pm.join(this);
+		
 		FileConfiguration config = plugin.getParticipantManager().getConfig();
 		ConfigurationSection section = config.getConfigurationSection(getName());
 		

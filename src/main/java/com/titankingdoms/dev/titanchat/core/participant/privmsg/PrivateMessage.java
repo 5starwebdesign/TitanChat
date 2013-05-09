@@ -10,7 +10,6 @@ public final class PrivateMessage extends Channel {
 	
 	public PrivateMessage(Participant participant) {
 		super(participant.getName(), "Conversation", Status.CONVERSATION);
-		super.join(participant);
 	}
 	
 	@Override
@@ -44,7 +43,10 @@ public final class PrivateMessage extends Channel {
 	}
 	
 	@Override
-	public void join(Participant participant) {}
+	public void join(Participant participant) {
+		if (participant != null && participant.getName().equals(getName()))
+			super.join(participant);
+	}
 	
 	@Override
 	public void leave(Participant participant) {}
