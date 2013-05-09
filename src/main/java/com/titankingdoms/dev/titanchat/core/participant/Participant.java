@@ -124,10 +124,12 @@ public class Participant extends ChatEntity {
 			return;
 		}
 		
-		if (!hasPermission("TitanChat.speak." + channel.getName())) {
-			if (!channel.getOperators().contains(getName())) {
-				sendMessage("&4You do not have permission");
-				return;
+		if (!channel.getStatus().equals(Status.CONVERSATION)) {
+			if (!hasPermission("TitanChat.speak." + channel.getName())) {
+				if (!channel.getOperators().contains(getName())) {
+					sendMessage("&4You do not have permission");
+					return;
+				}
 			}
 		}
 		
