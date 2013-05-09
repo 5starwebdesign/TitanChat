@@ -5,6 +5,7 @@ display-colour: '&4'
 format: ''
 password: ''
 range: 'channel'
+tag: '&4S'
 whitelist: false
 data:
 blacklist: []

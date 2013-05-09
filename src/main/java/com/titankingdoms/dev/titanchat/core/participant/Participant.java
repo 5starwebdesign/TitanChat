@@ -38,6 +38,7 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.dev.titanchat.core.ChatEntity;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.core.participant.privmsg.PrivateMessage;
 import com.titankingdoms.dev.titanchat.event.ChannelChatEvent;
 import com.titankingdoms.dev.titanchat.format.Censor;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
@@ -58,11 +59,13 @@ public class Participant extends ChatEntity {
 	private final Debugger db = new Debugger(4, "Participant");
 	
 	private Channel current;
+	private PrivateMessage pm;
 	
 	private final Map<String, Channel> channels;
 	
 	public Participant(String name) {
 		super("Participant", name);
+		this.pm = new PrivateMessage(this);
 		this.channels = new HashMap<String, Channel>();
 		
 		FileConfiguration config = plugin.getParticipantManager().getConfig();
@@ -313,6 +316,15 @@ public class Participant extends ChatEntity {
 	 */
 	public String getDisplayName() {
 		return getData("display-name", getName()).asString();
+	}
+	
+	/**
+	 * Gets the {@link PrivateMessage} {@link Channel}
+	 * 
+	 * @return The {@link PrivateMessage} {@link Channel}
+	 */
+	public PrivateMessage getPM() {
+		return pm;
 	}
 	
 	/**

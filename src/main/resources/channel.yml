@@ -5,6 +5,7 @@ display-colour: ''
 format: ''
 password: ''
 range: ''
+tag: ''
 whitelist: false
 data:
 blacklist: []

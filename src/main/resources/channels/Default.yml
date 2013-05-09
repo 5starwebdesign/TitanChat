@@ -5,6 +5,7 @@ display-colour: '&f'
 format: ''
 password: ''
 range: 'channel'
+tag: '&1D'
 whitelist: false
 data:
 blacklist: []

@@ -5,6 +5,7 @@ display-colour: ''
 format: ''
 password: ''
 range: 'local'
+tag: '&6L'
 whitelist: false
 data:
 blacklist: []

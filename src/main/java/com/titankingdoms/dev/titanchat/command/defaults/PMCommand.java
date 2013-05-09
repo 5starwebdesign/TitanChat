@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.channel.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
@@ -48,14 +47,11 @@ public final class PMCommand extends Command {
 		}
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);
-		
-		Conversation conversation = new Conversation();
-		conversation.join(target);
+		participant.join(target.getPM());
+		sendMessage(sender, "&6You have started a private conversation");
 		
 		if (args.length > 1)
-			participant.chat(conversation, StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
-		else
-			participant.direct(conversation);
+			participant.chat(target.getPM(), StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
 	}
 
 	@Override

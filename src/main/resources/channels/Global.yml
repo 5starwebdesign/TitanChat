@@ -5,6 +5,7 @@ display-colour: ''
 format: ''
 password: ''
 range: 'global'
+tag: '&2G'
 whitelist: false
 data:
 blacklist: []

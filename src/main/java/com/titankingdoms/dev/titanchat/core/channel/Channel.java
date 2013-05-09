@@ -155,6 +155,13 @@ public abstract class Channel extends ChatEntity {
 	}
 	
 	/**
+	 * Gets the tag of the {@link Channel}
+	 * 
+	 * @return The {@link Channel} tag
+	 */
+	public abstract String getTag();
+	
+	/**
 	 * Gets the type of the {@link Channel}
 	 * 
 	 * @return The type

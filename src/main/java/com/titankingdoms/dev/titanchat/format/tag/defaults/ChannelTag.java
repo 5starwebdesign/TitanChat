@@ -15,27 +15,26 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel.conversation;
-
-import org.bukkit.configuration.file.FileConfiguration;
+package com.titankingdoms.dev.titanchat.format.tag.defaults;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
-public final class ConversationLoader extends ChannelLoader {
+/**
+ * {@link ChannelTag} - {@link Tag} for the tag of the {@link Channel}
+ * 
+ * @author NodinChan
+ *
+ */
+public final class ChannelTag extends Tag {
 	
-	public ConversationLoader() {
-		super("Conversation");
+	public ChannelTag(String tag) {
+		super("%chtag");
 	}
 	
 	@Override
-	public Channel construct(String name) {
-		return new Conversation();
-	}
-	
-	@Override
-	public Channel load(String name, Status status, FileConfiguration config) {
-		return new Conversation();
+	public String getVariable(Participant participant, Channel channel) {
+		return channel.getTag();
 	}
 }
