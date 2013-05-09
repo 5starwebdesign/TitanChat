@@ -221,15 +221,15 @@ public abstract class Channel extends ChatEntity {
 		if (!isParticipating(participant)) {
 			sendMessage("&6" + participant.getDisplayName() + " has joined " + getName());
 			participants.put(participant.getName().toLowerCase(), participant);
+			
+			ChannelJoinEvent event = new ChannelJoinEvent(participant, this);
+			plugin.getServer().getPluginManager().callEvent(event);
+			
+			db.debug(Level.INFO, getName() + " Channel Join: " + participant.getName());
 		}
 		
 		if (!participant.isParticipating(this))
 			participant.join(this);
-		
-		ChannelJoinEvent event = new ChannelJoinEvent(participant, this);
-		plugin.getServer().getPluginManager().callEvent(event);
-		
-		db.debug(Level.INFO, getName() + " Channel Join: " + participant.getName());
 	}
 	
 	/**
@@ -244,15 +244,15 @@ public abstract class Channel extends ChatEntity {
 		if (isParticipating(participant)) {
 			participants.remove(participant.getName().toLowerCase());
 			sendMessage("&6" + participant.getDisplayName() + " has left " + getName());
+			
+			ChannelLeaveEvent event = new ChannelLeaveEvent(participant, this);
+			plugin.getServer().getPluginManager().callEvent(event);
+			
+			db.debug(Level.INFO, getName() + " Channel Leave: " + participant.getName());
 		}
 		
 		if (participant.isParticipating(this))
 			participant.leave(this);
-		
-		ChannelLeaveEvent event = new ChannelLeaveEvent(participant, this);
-		plugin.getServer().getPluginManager().callEvent(event);
-		
-		db.debug(Level.INFO, getName() + " Channel Leave: " + participant.getName());
 	}
 	
 	/**

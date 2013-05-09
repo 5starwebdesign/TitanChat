@@ -65,10 +65,8 @@ public class Participant extends ChatEntity {
 	
 	public Participant(String name) {
 		super("Participant", name);
-		this.pm = new PrivateMessage(this);
 		this.channels = new HashMap<String, Channel>();
-		
-		pm.join(this);
+		this.pm = new PrivateMessage(this);
 		
 		FileConfiguration config = plugin.getParticipantManager().getConfig();
 		ConfigurationSection section = config.getConfigurationSection(getName());
@@ -221,7 +219,7 @@ public class Participant extends ChatEntity {
 			recipient.sendMessage(format.replace("%message", message));
 		
 		if (event.getRecipients().size() <= 1)
-			sendMessage("&6Nobody heard you...");
+			sendMessage("&6Nobody else heard you...");
 		
 		if (!plugin.getConfig().getBoolean("logging.chat.log", false))
 			return;
@@ -430,7 +428,7 @@ public class Participant extends ChatEntity {
 		if (channel == null)
 			return;
 		
-		if (!isParticipating(channel) && !channel.getStatus().equals(Status.CONVERSATION))
+		if (!isParticipating(channel))
 			this.channels.put(channel.getName().toLowerCase(), channel);
 		
 		if (!channel.isParticipating(this))
@@ -449,7 +447,7 @@ public class Participant extends ChatEntity {
 		if (channel == null)
 			return;
 		
-		if (isParticipating(channel) && !channel.getStatus().equals(Status.CONVERSATION))
+		if (isParticipating(channel))
 			this.channels.remove(channel.getName().toLowerCase());
 		
 		if (channel.isParticipating(this))
