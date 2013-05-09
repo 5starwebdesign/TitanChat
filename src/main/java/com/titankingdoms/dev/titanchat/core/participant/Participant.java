@@ -403,7 +403,7 @@ public class Participant extends ChatEntity {
 	 * @return True if participating in the {@link Channel}
 	 */
 	public final boolean isParticipating(String channel) {
-		return channels.containsKey(channel.toLowerCase());
+		return channels.containsKey((channel != null) ? channel.toLowerCase() : "");
 	}
 	
 	/**
