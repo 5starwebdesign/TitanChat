@@ -39,12 +39,8 @@ public final class PrivateMessage extends Channel {
 	}
 	
 	@Override
-	public void join(Participant participant) {
-		participant.join(this);
-	}
+	public void join(Participant participant) {}
 	
 	@Override
-	public void leave(Participant participant) {
-		participant.join(this);
-	}
+	public void leave(Participant participant) {}
 }
