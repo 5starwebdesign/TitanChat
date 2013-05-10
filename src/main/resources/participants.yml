@@ -22,3 +22,11 @@ Steve:
         all: []
     data:
         suffix: ' &fthe &4Adventurer&f'
+SomeRandomGuy:
+    channels:
+        current: ''
+        all: []
+    data:
+        display-name: 'Random Guy'
+        prefix: 'This is a '
+        suffix: ' on your Server'
