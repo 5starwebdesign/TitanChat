@@ -53,6 +53,7 @@ public final class BlacklistCommand extends Command {
 		if (args[0].equals("list")) {
 			String list = StringUtils.join(channel.getBlacklist(), ", ");
 			sendMessage(sender, "&6" + channel.getName() + " Blacklist: " + list);
+			return;
 			
 		} else {
 			if (args.length < 2) {

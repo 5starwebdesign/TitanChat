@@ -58,6 +58,7 @@ public final class WhitelistCommand extends Command {
 		if (args[0].equalsIgnoreCase("list")) {
 			String list = StringUtils.join(channel.getWhitelist(), ", ");
 			sendMessage(sender, "&6" + channel.getName() + " Whitelist: " + list);
+			return;
 			
 		} else {
 			if (args.length < 2) {
