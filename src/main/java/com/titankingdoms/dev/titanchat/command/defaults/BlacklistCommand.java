@@ -50,12 +50,18 @@ public final class BlacklistCommand extends Command {
 			return;
 		}
 		
-		if (!args[0].equalsIgnoreCase("list") && args.length < 2) {
-			sendMessage(sender, "&4Invalid argument length");
+		if (args[0].equals("list")) {
+			String list = StringUtils.join(channel.getBlacklist(), ", ");
+			sendMessage(sender, "&6" + channel.getName() + " Blacklist: " + list);
 			
-			String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
-			sendMessage(sender, "&6" + usage);
-			return;
+		} else {
+			if (args.length < 2) {
+				sendMessage(sender, "&4Invalid argument length");
+				
+				String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
+				sendMessage(sender, "&6" + usage);
+				return;
+			}
 		}
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[1]);
@@ -98,10 +104,6 @@ public final class BlacklistCommand extends Command {
 				sendMessage(sender, "&6" + participant.getDisplayName() + " has been removed from blacklist");
 			
 			broadcast(channel, "&6" + participant.getDisplayName() + " has been removed from blacklist");
-			
-		} else if (args[0].equalsIgnoreCase("list")) {
-			String list = StringUtils.join(channel.getBlacklist(), ", ");
-			sendMessage(sender, "&6" + channel.getName() + " Blacklist: " + list);
 			
 		} else {
 			sendMessage(sender, "&4Incorrect usage: /titanchat @[channel] blacklist " + getUsage());

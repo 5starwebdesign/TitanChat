@@ -55,12 +55,18 @@ public final class WhitelistCommand extends Command {
 			return;
 		}
 		
-		if (!args[0].equalsIgnoreCase("list") && args.length < 2) {
-			sendMessage(sender, "&4Invalid argument length");
+		if (args[0].equalsIgnoreCase("list")) {
+			String list = StringUtils.join(channel.getWhitelist(), ", ");
+			sendMessage(sender, "&6" + channel.getName() + " Whitelist: " + list);
 			
-			String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
-			sendMessage(sender, "&6" + usage);
-			return;
+		} else {
+			if (args.length < 2) {
+				sendMessage(sender, "&4Invalid argument length");
+				
+				String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
+				sendMessage(sender, "&6" + usage);
+				return;
+			}
 		}
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[1]);
@@ -102,10 +108,6 @@ public final class WhitelistCommand extends Command {
 				sendMessage(sender, "&6" + participant.getDisplayName() + " has been removed from whitelist");
 			
 			broadcast(channel, "&6" + participant.getDisplayName() + " has been removed from whitelist");
-			
-		} else if (args[0].equalsIgnoreCase("list")) {
-			String list = StringUtils.join(channel.getWhitelist(), ", ");
-			sendMessage(sender, "&6" + channel.getName() + " Whitelist: " + list);
 			
 		} else {
 			sendMessage(sender, "&4Incorrect usage: /titanchat @[channel] whitelist " + getUsage());
