@@ -55,14 +55,12 @@ public final class WhitelistCommand extends Command {
 			return;
 		}
 		
-		if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove")) {
-			if (args.length < 2) {
-				sendMessage(sender, "&4Invalid argument length");
-				
-				String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
-				sendMessage(sender, "&6" + usage);
-				return;
-			}
+		if (!args[0].equalsIgnoreCase("list") && args.length < 2) {
+			sendMessage(sender, "&4Invalid argument length");
+			
+			String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
+			sendMessage(sender, "&6" + usage);
+			return;
 		}
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[1]);

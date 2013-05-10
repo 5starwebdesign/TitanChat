@@ -42,7 +42,7 @@ public final class ListCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		String header = "&b" + StringUtils.center(" Channel List ", 55, '=');
+		String header = "&b" + StringUtils.center(" Channel List ", 50, '=');
 		
 		StringBuilder list = new StringBuilder();
 		
@@ -68,7 +68,7 @@ public final class ListCommand extends Command {
 		}
 		
 		sender.sendMessage(header);
-		sender.sendMessage(ChatUtils.wordWrap(list.toString(), 55));
+		sender.sendMessage(ChatUtils.wordWrap(list.toString(), 50));
 	}
 	
 	@Override

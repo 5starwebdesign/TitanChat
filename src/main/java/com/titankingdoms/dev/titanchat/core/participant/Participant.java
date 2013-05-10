@@ -218,7 +218,7 @@ public class Participant extends ChatEntity {
 		format = Format.colourise(tagMatch.appendTail(parsedFormat).toString());
 		
 		for (Participant recipient : event.getRecipients())
-			recipient.sendMessage(format.replace("%message", message));
+			recipient.sendMessage(ChatUtils.wordWrap(format.replace("%message", message), 50));
 		
 		if (event.getRecipients().size() <= 1)
 			sendMessage("&6Nobody else heard you...");
@@ -230,9 +230,9 @@ public class Participant extends ChatEntity {
 		String log = format.replace("%message", event.getMessage());
 		
 		if (plugin.getConfig().getBoolean("logging.chat.colour", true))
-			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 55));
+			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 50));
 		else
-			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 55));
+			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 50));
 	}
 	
 	/**
@@ -375,9 +375,9 @@ public class Participant extends ChatEntity {
 		String log = format.replace("%message", event.getEmote());
 		
 		if (plugin.getConfig().getBoolean("logging.chat.colour", true))
-			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 55));
+			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 50));
 		else
-			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 55));
+			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 50));
 	}
 	
 	/**
