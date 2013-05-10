@@ -48,14 +48,14 @@ public final class PMCommand extends Command {
 		Participant target = plugin.getParticipantManager().getParticipant(args[0]);
 		
 		if (!target.isOnline()) {
-			sendMessage(sender, "&4" + target.getDisplayName() + " is currently offline");
+			sendMessage(sender, target.getDisplayName() + " &4is currently offline");
 			return;
 		}
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);
 		participant.join(target.getPM());
 		sendMessage(sender, "&6You have started a private conversation with " + target.getDisplayName());
-		target.sendMessage("&6" + participant.getDisplayName() + " has started a private conversation with you");
+		target.sendMessage(participant.getDisplayName() + " &6has started a private conversation with you");
 		
 		if (args.length > 1)
 			participant.chat(target.getPM(), StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));

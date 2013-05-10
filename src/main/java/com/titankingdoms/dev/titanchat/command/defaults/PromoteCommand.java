@@ -50,7 +50,7 @@ public final class PromoteCommand extends Command {
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
 		if (channel.getOperators().contains(participant.getName())) {
-			sendMessage(sender, "&4" + participant.getDisplayName() + " is already an operator");
+			sendMessage(sender, participant.getDisplayName() + " &4is already an operator");
 			return;
 		}
 		
@@ -58,9 +58,9 @@ public final class PromoteCommand extends Command {
 		participant.sendMessage("&6You have been promoted in " + channel.getName());
 		
 		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "&6" + participant.getDisplayName() + " has been promoted");
+			sendMessage(sender, participant.getDisplayName() + " &6has been promoted");
 		
-		broadcast(channel, "&6" + participant.getDisplayName() + " has been promoted");
+		broadcast(channel, participant.getDisplayName() + " &6has been promoted");
 	}
 	
 	@Override

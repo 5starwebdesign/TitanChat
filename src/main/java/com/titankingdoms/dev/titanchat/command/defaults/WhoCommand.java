@@ -46,8 +46,9 @@ public final class WhoCommand extends Command {
 		if (args.length > 0)
 			participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
-		sendMessage(sender, "&6Name: &5" + participant.getName());
-		sendMessage(sender, "&6Status: &5" + ((participant.isOnline()) ? "Online" : "Offline"));
+		sendMessage(sender, "&b" + StringUtils.center(participant.getName(), 50, '='));
+		sendMessage(sender, "&6Status: " + ((participant.isOnline()) ? "&2Online" : "&4Offline"));
+		sendMessage(sender, "&6Current Channel: &5" + participant.getCurrent());
 		sendMessage(sender, "&6Channels: &5" + StringUtils.join(participant.getChannelList(), ", "));
 	}
 	

@@ -29,7 +29,7 @@ import com.titankingdoms.dev.titanchat.format.tag.Tag;
  */
 public final class ChannelTag extends Tag {
 	
-	public ChannelTag(String tag) {
+	public ChannelTag() {
 		super("%chtag");
 	}
 	

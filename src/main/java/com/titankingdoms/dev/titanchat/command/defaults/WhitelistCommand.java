@@ -38,7 +38,7 @@ public final class WhitelistCommand extends Command {
 	public WhitelistCommand() {
 		super("Whitelist");
 		setAliases("w");
-		setArgumentRange(2, 2);
+		setArgumentRange(1, 1024);
 		setDescription("Edit the whitelist of the channel");
 		setUsage("<add/list/remove> [player] [reason]");
 	}
@@ -74,7 +74,7 @@ public final class WhitelistCommand extends Command {
 		
 		if (args[0].equalsIgnoreCase("add")) {
 			if (channel.getWhitelist().contains(participant.getName())) {
-				sendMessage(sender, "&4" + participant.getDisplayName() + " is already on the whitelist");
+				sendMessage(sender, participant.getDisplayName() + " &4is already on the whitelist");
 				return;
 			}
 			
@@ -87,13 +87,13 @@ public final class WhitelistCommand extends Command {
 				participant.sendMessage("&6Reason: " + reason);
 			
 			if (!channel.isParticipating(sender.getName()))
-				sendMessage(sender, "&6" + participant.getDisplayName() + " has been added to whitelist");
+				sendMessage(sender, participant.getDisplayName() + " &6has been added to whitelist");
 			
-			broadcast(channel, "&6" + participant.getDisplayName() + " has been added to whitelist");
+			broadcast(channel, participant.getDisplayName() + " &6has been added to whitelist");
 			
 		} else if (args[0].equalsIgnoreCase("remove")) {
 			if (!channel.getWhitelist().contains(participant.getName())) {
-				sendMessage(sender, "&4" + participant.getDisplayName() + " is not on the whitelist");
+				sendMessage(sender, participant.getDisplayName() + " &4is not on the whitelist");
 				return;
 			}
 			
@@ -106,9 +106,9 @@ public final class WhitelistCommand extends Command {
 				participant.sendMessage("&4Reason: " + reason);
 			
 			if (!channel.isParticipating(sender.getName()))
-				sendMessage(sender, "&6" + participant.getDisplayName() + " has been removed from whitelist");
+				sendMessage(sender, participant.getDisplayName() + " &6has been removed from whitelist");
 			
-			broadcast(channel, "&6" + participant.getDisplayName() + " has been removed from whitelist");
+			broadcast(channel, participant.getDisplayName() + " &6has been removed from whitelist");
 			
 		} else {
 			sendMessage(sender, "&4Incorrect usage: /titanchat @[channel] whitelist " + getUsage());

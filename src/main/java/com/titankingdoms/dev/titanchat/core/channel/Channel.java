@@ -219,7 +219,7 @@ public abstract class Channel extends ChatEntity {
 			return;
 		
 		if (!isParticipating(participant)) {
-			sendMessage("&6" + participant.getDisplayName() + " has joined " + getName());
+			sendMessage(participant.getDisplayName() + " &bhas joined " + getName());
 			participants.put(participant.getName().toLowerCase(), participant);
 			
 			ChannelJoinEvent event = new ChannelJoinEvent(participant, this);
@@ -243,7 +243,7 @@ public abstract class Channel extends ChatEntity {
 		
 		if (isParticipating(participant)) {
 			participants.remove(participant.getName().toLowerCase());
-			sendMessage("&6" + participant.getDisplayName() + " has left " + getName());
+			sendMessage(participant.getDisplayName() + " &bhas left " + getName());
 			
 			ChannelLeaveEvent event = new ChannelLeaveEvent(participant, this);
 			plugin.getServer().getPluginManager().callEvent(event);

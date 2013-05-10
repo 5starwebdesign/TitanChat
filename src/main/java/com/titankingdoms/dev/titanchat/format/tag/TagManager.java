@@ -104,11 +104,13 @@ public class TagManager {
 	 */
 	public void load() {
 		registerTags(
+				new ChannelTag(),
 				new ColourTag(),
 				new DisplayNameTag(),
 				new NameTag(),
 				new PrefixTag(),
-				new SuffixTag()
+				new SuffixTag(),
+				new WorldTag()
 		);
 		
 		if (!tags.isEmpty())
@@ -146,11 +148,13 @@ public class TagManager {
 			unregisterTag(tag);
 		
 		registerTags(
+				new ChannelTag(),
 				new ColourTag(),
 				new DisplayNameTag(),
 				new NameTag(),
 				new PrefixTag(),
-				new SuffixTag()
+				new SuffixTag(),
+				new WorldTag()
 		);
 		
 		if (!tags.isEmpty())

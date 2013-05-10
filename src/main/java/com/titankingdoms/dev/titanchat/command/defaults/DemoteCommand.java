@@ -50,7 +50,7 @@ public final class DemoteCommand extends Command {
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
 		if (!channel.getOperators().contains(participant.getName())) {
-			sendMessage(sender, "&4" + participant.getDisplayName() + " has not been an operator");
+			sendMessage(sender, participant.getDisplayName() + " &4has not been an operator");
 			return;
 		}
 		
@@ -58,9 +58,9 @@ public final class DemoteCommand extends Command {
 		participant.sendMessage("&4You have been demoted in " + channel.getName());
 		
 		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "&6" + participant.getDisplayName() + " has been demoted");
+			sendMessage(sender, participant.getDisplayName() + " &6has been demoted");
 		
-		broadcast(channel, "&6" + participant.getDisplayName() + " has been demoted");
+		broadcast(channel, participant.getDisplayName() + " &6has been demoted");
 	}
 	
 	@Override

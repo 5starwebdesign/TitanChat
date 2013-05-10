@@ -3,7 +3,7 @@ CONSOLE:
         current: ''
         all: []
     data:
-        display-name: '&4Server'
+        display-name: '&4Server&f'
 NodinChan:
     channels:
         current: ''
