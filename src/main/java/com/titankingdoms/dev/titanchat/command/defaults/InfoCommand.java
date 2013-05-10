@@ -52,14 +52,19 @@ public final class InfoCommand extends Command {
 		
 		Topic topic = manager.getGeneralIndex();
 		int page = 1;
-		int pageWidth = manager.getConfig().getInt("page.width", 55);
+		int pageWidth = manager.getConfig().getInt("page.width", 50);
 		int pageHeight = manager.getConfig().getInt("page.height", 9);
 		
-		if (args.length > 0) {
+		if (args != null && args.length > 0) {
 			for (String arg : args) {
 				if (!NumberUtils.isNumber(arg)) {
 					if (topic instanceof Index) {
 						topic = ((Index) topic).getTopic(arg);
+						
+						if (topic == null) {
+							sendMessage(sender, "&4Topic not found");
+							return;
+						}
 						
 						if (!Vault.hasPermission(sender, "TitanChat.topic." + topic.getName())) {
 							sendMessage(sender, "&4You do not have permission to view this topic");
@@ -86,7 +91,7 @@ public final class InfoCommand extends Command {
 		if (page > pages.length)
 			page = pages.length;
 		
-		sendMessage(sender, "&b" + StringUtils.center(" " + header + " ", 55, '='));
+		sendMessage(sender, "&b" + StringUtils.center(" " + header + " ", pageWidth, '='));
 		sendMessage(sender, pages[page - 1]);
 	}
 	

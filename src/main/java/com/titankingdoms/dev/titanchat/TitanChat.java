@@ -170,7 +170,7 @@ public final class TitanChat extends JavaPlugin {
 			
 			if (args.length < 1) {
 				Messaging.sendMessage(sender, "&5You are running &6" + this);
-				Messaging.sendMessage(sender, "&6\"/titanchat help [page]\" for help");
+				Messaging.sendMessage(sender, "&6\"/titanchat info [topic/page]\" for help");
 				return true;
 			}
 			
@@ -193,6 +193,10 @@ public final class TitanChat extends JavaPlugin {
 				cmdName = args[0];
 				args = Arrays.copyOfRange(args, 1, args.length);
 			}
+			
+			db.debug(Level.INFO, "Command: " + cmdName);
+			db.debug(Level.INFO, "Channel:" + ((chName.isEmpty()) ? "" : " " + chName));
+			db.debug(Level.INFO, "Arguments:" + ((args != null) ? " " + StringUtils.join(args, ", ") : ""));
 			
 			Channel ch = null;
 			
