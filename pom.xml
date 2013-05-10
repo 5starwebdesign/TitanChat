@@ -9,7 +9,6 @@
     <name>TitanChat</name>
     <version>v4.0</version>
     
-    <description>TitanChat, a chat management and formatting plugin.</description>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -79,4 +78,5 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+    <description>TitanChat, a chat management and formatting plugin, its high flexibility is what makes it special. Instead of having a large bulk of hardcoded supports for other plugins, an addon system was implemented so that addons, custom channels and external commands can be coded to support other plugins and add new features. The built in commands in TitanChat help make your chat management task easier. Channels can also be disabled to have your old global Minecraft chat, but giving you more control over chat.</description>
 </project>
