@@ -42,7 +42,7 @@ public final class InfoCommand extends Command {
 		super("Info");
 		setAliases("?", "help");
 		setArgumentRange(0, 1024);
-		setDescription("Information about TitanChat");
+		setDescription("Get information about TitanChat");
 		setUsage("[topic/page]...");
 	}
 	

@@ -37,7 +37,7 @@ public final class ListCommand extends Command {
 	public ListCommand() {
 		super("List");
 		setAliases("channellist", "chlist", "chl");
-		setDescription("Give the list of permitted channels");
+		setDescription("Get list of permitted channels");
 	}
 	
 	@Override

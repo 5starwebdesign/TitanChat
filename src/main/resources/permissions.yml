@@ -35,6 +35,9 @@ delete:
 privmsg:
     description: Grants permission to private messaging
     default: op
+emote:
+    description: Grants permission to emoting
+    default: op
 reload:
     description: Grants permission to reload TitanChat
     default: op
@@ -42,7 +45,7 @@ debug:
     description: Grants permission to debug TitanChat
     default: op
 staff:
-    description: Grants all permissions
+    description: Grants all TitanChat permissions
     default: op
     children:
         participate_<channel>: true
@@ -55,12 +58,12 @@ staff:
         privmsg: true
         reload: true
         debug: true
-auto_join:
+auto_join_<channel>:
     description: Auto-joins on login
     default: false
-auto_leave:
+auto_leave_<channel>:
     description: Auto-leaves on login
     default: false
 update:
-    description: Notifies about updates
+    description: Notified about updates
     default: false

@@ -39,7 +39,7 @@ public final class WhitelistCommand extends Command {
 		super("Whitelist");
 		setAliases("w");
 		setArgumentRange(1, 1024);
-		setDescription("Edit the whitelist of the channel");
+		setDescription("Edit or view the whitelist of the channel");
 		setUsage("<add/list/remove> [player] [reason]");
 	}
 	

@@ -1,22 +1,26 @@
 == TitanChat
 
-TitanChat, a chat management and formatting plugin for Bukkit.
+TitanChat, a chat management and formatting plugin, its high flexibility is what makes it special. Instead of having a large bulk of hardcoded supports for other plugins, an addon system was implemented so that addons, custom channels and external commands can be coded to support other plugins and add new features. The built in commands in TitanChat help make your chat management task easier. Channels can also be disabled to have your old global Minecraft chat, but giving you more control over chat.
 
 -----------------------------------------------------------------------------------------------------------------------
 
 === Features
 
-* Channels
-** Create or delete channels with ease
-** Administrate with blacklist and kick commands
-* Supports
-** Colour codes
-** Prefixes and suffixes
-** All kinds of plugins if addons are provided
-* Addons
-** New chat variables from other plugins
-** Custom channels with their own unique features
-** External commands
+* High flexibility
+* Easy to understand and use
+* Channels with per-channel configuration available (Channels can be disabled in config.yml)
+* Built-in commands to manage your chat
+* Supports any permissions plugins that uses SuperPerms or is supported by [[http://dev.bukkit.org/server-mods/vault/|Vault]]
+** [[http://dev.bukkit.org/server-mods/bpermissions/|bPermissions]]
+** [[http://dev.bukkit.org/server-mods/permissionsex/|PermissionsEx]]
+** [[http://dev.bukkit.org/server-mods/droxperms/|DroxPerms]]
+** [[http://dev.bukkit.org/server-mods/permbukkit/|PermissionsBukkit]]
+** SuperPerms
+** GroupManager
+** [[http://dev.bukkit.org/server-mods/privileges/|Privileges]]
+** [[http://dev.bukkit.org/server-mods/zpermissions/|zPermissions]]
+* Addons, custom channels and external commands can be used to support any kind of plugin, creating channels with different kind of behaviours and adding new features
+
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -36,8 +40,10 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 === How to install
 
+* Download [[http://ci.whitejack.co/job/TitanChat/Recommended%20Build/|TitanChat]]
 * Place in plugins folder
-* Configure if you wish to
+* Start up to load default configuration
+* Configure
 * Done!
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -60,8 +66,6 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 === Todo
 
 * v4.0
-** Complete update
-** Thorough test
 ** Create addons
 
 * v4.1
@@ -74,7 +78,7 @@ TitanChat, a chat management and formatting plugin for Bukkit.
 
 * Author: NodinChan
 * Contributor: SLiPCoR
-* Tester: gwinans, gabizou
+* Tester: gwinans, gabizou, AlphaBlend
 
 ==== Thank you
 
