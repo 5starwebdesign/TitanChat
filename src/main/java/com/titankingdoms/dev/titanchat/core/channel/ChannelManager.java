@@ -34,6 +34,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.channel.standard.ServerChannel;
 import com.titankingdoms.dev.titanchat.core.channel.standard.StandardLoader;
+import com.titankingdoms.dev.titanchat.core.channel.standard.TemporaryLoader;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Permissions;
@@ -220,7 +221,7 @@ public final class ChannelManager {
 			return;
 		}
 		
-		registerLoaders(new StandardLoader());
+		registerLoaders(new StandardLoader(), new TemporaryLoader());
 		
 		registerLoaders(Loader.load(ChannelLoader.class, getLoaderDirectory()).toArray(new ChannelLoader[0]));
 		
@@ -329,7 +330,7 @@ public final class ChannelManager {
 			return;
 		}
 		
-		registerLoaders(new StandardLoader());
+		registerLoaders(new StandardLoader(), new TemporaryLoader());
 		
 		registerLoaders(Loader.load(ChannelLoader.class, getLoaderDirectory()).toArray(new ChannelLoader[0]));
 		

@@ -15,19 +15,23 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.participant.privmsg;
+package com.titankingdoms.dev.titanchat.core.channel.standard;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.info.Range;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.Format;
 
-public final class PrivateMessage extends Channel {
+/**
+ * {@link TemporaryChannel} - Temporary channels for communication
+ * 
+ * @author NodinChan
+ *
+ */
+public final class TemporaryChannel extends Channel {
 	
-	public PrivateMessage(Participant participant) {
-		super(participant.getName(), "Conversation", Status.CONVERSATION);
-		super.join(participant);
+	public TemporaryChannel(String name) {
+		super(name, "Temporary", Status.TEMPORARY);
 	}
 	
 	@Override
@@ -37,12 +41,12 @@ public final class PrivateMessage extends Channel {
 	
 	@Override
 	public String getDisplayColour() {
-		return plugin.getConfig().getString("pm.display-colour", "");
+		return "";
 	}
 	
 	@Override
 	public String getFormat() {
-		return plugin.getConfig().getString("pm.format", Format.getFormat());
+		return Format.getFormat();
 	}
 	
 	@Override
@@ -52,17 +56,11 @@ public final class PrivateMessage extends Channel {
 	
 	@Override
 	public String getTag() {
-		return "";
+		return getName();
 	}
 	
 	@Override
 	public void init() {}
-	
-	@Override
-	public void join(Participant participant) {}
-	
-	@Override
-	public void leave(Participant participant) {}
 	
 	@Override
 	public void save() {}
