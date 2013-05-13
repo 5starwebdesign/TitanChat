@@ -17,10 +17,6 @@
 
 package com.titankingdoms.dev.titanchat;
 
-import java.net.URL;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -28,13 +24,11 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.Format;
+import com.titankingdoms.dev.titanchat.update.UpdateVerify;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
 /**
@@ -48,11 +42,11 @@ public final class TitanChatListener implements Listener {
 	private final TitanChat plugin;
 	
 	private final String site = "http://dev.bukkit.org/server-mods/titanchat/";
-	private final double currentVer = 4.0;
-	private double newVer;
+	private final UpdateVerify update;
 	
 	public TitanChatListener() {
 		this.plugin = TitanChat.getInstance();
+		this.update = new UpdateVerify(site + "files.rss", "4.1");
 	}
 	
 	/**
@@ -96,9 +90,9 @@ public final class TitanChatListener implements Listener {
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
 		if (participant.hasPermission("TitanChat.update")) {
-			if (updateCheck() > currentVer) {
-				participant.sendMessage("&6" + newVer + " &5is out!");
-				participant.sendMessage("&5You are running &6" + currentVer);
+			if (update.verify()) {
+				participant.sendMessage("&6" + update.getNewVersion() + " &5is out!");
+				participant.sendMessage("&5You are running &6" + update.getCurrentVersion());
 				participant.sendMessage("&5Update at &9" + site);
 			}
 		}
@@ -130,30 +124,5 @@ public final class TitanChatListener implements Listener {
 		
 		for (int line = 0; line < 4; line++)
 			event.setLine(line, Format.colourise(event.getLine(line)));
-	}
-	
-	/**
-	 * Checks for updates
-	 * 
-	 * @return The latest version
-	 */
-	private double updateCheck() {
-		try {
-			URL url = new URL("http://dev.bukkit.org/server-mods/titanchat/files.rss");
-			
-			Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(url.openStream());
-			doc.getDocumentElement().normalize();
-			
-			Node node = doc.getElementsByTagName("item").item(0);
-			
-			if (node.getNodeType() == 1) {
-				Node name = ((Element) node).getElementsByTagName("title").item(0);
-				Node version = name.getChildNodes().item(0);
-				this.newVer = Double.valueOf(version.getNodeValue().split(" ")[1].trim().substring(1));
-			}
-			
-		} catch (Exception e) { this.newVer = currentVer; }
-		
-		return this.newVer;
 	}
 }

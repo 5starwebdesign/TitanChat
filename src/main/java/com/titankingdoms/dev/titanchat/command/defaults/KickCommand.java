@@ -65,7 +65,7 @@ public final class KickCommand extends Command {
 		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been kicked");
 		
-		broadcast(channel, participant.getDisplayName() + " &6has been kicked");
+		channel.sendMessage(participant.getDisplayName() + " &6has been kicked");
 	}
 	
 	@Override

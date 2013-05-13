@@ -89,7 +89,7 @@ public final class WhitelistCommand extends Command {
 			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been added to the whitelist");
 			
-			broadcast(channel, participant.getDisplayName() + " &6has been added to the whitelist");
+			channel.sendMessage(participant.getDisplayName() + " &6has been added to the whitelist");
 			
 		} else if (args[0].equalsIgnoreCase("remove")) {
 			if (!channel.getWhitelist().contains(participant.getName())) {
@@ -108,7 +108,7 @@ public final class WhitelistCommand extends Command {
 			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been removed from the whitelist");
 			
-			broadcast(channel, participant.getDisplayName() + " &6has been removed from the whitelist");
+			channel.sendMessage(participant.getDisplayName() + " &6has been removed from the whitelist");
 			
 		} else {
 			sendMessage(sender, "&4Incorrect usage: /titanchat [@<channel>] whitelist " + getUsage());

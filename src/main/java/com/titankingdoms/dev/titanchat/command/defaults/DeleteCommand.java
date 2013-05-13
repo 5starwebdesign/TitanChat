@@ -57,7 +57,7 @@ public final class DeleteCommand extends Command {
 		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, "&6" + channel.getName() + " has been deleted");
 		
-		broadcast(channel, "&6" + channel.getName() + " has been deleted");
+		channel.sendMessage("&6" + channel.getName() + " has been deleted");
 		
 		for (Participant participant : channel.getParticipants())
 			channel.leave(participant);

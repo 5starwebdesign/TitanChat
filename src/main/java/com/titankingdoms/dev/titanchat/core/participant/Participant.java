@@ -46,7 +46,6 @@ import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.util.Debugger;
-import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
@@ -643,7 +642,7 @@ public class Participant extends ChatEntity {
 	@Override
 	public void sendMessage(String... messages) {
 		if (isOnline())
-			Messaging.sendMessage(asCommandSender(), messages);
+			asCommandSender().sendMessage(Format.colourise(messages));
 	}
 	
 	/**

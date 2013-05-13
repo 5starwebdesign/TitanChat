@@ -23,8 +23,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.Format;
 
 /**
@@ -63,23 +61,6 @@ public final class Messaging {
 		
 		for (Player player : world.getPlayers())
 			player.sendMessage(messages);
-	}
-	
-	/**
-	 * Broadcasts the messages to the {@link Channel}
-	 * 
-	 * @param channel The {@link Channel} to broadcast to
-	 * 
-	 * @param messages The messages to broadcast
-	 */
-	public static void broadcast(Channel channel, String... messages) {
-		if (channel == null || messages == null)
-			return;
-		
-		messages = Format.colourise(messages);
-		
-		for (Participant participant : channel.getParticipants())
-			participant.sendMessage(messages);
 	}
 	
 	/**

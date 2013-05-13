@@ -73,17 +73,6 @@ public abstract class Command extends Loadable {
 	}
 	
 	/**
-	 * Broadcasts the messages in the {@link Channel}
-	 * 
-	 * @param channel The {@link Channel} to broadcast in
-	 * 
-	 * @param messages The messages to broadcast
-	 */
-	public final void broadcast(Channel channel, String... messages) {
-		Messaging.broadcast(channel, messages);
-	}
-	
-	/**
 	 * Broadcasts the messages to {@link Player}s around the sender
 	 * 
 	 * @param sender The sender of the messages

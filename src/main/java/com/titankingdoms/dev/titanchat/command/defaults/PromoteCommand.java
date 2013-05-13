@@ -60,7 +60,7 @@ public final class PromoteCommand extends Command {
 		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been promoted");
 		
-		broadcast(channel, participant.getDisplayName() + " &6has been promoted");
+		channel.sendMessage(participant.getDisplayName() + " &6has been promoted");
 	}
 	
 	@Override

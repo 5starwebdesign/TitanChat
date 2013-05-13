@@ -60,7 +60,7 @@ public final class DemoteCommand extends Command {
 		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been demoted");
 		
-		broadcast(channel, participant.getDisplayName() + " &6has been demoted");
+		channel.sendMessage(participant.getDisplayName() + " &6has been demoted");
 	}
 	
 	@Override
