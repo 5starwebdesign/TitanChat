@@ -58,7 +58,7 @@ public final class PMCommand extends Command {
 		target.sendMessage(participant.getDisplayName() + " &6has started a private conversation with you");
 		
 		if (args.length > 1)
-			participant.chat(target.getPM(), StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
+			participant.chatOut(target.getPM(), StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
 	}
 
 	@Override

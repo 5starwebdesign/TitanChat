@@ -156,7 +156,7 @@ public final class TitanChat extends JavaPlugin {
 	 */
 	public void log(Level level, String message) {
 		if (message != null && !message.isEmpty())
-			log.log((level != null) ? level : Level.INFO, "[TitanChat v4.0] " + message);
+			log.log((level != null) ? level : Level.INFO, "[TitanChat v4.1] " + message);
 	}
 	
 	@Override

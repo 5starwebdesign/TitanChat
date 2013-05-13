@@ -61,7 +61,4 @@ public class StandardChannel extends Channel {
 	public String getTag() {
 		return getConfig().getString("tag", "");
 	}
-	
-	@Override
-	public void reload() {}
 }

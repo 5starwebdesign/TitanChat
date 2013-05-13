@@ -24,15 +24,16 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 /**
- * {@link DirectCommand} - Command for directing attention to another {@link Channel}
+ * {@link FocusCommand} - Command for directing focus on another {@link Channel}
  * 
  * @author NodinChan
  *
  */
-public final class DirectCommand extends Command {
+public final class FocusCommand extends Command {
 	
-	public DirectCommand() {
-		super("Direct");
+	public FocusCommand() {
+		super("Focus");
+		setAliases("f", "change", "swap");
 		setArgumentRange(1, 1);
 		setDescription("Direct focus to the channel");
 		setUsage("<channel>");

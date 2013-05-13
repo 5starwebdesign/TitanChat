@@ -21,7 +21,6 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 ** [[http://dev.bukkit.org/server-mods/zpermissions/|zPermissions]]
 * Addons, custom channels and external commands can be used to support any kind of plugin, creating channels with different kind of behaviours and adding new features
 
-
 -----------------------------------------------------------------------------------------------------------------------
 
 === Functions
@@ -34,7 +33,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 === Dependecies
 
 * CraftBukkit 1.5.2-R0.1
-* Vault (OPTIONAL PERMISSIONS-WISE)
+* Vault (Required only for affixes of permissions plugins)
 
 -----------------------------------------------------------------------------------------------------------------------
 
@@ -60,6 +59,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 07.05.13 - Added help section and private messaging
 * 09.05.13 - Improved private messaging, made commands more descriptive and added emoting
 * 11.05.13 - TitanChat v4.0 Release
+* 13.05.13 - Into v4.1 development
 
 -----------------------------------------------------------------------------------------------------------------------
 

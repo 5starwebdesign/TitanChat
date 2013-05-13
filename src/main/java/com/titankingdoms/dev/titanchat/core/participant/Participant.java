@@ -109,13 +109,29 @@ public class Participant extends ChatEntity {
 	}
 	
 	/**
+	 * Receives chat from the {@link Participant}
+	 * 
+	 * @param sender The message sender
+	 * 
+	 * @param format The message format
+	 * 
+	 * @param message The message
+	 */
+	public void chatIn(Participant sender, String format, String message) {
+		if (!isOnline())
+			return;
+		
+		sendMessage(ChatUtils.wordWrap(format.replace("%message", message), 50));
+	}
+	
+	/**
 	 * Chats in the {@link Channel}
 	 * 
 	 * @param channel The {@link Channel} to chat in
 	 * 
 	 * @param message The message
 	 */
-	public final void chat(Channel channel, String message) {
+	public void chatOut(Channel channel, String message) {
 		if (!isOnline())
 			return;
 		
@@ -218,7 +234,7 @@ public class Participant extends ChatEntity {
 		format = Format.colourise(tagMatch.appendTail(parsedFormat).toString());
 		
 		for (Participant recipient : event.getRecipients())
-			recipient.sendMessage(ChatUtils.wordWrap(format.replace("%message", message), 50));
+			recipient.chatIn(this, format, message);
 		
 		if (event.getRecipients().size() <= 1)
 			sendMessage("&6Nobody else heard you...");
@@ -240,8 +256,8 @@ public class Participant extends ChatEntity {
 	 * 
 	 * @param message The message
 	 */
-	public final void chat(String message) {
-		chat(current, message);
+	public void chatOut(String message) {
+		chatOut(current, message);
 	}
 	
 	/**

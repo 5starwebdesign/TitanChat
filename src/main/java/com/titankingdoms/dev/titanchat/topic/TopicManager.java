@@ -48,7 +48,7 @@ public final class TopicManager {
 	
 	private final TitanChat plugin;
 	
-	private final Debugger db = new Debugger(6, "InfoManager");
+	private final Debugger db = new Debugger(6, "TopicManager");
 	
 	private File configFile;
 	private FileConfiguration config;

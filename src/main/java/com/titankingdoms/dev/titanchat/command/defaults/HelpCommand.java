@@ -31,16 +31,16 @@ import com.titankingdoms.dev.titanchat.topic.TopicManager;
 import com.titankingdoms.dev.titanchat.vault.Vault;
 
 /**
- * {@link InfoCommand} - Command for getting information about TitanChat
+ * {@link HelpCommand} - Command for getting information about TitanChat
  * 
  * @author NodinChan
  *
  */
-public final class InfoCommand extends Command {
+public final class HelpCommand extends Command {
 	
-	public InfoCommand() {
-		super("Info");
-		setAliases("?", "help");
+	public HelpCommand() {
+		super("Help");
+		setAliases("?", "topic");
 		setArgumentRange(0, 1024);
 		setDescription("Get information about TitanChat");
 		setUsage("[topic/page]...");

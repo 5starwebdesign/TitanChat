@@ -125,10 +125,10 @@ public final class CommandManager {
 	public void load() {
 		registerCommands(
 				new CreateCommand(), new DeleteCommand(), new ListCommand(),
-				new BlacklistCommand(), new KickCommand(), new WhitelistCommand(),
+				new BlacklistCommand(), new KickCommand(), new PlaceCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
-				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
-				new DebugCommand(), new InfoCommand(), new ReloadCommand(),
+				new FocusCommand(), new JoinCommand(), new LeaveCommand(),
+				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
 				new ChatCommand(), new EmoteCommand(), new PMCommand(),
 				new WhoCommand()
 		);
@@ -177,10 +177,10 @@ public final class CommandManager {
 		
 		registerCommands(
 				new CreateCommand(), new DeleteCommand(), new ListCommand(),
-				new BlacklistCommand(), new KickCommand(), new WhitelistCommand(),
+				new BlacklistCommand(), new KickCommand(), new PlaceCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
-				new DirectCommand(), new JoinCommand(), new LeaveCommand(),
-				new DebugCommand(), new InfoCommand(), new ReloadCommand(),
+				new FocusCommand(), new JoinCommand(), new LeaveCommand(),
+				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
 				new ChatCommand(), new EmoteCommand(), new PMCommand(),
 				new WhoCommand()
 		);

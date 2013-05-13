@@ -78,9 +78,9 @@ public final class TitanChatListener implements Listener {
 				return;
 			}
 			
-			participant.chat(channel, message.substring(message.indexOf(" ") + 1, message.length()));
+			participant.chatOut(channel, message.substring(message.indexOf(" ") + 1, message.length()));
 			
-		} else { participant.chat(message); }
+		} else { participant.chatOut(message); }
 	}
 	
 	/**
