@@ -23,6 +23,9 @@ whitelist_<channel>:
 kick_<channel>:
     description: Grants permission to kick
     default: op
+place_<channel>:
+    description: Grants permission to place
+    default: op
 rank_<channel>:
     description: Grants permission to rank
     default: op
@@ -53,6 +56,7 @@ staff:
         delete: true
         blacklist_<channel>: true
         whitelist_<channel>: true
+        place_<channel>: true
         kick_<channel>: true
         rank_<channel>: true
         privmsg: true

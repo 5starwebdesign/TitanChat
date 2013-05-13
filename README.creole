@@ -70,7 +70,6 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 * v4.1
 ** Customisable messages
-** Ignore lists
 
 -----------------------------------------------------------------------------------------------------------------------
 

@@ -320,9 +320,9 @@ public abstract class Channel extends ChatEntity {
 		getConfig().set("type", getType());
 		getConfig().set("status", getStatus().getName());
 		getConfig().set("range", getRange().getName());
-		getConfig().set("blacklist", new ArrayList<String>(getBlacklist()));
-		getConfig().set("whitelist", new ArrayList<String>(getWhitelist()));
-		getConfig().set("operators", new ArrayList<String>(getOperators()));
+		getConfig().set("blacklist", new ArrayList<String>(blacklist));
+		getConfig().set("whitelist", new ArrayList<String>(whitelist));
+		getConfig().set("operators", new ArrayList<String>(operators));
 		saveConfig();
 	}
 	

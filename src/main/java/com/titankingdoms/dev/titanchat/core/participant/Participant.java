@@ -63,11 +63,14 @@ public class Participant extends ChatEntity {
 	
 	private final Map<String, Channel> channels;
 	
+	private final Set<String> ignorelist;
+	
 	private final PrivateMessage pm;
 	
 	public Participant(String name) {
 		super("Participant", name);
 		this.channels = new HashMap<String, Channel>();
+		this.ignorelist = new HashSet<String>();
 		this.pm = new PrivateMessage(this);
 		
 		FileConfiguration config = plugin.getParticipantManager().getConfig();
@@ -118,7 +121,7 @@ public class Participant extends ChatEntity {
 	 * @param message The message
 	 */
 	public void chatIn(Participant sender, String format, String message) {
-		if (!isOnline())
+		if (!isOnline() || ignorelist.contains(sender.getName()))
 			return;
 		
 		sendMessage(ChatUtils.wordWrap(format.replace("%message", message), 50));
@@ -379,7 +382,7 @@ public class Participant extends ChatEntity {
 		format = Format.colourise(tagMatch.appendTail(parsedFormat).toString());
 		
 		for (Participant recipient : event.getRecipients())
-			recipient.sendMessage(format.replace("%message", emote));
+			recipient.chatIn(this, format, emote);
 		
 		if (event.getRecipients().size() <= 1)
 			sendMessage("&6Nobody else saw you...");
@@ -472,6 +475,15 @@ public class Participant extends ChatEntity {
 	}
 	
 	/**
+	 * Gets the ignore list of the {@link Participant}
+	 * 
+	 * @return The ignore list
+	 */
+	public Set<String> getIgnoreList() {
+		return ignorelist;
+	}
+	
+	/**
 	 * Gets the {@link PrivateMessage} {@link Channel}
 	 * 
 	 * @return The {@link PrivateMessage} {@link Channel}
@@ -511,7 +523,8 @@ public class Participant extends ChatEntity {
 	
 	@Override
 	public final void init() {
-		loadData();
+		super.init();
+		ignorelist.addAll(plugin.getParticipantManager().getConfig().getStringList("ignore"));
 	}
 	
 	/**
@@ -618,6 +631,7 @@ public class Participant extends ChatEntity {
 		super.save();
 		plugin.getParticipantManager().getConfig().set(getName() + ".channels.current", getCurrent());
 		plugin.getParticipantManager().getConfig().set(getName() + ".channels.all", getChannelList());
+		plugin.getParticipantManager().getConfig().set(getName() + ".ignore", new ArrayList<String>(ignorelist));
 		plugin.getParticipantManager().saveConfig();
 	}
 	

@@ -64,7 +64,7 @@ public final class WhitelistCommand extends Command {
 			if (args.length < 2) {
 				sendMessage(sender, "&4Invalid argument length");
 				
-				String usage = "/titanchat [@<channel>] " + getName().toLowerCase() + " " + getUsage();
+				String usage = "/titanchat [@<channel>] whitelist " + getUsage();
 				sendMessage(sender, "&6" + usage);
 				return;
 			}
@@ -87,9 +87,9 @@ public final class WhitelistCommand extends Command {
 				participant.sendMessage("&6Reason: " + reason);
 			
 			if (!channel.isParticipating(sender.getName()))
-				sendMessage(sender, participant.getDisplayName() + " &6has been added to whitelist");
+				sendMessage(sender, participant.getDisplayName() + " &6has been added to the whitelist");
 			
-			broadcast(channel, participant.getDisplayName() + " &6has been added to whitelist");
+			broadcast(channel, participant.getDisplayName() + " &6has been added to the whitelist");
 			
 		} else if (args[0].equalsIgnoreCase("remove")) {
 			if (!channel.getWhitelist().contains(participant.getName())) {
@@ -106,12 +106,12 @@ public final class WhitelistCommand extends Command {
 				participant.sendMessage("&4Reason: " + reason);
 			
 			if (!channel.isParticipating(sender.getName()))
-				sendMessage(sender, participant.getDisplayName() + " &6has been removed from whitelist");
+				sendMessage(sender, participant.getDisplayName() + " &6has been removed from the whitelist");
 			
-			broadcast(channel, participant.getDisplayName() + " &6has been removed from whitelist");
+			broadcast(channel, participant.getDisplayName() + " &6has been removed from the whitelist");
 			
 		} else {
-			sendMessage(sender, "&4Incorrect usage: /titanchat @[channel] whitelist " + getUsage());
+			sendMessage(sender, "&4Incorrect usage: /titanchat [@<channel>] whitelist " + getUsage());
 		}
 	}
 	

@@ -24,7 +24,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 /**
- * {@link FocusCommand} - Command for directing focus on another {@link Channel}
+ * {@link FocusCommand} - Command for directing focus to another {@link Channel}
  * 
  * @author NodinChan
  *

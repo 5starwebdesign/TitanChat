@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -105,7 +106,7 @@ public final class ParticipantManager {
 	 * @return The specified {@link Participant}
 	 */
 	public Participant getParticipant(CommandSender sender) {
-		if (sender.getName().equals("CONSOLE"))
+		if (sender instanceof ConsoleCommandSender)
 			return getConsoleParticipant();
 		
 		if (!hasParticipant(sender.getName()))
