@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.loading;
+package com.titankingdoms.dev.titanchat.util.loading;
 
 import java.io.File;
 import java.io.InputStream;

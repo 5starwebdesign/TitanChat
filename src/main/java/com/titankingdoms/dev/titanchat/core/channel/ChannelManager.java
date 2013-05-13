@@ -35,10 +35,10 @@ import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.channel.standard.ServerChannel;
 import com.titankingdoms.dev.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.loading.Loader;
-import com.titankingdoms.dev.titanchat.loading.Loader.ExtensionFilter;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Permissions;
+import com.titankingdoms.dev.titanchat.util.loading.Loader;
+import com.titankingdoms.dev.titanchat.util.loading.Loader.ExtensionFilter;
 
 /**
  * {@link ChannelManager} - Manages {@link Channel}s

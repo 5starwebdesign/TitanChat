@@ -1,31 +1,19 @@
 CONSOLE:
     channels:
-        current: ''
-        all: []
+        current: 'Default'
+        all: [Default, Staff]
     data:
         display-name: '&4Server&f'
 NodinChan:
     channels:
-        current: ''
-        all: []
+        current: 'Default'
+        all: [Default]
     data:
         prefix: '&4Dev&f'
-Notch:
-    channels:
-        current: ''
-        all: []
-    data:
-        suffix: ' &fthe &6Creator&f'
-Steve:
-    channels:
-        current: ''
-        all: []
-    data:
-        suffix: ' &fthe &4Adventurer&f'
 SomeRandomGuy:
     channels:
-        current: ''
-        all: []
+        current: 'Global'
+        all: [Default, Global]
     data:
         display-name: 'Random Guy'
         prefix: 'This is a '

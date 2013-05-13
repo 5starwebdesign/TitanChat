@@ -1,4 +1,4 @@
-package com.titankingdoms.dev.titanchat.update;
+package com.titankingdoms.dev.titanchat.util.update;
 
 import java.net.URL;
 

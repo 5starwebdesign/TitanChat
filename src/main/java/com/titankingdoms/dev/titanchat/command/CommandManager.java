@@ -29,8 +29,8 @@ import org.apache.commons.lang.StringUtils;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.command.defaults.*;
-import com.titankingdoms.dev.titanchat.loading.Loader;
 import com.titankingdoms.dev.titanchat.util.Debugger;
+import com.titankingdoms.dev.titanchat.util.loading.Loader;
 
 /**
  * {@link CommandManager} - Manages {@link Command}s

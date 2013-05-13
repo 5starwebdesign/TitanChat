@@ -22,8 +22,8 @@ import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
-import com.titankingdoms.dev.titanchat.loading.Loadable;
 import com.titankingdoms.dev.titanchat.topic.Topic;
+import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
 /**
  * {@link ChatAddon} - Extensions of TitanChat

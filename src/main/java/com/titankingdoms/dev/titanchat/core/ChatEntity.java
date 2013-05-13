@@ -23,8 +23,8 @@ import java.util.Map;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.titankingdoms.dev.titanchat.data.Data;
-import com.titankingdoms.dev.titanchat.loading.Loadable;
+import com.titankingdoms.dev.titanchat.core.data.Data;
+import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
 /**
  * {@link ChatEntity} - Represents a data holding entity

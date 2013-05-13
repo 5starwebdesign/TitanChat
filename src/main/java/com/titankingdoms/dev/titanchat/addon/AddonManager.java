@@ -27,8 +27,8 @@ import java.util.logging.Level;
 import org.apache.commons.lang.StringUtils;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.loading.Loader;
 import com.titankingdoms.dev.titanchat.util.Debugger;
+import com.titankingdoms.dev.titanchat.util.loading.Loader;
 
 /**
  * AddonManager - Manages {@link ChatAddon}s

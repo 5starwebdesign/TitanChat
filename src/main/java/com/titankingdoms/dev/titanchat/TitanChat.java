@@ -90,12 +90,12 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	/**
-	 * Gets the {@link TopicManager}
+	 * Gets the instance of {@link TitanChat}
 	 * 
-	 * @return The {@link TopicManager}
+	 * @return The instance of {@link TitanChat}
 	 */
-	public TopicManager getTopicManager() {
-		return topic;
+	public static TitanChat getInstance() {
+		return instance;
 	}
 	
 	/**
@@ -108,21 +108,21 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	/**
-	 * Gets the instance of {@link TitanChat}
-	 * 
-	 * @return The instance of {@link TitanChat}
-	 */
-	public static TitanChat getInstance() {
-		return instance;
-	}
-	
-	/**
 	 * Gets the {@link TagManager}
 	 * 
 	 * @return The {@link TagManager}
 	 */
 	public TagManager getTagManager() {
 		return tag;
+	}
+	
+	/**
+	 * Gets the {@link TopicManager}
+	 * 
+	 * @return The {@link TopicManager}
+	 */
+	public TopicManager getTopicManager() {
+		return topic;
 	}
 	
 	/**
@@ -170,7 +170,7 @@ public final class TitanChat extends JavaPlugin {
 			
 			if (args.length < 1) {
 				Messaging.sendMessage(sender, "&5You are running &6" + this);
-				Messaging.sendMessage(sender, "&6\"/titanchat info [topic/page]\" for help");
+				Messaging.sendMessage(sender, "&6\"/titanchat help [topic/page]\" for help");
 				return true;
 			}
 			
@@ -258,7 +258,7 @@ public final class TitanChat extends JavaPlugin {
 			return;
 		}
 		
-		Messaging.sendMessage(sender, "&4Invalid command", "&6\"/titanchat info [topic/page]\" for help");
+		Messaging.sendMessage(sender, "&4Invalid command", "&6\"/titanchat help [topic/page]\" for help");
 	}
 	
 	@Override

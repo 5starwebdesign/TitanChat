@@ -28,8 +28,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.Format;
-import com.titankingdoms.dev.titanchat.update.UpdateVerify;
 import com.titankingdoms.dev.titanchat.util.Messaging;
+import com.titankingdoms.dev.titanchat.util.update.UpdateVerify;
 
 /**
  * {@link TitanChatListener} - The listener of TitanChat

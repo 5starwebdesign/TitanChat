@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.loading;
+package com.titankingdoms.dev.titanchat.util.loading;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.titankingdoms.dev.titanchat.loading.Loadable.InitResult;
+import com.titankingdoms.dev.titanchat.util.loading.Loadable.InitResult;
 
 /**
  * {@link Loader} - Loads {@link Loadable}s
