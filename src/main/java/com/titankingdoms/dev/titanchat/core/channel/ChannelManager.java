@@ -34,7 +34,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.channel.standard.ServerChannel;
 import com.titankingdoms.dev.titanchat.core.channel.standard.StandardLoader;
-import com.titankingdoms.dev.titanchat.core.channel.standard.TemporaryLoader;
+import com.titankingdoms.dev.titanchat.core.channel.temporary.TemporaryLoader;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Permissions;
@@ -265,7 +265,7 @@ public final class ChannelManager {
 			return;
 		
 		for (Channel channel : channels) {
-			if (channel == null)
+			if (channel == null || channel.getStatus().equals(Status.TEMPORARY))
 				continue;
 			
 			if (getLimit() >= 0 && this.channels.size() >= getLimit())

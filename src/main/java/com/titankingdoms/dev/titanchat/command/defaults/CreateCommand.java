@@ -77,12 +77,18 @@ public final class CreateCommand extends Command {
 		
 		ChannelLoader loader = plugin.getChannelManager().getLoader(type);
 		channel = loader.construct(args[0]);
+		
+		if (channel == null) {
+			sendMessage(sender, "&4Failed to create channel");
+			return;
+		}
+		
+		channel.init();
 		plugin.getChannelManager().registerChannels(channel);
 		
 		ChannelCreationEvent event = new ChannelCreationEvent(channel);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
-		channel.getOperators().add(sender.getName());
 		channel.join(plugin.getParticipantManager().getParticipant(sender));
 		channel.getOperators().add(sender.getName());
 		sendMessage(sender, "&6" + channel.getName() + " has been created");

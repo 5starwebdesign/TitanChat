@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel.standard;
+package com.titankingdoms.dev.titanchat.core.channel.temporary;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
