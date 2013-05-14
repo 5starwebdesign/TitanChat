@@ -20,8 +20,10 @@ package com.titankingdoms.dev.titanchat.core.channel;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -119,6 +121,17 @@ public abstract class Channel extends ChatEntity {
 	 * @return The format
 	 */
 	public abstract String getFormat();
+	
+	/**
+	 * Gets a list of the names of the {@link Participant}s of the {@link Channel}
+	 * 
+	 * @return A list of the names of the {@link Participant}s of the {@link Channel}
+	 */
+	public List<String> getParticipantList() {
+		List<String> list = new ArrayList<String>(participants.keySet());
+		Collections.sort(list);
+		return list;
+	}
 	
 	/**
 	 * Gets the {@link Participant}s of the {@link Channel}

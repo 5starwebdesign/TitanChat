@@ -25,7 +25,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
  * {@link BlacklistCommand} - Command for editting and viewing the blacklist in {@link Channel}s

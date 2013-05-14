@@ -11,7 +11,7 @@
 * 11.01.12 - Mute and unmute commands and global channels
 * 13.01.12 - Silence, broadcast and command list commands
 * 15.01.12 - Follow, force and unfollow commands and local channel
-* 16.01.12 - Filter is now perfect, 1 month until NodinChan's Birthday
+* 16.01.12 - Filter is now perfect
 * 17.01.12 - Public command renamed to Status, fixed global and cleaned up code
 * 18.01.12 - Chat format now customisable and huge fix to a potential problem
 * 24.01.12 - Updated for 1.1 and added commands
@@ -24,7 +24,7 @@
 * 16.02.12 - Added TCSupport Loader and TCSupport
 * 17.02.12 - New managing code and permissions
 * 18.02.12 - Fixed config files not generating
-* 29.02.12 - Custom channels? Sure.
+* 29.02.12 - Added custom channels
 * 01.03.12 - Fixed empty channel.yml
 * 02.03.12 - Fixed broken commands
 * 03.03.12 - Fixed fail CREATE command
@@ -40,7 +40,7 @@
 * 11.03.12 - Minor changes in all classes
 * 12.03.12 - Swapped out enums and used annotations
 * 13.03.12 - Proofread code, 99% corrected, 1% unknown
-* 14.03.12 - Welcome, SLiPCoR!: Added debugging
+* 14.03.12 - SLiPCoR: Added debugging
 * 15.03.12 - Documented
 * 16.03.12 - Added permissions for prefixes and suffixes
 * 17.03.12 - Created a Wildcard avoider that checks if a permission node is listed exactly instead of a '*'
@@ -89,7 +89,7 @@
 
 -----------------------------------------------------------------------------------------------------------------------
 
-=== TitanChat v4 (Discontinued)
+=== TitanChat v4 (Scraped)
 
 * 07.07.12 - Started rewrite for v4.0, accepting ideas for improvement
 * 31.07.12 - Rewrote channel management and added basics for future improvements in flexibility

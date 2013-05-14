@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
@@ -39,7 +40,7 @@ import com.titankingdoms.dev.titanchat.topic.TopicManager;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.util.Permissions;
-import com.titankingdoms.dev.titanchat.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
  * {@link TitanChat} - Main Class of TitanChat
@@ -193,6 +194,8 @@ public final class TitanChat extends JavaPlugin {
 				cmdName = args[0];
 				args = Arrays.copyOfRange(args, 1, args.length);
 			}
+			
+			args = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").split(StringUtils.join(args, " "));
 			
 			db.debug(Level.INFO, "Command: " + cmdName);
 			db.debug(Level.INFO, "Channel:" + ((chName.isEmpty()) ? "" : " " + chName));

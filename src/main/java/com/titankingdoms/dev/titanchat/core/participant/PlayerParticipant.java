@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.core.participant;
 
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.dev.titanchat.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 public final class PlayerParticipant extends Participant {
 	
@@ -37,13 +37,15 @@ public final class PlayerParticipant extends Participant {
 		String name = super.getDisplayName();
 		
 		if (isOnline()) {
-			if (asCommandSender().getDisplayName().equals(getName()) && !getName().equals(name)) {
-				asCommandSender().setDisplayName(name);
-				asCommandSender().setPlayerListName(name);
-			}
+			Player player = asCommandSender();
 			
-			if (!asCommandSender().getDisplayName().equals(name))
-				setDisplayName(asCommandSender().getDisplayName());
+			if (player.getDisplayName().equals(getName()))
+				player.setDisplayName(name);
+			else
+				setDisplayName(player.getDisplayName());
+			
+			if (player.getPlayerListName().equals(getName()))
+				player.setPlayerListName(name);
 		}
 		
 		return super.getDisplayName();
@@ -63,12 +65,20 @@ public final class PlayerParticipant extends Participant {
 	
 	@Override
 	public void setDisplayName(String name) {
-		super.setDisplayName(name);
+		if (name == null)
+			name = "";
 		
-		if (isOnline() && !asCommandSender().getDisplayName().equals(name)) {
-			asCommandSender().setDisplayName(name);
-			asCommandSender().setPlayerListName(name);
+		if (isOnline()) {
+			Player player = asCommandSender();
+			
+			if (!player.getDisplayName().equals(name))
+				player.setDisplayName(name);
+			
+			if (!player.getPlayerListName().equals(name))
+				player.setPlayerListName(name);
 		}
+		
+		super.setDisplayName(name);
 	}
 	
 	@Override

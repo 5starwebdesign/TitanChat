@@ -23,7 +23,7 @@ import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.event.ChannelDeletionEvent;
-import com.titankingdoms.dev.titanchat.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
  * {@link DeleteCommand} - Command for {@link Channel} deletion

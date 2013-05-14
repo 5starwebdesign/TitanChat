@@ -46,7 +46,7 @@ import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.util.Debugger;
-import com.titankingdoms.dev.titanchat.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
  * {@link Participant} - Represents a {@link CommandSender}
@@ -424,9 +424,9 @@ public class Participant extends ChatEntity {
 	}
 	
 	/**
-	 * Gets a list of all joined {@link Channel}s
+	 * Gets a list of the names of all joined {@link Channel}s
 	 * 
-	 * @return A list of all joined {@link Channel}s
+	 * @return A list of the names of all joined {@link Channel}s
 	 */
 	public final List<String> getChannelList() {
 		List<String> list = new ArrayList<String>(channels.keySet());

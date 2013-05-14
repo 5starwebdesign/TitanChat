@@ -26,7 +26,7 @@ import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
 import com.titankingdoms.dev.titanchat.event.ChannelCreationEvent;
-import com.titankingdoms.dev.titanchat.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
  * {@link CreateCommand} - Command for {@link Channel} creation

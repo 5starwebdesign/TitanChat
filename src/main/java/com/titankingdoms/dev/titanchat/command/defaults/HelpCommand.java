@@ -28,7 +28,7 @@ import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.topic.Index;
 import com.titankingdoms.dev.titanchat.topic.Topic;
 import com.titankingdoms.dev.titanchat.topic.TopicManager;
-import com.titankingdoms.dev.titanchat.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
  * {@link HelpCommand} - Command for getting information about TitanChat
