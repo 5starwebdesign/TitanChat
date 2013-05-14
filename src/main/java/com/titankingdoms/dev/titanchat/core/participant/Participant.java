@@ -90,7 +90,7 @@ public class Participant extends ChatEntity {
 			}
 		}
 		
-		if (channels.isEmpty()) {
+		if (channels.size() <= 1) {
 			for (Channel channel : plugin.getChannelManager().getChannels(Status.DEFAULT).values())
 				join(channel);
 		}

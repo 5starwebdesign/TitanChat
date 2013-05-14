@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.titankingdoms.dev.titanchat.core.data.Data;
 import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
 /**

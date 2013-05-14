@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.data;
+package com.titankingdoms.dev.titanchat.core;
 
 public final class Data {
 	
