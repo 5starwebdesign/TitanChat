@@ -18,9 +18,12 @@
 package com.titankingdoms.dev.titanchat;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -195,7 +198,14 @@ public final class TitanChat extends JavaPlugin {
 				args = Arrays.copyOfRange(args, 1, args.length);
 			}
 			
-			args = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").split(StringUtils.join(args, " "));
+			List<String> arguments = new ArrayList<String>();
+			
+			Matcher match = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(StringUtils.join(args, " "));
+			
+			while (match.find())
+				arguments.add(match.group().replace("\"", ""));
+			
+			args = arguments.toArray(new String[0]);
 			
 			db.debug(Level.INFO, "Command: " + cmdName);
 			db.debug(Level.INFO, "Channel:" + ((chName.isEmpty()) ? "" : " " + chName));
