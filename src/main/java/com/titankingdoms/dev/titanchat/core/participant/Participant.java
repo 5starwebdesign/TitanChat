@@ -95,6 +95,14 @@ public class Participant extends ChatEntity {
 				join(channel);
 		}
 		
+		for (Channel channel : plugin.getChannelManager().getChannels()) {
+			if (Vault.hasPermission(asCommandSender(), "TitanChat.auto.join." + channel.getName()))
+				join(channel);
+			
+			if (Vault.hasPermission(asCommandSender(), "TitanChat.auto.leave." + channel.getName()))
+				leave(channel);
+		}
+		
 		if (!section.getString("channels.current", "").isEmpty())
 			direct(plugin.getChannelManager().getChannel(section.getString("channels.current", "")));
 		
