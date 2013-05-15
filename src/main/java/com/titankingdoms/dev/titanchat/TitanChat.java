@@ -393,6 +393,8 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Reloading managers...");
 		
+		reloadConfig();
+		
 		addon.reload();
 		channel.reload();
 		command.reload();

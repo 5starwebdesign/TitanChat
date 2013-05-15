@@ -172,8 +172,8 @@ public final class CommandManager {
 	 * Reloads the manager
 	 */
 	public void reload() {
-		this.commands.clear();
-		this.labels.clear();
+		for (Command command : getCommands())
+			unregisterCommand(command);
 		
 		registerCommands(
 				new CreateCommand(), new DeleteCommand(), new ListCommand(),

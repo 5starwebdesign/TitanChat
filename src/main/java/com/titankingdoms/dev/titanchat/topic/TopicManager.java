@@ -184,6 +184,8 @@ public final class TopicManager {
 		for (Topic topic : getTopics())
 			unregisterTopic(topic);
 		
+		reloadConfig();
+		
 		registerTopics(
 				new CommandsIndex().index(),
 				new PermissionsIndex().index()

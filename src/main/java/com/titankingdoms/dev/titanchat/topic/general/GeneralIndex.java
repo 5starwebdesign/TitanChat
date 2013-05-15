@@ -31,7 +31,7 @@ import com.titankingdoms.dev.titanchat.topic.Topic;
 public final class GeneralIndex extends Index {
 	
 	public GeneralIndex() {
-		super("General", "The General Index");
+		super("General", "General");
 	}
 	
 	@Override

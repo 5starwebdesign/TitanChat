@@ -154,6 +154,8 @@ public final class ParticipantManager {
 		
 		for (Player player : plugin.getServer().getOnlinePlayers())
 			registerParticipants(new PlayerParticipant(player));
+		
+		saveConfig();
 	}
 	
 	/**
@@ -186,12 +188,12 @@ public final class ParticipantManager {
 		for (Participant participant : getParticipants())
 			unregisterParticipant(participant);
 		
-		saveConfig();
-		
 		registerParticipants(new ConsoleParticipant());
 		
 		for (Player player : plugin.getServer().getOnlinePlayers())
 			registerParticipants(new PlayerParticipant(player));
+		
+		saveConfig();
 	}
 	
 	/**
