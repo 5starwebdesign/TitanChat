@@ -35,7 +35,6 @@ public final class UpdateVerify {
 	public UpdateVerify(String rss, String currentVersion) {
 		this.rss = rss;
 		this.currentVersion = currentVersion;
-		verify();
 	}
 	
 	public String getCurrentVersion() {

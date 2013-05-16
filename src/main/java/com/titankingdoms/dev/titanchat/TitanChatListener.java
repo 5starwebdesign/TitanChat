@@ -89,6 +89,9 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
+		if (!plugin.getConfig().getBoolean("update-verify", true))
+			return;
+		
 		if (participant.hasPermission("TitanChat.update")) {
 			if (update.verify()) {
 				participant.sendMessage("&6" + update.getNewVersion() + " &5is out!");
