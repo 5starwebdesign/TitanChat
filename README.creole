@@ -62,6 +62,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 13.05.13 - Into v4.1 development and added ignore lists
 * 14.05.13 - Added TemporaryChannels and some commands
 * 15.05.13 - Made commands treat multiple arguments within quotations as one argument
+* 16.05.13 - TitanChat v4.1 Release
 
 -----------------------------------------------------------------------------------------------------------------------
 

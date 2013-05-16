@@ -24,38 +24,12 @@ public final class ChannelEmoteEvent extends ChannelEvent {
 	private String format;
 	private String emote;
 	
-	public ChannelEmoteEvent(Participant sender, Channel channel, String emote) {
-		this(sender, new HashSet<Participant>(), channel, "", emote);
-	}
-	
 	public ChannelEmoteEvent(Participant sender, Channel channel, String format, String emote) {
-		this(sender, new HashSet<Participant>(), channel, format, emote);
-	}
-	
-	public ChannelEmoteEvent(Participant sender, Set<Participant> recipients, Channel channel, String emote) {
-		this(sender, recipients, channel, "", emote);
-	}
-	
-	public ChannelEmoteEvent(Participant sender, Set<Participant> recipients, Channel channel, String format, String emote) {
 		super(channel);
 		this.sender = sender;
-		this.recipients = recipients;
+		this.recipients = new HashSet<Participant>();
 		this.format = format;
 		this.emote = emote;
-	}
-	
-	/**
-	 * Adds the {@link Participant} to the recipients
-	 * 
-	 * @param recipient The {@link Participant} to add
-	 * 
-	 * @return True if successfully added
-	 */
-	public boolean addRecipient(Participant recipient) {
-		if (recipient == null)
-			return false;
-		
-		return (!this.recipients.contains(recipient)) ? this.recipients.add(recipient) : false;
 	}
 	
 	/**
@@ -91,7 +65,7 @@ public final class ChannelEmoteEvent extends ChannelEvent {
 	 * @return The recipients
 	 */
 	public Set<Participant> getRecipients() {
-		return new HashSet<Participant>(recipients);
+		return recipients;
 	}
 	
 	/**
@@ -101,20 +75,6 @@ public final class ChannelEmoteEvent extends ChannelEvent {
 	 */
 	public Participant getSender() {
 		return sender;
-	}
-	
-	/**
-	 * Removes the {@link Participant} from the recipients
-	 * 
-	 * @param recipient The {@link Participant} to remove
-	 * 
-	 * @return True if successfully removed
-	 */
-	public boolean removeRecipient(Participant recipient) {
-		if (recipient == null)
-			return false;
-		
-		return (this.recipients.contains(recipient)) ? this.recipients.remove(recipient) : false;
 	}
 	
 	/**

@@ -54,7 +54,7 @@ public class TagManager {
 	 * @return The default format for variables
 	 */
 	public String getDefaultTagFormat() {
-		return plugin.getConfig().getString("formatting.tag-format.default", "%var%");
+		return plugin.getConfig().getString("formatting.tag-format.default", "%tag%");
 	}
 	
 	/**

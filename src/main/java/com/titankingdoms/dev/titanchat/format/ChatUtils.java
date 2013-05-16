@@ -119,6 +119,9 @@ public final class ChatUtils {
 					if (end == -1)
 						end = lineLength + 1;
 					
+					if (end > line.length())
+						end = line.length();
+					
 					lines.add(line.substring(0, end));
 					line = ChatColor.getLastColors(lines.get(lines.size() - 1)) + line.substring(end - 1).trim();
 				}

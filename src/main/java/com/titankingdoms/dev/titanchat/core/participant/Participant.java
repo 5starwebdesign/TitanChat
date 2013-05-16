@@ -201,7 +201,8 @@ public class Participant extends ChatEntity {
 		if (!recipients.contains(this))
 			recipients.add(this);
 		
-		ChannelChatEvent event = new ChannelChatEvent(this, recipients, channel, format, message);
+		ChannelChatEvent event = new ChannelChatEvent(this, channel, format, message);
+		event.getRecipients().addAll(recipients);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
 		db.debug(Level.INFO, getName() + " Chat Message: " + event.getMessage());
@@ -346,7 +347,8 @@ public class Participant extends ChatEntity {
 		if (!recipients.contains(this))
 			recipients.add(this);
 		
-		ChannelEmoteEvent event = new ChannelEmoteEvent(this, recipients, channel, format, emote);
+		ChannelEmoteEvent event = new ChannelEmoteEvent(this, channel, format, emote);
+		event.getRecipients().addAll(recipients);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
 		db.debug(Level.INFO, getName() + " Emote Action: " + event.getEmote());

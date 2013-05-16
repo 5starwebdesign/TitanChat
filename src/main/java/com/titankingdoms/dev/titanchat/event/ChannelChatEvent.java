@@ -24,6 +24,7 @@ import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.Format;
 
 /**
  * {@link ChannelChatEvent} - Called when {@link Participant}s chat in {@link Channel}s
@@ -42,37 +43,15 @@ public final class ChannelChatEvent extends ChannelEvent {
 	private String message;
 	
 	public ChannelChatEvent(Participant sender, Channel channel, String message) {
-		this(sender, new HashSet<Participant>(), channel, "", message);
+		this(sender, channel, Format.getFormat(), message);
 	}
 	
 	public ChannelChatEvent(Participant sender, Channel channel, String format, String message) {
-		this(sender, new HashSet<Participant>(), channel, format, message);
-	}
-	
-	public ChannelChatEvent(Participant sender, Set<Participant> recipients, Channel channel, String message) {
-		this(sender, recipients, channel, "", message);
-	}
-	
-	public ChannelChatEvent(Participant sender, Set<Participant> recipients, Channel channel, String format, String message) {
 		super(channel);
 		this.sender = sender;
-		this.recipients = recipients;
+		this.recipients = new HashSet<Participant>();
 		this.format = format;
 		this.message = message;
-	}
-	
-	/**
-	 * Adds the {@link Participant} to the recipients
-	 * 
-	 * @param recipient The {@link Participant} to add
-	 * 
-	 * @return True if successfully added
-	 */
-	public boolean addRecipient(Participant recipient) {
-		if (recipient == null)
-			return false;
-		
-		return (!this.recipients.contains(recipient)) ? this.recipients.add(recipient) : false;
 	}
 	
 	/**
@@ -108,7 +87,7 @@ public final class ChannelChatEvent extends ChannelEvent {
 	 * @return The recipients
 	 */
 	public Set<Participant> getRecipients() {
-		return new HashSet<Participant>(recipients);
+		return recipients;
 	}
 	
 	/**
@@ -118,20 +97,6 @@ public final class ChannelChatEvent extends ChannelEvent {
 	 */
 	public Participant getSender() {
 		return sender;
-	}
-	
-	/**
-	 * Removes the {@link Participant} from the recipients
-	 * 
-	 * @param recipient The {@link Participant} to remove
-	 * 
-	 * @return True if successfully removed
-	 */
-	public boolean removeRecipient(Participant recipient) {
-		if (recipient == null)
-			return false;
-		
-		return (this.recipients.contains(recipient)) ? this.recipients.remove(recipient) : false;
 	}
 	
 	/**
