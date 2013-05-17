@@ -18,6 +18,8 @@ formatting:
         default: '%tag%'
         tags:
             chtag: '[%tag%]'
+    static-tags:
+        plugin: '[TitanChat]'
 filtering:
     censor: '*'
     phrases: []

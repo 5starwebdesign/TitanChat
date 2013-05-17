@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.configuration.ConfigurationSection;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.format.tag.defaults.*;
@@ -112,6 +113,13 @@ public class TagManager {
 				new SuffixTag(),
 				new WorldTag()
 		);
+		
+		ConfigurationSection staticTags = plugin.getConfig().getConfigurationSection("formatting.static-tags");
+		
+		if (staticTags != null) {
+			for (String staticTag : staticTags.getKeys(false))
+				registerTags(new StaticTag("%" + staticTag, staticTags.getString(staticTag, "")));
+		}
 		
 		if (!tags.isEmpty())
 			plugin.log(Level.INFO, "Tags loaded: " + StringUtils.join(tags.keySet(), ", "));
