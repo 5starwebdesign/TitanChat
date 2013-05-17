@@ -256,9 +256,9 @@ public final class TitanChat extends JavaPlugin {
 			if (args.length < cmd.getMinArguments() || args.length > cmd.getMaxArguments()) {
 				Messaging.sendMessage(sender, "&4Invalid argument length");
 				
-				String pre = "/titanchat [@<channel>] " + cmd.getName();
-				String suf = (!cmd.getUsage().isEmpty()) ? " " + cmd.getUsage() : "";
-				Messaging.sendMessage(sender, "&6" + pre + suf);
+				String cmdLbl = "/titanchat [@<channel>] " + cmd.getName().toLowerCase();
+				String cmdArgs = (!cmd.getUsage().isEmpty()) ? " " + cmd.getUsage().toLowerCase() : "";
+				Messaging.sendMessage(sender, "&6" + cmdLbl + cmdArgs);
 				return;
 			}
 			

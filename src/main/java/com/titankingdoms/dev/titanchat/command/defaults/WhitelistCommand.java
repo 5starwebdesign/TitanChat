@@ -78,13 +78,13 @@ public final class WhitelistCommand extends Command {
 				return;
 			}
 			
-			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
-			
 			channel.getWhitelist().add(participant.getName());
 			participant.sendMessage("&6You have been added to the whitelist of " + channel.getName());
 			
-			if (!reason.isEmpty())
+			if (args.length > 2) {
+				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
 				participant.sendMessage("&6Reason: " + reason);
+			}
 			
 			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been added to the whitelist");
@@ -97,13 +97,13 @@ public final class WhitelistCommand extends Command {
 				return;
 			}
 			
-			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
-			
 			channel.getWhitelist().remove(participant.getName());
 			participant.sendMessage("&4You have been removed from the whitelisted of " + channel.getName());
 			
-			if (!reason.isEmpty())
+			if (args.length > 2) {
+				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
 				participant.sendMessage("&4Reason: " + reason);
+			}
 			
 			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been removed from the whitelist");

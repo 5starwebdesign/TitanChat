@@ -58,9 +58,7 @@ public final class BlacklistCommand extends Command {
 		} else {
 			if (args.length < 2) {
 				sendMessage(sender, "&4Invalid argument length");
-				
-				String usage = "/titanchat [@<channel>] blacklist " + getUsage();
-				sendMessage(sender, "&6" + usage);
+				sendMessage(sender, "&6/titanchat [@<channel>] blacklist " + getUsage());
 				return;
 			}
 		}
@@ -73,14 +71,14 @@ public final class BlacklistCommand extends Command {
 				return;
 			}
 			
-			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
-			
 			channel.leave(participant);
 			channel.getBlacklist().add(participant.getName());
 			participant.sendMessage("&4You have been added to the blacklist of " + channel.getName());
 			
-			if (!reason.isEmpty())
+			if (args.length > 2) {
+				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
 				participant.sendMessage("&4Reason: " + reason);
+			}
 			
 			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been added to the blacklist");
@@ -93,13 +91,13 @@ public final class BlacklistCommand extends Command {
 				return;
 			}
 			
-			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
-			
 			channel.getBlacklist().remove(participant.getName());
 			participant.sendMessage("&6You have been removed from the blacklist of " + channel.getName());
 			
-			if (!reason.isEmpty())
+			if (args.length > 2) {
+				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
 				participant.sendMessage("&6Reason: " + reason);
+			}
 			
 			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been removed from the blacklist");

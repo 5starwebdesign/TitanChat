@@ -129,7 +129,7 @@ public final class CommandManager {
 				new DemoteCommand(), new PromoteCommand(),
 				new FocusCommand(), new IgnoreCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
-				new ChatCommand(), new EmoteCommand(), new PMCommand(),
+				new ChatCommand(), new EmoteCommand(), new NickCommand(), new PMCommand(),
 				new WhoCommand()
 		);
 		
@@ -181,7 +181,7 @@ public final class CommandManager {
 				new DemoteCommand(), new PromoteCommand(),
 				new FocusCommand(), new IgnoreCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
-				new ChatCommand(), new EmoteCommand(), new PMCommand(),
+				new ChatCommand(), new EmoteCommand(), new NickCommand(), new PMCommand(),
 				new WhoCommand()
 		);
 		
