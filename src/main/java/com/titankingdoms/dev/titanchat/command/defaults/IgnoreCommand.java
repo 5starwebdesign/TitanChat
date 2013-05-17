@@ -36,7 +36,7 @@ public final class IgnoreCommand extends Command {
 		super("Ignore");
 		setArgumentRange(1, 2);
 		setDescription("Edit or view the ignore list");
-		setUsage("<add/list/remove> [player]");
+		setUsage("<add|list|remove> [player]");
 	}
 	
 	@Override

@@ -19,7 +19,7 @@ public final class NickCommand extends Command {
 		super("Nick");
 		setArgumentRange(1, 3);
 		setDescription("Change the display name of the player");
-		setUsage("<set/reset> [player] <nickname>");
+		setUsage("<set|reset> [player] <nickname>");
 	}
 	
 	@Override

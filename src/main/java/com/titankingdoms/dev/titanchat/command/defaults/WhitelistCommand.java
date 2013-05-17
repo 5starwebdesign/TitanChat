@@ -40,7 +40,7 @@ public final class WhitelistCommand extends Command {
 		setAliases("w");
 		setArgumentRange(1, 1024);
 		setDescription("Edit or view the whitelist of the channel");
-		setUsage("<add/list/remove> [player] [reason]");
+		setUsage("<add|list|remove> [player] [reason]");
 	}
 	
 	@Override

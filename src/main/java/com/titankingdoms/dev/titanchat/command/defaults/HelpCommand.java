@@ -43,7 +43,7 @@ public final class HelpCommand extends Command {
 		setAliases("?", "topic");
 		setArgumentRange(0, 1024);
 		setDescription("Get information about TitanChat");
-		setUsage("[topic/page]...");
+		setUsage("[topic|page]...");
 	}
 	
 	@Override
