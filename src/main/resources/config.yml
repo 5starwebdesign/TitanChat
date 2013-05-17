@@ -12,8 +12,6 @@ logging:
         log: false
         colour: true
     debug: []
-metrics-statistics: true
-update-verify: true
 formatting:
     format: '%chtag%prefix%display%suffix: %colour%message'
     tag-format:
@@ -23,3 +21,5 @@ formatting:
 filtering:
     censor: '*'
     phrases: []
+metrics-statistics: true
+update-notify: true

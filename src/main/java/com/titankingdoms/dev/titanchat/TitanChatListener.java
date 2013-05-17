@@ -29,7 +29,7 @@ import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Messaging;
-import com.titankingdoms.dev.titanchat.util.update.UpdateVerify;
+import com.titankingdoms.dev.titanchat.util.update.Update;
 
 /**
  * {@link TitanChatListener} - The listener of TitanChat
@@ -42,11 +42,11 @@ public final class TitanChatListener implements Listener {
 	private final TitanChat plugin;
 	
 	private final String site = "http://dev.bukkit.org/server-mods/titanchat/";
-	private final UpdateVerify update;
+	private final Update update;
 	
 	public TitanChatListener() {
 		this.plugin = TitanChat.getInstance();
-		this.update = new UpdateVerify(site + "files.rss", "4.1");
+		this.update = new Update(site + "files.rss", "4.1.1");
 	}
 	
 	/**
@@ -89,13 +89,13 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
-		if (!plugin.getConfig().getBoolean("update-verify", true))
+		if (!plugin.getConfig().getBoolean("update-notify", true))
 			return;
 		
 		if (participant.hasPermission("TitanChat.update")) {
 			if (update.verify()) {
-				participant.sendMessage("&6" + update.getNewVersion() + " &5is out!");
-				participant.sendMessage("&5You are running &6" + update.getCurrentVersion());
+				participant.sendMessage("&5A new version of TitanChat is out!");
+				participant.sendMessage("&5You are running &6v" + update.getCurrentVersion());
 				participant.sendMessage("&5Update at &9" + site);
 			}
 		}

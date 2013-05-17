@@ -26,26 +26,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public final class UpdateVerify {
+public final class Update {
 	
 	private final String rss;
 	private final String currentVersion;
 	private String newVersion;
 	
-	public UpdateVerify(String rss, String currentVersion) {
+	public Update(String rss, String currentVersion) {
 		this.rss = rss;
 		this.currentVersion = currentVersion;
 	}
 	
-	public String getCurrentVersion() {
-		return currentVersion;
-	}
-	
-	public String getNewVersion() {
-		return newVersion;
-	}
-	
-	public boolean verify() {
+	public String check() {
 		try {
 			URL url = new URL(rss);
 			
@@ -57,23 +49,30 @@ public final class UpdateVerify {
 			if (node.getNodeType() == 1) {
 				Node name = ((Element) node).getElementsByTagName("title").item(0);
 				Node version = name.getChildNodes().item(0);
-				newVersion = version.getNodeValue().split(" ")[1].trim().substring(1);
+				newVersion = version.getNodeValue().replaceAll("[^\\d\\.]", "");
 				
 			} else { newVersion = currentVersion; }
 			
 		} catch (Exception e) { newVersion = currentVersion; }
 		
-		boolean update = false;
-		
+		return newVersion;
+	}
+	
+	public String getCurrentVersion() {
+		return currentVersion;
+	}
+	
+	public String getNewVersion() {
+		return newVersion;
+	}
+	
+	public boolean isNew(String newVersion) {
 		String[] currentDigits = currentVersion.split("\\.");
 		String[] newDigits = newVersion.split("\\.");
 		
 		for (int digit = 0; digit < Math.max(currentDigits.length, newDigits.length); digit++) {
-			if (currentDigits.length < digit + 1 || newDigits.length < digit + 1)
-				break;
-			
-			String currentDigitString = currentDigits[digit];
-			String newDigitString = newDigits[digit];
+			String currentDigitString = (currentDigits.length > digit) ? currentDigits[digit] : "0";
+			String newDigitString = (newDigits.length > digit) ? newDigits[digit] : "0";
 			
 			if (!NumberUtils.isNumber(currentDigitString) || !NumberUtils.isNumber(newDigitString))
 				continue;
@@ -81,13 +80,17 @@ public final class UpdateVerify {
 			int currentDigit = NumberUtils.toInt(currentDigitString);
 			int newDigit = NumberUtils.toInt(newDigitString);
 			
-			if (newDigit == currentDigit)
-				continue;
+			if (newDigit > currentDigit)
+				return true;
 			
-			update = newDigit > currentDigit;
-			break;
+			if (newDigit < currentDigit)
+				break;
 		}
 		
-		return update;
+		return false;
+	}
+	
+	public boolean verify() {
+		return isNew(check());
 	}
 }
