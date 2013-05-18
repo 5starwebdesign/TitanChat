@@ -46,7 +46,7 @@ public final class TitanChatListener implements Listener {
 	
 	public TitanChatListener() {
 		this.plugin = TitanChat.getInstance();
-		this.update = new Update(site + "files.rss", "4.1.1");
+		this.update = new Update(site + "files.rss", "4.2");
 	}
 	
 	/**
