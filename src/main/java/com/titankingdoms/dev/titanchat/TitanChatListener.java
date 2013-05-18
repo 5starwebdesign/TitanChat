@@ -89,6 +89,9 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
+		if (participant.getCurrentChannel() != null)
+			participant.sendMessage("&bYou are now speaking in " + participant.getCurrent());
+		
 		if (!plugin.getConfig().getBoolean("update-notify", true))
 			return;
 		

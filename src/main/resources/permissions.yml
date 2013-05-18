@@ -62,12 +62,6 @@ staff:
         privmsg: true
         reload: true
         debug: true
-auto_join_<channel>:
-    description: Auto-joins on login
-    default: false
-auto_leave_<channel>:
-    description: Auto-leaves on login
-    default: false
 update:
     description: Notified about updates
     default: false

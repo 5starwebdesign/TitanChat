@@ -29,7 +29,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
  */
 public final class Format {
 	
-	private static final String DEFAULT_FORMAT = "%prefix%display%suffix\u00A7f: %colour%message";
+	private static final String DEFAULT_FORMAT = "%chtag%prefix%display%suffix\u00A7f: %colour%message";
 	
 	/**
 	 * Colourises the text
