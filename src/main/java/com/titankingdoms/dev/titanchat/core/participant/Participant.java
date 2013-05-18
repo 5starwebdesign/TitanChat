@@ -35,7 +35,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.dev.titanchat.core.ChatEntity;
+import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.privmsg.PrivateMessage;
@@ -54,21 +54,28 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public class Participant extends ChatEntity {
+public class Participant {
+	
+	protected TitanChat plugin;
 	
 	private final Debugger db = new Debugger(4, "Participant");
+	
+	private final String name;
 	
 	private Channel current;
 	
 	private final Map<String, Channel> channels;
+	private final Map<String, Data> data;
 	
 	private final Set<String> ignorelist;
 	
 	private final PrivateMessage pm;
 	
 	public Participant(String name) {
-		super("Participant", name);
+		this.plugin = TitanChat.getInstance();
+		this.name = name;
 		this.channels = new HashMap<String, Channel>();
+		this.data = new HashMap<String, Data>();
 		this.ignorelist = new HashSet<String>();
 		this.pm = new PrivateMessage(this);
 		
@@ -437,11 +444,6 @@ public class Participant extends ChatEntity {
 		return new HashSet<Channel>(channels.values());
 	}
 	
-	@Override
-	public FileConfiguration getConfig() {
-		throw new UnsupportedOperationException("Participants do not have config files");
-	}
-	
 	/**
 	 * Gets the name of the current (@link Channel}
 	 * 
@@ -460,7 +462,52 @@ public class Participant extends ChatEntity {
 		return current;
 	}
 	
-	@Override
+	/**
+	 * Gets the specified {@link Data} from cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @param def The default value
+	 * 
+	 * @return The {@link Data} if found, otherwise the default value
+	 */
+	public final Data getData(String key, Data def) {
+		return (data.containsKey(key)) ? data.get(key) : def;
+	}
+	
+	/**
+	 * Gets the specified {@link Data} from cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @param def The default value
+	 * 
+	 * @return The {@link Data} if found, otherwise the default value
+	 */
+	public final Data getData(String key, Object def) {
+		return getData(key, new Data(def));
+	}
+	
+	/**
+	 * Gets the specified {@link Data} from cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @return The {@link Data} if found, otherwise null
+	 */
+	public final Data getData(String key) {
+		return getData(key, null);
+	}
+	
+	/**
+	 * Gets the cached data map
+	 * 
+	 * @return The cached data map
+	 */
+	public final Map<String, Data> getDataMap() {
+		return new HashMap<String, Data>(data);
+	}
+	
 	public ConfigurationSection getDataSection() {
 		FileConfiguration config = plugin.getParticipantManager().getConfig();
 		return config.getConfigurationSection(getName() + ".data");
@@ -482,6 +529,10 @@ public class Participant extends ChatEntity {
 	 */
 	public Set<String> getIgnoreList() {
 		return ignorelist;
+	}
+	
+	public final String getName() {
+		return name;
 	}
 	
 	/**
@@ -522,9 +573,8 @@ public class Participant extends ChatEntity {
 		return Vault.hasPermission(asCommandSender(), node);
 	}
 	
-	@Override
 	public final void init() {
-		super.init();
+		loadData();
 		ignorelist.addAll(plugin.getParticipantManager().getConfig().getStringList("ignore"));
 	}
 	
@@ -622,29 +672,79 @@ public class Participant extends ChatEntity {
 			direct(getChannels().iterator().hasNext() ? getChannels().iterator().next() : null);
 	}
 	
-	@Override
-	public void reloadConfig() {
-		throw new UnsupportedOperationException("Participants do not have config files");
+	/**
+	 * Loads the {@link Data} from the data section
+	 */
+	public final void loadData() {
+		ConfigurationSection dataSection = getDataSection();
+		
+		if (dataSection == null)
+			return;
+		
+		this.data.clear();
+		
+		for (String key : dataSection.getKeys(false))
+			setData(key, dataSection.get(key));
 	}
 	
-	@Override
+	/**
+	 * Removes the {@link Data} from cache
+	 * 
+	 * @param key The key of the data pair
+	 */
+	public final void removeData(String key) {
+		this.data.remove(key);
+	}
+	
 	public void save() {
-		super.save();
+		saveData();
 		plugin.getParticipantManager().getConfig().set(getName() + ".channels.current", getCurrent());
 		plugin.getParticipantManager().getConfig().set(getName() + ".channels.all", getChannelList());
 		plugin.getParticipantManager().getConfig().set(getName() + ".ignore", new ArrayList<String>(ignorelist));
 		plugin.getParticipantManager().saveConfig();
 	}
 	
-	@Override
-	public void saveConfig() {
-		throw new UnsupportedOperationException("Participants do not have config files");
+	/**
+	 * Saves the {@link Data} to the data section
+	 */
+	public final void saveData() {
+		ConfigurationSection dataSection = getDataSection();
+		
+		if (dataSection == null)
+			return;
+		
+		for (String key : new HashSet<String>(dataSection.getKeys(false)))
+			dataSection.set(key, null);
+		
+		for (String key : data.keySet())
+			dataSection.set(key, data.get(key).asString());
 	}
 	
-	@Override
 	public void sendMessage(String... messages) {
 		if (isOnline())
 			asCommandSender().sendMessage(Format.colourise(messages));
+	}
+	
+	/**
+	 * Sets the {@link Data} in the cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @param value The new value
+	 */
+	public final void setData(String key, Object value) {
+		setData(key, new Data(value));
+	}
+	
+	/**
+	 * Sets the {@link Data} in the cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @param value The new value
+	 */
+	public final void setData(String key, Data value) {
+		this.data.put(key, value);
 	}
 	
 	/**

@@ -78,13 +78,13 @@ public final class JoinCommand extends Command {
 			}
 		}
 		
-		if (!channel.getData("password", "").asString().isEmpty()) {
+		if (!channel.getConfig().getString("password", "").isEmpty()) {
 			if (args.length < 2) {
 				sendMessage(sender, "&4Please enter a password");
 				return;
 			}
 			
-			if (!channel.getData("password").equals(args[1])) {
+			if (!channel.getConfig().getString("password", "").equals(args[1])) {
 				sendMessage(sender, "&4Incorrect password");
 				return;
 			}

@@ -28,11 +28,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.bukkit.configuration.ConfigurationSection;
-
 import com.titankingdoms.dev.titanchat.addon.ChatAddon;
 import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.core.ChatEntity;
 import com.titankingdoms.dev.titanchat.core.channel.info.Range;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
@@ -41,6 +38,7 @@ import com.titankingdoms.dev.titanchat.event.ChannelLeaveEvent;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.topic.Topic;
 import com.titankingdoms.dev.titanchat.util.Debugger;
+import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
 /**
  * {@link Channel} - Channels for communication
@@ -48,7 +46,7 @@ import com.titankingdoms.dev.titanchat.util.Debugger;
  * @author NodinChan
  *
  */
-public abstract class Channel extends ChatEntity {
+public abstract class Channel extends Loadable {
 	
 	private final Debugger db = new Debugger(3, "Channel");
 	
@@ -63,7 +61,7 @@ public abstract class Channel extends ChatEntity {
 	private final Map<String, Participant> participants;
 	
 	public Channel(String name, String type, Status status) {
-		super("Channel", name);
+		super(name);
 		this.type = type;
 		this.status = status;
 		this.blacklist = new HashSet<String>();
@@ -96,11 +94,6 @@ public abstract class Channel extends ChatEntity {
 	@Override
 	public final File getDataFolder() {
 		return plugin.getChannelManager().getChannelDirectory();
-	}
-	
-	@Override
-	public ConfigurationSection getDataSection() {
-		return getConfig().getConfigurationSection("data");
 	}
 	
 	@Override
@@ -192,9 +185,7 @@ public abstract class Channel extends ChatEntity {
 		return whitelist;
 	}
 	
-	@Override
 	public void init() {
-		super.init();
 		blacklist.addAll(getConfig().getStringList("blacklist"));
 		whitelist.addAll(getConfig().getStringList("whitelist"));
 		operators.addAll(getConfig().getStringList("operators"));
@@ -327,9 +318,7 @@ public abstract class Channel extends ChatEntity {
 		init();
 	}
 	
-	@Override
 	public void save() {
-		super.save();
 		getConfig().set("type", getType());
 		getConfig().set("status", getStatus().getName());
 		getConfig().set("range", getRange().getName());
@@ -339,7 +328,6 @@ public abstract class Channel extends ChatEntity {
 		saveConfig();
 	}
 	
-	@Override
 	public void sendMessage(String... messages) {
 		for (Participant participant : participants.values())
 			participant.sendMessage(messages);

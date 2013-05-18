@@ -11,3 +11,4 @@ data:
 blacklist: []
 whitelist: []
 operators: []
+carbon-copy: [Staff]
