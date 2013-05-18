@@ -1,0 +1,8 @@
+networks:
+    StaffCentral:
+        node: Staff
+        hubs:
+        - Default
+        - Global
+        - Local
+        - World

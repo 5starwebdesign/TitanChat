@@ -70,8 +70,10 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 === Todo
 
-* v4.*
-** Create addons
+* Complete basic addons
+* Per world support
+* Channel networks
+* Code improvements
 
 -----------------------------------------------------------------------------------------------------------------------
 
