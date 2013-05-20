@@ -135,7 +135,7 @@ public class TagManager {
 			return;
 		
 		for (Tag tag : tags) {
-			if (tag == null)
+			if (tag == null || tag.getTag().isEmpty())
 				continue;
 			
 			if (hasTag(tag)) {

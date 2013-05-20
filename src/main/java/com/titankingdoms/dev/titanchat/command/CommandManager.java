@@ -149,7 +149,7 @@ public final class CommandManager {
 			return;
 		
 		for (Command command : commands) {
-			if (command == null)
+			if (command == null || command.getName().isEmpty())
 				continue;
 			
 			if (hasCommand(command)) {

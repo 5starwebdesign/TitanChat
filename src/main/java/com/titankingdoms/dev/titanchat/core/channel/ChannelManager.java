@@ -265,7 +265,7 @@ public final class ChannelManager {
 			return;
 		
 		for (Channel channel : channels) {
-			if (channel == null || channel.getStatus().equals(Status.TEMPORARY))
+			if (channel == null || channel.getName().isEmpty() || channel.getStatus().equals(Status.TEMPORARY))
 				continue;
 			
 			if (getLimit() >= 0 && this.channels.size() >= getLimit())
@@ -302,7 +302,7 @@ public final class ChannelManager {
 			return;
 		
 		for (ChannelLoader loader : loaders) {
-			if (loader == null)
+			if (loader == null || loader.getName().isEmpty())
 				continue;
 			
 			if (hasLoader(loader)) {

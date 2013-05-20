@@ -162,7 +162,7 @@ public final class TopicManager {
 			return;
 		
 		for (Topic topic : topics) {
-			if (topic == null)
+			if (topic == null || topic.getName().isEmpty())
 				continue;
 			
 			if (hasTopic(topic)) {

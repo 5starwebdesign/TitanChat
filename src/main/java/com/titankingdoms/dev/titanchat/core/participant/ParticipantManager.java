@@ -168,7 +168,7 @@ public final class ParticipantManager {
 			return;
 		
 		for (Participant participant : participants) {
-			if (participant == null)
+			if (participant == null || participant.getName().isEmpty())
 				continue;
 			
 			if (hasParticipant(participant)) {
