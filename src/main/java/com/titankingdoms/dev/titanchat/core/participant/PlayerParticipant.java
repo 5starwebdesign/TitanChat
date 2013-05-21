@@ -69,7 +69,7 @@ public final class PlayerParticipant extends Participant {
 			name = "";
 		
 		if (name.length() > 16)
-			name = name.substring(0, 17);
+			name = name.substring(0, 16);
 		
 		if (isOnline()) {
 			Player player = asCommandSender();
