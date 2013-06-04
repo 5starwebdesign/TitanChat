@@ -30,6 +30,7 @@ import java.util.logging.Level;
 
 import com.titankingdoms.dev.titanchat.addon.ChatAddon;
 import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.info.Range;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
@@ -46,7 +47,7 @@ import com.titankingdoms.dev.titanchat.util.loading.Loadable;
  * @author NodinChan
  *
  */
-public abstract class Channel extends Loadable {
+public abstract class Channel extends Loadable implements EndPoint {
 	
 	private final Debugger db = new Debugger(3, "Channel");
 	
@@ -223,7 +224,7 @@ public abstract class Channel extends Loadable {
 			return;
 		
 		if (!isParticipating(participant)) {
-			sendMessage(participant.getDisplayName() + " &bhas joined " + getName());
+			notice(participant.getDisplayName() + " &bhas joined " + getName());
 			participants.put(participant.getName().toLowerCase(), participant);
 			
 			ChannelJoinEvent event = new ChannelJoinEvent(participant, this);
@@ -247,7 +248,7 @@ public abstract class Channel extends Loadable {
 		
 		if (isParticipating(participant)) {
 			participants.remove(participant.getName().toLowerCase());
-			sendMessage(participant.getDisplayName() + " &bhas left " + getName());
+			notice(participant.getDisplayName() + " &bhas left " + getName());
 			
 			ChannelLeaveEvent event = new ChannelLeaveEvent(participant, this);
 			plugin.getServer().getPluginManager().callEvent(event);
@@ -257,6 +258,19 @@ public abstract class Channel extends Loadable {
 		
 		if (participant.isParticipating(this))
 			participant.leave(this);
+	}
+	
+	public void messageIn(EndPoint sender, String message) {
+		
+	}
+	
+	public void messageOut(EndPoint recipient, String message) {
+		
+	}
+	
+	public void notice(String message) {
+		for (Participant participant : participants.values())
+			participant.sendMessage(message);
 	}
 	
 	/**
@@ -326,10 +340,5 @@ public abstract class Channel extends Loadable {
 		getConfig().set("whitelist", new ArrayList<String>(whitelist));
 		getConfig().set("operators", new ArrayList<String>(operators));
 		saveConfig();
-	}
-	
-	public void sendMessage(String... messages) {
-		for (Participant participant : participants.values())
-			participant.sendMessage(messages);
 	}
 }

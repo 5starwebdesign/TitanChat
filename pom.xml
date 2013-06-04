@@ -57,7 +57,7 @@
         </repository>
         <repository>
             <id>theyeticave-repo</id>
-            <url>http://ci.theyeticave.net/plugin/repository/everything/</url>
+            <url>http://nexus.theyeticave.net/</url>
         </repository>
     </repositories>
     <dependencies>

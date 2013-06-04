@@ -64,7 +64,7 @@ public final class PlaceCommand extends Command {
 		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been placed");
 		
-		channel.sendMessage(participant.getDisplayName() + " &6has been placed");
+		channel.notice(participant.getDisplayName() + " &6has been placed");
 	}
 	
 	@Override
