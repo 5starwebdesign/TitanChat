@@ -21,9 +21,11 @@ public interface EndPoint {
 	
 	public String getName();
 	
-	public void messageIn(EndPoint sender, String message);
+	public String getPointType();
 	
-	public void messageOut(EndPoint recipient, String message);
+	public void messageIn(EndPoint sender, String format, String message);
 	
-	public void notice(String message);
+	public void messageOut(EndPoint recipient, String format, String message);
+	
+	public void notice(String... messages);
 }

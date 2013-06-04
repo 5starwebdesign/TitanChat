@@ -67,7 +67,7 @@ public final class IgnoreCommand extends Command {
 			}
 			
 			participant.getIgnoreList().add(target.getName());
-			target.sendMessage("&4You have been added to the ignore list of " + participant.getDisplayName());
+			target.notice("&4You have been added to the ignore list of " + participant.getDisplayName());
 			sendMessage(sender, target.getDisplayName() + " &6has been added to the ignore list");
 			
 		} else if (args[0].equalsIgnoreCase("remove")) {
@@ -77,7 +77,7 @@ public final class IgnoreCommand extends Command {
 			}
 			
 			participant.getIgnoreList().remove(target.getName());
-			target.sendMessage("&6You have been removed from the ignore list of " + participant.getDisplayName());
+			target.notice("&6You have been removed from the ignore list of " + participant.getDisplayName());
 			sendMessage(sender, target.getDisplayName() + " &6has been removed from the ignore list");
 			
 		} else {

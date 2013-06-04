@@ -73,11 +73,11 @@ public final class BlacklistCommand extends Command {
 			
 			channel.leave(participant);
 			channel.getBlacklist().add(participant.getName());
-			participant.sendMessage("&4You have been added to the blacklist of " + channel.getName());
+			participant.notice("&4You have been added to the blacklist of " + channel.getName());
 			
 			if (args.length > 2) {
 				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
-				participant.sendMessage("&4Reason: " + reason);
+				participant.notice("&4Reason: " + reason);
 			}
 			
 			if (!channel.isParticipating(sender.getName()))
@@ -92,11 +92,11 @@ public final class BlacklistCommand extends Command {
 			}
 			
 			channel.getBlacklist().remove(participant.getName());
-			participant.sendMessage("&6You have been removed from the blacklist of " + channel.getName());
+			participant.notice("&6You have been removed from the blacklist of " + channel.getName());
 			
 			if (args.length > 2) {
 				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
-				participant.sendMessage("&6Reason: " + reason);
+				participant.notice("&6Reason: " + reason);
 			}
 			
 			if (!channel.isParticipating(sender.getName()))

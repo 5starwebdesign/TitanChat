@@ -90,16 +90,16 @@ public final class TitanChatListener implements Listener {
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
 		if (participant.getCurrentChannel() != null)
-			participant.sendMessage("&bYou are now speaking in " + participant.getCurrent());
+			participant.notice("&bYou are now speaking in " + participant.getCurrent());
 		
 		if (!plugin.getConfig().getBoolean("update-notify", true))
 			return;
 		
 		if (participant.hasPermission("TitanChat.update")) {
 			if (update.verify()) {
-				participant.sendMessage("&5A new version of TitanChat is out!");
-				participant.sendMessage("&5You are running &6v" + update.getCurrentVersion());
-				participant.sendMessage("&5Update at &9" + site);
+				participant.notice("&5A new version of TitanChat is out!");
+				participant.notice("&5You are running &6v" + update.getCurrentVersion());
+				participant.notice("&5Update at &9" + site);
 			}
 		}
 	}

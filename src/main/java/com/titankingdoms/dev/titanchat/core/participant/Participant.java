@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,6 +37,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.privmsg.PrivateMessage;
@@ -54,7 +56,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public class Participant {
+public class Participant implements EndPoint {
 	
 	protected TitanChat plugin;
 	
@@ -65,7 +67,7 @@ public class Participant {
 	private Channel current;
 	
 	private final Map<String, Channel> channels;
-	private final Map<String, Data> data;
+	private final Map<String, Meta> meta;
 	
 	private final Set<String> ignorelist;
 	
@@ -75,7 +77,7 @@ public class Participant {
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
 		this.channels = new HashMap<String, Channel>();
-		this.data = new HashMap<String, Data>();
+		this.meta = new HashMap<String, Meta>();
 		this.ignorelist = new HashSet<String>();
 		this.pm = new PrivateMessage(this);
 		
@@ -130,7 +132,7 @@ public class Participant {
 		if (!isOnline() || ignorelist.contains(sender.getName()))
 			return;
 		
-		sendMessage(ChatUtils.wordWrap(format.replace("%message", message), 50));
+		notice(ChatUtils.wordWrap(format.replace("%message", message), 50));
 	}
 	
 	/**
@@ -145,14 +147,14 @@ public class Participant {
 			return;
 		
 		if (channel == null) {
-			sendMessage("&4Please join a channel to speak");
+			notice("&4Please join a channel to speak");
 			return;
 		}
 		
 		if (!channel.getStatus().equals(Status.CONVERSATION)) {
 			if (!hasPermission("TitanChat.speak." + channel.getName())) {
 				if (!channel.getOperators().contains(getName())) {
-					sendMessage("&4You do not have permission");
+					notice("&4You do not have permission");
 					return;
 				}
 			}
@@ -247,7 +249,7 @@ public class Participant {
 			recipient.chatIn(this, format, message);
 		
 		if (event.getRecipients().size() <= 1)
-			sendMessage("&6Nobody else heard you...");
+			notice("&6Nobody else heard you...");
 		
 		if (!plugin.getConfig().getBoolean("logging.chat.log", false))
 			return;
@@ -294,14 +296,14 @@ public class Participant {
 			return;
 		
 		if (channel == null) {
-			sendMessage("&4Please join a channel to speak");
+			notice("&4Please join a channel to speak");
 			return;
 		}
 		
 		if (!channel.getStatus().equals(Status.CONVERSATION)) {
 			if (!hasPermission("TitanChat.speak." + channel.getName())) {
 				if (!channel.getOperators().contains(getName())) {
-					sendMessage("&4You do not have permission");
+					notice("&4You do not have permission");
 					return;
 				}
 			}
@@ -393,7 +395,7 @@ public class Participant {
 			recipient.chatIn(this, format, emote);
 		
 		if (event.getRecipients().size() <= 1)
-			sendMessage("&6Nobody else saw you...");
+			notice("&6Nobody else saw you...");
 		
 		if (!plugin.getConfig().getBoolean("logging.chat.log", false))
 			return;
@@ -445,6 +447,15 @@ public class Participant {
 	}
 	
 	/**
+	 * Gets the configuration of the {@link Participant}
+	 * 
+	 * @return The configuration
+	 */
+	public final ConfigurationSection getConfiguration() {
+		return plugin.getParticipantManager().getConfig().getConfigurationSection(name);
+	}
+	
+	/**
 	 * Gets the name of the current (@link Channel}
 	 * 
 	 * @return The name of the current {@link Channel}
@@ -463,63 +474,12 @@ public class Participant {
 	}
 	
 	/**
-	 * Gets the specified {@link Data} from cache
-	 * 
-	 * @param key The key of the data pair
-	 * 
-	 * @param def The default value
-	 * 
-	 * @return The {@link Data} if found, otherwise the default value
-	 */
-	public final Data getData(String key, Data def) {
-		return (data.containsKey(key)) ? data.get(key) : def;
-	}
-	
-	/**
-	 * Gets the specified {@link Data} from cache
-	 * 
-	 * @param key The key of the data pair
-	 * 
-	 * @param def The default value
-	 * 
-	 * @return The {@link Data} if found, otherwise the default value
-	 */
-	public final Data getData(String key, Object def) {
-		return getData(key, new Data(def));
-	}
-	
-	/**
-	 * Gets the specified {@link Data} from cache
-	 * 
-	 * @param key The key of the data pair
-	 * 
-	 * @return The {@link Data} if found, otherwise null
-	 */
-	public final Data getData(String key) {
-		return getData(key, null);
-	}
-	
-	/**
-	 * Gets the cached data map
-	 * 
-	 * @return The cached data map
-	 */
-	public final Map<String, Data> getDataMap() {
-		return new HashMap<String, Data>(data);
-	}
-	
-	public ConfigurationSection getDataSection() {
-		FileConfiguration config = plugin.getParticipantManager().getConfig();
-		return config.getConfigurationSection(getName() + ".data");
-	}
-	
-	/**
 	 * Gets the display name of the {@link Participant}
 	 * 
 	 * @return The display name
 	 */
 	public String getDisplayName() {
-		return getData("display-name", getName()).asString();
+		return getMeta("display-name", getName()).stringValue();
 	}
 	
 	/**
@@ -529,6 +489,50 @@ public class Participant {
 	 */
 	public Set<String> getIgnoreList() {
 		return ignorelist;
+	}
+	
+	/**
+	 * Gets all the {@link Meta}
+	 * 
+	 * @return All cached {@link Meta}
+	 */
+	public Map<String, Meta> getMeta() {
+		if (meta.isEmpty())
+			reloadMeta();
+		
+		return new HashMap<String, Meta>(meta);
+	}
+	
+	/**
+	 * Gets the specified {@link Meta} from cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @param def The default value
+	 * 
+	 * @return The {@link Meta} if found, otherwise the default value
+	 */
+	public Meta getMeta(String key, Meta def) {
+		if (key == null)
+			return (def != null) ? def : new Meta("", new Object());
+		
+		return (meta.containsKey(key)) ? this.meta.get(key) : def;
+	}
+	
+	/**
+	 * Gets the specified {@link Meta} from cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @param def The default value
+	 * 
+	 * @return The {@link Meta} if found, otherwise the default value
+	 */
+	public final Meta getMeta(String key, Object def) {
+		if (key == null)
+			return new Meta("", (def != null) ? def : new Object());
+		
+		return getMeta(key, new Meta(key, def));
 	}
 	
 	public final String getName() {
@@ -544,13 +548,17 @@ public class Participant {
 		return pm;
 	}
 	
+	public final String getPointType() {
+		return "Participant";
+	}
+	
 	/**
 	 * Gets the prefix of the {@link Participant}
 	 * 
 	 * @return The prefix
 	 */
 	public String getPrefix() {
-		return getData("prefix", "").asString();
+		return getMeta("prefix", "").stringValue();
 	}
 	
 	/**
@@ -559,7 +567,7 @@ public class Participant {
 	 * @return The suffix
 	 */
 	public String getSuffix() {
-		return getData("suffix", "").asString();
+		return getMeta("suffix", "").stringValue();
 	}
 	
 	/**
@@ -574,7 +582,7 @@ public class Participant {
 	}
 	
 	public final void init() {
-		loadData();
+		reloadMeta();
 		ignorelist.addAll(plugin.getParticipantManager().getConfig().getStringList("ignore"));
 	}
 	
@@ -672,79 +680,54 @@ public class Participant {
 			direct(getChannels().iterator().hasNext() ? getChannels().iterator().next() : null);
 	}
 	
-	/**
-	 * Loads the {@link Data} from the data section
-	 */
-	public final void loadData() {
-		ConfigurationSection dataSection = getDataSection();
+	public void messageIn(EndPoint sender, String format, String message) {
 		
-		if (dataSection == null)
-			return;
+	}
+	
+	public void messageOut(EndPoint recipient, String format, String message) {
 		
-		this.data.clear();
-		
-		for (String key : dataSection.getKeys(false))
-			setData(key, dataSection.get(key));
+	}
+	
+	public void notice(String... messages) {
+		if (isOnline())
+			asCommandSender().sendMessage(Format.colourise(messages));
 	}
 	
 	/**
-	 * Removes the {@link Data} from cache
-	 * 
-	 * @param key The key of the data pair
+	 * Reloads the {@link Meta}
 	 */
-	public final void removeData(String key) {
-		this.data.remove(key);
+	public final void reloadMeta() {
+		ConfigurationSection meta = getConfiguration().getConfigurationSection("meta");
+		
+		if (meta == null)
+			return;
+		
+		for (String key : getMeta().keySet())
+			setMeta(key, null);
+		
+		for (String key : meta.getKeys(false))
+			setMeta(key, meta.get(key));
 	}
 	
 	public void save() {
-		saveData();
+		saveMeta();
 		plugin.getParticipantManager().getConfig().set(getName() + ".channels.current", getCurrent());
 		plugin.getParticipantManager().getConfig().set(getName() + ".channels.all", getChannelList());
 		plugin.getParticipantManager().getConfig().set(getName() + ".ignore", new ArrayList<String>(ignorelist));
 		plugin.getParticipantManager().saveConfig();
 	}
 	
-	/**
-	 * Saves the {@link Data} to the data section
-	 */
-	public final void saveData() {
-		ConfigurationSection dataSection = getDataSection();
+	public void saveMeta() {
+		ConfigurationSection meta = getConfiguration().getConfigurationSection("meta");
 		
-		if (dataSection == null)
+		if (meta == null)
 			return;
 		
-		for (String key : new HashSet<String>(dataSection.getKeys(false)))
-			dataSection.set(key, null);
+		for (String key : meta.getKeys(false))
+			meta.set(key, null);
 		
-		for (String key : data.keySet())
-			dataSection.set(key, data.get(key).asString());
-	}
-	
-	public void sendMessage(String... messages) {
-		if (isOnline())
-			asCommandSender().sendMessage(Format.colourise(messages));
-	}
-	
-	/**
-	 * Sets the {@link Data} in the cache
-	 * 
-	 * @param key The key of the data pair
-	 * 
-	 * @param value The new value
-	 */
-	public final void setData(String key, Object value) {
-		setData(key, new Data(value));
-	}
-	
-	/**
-	 * Sets the {@link Data} in the cache
-	 * 
-	 * @param key The key of the data pair
-	 * 
-	 * @param value The new value
-	 */
-	public final void setData(String key, Data value) {
-		this.data.put(key, value);
+		for (String key : getMeta().keySet())
+			meta.set(key, getMeta().get(key));
 	}
 	
 	/**
@@ -753,7 +736,38 @@ public class Participant {
 	 * @param name The new display name
 	 */
 	public void setDisplayName(String name) {
-		setData("display-name", name);
+		setMeta("display-name", name);
+	}
+	
+	/**
+	 * Sets the {@link Meta} in the cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @param value The new value
+	 */
+	public void setMeta(Meta meta) {
+		if (meta == null || meta.key() == null || meta.key().isEmpty())
+			return;
+		
+		if (meta.value() == null)
+			this.meta.remove(meta.key());
+		else
+			this.meta.put(meta.key(), meta);
+	}
+	
+	/**
+	 * Sets the {@link Meta} in the cache
+	 * 
+	 * @param key The key of the data pair
+	 * 
+	 * @param meta The new value
+	 */
+	public final void setMeta(String key, Object meta) {
+		if (key == null || key.isEmpty())
+			return;
+		
+		setMeta(new Meta(key, meta));
 	}
 	
 	/**
@@ -771,5 +785,48 @@ public class Participant {
 			return this;
 		
 		return plugin.getParticipantManager().getParticipant(player.getName());
+	}
+	
+	public static final class Meta {
+		
+		private final String key;
+		private final Object value;
+		
+		public Meta(String key, Object value) {
+			this.key = key;
+			this.value = value;
+		}
+		
+		public boolean booleanValue() {
+			return Boolean.valueOf(stringValue());
+		}
+		
+		public double doubleValue() {
+			return NumberUtils.toDouble(stringValue(), 0.0D);
+		}
+		
+		public float floatValue() {
+			return NumberUtils.toFloat(stringValue(), 0.0F);
+		}
+		
+		public int intValue() {
+			return NumberUtils.toInt(stringValue(), 0);
+		}
+		
+		public String key() {
+			return key;
+		}
+		
+		public long longValue() {
+			return NumberUtils.toLong(stringValue(), 0L);
+		}
+		
+		public String stringValue() {
+			return (value != null) ? value.toString() : "";
+		}
+		
+		public Object value() {
+			return value;
+		}
 	}
 }

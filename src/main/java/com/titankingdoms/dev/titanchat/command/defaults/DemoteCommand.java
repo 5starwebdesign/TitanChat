@@ -55,7 +55,7 @@ public final class DemoteCommand extends Command {
 		}
 		
 		channel.getOperators().remove(participant.getName());
-		participant.sendMessage("&4You have been demoted in " + channel.getName());
+		participant.notice("&4You have been demoted in " + channel.getName());
 		
 		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been demoted");

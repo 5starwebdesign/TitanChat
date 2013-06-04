@@ -60,7 +60,7 @@ public final class KickCommand extends Command {
 		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
 		
 		channel.leave(participant);
-		participant.sendMessage("&4You have been kicked from " + channel.getName() + ": " + reason);
+		participant.notice("&4You have been kicked from " + channel.getName() + ": " + reason);
 		
 		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been kicked");

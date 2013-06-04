@@ -117,6 +117,15 @@ public abstract class Channel extends Loadable implements EndPoint {
 	public abstract String getFormat();
 	
 	/**
+	 * Gets the operators of the {@link Channel}
+	 * 
+	 * @return The operators
+	 */
+	public final Set<String> getOperators() {
+		return operators;
+	}
+	
+	/**
 	 * Gets a list of the names of the {@link Participant}s of the {@link Channel}
 	 * 
 	 * @return A list of the names of the {@link Participant}s of the {@link Channel}
@@ -136,13 +145,8 @@ public abstract class Channel extends Loadable implements EndPoint {
 		return new HashSet<Participant>(participants.values());
 	}
 	
-	/**
-	 * Gets the operators of the {@link Channel}
-	 * 
-	 * @return The operators
-	 */
-	public final Set<String> getOperators() {
-		return operators;
+	public final String getPointType() {
+		return "Channel";
 	}
 	
 	/**
@@ -260,17 +264,17 @@ public abstract class Channel extends Loadable implements EndPoint {
 			participant.leave(this);
 	}
 	
-	public void messageIn(EndPoint sender, String message) {
+	public void messageIn(EndPoint sender, String format, String message) {
 		
 	}
 	
-	public void messageOut(EndPoint recipient, String message) {
+	public void messageOut(EndPoint recipient, String format, String message) {
 		
 	}
 	
-	public void notice(String message) {
+	public void notice(String... messages) {
 		for (Participant participant : participants.values())
-			participant.sendMessage(message);
+			participant.notice(messages);
 	}
 	
 	/**

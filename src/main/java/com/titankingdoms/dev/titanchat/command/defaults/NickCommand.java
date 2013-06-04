@@ -53,7 +53,7 @@ public final class NickCommand extends Command {
 			}
 			
 			participant.setDisplayName(nickname);
-			participant.sendMessage("&6You are now known as " + participant.getDisplayName());
+			participant.notice("&6You are now known as " + participant.getDisplayName());
 			
 		} else if (args[0].equalsIgnoreCase("reset")) {
 			if (args.length > 2) {
@@ -68,7 +68,7 @@ public final class NickCommand extends Command {
 				participant = plugin.getParticipantManager().getParticipant(args[1]);
 			
 			participant.setDisplayName(participant.getName());
-			participant.sendMessage("&6You have reset your display name");
+			participant.notice("&6You have reset your display name");
 			
 		} else {
 			sendMessage(sender, "&4Incorrect usage: /titanchat nick " + getUsage());

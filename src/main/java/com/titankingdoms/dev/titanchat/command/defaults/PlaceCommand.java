@@ -59,7 +59,7 @@ public final class PlaceCommand extends Command {
 		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
 		
 		channel.join(participant);
-		participant.sendMessage("&4You have been placed in " + channel.getName() + ": " + reason);
+		participant.notice("&4You have been placed in " + channel.getName() + ": " + reason);
 		
 		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been placed");

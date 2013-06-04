@@ -55,7 +55,7 @@ public final class PMCommand extends Command {
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);
 		participant.join(target.getPM());
 		sendMessage(sender, "&6You have started a private conversation with " + target.getDisplayName());
-		target.sendMessage(participant.getDisplayName() + " &6has started a private conversation with you");
+		target.notice(participant.getDisplayName() + " &6has started a private conversation with you");
 		
 		if (args.length > 1)
 			participant.chatOut(target.getPM(), StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
