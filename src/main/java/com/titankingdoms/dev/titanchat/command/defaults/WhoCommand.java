@@ -49,7 +49,6 @@ public final class WhoCommand extends Command {
 		sendMessage(sender, "&b" + StringUtils.center(participant.getName(), 50, '='));
 		sendMessage(sender, "&6Status: " + ((participant.isOnline()) ? "&2Online" : "&4Offline"));
 		sendMessage(sender, "&6Current Channel: &b" + participant.getCurrent());
-		sendMessage(sender, "&6Channels: &b" + StringUtils.join(participant.getChannelList(), ", "));
 	}
 	
 	@Override

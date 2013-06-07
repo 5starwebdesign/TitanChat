@@ -29,9 +29,4 @@ public final class ConsoleParticipant extends Participant {
 	public CommandSender asCommandSender() {
 		return plugin.getServer().getConsoleSender();
 	}
-	
-	@Override
-	public Participant toParticipant() {
-		return this;
-	}
 }

@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
@@ -47,7 +48,10 @@ public final class EmoteCommand extends Command {
 			return;
 		}
 		
-		plugin.getParticipantManager().getParticipant(sender).emote(channel, StringUtils.join(args, " "));
+		String format = Format.getEmoteFormat();
+		String message = StringUtils.join(args, " ");
+		
+		channel.messageIn(plugin.getParticipantManager().getParticipant(sender), format, message);
 	}
 	
 	@Override

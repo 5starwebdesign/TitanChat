@@ -2,18 +2,14 @@ channels:
     enable: true
     limit: -1
     range: 15
-pm:
-    display-colour: ''
-    format: '%chtag%prefix%display%suffix whispers: %colour%message'
-emote:
-    format: '* %prefix%display%suffix %message'
 logging:
     chat:
         log: false
         colour: true
     debug: []
 formatting:
-    format: '%chtag%prefix%display%suffix: %colour%message'
+    chat: '%eptag%prefix%display%suffix: %colour%message'
+    emote: '* %prefix%display%suffix %message'
     tag-format:
         default: '%tag%'
         tags:

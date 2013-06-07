@@ -72,9 +72,9 @@ public final class TitanChatListener implements Listener {
 				return;
 			}
 			
-			participant.chatOut(channel, message.substring(message.indexOf(" ") + 1, message.length()));
+			participant.messageOut(channel, message.substring(message.indexOf(" ") + 1, message.length()));
 			
-		} else { participant.chatOut(message); }
+		} else { participant.messageOut(message); }
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
-		if (participant.getCurrentChannel() != null)
+		if (participant.getCurrentEndPoint() != null)
 			participant.notice("&bYou are now speaking in " + participant.getCurrent());
 		
 		if (!plugin.getConfig().getBoolean("update-notify", true))

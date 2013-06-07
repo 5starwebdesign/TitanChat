@@ -65,6 +65,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 16.05.13 - TitanChat v4.1 Release
 * 17.05.13 - Into v4.1.1 development as an improvement update
 * 18.05.13 - Fixed some minor issues
+* 08.06.13 - Code refactor
 
 -----------------------------------------------------------------------------------------------------------------------
 

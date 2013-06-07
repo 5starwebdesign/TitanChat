@@ -17,15 +17,31 @@
 
 package com.titankingdoms.dev.titanchat.core;
 
+import java.util.Set;
+
 public interface EndPoint {
+	
+	public String getDisplayColour();
+	
+	public String getFormat();
+	
+	public Set<EndPoint> getLinkedPoints();
 	
 	public String getName();
 	
 	public String getPointType();
 	
+	public String getTag();
+	
+	public boolean isLinked(EndPoint endpoint);
+	
+	public void link(EndPoint endpoint);
+	
 	public void messageIn(EndPoint sender, String format, String message);
 	
-	public void messageOut(EndPoint recipient, String format, String message);
+	public void messageOut(EndPoint recipient, String message);
 	
 	public void notice(String... messages);
+	
+	public void unlink(EndPoint endpoint);
 }

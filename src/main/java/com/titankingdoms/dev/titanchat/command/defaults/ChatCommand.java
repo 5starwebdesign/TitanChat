@@ -47,7 +47,7 @@ public final class ChatCommand extends Command {
 			return;
 		}
 		
-		plugin.getParticipantManager().getParticipant(sender).chatOut(channel, StringUtils.join(args, " "));
+		plugin.getParticipantManager().getParticipant(sender).messageOut(channel, StringUtils.join(args, " "));
 	}
 	
 	@Override

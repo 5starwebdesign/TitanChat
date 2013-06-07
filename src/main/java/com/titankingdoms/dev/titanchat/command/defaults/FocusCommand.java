@@ -55,12 +55,12 @@ public final class FocusCommand extends Command {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);
 		
-		if (channel.equals(participant.getCurrentChannel())) {
+		if (channel.equals(participant.getCurrentEndPoint())) {
 			sendMessage(sender, "&4You are already speaking in the channel");
 			return;
 		}
 		
-		participant.direct(channel);
+		participant.focus(channel);
 		sendMessage(sender, "&6You are now speaking in " + channel.getName());
 	}
 	

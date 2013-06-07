@@ -29,7 +29,8 @@ import com.titankingdoms.dev.titanchat.TitanChat;
  */
 public final class Format {
 	
-	private static final String DEFAULT_FORMAT = "%chtag%prefix%display%suffix\u00A7f: %colour%message";
+	private static final String CHAT_FORMAT = "%eptag%prefix%display%suffix\u00A7f: %colour%message";
+	private static final String EMOTE_FORMAT = "* %prefix%display%suffix \u00A7f%message";
 	
 	/**
 	 * Colourises the text
@@ -86,21 +87,30 @@ public final class Format {
 	}
 	
 	/**
-	 * Gets the default format
-	 * 
-	 * @return The default format
-	 */
-	public static String getDefaultFormat() {
-		return DEFAULT_FORMAT;
-	}
-	
-	/**
 	 * Gets the format
 	 * 
 	 * @return The format
 	 */
-	public static String getFormat() {
+	public static String getChatFormat() {
 		FileConfiguration config = TitanChat.getInstance().getConfig();
-		return colourise(config.getString("formatting.format", DEFAULT_FORMAT));
+		return colourise(config.getString("formatting.chat", CHAT_FORMAT));
+	}
+	
+	/**
+	 * Gets the default format
+	 * 
+	 * @return The default format
+	 */
+	public static String getDefaultChatFormat() {
+		return CHAT_FORMAT;
+	}
+	
+	public static String getDefaultEmoteFormat() {
+		return EMOTE_FORMAT;
+	}
+	
+	public static String getEmoteFormat() {
+		FileConfiguration config = TitanChat.getInstance().getConfig();
+		return colourise(config.getString("formatting.emote", EMOTE_FORMAT));
 	}
 }

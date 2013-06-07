@@ -127,9 +127,9 @@ public final class CommandManager {
 				new CreateCommand(), new DeleteCommand(), new ListCommand(),
 				new BlacklistCommand(), new KickCommand(), new PlaceCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
-				new FocusCommand(), new IgnoreCommand(), new JoinCommand(), new LeaveCommand(),
+				new FocusCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
-				new ChatCommand(), new EmoteCommand(), new NickCommand(), new PMCommand(),
+				new ChatCommand(), new EmoteCommand(), new NickCommand(), new PrivMsgCommand(),
 				new WhoCommand()
 		);
 		
@@ -179,9 +179,9 @@ public final class CommandManager {
 				new CreateCommand(), new DeleteCommand(), new ListCommand(),
 				new BlacklistCommand(), new KickCommand(), new PlaceCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
-				new FocusCommand(), new IgnoreCommand(), new JoinCommand(), new LeaveCommand(),
+				new FocusCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
-				new ChatCommand(), new EmoteCommand(), new NickCommand(), new PMCommand(),
+				new ChatCommand(), new EmoteCommand(), new NickCommand(), new PrivMsgCommand(),
 				new WhoCommand()
 		);
 		

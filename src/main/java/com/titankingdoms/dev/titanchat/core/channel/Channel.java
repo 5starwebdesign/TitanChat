@@ -116,6 +116,10 @@ public abstract class Channel extends Loadable implements EndPoint {
 	 */
 	public abstract String getFormat();
 	
+	public Set<EndPoint> getLinkedPoints() {
+		return new HashSet<EndPoint>();
+	}
+	
 	/**
 	 * Gets the operators of the {@link Channel}
 	 * 
@@ -196,6 +200,10 @@ public abstract class Channel extends Loadable implements EndPoint {
 		operators.addAll(getConfig().getStringList("operators"));
 	}
 	
+	public boolean isLinked(EndPoint endpoint) {
+		return false;
+	}
+	
 	/**
 	 * Checks if the specified {@link Participant} is participating in the {@link Channel}
 	 * 
@@ -237,8 +245,8 @@ public abstract class Channel extends Loadable implements EndPoint {
 			db.debug(Level.INFO, getName() + " Channel Join: " + participant.getName());
 		}
 		
-		if (!participant.isParticipating(this))
-			participant.join(this);
+		if (!participant.isLinked(this))
+			participant.link(this);
 	}
 	
 	/**
@@ -260,15 +268,19 @@ public abstract class Channel extends Loadable implements EndPoint {
 			db.debug(Level.INFO, getName() + " Channel Leave: " + participant.getName());
 		}
 		
-		if (participant.isParticipating(this))
-			participant.leave(this);
+		if (participant.isLinked(this))
+			participant.unlink(this);
+	}
+	
+	public void link(EndPoint endpoint) {
+		
 	}
 	
 	public void messageIn(EndPoint sender, String format, String message) {
 		
 	}
 	
-	public void messageOut(EndPoint recipient, String format, String message) {
+	public void messageOut(EndPoint recipient, String message) {
 		
 	}
 	
@@ -344,5 +356,9 @@ public abstract class Channel extends Loadable implements EndPoint {
 		getConfig().set("whitelist", new ArrayList<String>(whitelist));
 		getConfig().set("operators", new ArrayList<String>(operators));
 		saveConfig();
+	}
+	
+	public void unlink(EndPoint endpoint) {
+		
 	}
 }

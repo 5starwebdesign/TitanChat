@@ -49,7 +49,7 @@ public class StandardChannel extends Channel {
 	
 	@Override
 	public String getFormat() {
-		return getConfig().getString("format", Format.getFormat());
+		return getConfig().getString("format", Format.getChatFormat());
 	}
 	
 	@Override

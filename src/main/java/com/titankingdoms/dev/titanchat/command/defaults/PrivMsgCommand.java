@@ -28,16 +28,16 @@ import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
- * {@link PMCommand} - Command for private messaging
+ * {@link PrivMsgCommand} - Command for private messaging
  * 
  * @author NodinChan
  *
  */
-public final class PMCommand extends Command {
+public final class PrivMsgCommand extends Command {
 
-	public PMCommand() {
-		super("PM");
-		setAliases("msg", "privmsg");
+	public PrivMsgCommand() {
+		super("PrivMsg");
+		setAliases("msg", "pm");
 		setArgumentRange(1, 1024);
 		setDescription("Private messaging");
 		setUsage("<player> [message]");
@@ -53,12 +53,12 @@ public final class PMCommand extends Command {
 		}
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);
-		participant.join(target.getPM());
+		participant.link(target);
 		sendMessage(sender, "&6You have started a private conversation with " + target.getDisplayName());
 		target.notice(participant.getDisplayName() + " &6has started a private conversation with you");
 		
 		if (args.length > 1)
-			participant.chatOut(target.getPM(), StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
+			participant.messageOut(target, StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
 	}
 
 	@Override

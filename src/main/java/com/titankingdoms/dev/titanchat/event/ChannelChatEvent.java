@@ -43,7 +43,7 @@ public final class ChannelChatEvent extends ChannelEvent {
 	private String message;
 	
 	public ChannelChatEvent(Participant sender, Channel channel, String message) {
-		this(sender, channel, Format.getFormat(), message);
+		this(sender, channel, Format.getChatFormat(), message);
 	}
 	
 	public ChannelChatEvent(Participant sender, Channel channel, String format, String message) {

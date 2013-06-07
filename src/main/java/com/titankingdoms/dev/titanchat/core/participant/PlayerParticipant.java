@@ -83,9 +83,4 @@ public final class PlayerParticipant extends Participant {
 		
 		super.setDisplayName(name);
 	}
-	
-	@Override
-	public Participant toParticipant() {
-		return this;
-	}
 }
