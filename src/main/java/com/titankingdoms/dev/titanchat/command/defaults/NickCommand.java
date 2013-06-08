@@ -3,7 +3,6 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.ConsoleParticipant;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
@@ -23,7 +22,7 @@ public final class NickCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, Channel channel, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		if (args[0].equalsIgnoreCase("set")) {
 			if (args.length < 2) {
 				sendMessage(sender, "&4Invalid argument length");
@@ -76,7 +75,7 @@ public final class NickCommand extends Command {
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender, Channel channel) {
+	public boolean permissionCheck(CommandSender sender) {
 		return true;
 	}
 }

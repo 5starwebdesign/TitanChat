@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.command.ChannelCommand;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -30,7 +30,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class DemoteCommand extends Command {
+public final class DemoteCommand extends ChannelCommand {
 	
 	public DemoteCommand() {
 		super("Demote");
@@ -42,11 +42,6 @@ public final class DemoteCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		if (channel == null) {
-			sendMessage(sender, "&4Channel not defined");
-			return;
-		}
-		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
 		if (!channel.getOperators().contains(participant.getName())) {

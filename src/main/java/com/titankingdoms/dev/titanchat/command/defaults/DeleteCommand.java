@@ -42,13 +42,13 @@ public final class DeleteCommand extends Command {
 	}
 
 	@Override
-	public void execute(CommandSender sender, Channel channel, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		if (!plugin.getChannelManager().hasChannel(args[0])) {
 			sendMessage(sender, "&4Channel does not exist");
 			return;
 		}
 		
-		channel = plugin.getChannelManager().getChannel(args[0]);
+		Channel channel = plugin.getChannelManager().getChannel(args[0]);
 		plugin.getChannelManager().unregisterChannel(channel);
 		
 		ChannelDeletionEvent event = new ChannelDeletionEvent(channel);
@@ -66,7 +66,7 @@ public final class DeleteCommand extends Command {
 	}
 
 	@Override
-	public boolean permissionCheck(CommandSender sender, Channel channel) {
+	public boolean permissionCheck(CommandSender sender) {
 		return Vault.hasPermission(sender, "TitanChat.delete");
 	}
 }

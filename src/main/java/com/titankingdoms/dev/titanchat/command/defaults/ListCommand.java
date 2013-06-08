@@ -41,7 +41,7 @@ public final class ListCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, Channel channel, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		String header = "&b" + StringUtils.center(" Channel List ", 50, '=');
 		
 		StringBuilder list = new StringBuilder();
@@ -72,7 +72,7 @@ public final class ListCommand extends Command {
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender, Channel channel) {
+	public boolean permissionCheck(CommandSender sender) {
 		return true;
 	}
 }

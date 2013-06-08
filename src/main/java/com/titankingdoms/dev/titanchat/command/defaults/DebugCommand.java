@@ -26,7 +26,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
@@ -47,7 +46,7 @@ public final class DebugCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, Channel channel, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		if (args[0].equalsIgnoreCase("start")) {
 			List<String> ids = Arrays.asList(Arrays.copyOfRange(args, 1, args.length));
 			
@@ -74,7 +73,7 @@ public final class DebugCommand extends Command {
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender, Channel channel) {
+	public boolean permissionCheck(CommandSender sender) {
 		return Vault.hasPermission(sender, "TitanChat.debug");
 	}
 }

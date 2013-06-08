@@ -45,7 +45,7 @@ public final class CreateCommand extends Command {
 	}
 
 	@Override
-	public void execute(CommandSender sender, Channel channel, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		if (plugin.getChannelManager().hasChannel(args[0])) {
 			sendMessage(sender, "&4Channel already exists");
 			return;
@@ -76,7 +76,7 @@ public final class CreateCommand extends Command {
 		}
 		
 		ChannelLoader loader = plugin.getChannelManager().getLoader(type);
-		channel = loader.construct(args[0]);
+		Channel channel = loader.construct(args[0]);
 		
 		if (channel == null) {
 			sendMessage(sender, "&4Failed to create channel");
@@ -98,7 +98,7 @@ public final class CreateCommand extends Command {
 	}
 
 	@Override
-	public boolean permissionCheck(CommandSender sender, Channel channel) {
+	public boolean permissionCheck(CommandSender sender) {
 		return Vault.hasPermission(sender, "TitanChat.create");
 	}
 }

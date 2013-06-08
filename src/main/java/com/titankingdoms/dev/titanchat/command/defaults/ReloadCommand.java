@@ -20,7 +20,6 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
@@ -38,14 +37,14 @@ public final class ReloadCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, Channel channel, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		sendMessage(sender, "&6TitanChat is now reloading...");
 		plugin.onReload();
 		sendMessage(sender, "&6TitanChat is now reloaded");
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender, Channel channel) {
+	public boolean permissionCheck(CommandSender sender) {
 		return Vault.hasPermission(sender, "TitanChat.reload");
 	}
 }

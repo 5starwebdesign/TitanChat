@@ -22,7 +22,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.topic.Index;
@@ -47,7 +46,7 @@ public final class HelpCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, Channel channel, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		TopicManager manager = plugin.getTopicManager();
 		
 		Topic topic = manager.getGeneralIndex();
@@ -96,7 +95,7 @@ public final class HelpCommand extends Command {
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender, Channel channel) {
+	public boolean permissionCheck(CommandSender sender) {
 		return true;
 	}
 }

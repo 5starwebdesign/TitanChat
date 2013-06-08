@@ -90,11 +90,9 @@ public abstract class Command extends Loadable {
 	 * 
 	 * @param sender The {@link CommandSender}
 	 * 
-	 * @param channel The targetted {@link Channel}
-	 * 
 	 * @param args The arguments of the command
 	 */
-	public abstract void execute(CommandSender sender, Channel channel, String[] args);
+	public abstract void execute(CommandSender sender, String[] args);
 	
 	/**
 	 * Gets the aliases of the {@link Command}
@@ -155,11 +153,9 @@ public abstract class Command extends Loadable {
 	 * 
 	 * @param sender The {@link CommandSender}
 	 * 
-	 * @param channel The targetted {@link Channel}
-	 * 
 	 * @return True if the {@link CommandSender} has permission
 	 */
-	public abstract boolean permissionCheck(CommandSender sender, Channel channel);
+	public abstract boolean permissionCheck(CommandSender sender);
 	
 	/**
 	 * Registers the {@link ChatAddon}s

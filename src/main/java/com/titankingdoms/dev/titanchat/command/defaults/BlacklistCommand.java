@@ -22,7 +22,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.command.ChannelCommand;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -33,7 +33,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class BlacklistCommand extends Command {
+public final class BlacklistCommand extends ChannelCommand {
 	
 	public BlacklistCommand() {
 		super("Blacklist");
@@ -45,11 +45,6 @@ public final class BlacklistCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		if (channel == null) {
-			sendMessage(sender, "&4Channel not defined");
-			return;
-		}
-		
 		if (args[0].equals("list")) {
 			String list = StringUtils.join(channel.getBlacklist(), ", ");
 			sendMessage(sender, "&6" + channel.getName() + " Blacklist: " + list);

@@ -22,7 +22,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.command.ChannelCommand;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -33,7 +33,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class WhitelistCommand extends Command {
+public final class WhitelistCommand extends ChannelCommand {
 	
 	public WhitelistCommand() {
 		super("Whitelist");

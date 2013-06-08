@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.command.ChannelCommand;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -30,7 +30,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class PromoteCommand extends Command {
+public final class PromoteCommand extends ChannelCommand {
 	
 	public PromoteCommand() {
 		super("Promote");
