@@ -47,17 +47,17 @@ public final class KickCommand extends ChannelCommand {
 	public void execute(CommandSender sender, Channel channel, String[] args) {
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
-		if (!channel.isParticipating(participant)) {
+		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
 			sendMessage(sender, participant.getDisplayName() + " &4is not on the channel");
 			return;
 		}
 		
 		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
 		
-		channel.leave(participant);
+		channel.unlink(participant);
 		participant.notice("&4You have been kicked from " + channel.getName() + ": " + reason);
 		
-		if (!channel.isParticipating(sender.getName()))
+		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 			sendMessage(sender, participant.getDisplayName() + " &6has been kicked");
 		
 		channel.notice(participant.getDisplayName() + " &6has been kicked");

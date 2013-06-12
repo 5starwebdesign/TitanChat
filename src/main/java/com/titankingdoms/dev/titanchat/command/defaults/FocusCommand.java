@@ -48,12 +48,12 @@ public final class FocusCommand extends Command {
 		
 		Channel channel = plugin.getChannelManager().getChannel(args[0]);
 		
-		if (!channel.isParticipating(sender.getName())) {
+		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
 			plugin.getServer().dispatchCommand(sender, "titanchat join " + channel.getName());
 			return;
 		}
 		
-		if (!channel.isParticipating(sender.getName()))
+		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 			return;
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);

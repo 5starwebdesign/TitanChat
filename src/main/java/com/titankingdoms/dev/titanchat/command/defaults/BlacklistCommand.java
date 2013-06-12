@@ -66,7 +66,7 @@ public final class BlacklistCommand extends ChannelCommand {
 				return;
 			}
 			
-			channel.leave(participant);
+			channel.unlink(participant);
 			channel.getBlacklist().add(participant.getName());
 			participant.notice("&4You have been added to the blacklist of " + channel.getName());
 			
@@ -75,7 +75,7 @@ public final class BlacklistCommand extends ChannelCommand {
 				participant.notice("&4Reason: " + reason);
 			}
 			
-			if (!channel.isParticipating(sender.getName()))
+			if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 				sendMessage(sender, participant.getDisplayName() + " &6has been added to the blacklist");
 			
 			channel.notice(participant.getDisplayName() + " &6has been added to the blacklist");
@@ -94,7 +94,7 @@ public final class BlacklistCommand extends ChannelCommand {
 				participant.notice("&6Reason: " + reason);
 			}
 			
-			if (!channel.isParticipating(sender.getName()))
+			if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 				sendMessage(sender, participant.getDisplayName() + " &6has been removed from the blacklist");
 			
 			channel.notice(participant.getDisplayName() + " &6has been removed from the blacklist");

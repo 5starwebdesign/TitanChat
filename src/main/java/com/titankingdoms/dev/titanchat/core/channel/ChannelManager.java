@@ -31,11 +31,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.channel.standard.ServerChannel;
 import com.titankingdoms.dev.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.dev.titanchat.core.channel.temporary.TemporaryLoader;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Permissions;
 import com.titankingdoms.dev.titanchat.util.loading.Loader;
@@ -339,8 +339,8 @@ public final class ChannelManager {
 		
 		for (Channel channel : getChannels()) {
 			if (!channel.getConfigFile().exists()) {
-				for (Participant participant : channel.getParticipants())
-					channel.leave(participant);
+				for (EndPoint endpoint : channel.getLinkedPoints())
+					channel.unlink(endpoint);
 				
 				unregisterChannel(channel);
 				continue;

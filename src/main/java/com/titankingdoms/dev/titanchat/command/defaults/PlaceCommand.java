@@ -46,17 +46,17 @@ public final class PlaceCommand extends ChannelCommand {
 	public void execute(CommandSender sender, Channel channel, String[] args) {
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
-		if (channel.isParticipating(participant)) {
+		if (channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
 			sendMessage(sender, participant.getDisplayName() + " &4is already on the channel");
 			return;
 		}
 		
 		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
 		
-		channel.join(participant);
+		channel.link(participant);
 		participant.notice("&4You have been placed in " + channel.getName() + ": " + reason);
 		
-		if (!channel.isParticipating(sender.getName()))
+		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 			sendMessage(sender, participant.getDisplayName() + " &6has been placed");
 		
 		channel.notice(participant.getDisplayName() + " &6has been placed");

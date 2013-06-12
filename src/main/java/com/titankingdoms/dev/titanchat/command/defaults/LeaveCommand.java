@@ -55,12 +55,12 @@ public final class LeaveCommand extends Command {
 			}
 		}
 		
-		if (!channel.isParticipating(sender.getName())) {
+		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
 			sendMessage(sender, "&4You have not joined the channel");
 			return;
 		}
 		
-		channel.leave(plugin.getParticipantManager().getParticipant(sender));
+		channel.unlink(plugin.getParticipantManager().getParticipant(sender));
 		sendMessage(sender, "&6You have left " + channel.getName());
 	}
 	

@@ -56,7 +56,7 @@ public final class JoinCommand extends Command {
 			}
 		}
 		
-		if (channel.isParticipating(sender.getName())) {
+		if (channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
 			sendMessage(sender, "&4You have already joined the channel");
 			return;
 		}
@@ -90,7 +90,7 @@ public final class JoinCommand extends Command {
 			}
 		}
 		
-		channel.join(plugin.getParticipantManager().getParticipant(sender));
+		channel.link(plugin.getParticipantManager().getParticipant(sender));
 		sendMessage(sender, "&6You have joined " + channel.getName());
 	}
 	

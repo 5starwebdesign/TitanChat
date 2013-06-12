@@ -20,8 +20,8 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.event.ChannelDeletionEvent;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
@@ -54,13 +54,13 @@ public final class DeleteCommand extends Command {
 		ChannelDeletionEvent event = new ChannelDeletionEvent(channel);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
-		if (!channel.isParticipating(sender.getName()))
+		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 			sendMessage(sender, "&6" + channel.getName() + " has been deleted");
 		
 		channel.notice("&6" + channel.getName() + " has been deleted");
 		
-		for (Participant participant : channel.getParticipants())
-			channel.leave(participant);
+		for (EndPoint endpoint : channel.getLinkedPoints())
+			channel.unlink(endpoint);
 		
 		channel.getConfigFile().delete();
 	}

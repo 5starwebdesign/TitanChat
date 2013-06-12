@@ -57,7 +57,7 @@ public final class PromoteCommand extends ChannelCommand {
 		channel.getOperators().add(participant.getName());
 		participant.notice("&6You have been promoted in " + channel.getName());
 		
-		if (!channel.isParticipating(sender.getName()))
+		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 			sendMessage(sender, participant.getDisplayName() + " &6has been promoted");
 		
 		channel.notice(participant.getDisplayName() + " &6has been promoted");

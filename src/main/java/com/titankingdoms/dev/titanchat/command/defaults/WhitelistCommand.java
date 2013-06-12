@@ -86,7 +86,7 @@ public final class WhitelistCommand extends ChannelCommand {
 				participant.notice("&6Reason: " + reason);
 			}
 			
-			if (!channel.isParticipating(sender.getName()))
+			if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 				sendMessage(sender, participant.getDisplayName() + " &6has been added to the whitelist");
 			
 			channel.notice(participant.getDisplayName() + " &6has been added to the whitelist");
@@ -105,7 +105,7 @@ public final class WhitelistCommand extends ChannelCommand {
 				participant.notice("&4Reason: " + reason);
 			}
 			
-			if (!channel.isParticipating(sender.getName()))
+			if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
 				sendMessage(sender, participant.getDisplayName() + " &6has been removed from the whitelist");
 			
 			channel.notice(participant.getDisplayName() + " &6has been removed from the whitelist");

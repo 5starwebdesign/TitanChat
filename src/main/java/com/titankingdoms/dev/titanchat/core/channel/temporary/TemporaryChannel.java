@@ -39,12 +39,10 @@ public final class TemporaryChannel extends Channel {
 		return new String[0];
 	}
 	
-	@Override
 	public String getDisplayColour() {
 		return "";
 	}
 	
-	@Override
 	public String getFormat() {
 		return Format.getChatFormat();
 	}
@@ -54,7 +52,6 @@ public final class TemporaryChannel extends Channel {
 		return Range.CHANNEL;
 	}
 	
-	@Override
 	public String getTag() {
 		return getName();
 	}

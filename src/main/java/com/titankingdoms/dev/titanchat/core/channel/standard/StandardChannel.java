@@ -42,12 +42,10 @@ public class StandardChannel extends Channel {
 		return getConfig().getStringList("aliases").toArray(new String[0]);
 	}
 	
-	@Override
 	public String getDisplayColour() {
 		return getConfig().getString("display-colour", "");
 	}
 	
-	@Override
 	public String getFormat() {
 		return getConfig().getString("format", Format.getChatFormat());
 	}
@@ -57,7 +55,6 @@ public class StandardChannel extends Channel {
 		return Range.fromName(getConfig().getString("range", "channel"));
 	}
 	
-	@Override
 	public String getTag() {
 		return getConfig().getString("tag", "");
 	}

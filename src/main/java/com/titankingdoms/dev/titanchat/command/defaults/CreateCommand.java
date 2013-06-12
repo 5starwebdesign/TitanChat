@@ -89,7 +89,7 @@ public final class CreateCommand extends Command {
 		ChannelCreationEvent event = new ChannelCreationEvent(channel);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
-		channel.join(plugin.getParticipantManager().getParticipant(sender));
+		channel.link(plugin.getParticipantManager().getParticipant(sender));
 		channel.getOperators().add(sender.getName());
 		sendMessage(sender, "&6" + channel.getName() + " has been created");
 		
