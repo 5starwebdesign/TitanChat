@@ -17,12 +17,12 @@
 
 package com.titankingdoms.dev.titanchat.format.tag.defaults;
 
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
 /**
- * {@link ColourTag} - {@link Tag} for the chat display colour of the {@link Channel}
+ * {@link ColourTag} - {@link Tag} for the chat display colour of the {@link EndPoint}
  * 
  * @author NodinChan
  *
@@ -34,7 +34,10 @@ public final class ColourTag extends Tag {
 	}
 	
 	@Override
-	public String getVariable(Participant participant, Channel channel) {
-		return channel.getDisplayColour();
+	public String getVariable(EndPoint sender, EndPoint recipient) {
+		if (!(sender instanceof Channel))
+			return "";
+		
+		return ((Channel) recipient).getDisplayColour();
 	}
 }

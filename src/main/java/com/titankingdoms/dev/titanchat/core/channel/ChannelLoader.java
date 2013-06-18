@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.core.channel;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
 import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
 /**

@@ -105,13 +105,12 @@ public class TagManager {
 	 */
 	public void load() {
 		registerTags(
-				new ChannelTag(),
+				new EndPointTag(),
 				new ColourTag(),
 				new DisplayNameTag(),
 				new NameTag(),
 				new PrefixTag(),
-				new SuffixTag(),
-				new WorldTag()
+				new SuffixTag()
 		);
 		
 		ConfigurationSection staticTags = plugin.getConfig().getConfigurationSection("formatting.static-tags");
@@ -156,13 +155,12 @@ public class TagManager {
 			unregisterTag(tag);
 		
 		registerTags(
-				new ChannelTag(),
+				new EndPointTag(),
 				new ColourTag(),
 				new DisplayNameTag(),
 				new NameTag(),
 				new PrefixTag(),
-				new SuffixTag(),
-				new WorldTag()
+				new SuffixTag()
 		);
 		
 		if (!tags.isEmpty())

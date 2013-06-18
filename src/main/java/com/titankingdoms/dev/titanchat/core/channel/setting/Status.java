@@ -15,37 +15,38 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel.info;
+package com.titankingdoms.dev.titanchat.core.channel.setting;
 
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * {@link Range} - The {@link Channel} communication range
+ * {@link Status} - The {@link Channel} status
  * 
  * @author NodinChan
  *
  */
-public enum Range {
-	CHANNEL("channel"),
-	GLOBAL("global"),
-	LOCAL("local"),
-	WORLD("world");
+public enum Status {
+	CONVERSATION("conversation"),
+	DEFAULT("default"),
+	NONE("none"),
+	STAFF("staff"),
+	TEMPORARY("temporary");
 	
 	private String name;
-	private static final Map<String, Range> NAME_MAP = new HashMap<String, Range>();
+	private static final Map<String, Status> NAME_MAP = new HashMap<String, Status>();
 	
-	private Range(String name) {
+	private Status(String name) {
 		this.name = name;
 	}
 	
 	static {
-		for (Range range : EnumSet.allOf(Range.class))
-			NAME_MAP.put(range.name, range);
+		for (Status type : EnumSet.allOf(Status.class))
+			NAME_MAP.put(type.name, type);
 	}
 	
-	public static Range fromName(String name) {
+	public static Status fromName(String name) {
 		return NAME_MAP.get(name.toLowerCase());
 	}
 	

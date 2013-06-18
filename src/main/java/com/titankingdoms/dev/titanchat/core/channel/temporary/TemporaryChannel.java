@@ -18,8 +18,8 @@
 package com.titankingdoms.dev.titanchat.core.channel.temporary;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.channel.info.Range;
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.core.channel.setting.Range;
+import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
 import com.titankingdoms.dev.titanchat.format.Format;
 
 /**

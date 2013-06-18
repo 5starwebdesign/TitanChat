@@ -17,12 +17,11 @@
 
 package com.titankingdoms.dev.titanchat.format.tag.defaults;
 
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
 /**
- * {@link NameTag} - {@link Tag} for the name of the {@link Participant}
+ * {@link NameTag} - {@link Tag} for the name of the {@link EndPoint}
  * 
  * @author NodinChan
  *
@@ -34,7 +33,7 @@ public final class NameTag extends Tag {
 	}
 	
 	@Override
-	public String getVariable(Participant participant, Channel channel) {
-		return participant.getName();
+	public String getVariable(EndPoint sender, EndPoint recipient) {
+		return sender.getName();
 	}
 }

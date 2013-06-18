@@ -17,28 +17,27 @@
 
 package com.titankingdoms.dev.titanchat.format.tag.defaults;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
 /**
- * {@link WorldTag} - {@link Tag} for the {@link World} of the {@link Participant}
+ * {@link EndPointTag} - {@link Tag} for the tag of the {@link EndPoint}
  * 
  * @author NodinChan
  *
  */
-public final class WorldTag extends Tag {
+public final class EndPointTag extends Tag {
 	
-	public WorldTag() {
-		super("%world");
+	public EndPointTag() {
+		super("%eptag");
 	}
 	
 	@Override
-	public String getVariable(Participant participant, Channel channel) {
-		CommandSender sender = participant.asCommandSender();
-		return (sender instanceof Player) ? ((Player) sender).getWorld().getName() : "";
+	public String getVariable(EndPoint sender, EndPoint recipient) {
+		if (!(sender instanceof Channel))
+			return "";
+		
+		return ((Channel) recipient).getTag();
 	}
 }

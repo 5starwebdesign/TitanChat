@@ -21,17 +21,13 @@ import java.util.Set;
 
 public interface EndPoint {
 	
-	public String getDisplayColour();
-	
-	public String getFormat();
-	
 	public Set<EndPoint> getLinkedPoints();
 	
 	public String getName();
 	
 	public String getPointType();
 	
-	public String getTag();
+	public Message handleMessage(EndPoint sender, String message);
 	
 	public boolean isLinked(EndPoint endpoint);
 	

@@ -1,7 +1,6 @@
 package com.titankingdoms.dev.titanchat.format.tag;
 
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 
 public final class StaticTag extends Tag {
 	
@@ -13,7 +12,7 @@ public final class StaticTag extends Tag {
 	}
 	
 	@Override
-	public String getVariable(Participant participant, Channel channel) {
+	public String getVariable(EndPoint sender, EndPoint recipient) {
 		return variable;
 	}
 }

@@ -15,26 +15,41 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.format.tag.defaults;
+package com.titankingdoms.dev.titanchat.core.channel.setting;
 
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.format.tag.Tag;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * {@link ChannelTag} - {@link Tag} for the tag of the {@link Channel}
+ * {@link Range} - The {@link Channel} communication range
  * 
  * @author NodinChan
  *
  */
-public final class ChannelTag extends Tag {
+public enum Range {
+	CHANNEL("channel"),
+	GLOBAL("global"),
+	LOCAL("local"),
+	WORLD("world");
 	
-	public ChannelTag() {
-		super("%chtag");
+	private String name;
+	private static final Map<String, Range> NAME_MAP = new HashMap<String, Range>();
+	
+	private Range(String name) {
+		this.name = name;
 	}
 	
-	@Override
-	public String getVariable(Participant participant, Channel channel) {
-		return channel.getTag();
+	static {
+		for (Range range : EnumSet.allOf(Range.class))
+			NAME_MAP.put(range.name, range);
+	}
+	
+	public static Range fromName(String name) {
+		return NAME_MAP.get(name.toLowerCase());
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

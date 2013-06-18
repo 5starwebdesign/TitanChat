@@ -26,8 +26,9 @@ import java.util.Set;
 
 import com.titankingdoms.dev.titanchat.addon.ChatAddon;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.channel.info.Range;
-import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.core.Message;
+import com.titankingdoms.dev.titanchat.core.channel.setting.Range;
+import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.loading.Loadable;
@@ -76,7 +77,11 @@ public abstract class Channel extends Loadable implements EndPoint {
 		return plugin.getResource("channel.yml");
 	}
 	
-	public Set<EndPoint> getLinkedPoints() {
+	public abstract String getDisplayColour();
+	
+	public abstract String getFormat();
+	
+	public final Set<EndPoint> getLinkedPoints() {
 		return new HashSet<EndPoint>(endpoints.values());
 	}
 	
@@ -104,6 +109,8 @@ public abstract class Channel extends Loadable implements EndPoint {
 		return status;
 	}
 	
+	public abstract String getTag();
+	
 	public final String getType() {
 		return type;
 	}
@@ -112,18 +119,22 @@ public abstract class Channel extends Loadable implements EndPoint {
 		return whitelist;
 	}
 	
+	public Message handleMessage(EndPoint sender, String message) {
+		return new Message(sender, new HashSet<EndPoint>(), "", message);
+	}
+	
 	public void init() {
 		
 	}
 	
-	public boolean isLinked(EndPoint endpoint) {
+	public final boolean isLinked(EndPoint endpoint) {
 		if (endpoint == null)
 			return false;
 		
 		return endpoints.containsKey((endpoint.getPointType() + ":" + endpoint.getName()).toLowerCase());
 	}
 	
-	public void link(EndPoint endpoint) {
+	public final void link(EndPoint endpoint) {
 		if (endpoint == null || endpoint instanceof Channel)
 			return;
 		
@@ -134,7 +145,7 @@ public abstract class Channel extends Loadable implements EndPoint {
 			endpoint.link(this);
 	}
 	
-	public void messageIn(EndPoint sender, String format, String message) {
+	public final void messageIn(EndPoint sender, String format, String message) {
 		if (sender == null || format == null || format.isEmpty() || message == null || message.isEmpty())
 			return;
 		
@@ -142,9 +153,9 @@ public abstract class Channel extends Loadable implements EndPoint {
 			endpoint.messageIn(sender, getFormat(), message);
 	}
 	
-	public void messageOut(EndPoint recipient, String message) {}
+	public final void messageOut(EndPoint recipient, String message) {}
 	
-	public void notice(String... messages) {
+	public final void notice(String... messages) {
 		for (EndPoint endpoint : getLinkedPoints())
 			if (endpoint instanceof Participant)
 				endpoint.notice(messages);
@@ -166,7 +177,7 @@ public abstract class Channel extends Loadable implements EndPoint {
 		
 	}
 	
-	public void unlink(EndPoint endpoint) {
+	public final void unlink(EndPoint endpoint) {
 		if (endpoint == null || endpoint instanceof Channel)
 			return;
 		

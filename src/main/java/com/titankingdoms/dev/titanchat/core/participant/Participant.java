@@ -32,6 +32,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.core.Message;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -87,10 +88,6 @@ public class Participant implements EndPoint {
 		return current;
 	}
 	
-	public String getDisplayColour() {
-		return "";
-	}
-	
 	public String getDisplayName() {
 		return getMeta("display-name", getName()).stringValue();
 	}
@@ -113,10 +110,6 @@ public class Participant implements EndPoint {
 	
 	public final Set<EndPoint> getLinkedPoints() {
 		return new HashSet<EndPoint>(endpoints.values());
-	}
-	
-	public String getFormat() {
-		return Format.getChatFormat();
 	}
 	
 	public Map<String, Meta> getMeta() {
@@ -153,8 +146,8 @@ public class Participant implements EndPoint {
 		return getMeta("suffix", "").stringValue();
 	}
 	
-	public final String getTag() {
-		return "PrivMsg";
+	public Message handleMessage(EndPoint sender, String message) {
+		return new Message(sender, new HashSet<EndPoint>(), "", message);
 	}
 	
 	public final boolean hasPermission(String node) {
@@ -190,18 +183,14 @@ public class Participant implements EndPoint {
 			focus(endpoint);
 	}
 	
-	public void messageIn(EndPoint sender, String format, String message) {
+	public final void messageIn(EndPoint sender, String format, String message) {
 		if (sender == null || format == null || format.isEmpty() || message == null || message.isEmpty())
 			return;
-		
-		notice(format.replace("%message", message));
 	}
 	
-	public void messageOut(EndPoint recipient, String message) {
+	public final void messageOut(EndPoint recipient, String message) {
 		if (recipient == null || message == null || message.isEmpty())
 			return;
-		
-		recipient.messageIn(this, recipient.getFormat(), message);
 	}
 	
 	public final void messageOut(String message) {

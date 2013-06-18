@@ -18,8 +18,7 @@
 package com.titankingdoms.dev.titanchat.format.tag;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 
 /**
  * {@link Tag} - Tag for formatting
@@ -60,11 +59,11 @@ public abstract class Tag {
 	/**
 	 * Gets the variable represented by the tag
 	 * 
-	 * @param participant The {@link Participant} chatting
+	 * @param sender The message sender
 	 * 
-	 * @param channel The {@link Channel} being chat in
+	 * @param recipient The message recipient
 	 * 
 	 * @return The variable
 	 */
-	public abstract String getVariable(Participant participant, Channel channel);
+	public abstract String getVariable(EndPoint sender, EndPoint recipient);
 }

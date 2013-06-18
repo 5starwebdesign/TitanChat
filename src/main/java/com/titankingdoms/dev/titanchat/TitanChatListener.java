@@ -20,14 +20,12 @@ package com.titankingdoms.dev.titanchat;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 import com.titankingdoms.dev.titanchat.util.update.Update;
 
@@ -116,19 +114,5 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		plugin.getParticipantManager().unregisterParticipant(participant);
-	}
-	
-	/**
-	 * Colourises text on signs
-	 * 
-	 * @param event {@link SignChangeEvent}
-	 */
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onSignChange(SignChangeEvent event) {
-		if (event == null)
-			return;
-		
-		for (int line = 0; line < 4; line++)
-			event.setLine(line, Format.colourise(event.getLine(line)));
 	}
 }
