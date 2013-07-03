@@ -44,7 +44,7 @@ public final class TemporaryChannel extends Channel {
 	}
 	
 	public String getFormat() {
-		return Format.getChatFormat();
+		return Format.getFormat();
 	}
 	
 	@Override

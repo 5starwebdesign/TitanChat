@@ -11,14 +11,14 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * Channels with per-channel configuration available (Channels can be disabled in config.yml)
 * Built-in commands to manage your chat
 * Supports any permissions plugins that uses SuperPerms or is supported by [[http://dev.bukkit.org/server-mods/vault/|Vault]]
-** [[http://dev.bukkit.org/server-mods/bpermissions/|bPermissions]]
-** [[http://dev.bukkit.org/server-mods/permissionsex/|PermissionsEx]]
-** [[http://dev.bukkit.org/server-mods/droxperms/|DroxPerms]]
-** [[http://dev.bukkit.org/server-mods/permbukkit/|PermissionsBukkit]]
+** [[http://dev.bukkit.org/permissions/bpermissions/|bPermissions]]
+** [[http://dev.bukkit.org/permissions/permissionsex/|PermissionsEx]]
+** [[http://dev.bukkit.org/permissions/droxperms/|DroxPerms]]
+** [[http://dev.bukkit.org/permissions/permbukkit/|PermissionsBukkit]]
 ** SuperPerms
 ** GroupManager
-** [[http://dev.bukkit.org/server-mods/privileges/|Privileges]]
-** [[http://dev.bukkit.org/server-mods/zpermissions/|zPermissions]]
+** [[http://dev.bukkit.org/permissions/privileges/|Privileges]]
+** [[http://dev.bukkit.org/permissions/zpermissions/|zPermissions]]
 * Addons, custom channels and external commands can be used to support any kind of plugin, creating channels with different kind of behaviours and adding new features
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -65,8 +65,10 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 16.05.13 - TitanChat v4.1 Release
 * 17.05.13 - Into v4.1.1 development as an improvement update
 * 18.05.13 - Fixed some minor issues
-* 08.06.13 - Code refactor
-* 12.06.13 - Refactored Participants and Channels, Networks are planned
+* 20.05.13 - Into v4.2 development
+* 08.06.13 - Participant package refactor
+* 12.06.13 - Channel package refactor
+* 03.07.13 - Creativity block, rewrite on hold
 
 -----------------------------------------------------------------------------------------------------------------------
 

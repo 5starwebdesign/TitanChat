@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.titankingdoms.dev.titanchat.addon.ChatAddon;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
@@ -30,6 +31,7 @@ import com.titankingdoms.dev.titanchat.core.Message;
 import com.titankingdoms.dev.titanchat.core.channel.setting.Range;
 import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
@@ -81,22 +83,27 @@ public abstract class Channel extends Loadable implements EndPoint {
 	
 	public abstract String getFormat();
 	
-	public final Set<EndPoint> getLinkedPoints() {
+	public Set<EndPoint> getLinkedPoints() {
 		return new HashSet<EndPoint>(endpoints.values());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends EndPoint> Set<T> getLinkedPointsByClass(Class<T> pointClass) {
+		Set<T> endpoints = new HashSet<T>();
+		
+		if (pointClass == null)
+			return endpoints;
+		
+		for (EndPoint endpoint : getLinkedPoints()) {
+			if (pointClass.isAssignableFrom(endpoint.getClass()))
+				endpoints.add((T) endpoint);
+		}
+		
+		return endpoints;
 	}
 	
 	public final Set<String> getOperators() {
 		return operators;
-	}
-	
-	public final Set<Participant> getParticipants() {
-		Set<Participant> participants = new HashSet<Participant>();
-		
-		for (EndPoint endpoint : getLinkedPoints())
-			if (endpoint instanceof Participant)
-				participants.add((Participant) endpoint);
-		
-		return participants;
 	}
 	
 	public final String getPointType() {
@@ -120,21 +127,58 @@ public abstract class Channel extends Loadable implements EndPoint {
 	}
 	
 	public Message handleMessage(EndPoint sender, String message) {
-		return new Message(sender, new HashSet<EndPoint>(), "", message);
+		if (!(sender instanceof Participant))
+			return new Message(sender, new HashSet<EndPoint>(), "", "");
+		
+		Participant participant = (Participant) sender;
+		
+		if (!participant.hasPermission("TitanChat.speak." + getName())) {
+			if (!getOperators().contains(sender.getName())) {
+				sender.notice("&4You do not have permission");
+				return new Message(sender, new HashSet<EndPoint>(), "", "");
+			}
+		}
+		
+		db.debug(Level.INFO, sender.getName() + " -> " + getName() + " : " + message);
+		
+		String format = getFormat();
+		
+		if (format == null || format.isEmpty())
+			format = Format.getFormat();
+		
+		Set<EndPoint> recipients = new HashSet<EndPoint>();
+		
+		switch (getRange()) {
+		
+		case CHANNEL:
+			
+			break;
+			
+		case GLOBAL:
+			break;
+			
+		case LOCAL:
+			break;
+			
+		case WORLD:
+			break;
+		}
+		
+		return new Message(sender, recipients, format, message);
 	}
 	
 	public void init() {
 		
 	}
 	
-	public final boolean isLinked(EndPoint endpoint) {
+	public boolean isLinked(EndPoint endpoint) {
 		if (endpoint == null)
 			return false;
 		
 		return endpoints.containsKey((endpoint.getPointType() + ":" + endpoint.getName()).toLowerCase());
 	}
 	
-	public final void link(EndPoint endpoint) {
+	public void link(EndPoint endpoint) {
 		if (endpoint == null || endpoint instanceof Channel)
 			return;
 		
@@ -148,17 +192,13 @@ public abstract class Channel extends Loadable implements EndPoint {
 	public final void messageIn(EndPoint sender, String format, String message) {
 		if (sender == null || format == null || format.isEmpty() || message == null || message.isEmpty())
 			return;
-		
-		for (EndPoint endpoint : getLinkedPoints())
-			endpoint.messageIn(sender, getFormat(), message);
 	}
 	
 	public final void messageOut(EndPoint recipient, String message) {}
 	
 	public final void notice(String... messages) {
-		for (EndPoint endpoint : getLinkedPoints())
-			if (endpoint instanceof Participant)
-				endpoint.notice(messages);
+		for (Participant participant : getLinkedPointsByClass(Participant.class))
+			participant.notice(messages);
 	}
 	
 	public final void register(ChatAddon... addons) {

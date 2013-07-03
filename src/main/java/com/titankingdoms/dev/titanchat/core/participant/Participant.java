@@ -50,11 +50,16 @@ public class Participant implements EndPoint {
 	private final Map<String, EndPoint> endpoints;
 	private final Map<String, Meta> meta;
 	
+	private final Set<EndPoint> basePoint;
+	
 	public Participant(String name) {
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
 		this.endpoints = new HashMap<String, EndPoint>();
 		this.meta = new HashMap<String, Meta>();
+		
+		this.basePoint = new HashSet<EndPoint>();
+		this.basePoint.add(this);
 	}
 	
 	public CommandSender asCommandSender() {
@@ -74,6 +79,10 @@ public class Participant implements EndPoint {
 		
 		if (endpoint != null && !isLinked(endpoint))
 			link(endpoint);
+	}
+	
+	public Set<EndPoint> getBasePoints() {
+		return Collections.unmodifiableSet(basePoint);
 	}
 	
 	public final ConfigurationSection getConfiguration() {
@@ -110,6 +119,21 @@ public class Participant implements EndPoint {
 	
 	public final Set<EndPoint> getLinkedPoints() {
 		return new HashSet<EndPoint>(endpoints.values());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends EndPoint> Set<T> getLinkedPointsByClass(Class<T> pointClass) {
+		Set<T> endpoints = new HashSet<T>();
+		
+		if (pointClass == null)
+			return endpoints;
+		
+		for (EndPoint endpoint : getLinkedPoints()) {
+			if (pointClass.isAssignableFrom(endpoint.getClass()))
+				endpoints.add((T) endpoint);
+		}
+		
+		return endpoints;
 	}
 	
 	public Map<String, Meta> getMeta() {

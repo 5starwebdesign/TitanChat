@@ -23,6 +23,8 @@ public interface EndPoint {
 	
 	public Set<EndPoint> getLinkedPoints();
 	
+	public <T extends EndPoint> Set<T> getLinkedPointsByClass(Class<T> pointClass);
+	
 	public String getName();
 	
 	public String getPointType();

@@ -23,6 +23,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
@@ -64,7 +65,7 @@ public final class ListCommand extends Command {
 			if (list.length() > 0)
 				list.append(", ");
 			
-			list.append(ch.getName() + " (" + ch.getParticipants().size() + ")");
+			list.append(ch.getName() + " (" + ch.getLinkedPointsByClass(Participant.class).size() + ")");
 		}
 		
 		sender.sendMessage(header);

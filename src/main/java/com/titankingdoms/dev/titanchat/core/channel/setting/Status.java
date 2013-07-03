@@ -28,7 +28,6 @@ import java.util.Map;
  *
  */
 public enum Status {
-	CONVERSATION("conversation"),
 	DEFAULT("default"),
 	NONE("none"),
 	STAFF("staff"),
