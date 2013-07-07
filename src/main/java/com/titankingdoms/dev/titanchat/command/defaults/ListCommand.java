@@ -65,7 +65,7 @@ public final class ListCommand extends Command {
 			if (list.length() > 0)
 				list.append(", ");
 			
-			list.append(ch.getName() + " (" + ch.getLinkedPointsByClass(Participant.class).size() + ")");
+			list.append(ch.getName() + " (" + ch.getLinkedPointCountByClass(Participant.class) + ")");
 		}
 		
 		sender.sendMessage(header);

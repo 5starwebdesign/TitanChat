@@ -81,7 +81,23 @@ public abstract class Channel extends Loadable implements EndPoint {
 	
 	public abstract String getDisplayColour();
 	
-	public abstract String getFormat();
+	public int getLinkedPointCount() {
+		return endpoints.size();
+	}
+	
+	public <T extends EndPoint> int getLinkedPointCountByClass(Class<T> pointClass) {
+		int count = 0;
+		
+		if (pointClass == null)
+			return count;
+		
+		for (EndPoint endpoint : getLinkedPoints()) {
+			if (pointClass.isAssignableFrom(endpoint.getClass()))
+				count++;
+		}
+		
+		return count;
+	}
 	
 	public Set<EndPoint> getLinkedPoints() {
 		return new HashSet<EndPoint>(endpoints.values());
@@ -126,7 +142,7 @@ public abstract class Channel extends Loadable implements EndPoint {
 		return whitelist;
 	}
 	
-	public Message handleMessage(EndPoint sender, String message) {
+	public Message handleMessage(EndPoint sender, String format, String message) {
 		if (!(sender instanceof Participant))
 			return new Message(sender, new HashSet<EndPoint>(), "", "");
 		
@@ -140,11 +156,6 @@ public abstract class Channel extends Loadable implements EndPoint {
 		}
 		
 		db.debug(Level.INFO, sender.getName() + " -> " + getName() + " : " + message);
-		
-		String format = getFormat();
-		
-		if (format == null || format.isEmpty())
-			format = Format.getFormat();
 		
 		Set<EndPoint> recipients = new HashSet<EndPoint>();
 		

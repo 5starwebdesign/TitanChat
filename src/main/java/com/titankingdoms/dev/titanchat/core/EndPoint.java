@@ -21,6 +21,12 @@ import java.util.Set;
 
 public interface EndPoint {
 	
+	public String getConversationFormat();
+	
+	public int getLinkedPointCount();
+	
+	public <T extends EndPoint> int getLinkedPointCountByClass(Class<T> pointClass);
+	
 	public Set<EndPoint> getLinkedPoints();
 	
 	public <T extends EndPoint> Set<T> getLinkedPointsByClass(Class<T> pointClass);
@@ -29,7 +35,7 @@ public interface EndPoint {
 	
 	public String getPointType();
 	
-	public Message handleMessage(EndPoint sender, String message);
+	public Message handleMessage(EndPoint sender, String format, String message);
 	
 	public boolean isLinked(EndPoint endpoint);
 	

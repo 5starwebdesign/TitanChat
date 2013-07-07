@@ -17,14 +17,11 @@
 
 package com.titankingdoms.dev.titanchat.core.participant;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
@@ -89,6 +86,10 @@ public class Participant implements EndPoint {
 		return plugin.getParticipantManager().getConfig().getConfigurationSection(name);
 	}
 	
+	public String getConversationFormat() {
+		return "";
+	}
+	
 	public final String getCurrent() {
 		return (current != null) ? current.getName() : "";
 	}
@@ -101,20 +102,22 @@ public class Participant implements EndPoint {
 		return getMeta("display-name", getName()).stringValue();
 	}
 	
-	public final Map<String, List<String>> getLinkedPointList() {
-		Map<String, List<String>> listMap = new TreeMap<String, List<String>>();
+	public int getLinkedPointCount() {
+		return endpoints.size();
+	}
+	
+	public <T extends EndPoint> int getLinkedPointCountByClass(Class<T> pointClass) {
+		int count = 0;
+		
+		if (pointClass == null)
+			return count;
 		
 		for (EndPoint endpoint : getLinkedPoints()) {
-			if (!listMap.containsKey(endpoint.getPointType()))
-				listMap.put(endpoint.getPointType(), new ArrayList<String>());
-			
-			listMap.get(endpoint.getPointType()).add(endpoint.getName());
+			if (pointClass.isAssignableFrom(endpoint.getClass()))
+				count++;
 		}
 		
-		for (List<String> list : listMap.values())
-			Collections.sort(list);
-		
-		return listMap;
+		return count;
 	}
 	
 	public final Set<EndPoint> getLinkedPoints() {
@@ -170,7 +173,7 @@ public class Participant implements EndPoint {
 		return getMeta("suffix", "").stringValue();
 	}
 	
-	public Message handleMessage(EndPoint sender, String message) {
+	public Message handleMessage(EndPoint sender, String format, String message) {
 		return new Message(sender, new HashSet<EndPoint>(), "", message);
 	}
 	
@@ -215,6 +218,8 @@ public class Participant implements EndPoint {
 	public final void messageOut(EndPoint recipient, String message) {
 		if (recipient == null || message == null || message.isEmpty())
 			return;
+		
+		Message msg = recipient.handleMessage(this, recipient.getConversationFormat(), message);
 	}
 	
 	public final void messageOut(String message) {

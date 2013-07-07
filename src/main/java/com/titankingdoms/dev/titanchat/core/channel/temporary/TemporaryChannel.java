@@ -43,7 +43,7 @@ public final class TemporaryChannel extends Channel {
 		return "";
 	}
 	
-	public String getFormat() {
+	public String getConversationFormat() {
 		return Format.getFormat();
 	}
 	

@@ -46,7 +46,7 @@ public class StandardChannel extends Channel {
 		return getConfig().getString("display-colour", "");
 	}
 	
-	public String getFormat() {
+	public String getConversationFormat() {
 		return getConfig().getString("format", Format.getFormat());
 	}
 	
