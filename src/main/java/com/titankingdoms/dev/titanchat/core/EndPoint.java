@@ -19,9 +19,13 @@ package com.titankingdoms.dev.titanchat.core;
 
 import java.util.Set;
 
+import com.titankingdoms.dev.titanchat.event.ChatEvent;
+
 public interface EndPoint {
 	
 	public String getConversationFormat();
+	
+	public String getDisplayName();
 	
 	public int getLinkedPointCount();
 	
@@ -35,15 +39,11 @@ public interface EndPoint {
 	
 	public String getPointType();
 	
-	public Message handleMessage(EndPoint sender, String format, String message);
+	public ChatEvent handleMessage(EndPoint sender, String format, String message);
 	
 	public boolean isLinked(EndPoint endpoint);
 	
 	public void link(EndPoint endpoint);
-	
-	public void messageIn(EndPoint sender, String format, String message);
-	
-	public void messageOut(EndPoint recipient, String message);
 	
 	public void notice(String... messages);
 	

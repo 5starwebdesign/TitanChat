@@ -27,11 +27,10 @@ import java.util.logging.Level;
 
 import com.titankingdoms.dev.titanchat.addon.ChatAddon;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.Message;
 import com.titankingdoms.dev.titanchat.core.channel.setting.Range;
 import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.format.Format;
+import com.titankingdoms.dev.titanchat.event.ChatEvent;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
@@ -80,6 +79,10 @@ public abstract class Channel extends Loadable implements EndPoint {
 	}
 	
 	public abstract String getDisplayColour();
+	
+	public final String getDisplayName() {
+		return getName();
+	}
 	
 	public int getLinkedPointCount() {
 		return endpoints.size();
@@ -142,19 +145,7 @@ public abstract class Channel extends Loadable implements EndPoint {
 		return whitelist;
 	}
 	
-	public Message handleMessage(EndPoint sender, String format, String message) {
-		if (!(sender instanceof Participant))
-			return new Message(sender, new HashSet<EndPoint>(), "", "");
-		
-		Participant participant = (Participant) sender;
-		
-		if (!participant.hasPermission("TitanChat.speak." + getName())) {
-			if (!getOperators().contains(sender.getName())) {
-				sender.notice("&4You do not have permission");
-				return new Message(sender, new HashSet<EndPoint>(), "", "");
-			}
-		}
-		
+	public ChatEvent handleMessage(EndPoint sender, String format, String message) {
 		db.debug(Level.INFO, sender.getName() + " -> " + getName() + " : " + message);
 		
 		Set<EndPoint> recipients = new HashSet<EndPoint>();
@@ -175,7 +166,7 @@ public abstract class Channel extends Loadable implements EndPoint {
 			break;
 		}
 		
-		return new Message(sender, recipients, format, message);
+		return new ChatEvent(sender, recipients, format, message);
 	}
 	
 	public void init() {
@@ -199,13 +190,6 @@ public abstract class Channel extends Loadable implements EndPoint {
 		if (!endpoint.isLinked(this))
 			endpoint.link(this);
 	}
-	
-	public final void messageIn(EndPoint sender, String format, String message) {
-		if (sender == null || format == null || format.isEmpty() || message == null || message.isEmpty())
-			return;
-	}
-	
-	public final void messageOut(EndPoint recipient, String message) {}
 	
 	public final void notice(String... messages) {
 		for (Participant participant : getLinkedPointsByClass(Participant.class))

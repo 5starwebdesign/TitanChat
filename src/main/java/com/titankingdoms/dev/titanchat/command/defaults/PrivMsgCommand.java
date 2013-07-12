@@ -56,8 +56,10 @@ public final class PrivMsgCommand extends Command {
 		sendMessage(sender, "&6You have started a private conversation with " + target.getDisplayName());
 		target.notice(participant.getDisplayName() + " &6has started a private conversation with you");
 		
+		String message = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
+		
 		if (args.length > 1)
-			participant.messageOut(target, StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
+			target.handleMessage(participant, target.getConversationFormat(), message);
 	}
 
 	@Override

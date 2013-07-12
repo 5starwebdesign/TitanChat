@@ -24,6 +24,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.Messaging;
@@ -61,6 +62,7 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		String message = event.getMessage();
+		EndPoint target = participant.getCurrentEndPoint();
 		
 		if (message.startsWith("@") && message.split(" ").length > 1) {
 			Channel channel = plugin.getChannelManager().getChannel(message.split(" ")[0].substring(1));
@@ -70,9 +72,10 @@ public final class TitanChatListener implements Listener {
 				return;
 			}
 			
-			participant.messageOut(channel, message.substring(message.indexOf(" ") + 1, message.length()));
-			
-		} else { participant.messageOut(message); }
+			message = message.substring(message.indexOf(" ") + 1, message.length());
+		}
+		
+		target.handleMessage(participant, target.getConversationFormat(), message);
 	}
 	
 	/**

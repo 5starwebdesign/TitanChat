@@ -29,7 +29,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.Message;
+import com.titankingdoms.dev.titanchat.event.ChatEvent;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -173,8 +173,8 @@ public class Participant implements EndPoint {
 		return getMeta("suffix", "").stringValue();
 	}
 	
-	public Message handleMessage(EndPoint sender, String format, String message) {
-		return new Message(sender, new HashSet<EndPoint>(), "", message);
+	public ChatEvent handleMessage(EndPoint sender, String format, String message) {
+		return new ChatEvent(sender, new HashSet<EndPoint>(), format, message);
 	}
 	
 	public final boolean hasPermission(String node) {
@@ -208,22 +208,6 @@ public class Participant implements EndPoint {
 		
 		if (!endpoint.equals(current))
 			focus(endpoint);
-	}
-	
-	public final void messageIn(EndPoint sender, String format, String message) {
-		if (sender == null || format == null || format.isEmpty() || message == null || message.isEmpty())
-			return;
-	}
-	
-	public final void messageOut(EndPoint recipient, String message) {
-		if (recipient == null || message == null || message.isEmpty())
-			return;
-		
-		Message msg = recipient.handleMessage(this, recipient.getConversationFormat(), message);
-	}
-	
-	public final void messageOut(String message) {
-		messageOut(current, message);
 	}
 	
 	public void notice(String... messages) {

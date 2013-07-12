@@ -32,7 +32,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 === Dependecies
 
-* CraftBukkit 1.5.2-R0.1
+* CraftBukkit 1.5.2-R1.0
 * Vault (Required only for affixes of permissions plugins)
 
 -----------------------------------------------------------------------------------------------------------------------
