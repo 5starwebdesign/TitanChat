@@ -24,7 +24,7 @@ import com.titankingdoms.dev.titanchat.command.ChannelCommand;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ChatProcessEvent;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
@@ -51,7 +51,7 @@ public final class ChatCommand extends ChannelCommand {
 		String format = msgRecipient.getConversationFormat();
 		String message = StringUtils.join(args, " ");
 		
-		ChatEvent event = msgRecipient.handleMessage(msgSender, format, message);
+		ChatProcessEvent event = msgRecipient.processConversation(msgSender, format, message);
 		plugin.getServer().getPluginManager().callEvent(event);
 	}
 	

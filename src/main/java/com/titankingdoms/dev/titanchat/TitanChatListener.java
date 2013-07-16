@@ -75,7 +75,7 @@ public final class TitanChatListener implements Listener {
 			message = message.substring(message.indexOf(" ") + 1, message.length());
 		}
 		
-		target.handleMessage(participant, target.getConversationFormat(), message);
+		target.processConversation(participant, target.getConversationFormat(), message);
 	}
 	
 	/**

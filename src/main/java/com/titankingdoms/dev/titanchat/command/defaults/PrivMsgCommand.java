@@ -59,7 +59,7 @@ public final class PrivMsgCommand extends Command {
 		String message = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
 		
 		if (args.length > 1)
-			target.handleMessage(participant, target.getConversationFormat(), message);
+			target.processConversation(participant, target.getConversationFormat(), message);
 	}
 
 	@Override

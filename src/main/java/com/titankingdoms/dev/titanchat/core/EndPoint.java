@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.core;
 
 import java.util.Set;
 
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ChatProcessEvent;
 
 public interface EndPoint {
 	
@@ -39,11 +39,15 @@ public interface EndPoint {
 	
 	public String getPointType();
 	
-	public ChatEvent handleMessage(EndPoint sender, String format, String message);
+	public ChatProcessEvent processConversation(EndPoint sender, String format, String message);
 	
 	public boolean isLinked(EndPoint endpoint);
 	
 	public void link(EndPoint endpoint);
+	
+	public void messageIn(EndPoint sender, String format, String message);
+	
+	public void messageOut(EndPoint recipient, String format, String message);
 	
 	public void notice(String... messages);
 	

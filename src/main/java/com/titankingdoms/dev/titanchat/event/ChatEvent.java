@@ -1,24 +1,4 @@
-/*
- *     Copyright (C) 2013  Nodin Chan <nodinchan@live.com>
- *     
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, either version 3 of the License, or
- *     (at your option) any later version.
- *     
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *     
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 package com.titankingdoms.dev.titanchat.event;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -30,20 +10,16 @@ public final class ChatEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
 	
 	private final EndPoint sender;
-	private final Set<EndPoint> recipients;
+	private final EndPoint recipient;
 	
-	private String format;
-	private String message;
+	private final String format;
+	private final String message;
 	
-	public ChatEvent(EndPoint sender, Set<EndPoint> recipients, String format, String message) {
+	public ChatEvent(EndPoint sender, EndPoint recipient, String format, String message) {
 		this.sender = sender;
-		this.recipients = (recipients != null) ? recipients : new HashSet<EndPoint>();
-		this.format = (format != null) ? format : "";
-		this.message = (message != null) ? message : "";
-	}
-	
-	public ChatEvent(EndPoint sender, String format, String message) {
-		this(sender, new HashSet<EndPoint>(), format, message);
+		this.recipient = recipient;
+		this.format = format;
+		this.message = message;
 	}
 	
 	public String getFormat() {
@@ -63,19 +39,11 @@ public final class ChatEvent extends Event {
 		return message;
 	}
 	
-	public Set<EndPoint> getRecipients() {
-		return recipients;
+	public EndPoint getRecipient() {
+		return recipient;
 	}
 	
 	public EndPoint getSender() {
 		return sender;
-	}
-	
-	public void setFormat(String format) {
-		this.format = (format != null) ? format : "";
-	}
-	
-	public void setMessage(String message) {
-		this.message = (message != null) ? message : "";
 	}
 }

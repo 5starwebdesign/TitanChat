@@ -45,7 +45,7 @@ public final class EmoteCommand extends ChannelCommand {
 		String format = "* " + sender.getName() + " %message";
 		String message = StringUtils.join(args, " ");
 		
-		channel.handleMessage(plugin.getParticipantManager().getParticipant(sender), format, message);
+		channel.processConversation(plugin.getParticipantManager().getParticipant(sender), format, message);
 	}
 	
 	@Override

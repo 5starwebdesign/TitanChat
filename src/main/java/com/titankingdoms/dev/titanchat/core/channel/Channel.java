@@ -30,7 +30,7 @@ import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.setting.Range;
 import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ChatProcessEvent;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
@@ -145,7 +145,7 @@ public abstract class Channel extends Loadable implements EndPoint {
 		return whitelist;
 	}
 	
-	public ChatEvent handleMessage(EndPoint sender, String format, String message) {
+	public ChatProcessEvent processConversation(EndPoint sender, String format, String message) {
 		db.debug(Level.INFO, sender.getName() + " -> " + getName() + " : " + message);
 		
 		Set<EndPoint> recipients = new HashSet<EndPoint>();
@@ -166,7 +166,7 @@ public abstract class Channel extends Loadable implements EndPoint {
 			break;
 		}
 		
-		return new ChatEvent(sender, recipients, format, message);
+		return new ChatProcessEvent(sender, recipients, format, message);
 	}
 	
 	public void init() {
@@ -189,6 +189,14 @@ public abstract class Channel extends Loadable implements EndPoint {
 		
 		if (!endpoint.isLinked(this))
 			endpoint.link(this);
+	}
+	
+	public void messageIn(EndPoint sender, String format, String message) {
+		
+	}
+	
+	public void messageOut(EndPoint recipient, String format, String message) {
+		
 	}
 	
 	public final void notice(String... messages) {

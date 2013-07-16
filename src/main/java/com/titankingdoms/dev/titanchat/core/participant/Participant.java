@@ -29,7 +29,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ChatProcessEvent;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -173,8 +173,8 @@ public class Participant implements EndPoint {
 		return getMeta("suffix", "").stringValue();
 	}
 	
-	public ChatEvent handleMessage(EndPoint sender, String format, String message) {
-		return new ChatEvent(sender, new HashSet<EndPoint>(), format, message);
+	public ChatProcessEvent processConversation(EndPoint sender, String format, String message) {
+		return new ChatProcessEvent(sender, new HashSet<EndPoint>(), format, message);
 	}
 	
 	public final boolean hasPermission(String node) {
@@ -208,6 +208,14 @@ public class Participant implements EndPoint {
 		
 		if (!endpoint.equals(current))
 			focus(endpoint);
+	}
+	
+	public void messageIn(EndPoint sender, String format, String message) {
+		
+	}
+	
+	public void messageOut(EndPoint recipient, String format, String message) {
+		
 	}
 	
 	public void notice(String... messages) {
