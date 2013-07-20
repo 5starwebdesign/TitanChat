@@ -1,96 +1,76 @@
 == TitanChat
 
-TitanChat, a chat management and formatting plugin, its high flexibility is what makes it special. Instead of having a large bulk of hardcoded supports for other plugins, an addon system was implemented so that addons, custom channels and external commands can be coded to support other plugins and add new features. The built in commands in TitanChat help make your chat management task easier. Channels can also be disabled to have your old global Minecraft chat, but giving you more control over chat.
+TitanChat, a chat management and formatting plugin, its high flexibility is what makes it special. Instead of having a large bulk of hardcoded supports for other plugins, an addon system was implemented to support other plugins and add new features. The built in commands in TitanChat help make your chat management task easier. Channels can also be disabled to have your old global Minecraft chat, but giving you more control over chat.
 
------------------------------------------------------------------------------------------------------------------------
+----
 
 === Features
 
 * High flexibility
 * Easy to understand and use
-* Channels with per-channel configuration available (Channels can be disabled in config.yml)
 * Built-in commands to manage your chat
-* Supports any permissions plugins that uses SuperPerms or is supported by [[http://dev.bukkit.org/server-mods/vault/|Vault]]
+* Supports any permissions plugins that uses SuperPerms or is supported by [[http://dev.bukkit.org/milkbowl/Vault|Vault]]
 ** [[http://dev.bukkit.org/permissions/bpermissions/|bPermissions]]
 ** [[http://dev.bukkit.org/permissions/permissionsex/|PermissionsEx]]
 ** [[http://dev.bukkit.org/permissions/droxperms/|DroxPerms]]
+** [[http://dev.bukkit.org/permissions/simplyperms/|SimplyPerms]]
+** [[http://dev.bukkit.org/permissions/xperms/|XPerms]]
 ** [[http://dev.bukkit.org/permissions/permbukkit/|PermissionsBukkit]]
+** [[http://dev.bukkit.org/permissions/totalpermissions/|TotalPermissions]]
 ** SuperPerms
 ** GroupManager
 ** [[http://dev.bukkit.org/permissions/privileges/|Privileges]]
 ** [[http://dev.bukkit.org/permissions/zpermissions/|zPermissions]]
-* Addons, custom channels and external commands can be used to support any kind of plugin, creating channels with different kind of behaviours and adding new features
+* Addon system to support other plugins and add new features
 
------------------------------------------------------------------------------------------------------------------------
+----
 
 === Functions
 
 * Chat management
 * Chat formatting
 
------------------------------------------------------------------------------------------------------------------------
+----
 
-=== Dependecies
+=== Dependencies
 
 * CraftBukkit 1.5.2-R1.0
 * Vault (Required only for affixes of permissions plugins)
 
------------------------------------------------------------------------------------------------------------------------
+----
 
 === How to install
 
-* Download [[http://ci.whitejack.co/job/TitanChat/Recommended%20Build/|TitanChat]]
-* Place in plugins folder
-* Start up to load default configuration
-* Configure
-* Done!
+# Download [[http://ci.whitejack.co/job/TitanChat/Recommended%20Build/|TitanChat]]
+# Place in plugins folder
+# Start up to load default configuration
+# Configure
+# DOne!
 
------------------------------------------------------------------------------------------------------------------------
+----
 
 === Changelog
 
-* 16.03.13 - Scraped v4.0 and rewrite from scratch
-* 18.03.13 - Completed some of the rewrite
-* 20.03.13 - Completed half of the rewrite, awaiting Bukkit 1.5 Beta Build
-* 22.03.13 - Completed most of the rewrite, completing commands
-* 05.04.13 - Ensure that code is compatible with Jenkins
-* 11.04.13 - Documented
-* 30.04.13 - Fixed bugs
-* 07.05.13 - Added help section and private messaging
-* 09.05.13 - Improved private messaging, made commands more descriptive and added emoting
-* 11.05.13 - TitanChat v4.0 Release
-* 13.05.13 - Into v4.1 development and added ignore lists
-* 14.05.13 - Added TemporaryChannels and some commands
-* 15.05.13 - Made commands treat multiple arguments within quotations as one argument
-* 16.05.13 - TitanChat v4.1 Release
-* 17.05.13 - Into v4.1.1 development as an improvement update
-* 18.05.13 - Fixed some minor issues
-* 20.05.13 - Into v4.2 development
-* 08.06.13 - Participant package refactor
-* 12.06.13 - Channel package refactor
-* 03.07.13 - Creativity block, rewrite on hold
+* 21.07.13 - Rewrite begins
 
------------------------------------------------------------------------------------------------------------------------
+----
 
 === Todo
 
-* Complete basic addons
-* Per world support
-* Channel networks
-* Code improvements
+* Complete rewrite
 
------------------------------------------------------------------------------------------------------------------------
+----
 
 === Credits
 
 * Author: NodinChan
-* Contributor: SLiPCoR
-* Tester: gwinans, gabizou, AlphaBlend
+* Contributor(s): SLiPCoR
+* Tester(s): gwinans, gabizou, AlphaBlend
 
 ==== Thank you
 
-* Thanks to gwinans for making such a good suggestion
-* Thanks to my friends online for contributing
-* Thanks to all users who are willing to bear with the occassional bugs
+* Thanks to gwinans for the idea
+* Thanks to my friends online for their help
+* Thanks to all the users who are willing to bear with the bugs and are willing to give feedback
 
------------------------------------------------------------------------------------------------------------------------
+----
