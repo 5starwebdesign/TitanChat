@@ -1,0 +1,12 @@
+name: TitanChat
+version: '5.0.0 Build #${BUILD_NUMBER}'
+author: NodinChan
+website: http://dev.bukkit.org/bukkit-plugins/titanchat/
+main: com.titankingdoms.dev.titanchat.TitanChat
+prefix: TitanChat
+softdepend: [Vault]
+commands:
+    titanchat:
+        description: TitanChat Commands
+        aliases: [tchat, tc]
+        usage: /<command> <sub-command> <arguments>
