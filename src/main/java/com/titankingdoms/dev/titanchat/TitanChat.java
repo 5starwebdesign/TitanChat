@@ -31,6 +31,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.titankingdoms.dev.titanchat.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.command.CommandManager;
+import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
@@ -154,6 +155,7 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "Registering managers...");
 		
 		registerManager(new CommandManager());
+		registerManager(new ChannelManager());
 		registerManager(new AddonManager());
 		
 		if (!new File(getDataFolder(), "config.yml").exists()) {
