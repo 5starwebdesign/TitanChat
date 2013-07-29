@@ -15,19 +15,25 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core;
+package com.titankingdoms.dev.titanchat.core.user.console;
 
-public interface EndPoint {
+import org.bukkit.command.CommandSender;
+
+import com.titankingdoms.dev.titanchat.core.user.User;
+
+public final class Console extends User {
 	
-	public String getName();
+	public Console(String name) {
+		super(name);
+	}
 	
-	public String getType();
+	@Override
+	public CommandSender getCommandSender() {
+		return plugin.getServer().getConsoleSender();
+	}
 	
-	public void onMessageIn(EndPoint sender, String format, String message);
-	
-	public void onMessageOut(EndPoint recipient, String format, String message);
-	
-	public void sendNotice(String... messages);
-	
-	public void sendRawLine(String line);
+	@Override
+	public void sendRawLine(String line) {
+		getCommandSender().sendMessage(line);
+	}
 }

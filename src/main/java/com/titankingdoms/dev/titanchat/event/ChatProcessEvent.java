@@ -15,43 +15,21 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.event;
 
-import com.titankingdoms.dev.titanchat.TitanChat;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+
 import com.titankingdoms.dev.titanchat.core.EndPoint;
 
-public abstract class Channel implements EndPoint {
+public final class ChatProcessEvent extends Event {
 	
-	protected final TitanChat plugin;
-	
-	private final String name;
-	
-	public Channel(String name) {
-		this.plugin = TitanChat.getInstance();
-		this.name = name;
+	public ChatProcessEvent(EndPoint sender, EndPoint recipient, String format, String message) {
+		
 	}
 	
 	@Override
-	public final String getName() {
-		return name;
-	}
-	
-	@Override
-	public final String getType() {
-		return "Channel";
-	}
-	
-	@Override
-	public void onMessageIn(EndPoint sender, String format, String message) {}
-	
-	@Override
-	public void onMessageOut(EndPoint recipient, String format, String message) {}
-	
-	@Override
-	public void sendNotice(String... messages) {}
-	
-	@Override
-	public String toString() {
-		return "Channel: {name: " + getName() + "}";
+	public HandlerList getHandlers() {
+		return null;
 	}
 }

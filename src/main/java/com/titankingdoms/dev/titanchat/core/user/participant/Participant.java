@@ -15,43 +15,34 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.core.user.participant;
 
-import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public abstract class Channel implements EndPoint {
+import com.titankingdoms.dev.titanchat.core.user.User;
+
+public final class Participant extends User {
 	
-	protected final TitanChat plugin;
-	
-	private final String name;
-	
-	public Channel(String name) {
-		this.plugin = TitanChat.getInstance();
-		this.name = name;
+	public Participant(Player player) {
+		super(player.getName());
 	}
 	
 	@Override
-	public final String getName() {
-		return name;
+	public CommandSender getCommandSender() {
+		return getPlayer();
+	}
+	
+	public Player getPlayer() {
+		return plugin.getServer().getPlayerExact(getName());
 	}
 	
 	@Override
-	public final String getType() {
-		return "Channel";
+	public String getType() {
+		return "Participant";
 	}
 	
-	@Override
-	public void onMessageIn(EndPoint sender, String format, String message) {}
-	
-	@Override
-	public void onMessageOut(EndPoint recipient, String format, String message) {}
-	
-	@Override
-	public void sendNotice(String... messages) {}
-	
-	@Override
-	public String toString() {
-		return "Channel: {name: " + getName() + "}";
+	public boolean isOnline() {
+		return getPlayer() != null;
 	}
 }
