@@ -18,8 +18,8 @@
 package com.titankingdoms.dev.titanchat;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -32,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.titankingdoms.dev.titanchat.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.command.CommandManager;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
+import com.titankingdoms.dev.titanchat.core.user.UserManager;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
@@ -41,7 +42,7 @@ public final class TitanChat extends JavaPlugin {
 	
 	private final Logger log = Logger.getLogger("TitanLog");
 	
-	private final Map<Class<?>, Manager<?>> managers = new HashMap<Class<?>, Manager<?>>();
+	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
 	
 	public static TitanChat getInstance() {
 		if (instance == null)
@@ -156,6 +157,7 @@ public final class TitanChat extends JavaPlugin {
 		
 		registerManager(new CommandManager());
 		registerManager(new ChannelManager());
+		registerManager(new UserManager());
 		registerManager(new AddonManager());
 		
 		if (!new File(getDataFolder(), "config.yml").exists()) {

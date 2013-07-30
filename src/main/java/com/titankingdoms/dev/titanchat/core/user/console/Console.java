@@ -23,8 +23,8 @@ import com.titankingdoms.dev.titanchat.core.user.User;
 
 public final class Console extends User {
 	
-	public Console(String name) {
-		super(name);
+	public Console() {
+		super("CONSOLE");
 	}
 	
 	@Override

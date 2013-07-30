@@ -17,67 +17,95 @@
 
 package com.titankingdoms.dev.titanchat.core.user;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 
 import com.titankingdoms.dev.titanchat.Manager;
+import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.user.console.Console;
 
 public final class UserManager implements Manager<User> {
 	
+	private final TitanChat plugin;
+	
+	private final Map<String, User> users;
+	
 	public UserManager() {
-		// TODO Auto-generated constructor stub
+		this.plugin = TitanChat.getInstance();
+		this.users = new HashMap<String, User>();
 	}
 	
 	@Override
 	public User get(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return (name != null) ? users.get(name.toLowerCase()) : null;
+	}
+	
+	public Console getConsole() {
+		return (Console) get("CONSOLE");
 	}
 	
 	@Override
 	public List<User> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ArrayList<User>(users.values());
 	}
 	
 	@Override
 	public boolean has(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		return (name != null) ? users.containsKey(name.toLowerCase()) : false;
 	}
 	
 	@Override
-	public boolean has(User item) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean has(User user) {
+		if (user == null)
+			return false;
+		
+		if (!has(user.getName()))
+			return false;
+		
+		return get(user.getName()).equals(user);
 	}
 	
 	@Override
 	public void load() {
-		// TODO Auto-generated method stub
-
+		
 	}
 	
 	@Override
-	public void registerAll(User... items) {
-		// TODO Auto-generated method stub
-
+	public void registerAll(User... users) {
+		if (users == null)
+			return;
+		
+		for (User user : users) {
+			if (user == null)
+				continue;
+			
+			if (has(user)) {
+				plugin.log(Level.WARNING, "Duplicate: " + user);
+				continue;
+			}
+			
+			this.users.put(user.getName().toLowerCase(), user);
+		}
 	}
 	
 	@Override
 	public void reload() {
-		// TODO Auto-generated method stub
-
+		
 	}
 	
 	@Override
 	public void unload() {
-		// TODO Auto-generated method stub
-
+		
 	}
 	
 	@Override
-	public void unregister(User item) {
-		// TODO Auto-generated method stub
-
+	public void unregister(User user) {
+		if (user == null || !has(user))
+			return;
+		
+		this.users.remove(user.getName().toLowerCase());
 	}
 }
