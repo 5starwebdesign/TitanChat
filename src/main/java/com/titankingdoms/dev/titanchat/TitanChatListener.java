@@ -22,14 +22,20 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import com.titankingdoms.dev.titanchat.core.user.User;
+import com.titankingdoms.dev.titanchat.core.user.UserManager;
+
 public final class TitanChatListener implements Listener {
 	
+	private final TitanChat plugin;
+	
 	public TitanChatListener() {
-		
+		this.plugin = TitanChat.getInstance();
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-		
+		User user = plugin.getManager(UserManager.class).getUser(event.getPlayer());
+		user.onMessageOut(null, "", event.getMessage());
 	}
 }

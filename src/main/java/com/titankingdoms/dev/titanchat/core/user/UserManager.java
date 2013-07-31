@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.bukkit.command.CommandSender;
+
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.user.console.Console;
@@ -43,13 +45,17 @@ public final class UserManager implements Manager<User> {
 		return (name != null) ? users.get(name.toLowerCase()) : null;
 	}
 	
+	@Override
+	public List<User> getAll() {
+		return new ArrayList<User>(users.values());
+	}
+	
 	public Console getConsole() {
 		return (Console) get("CONSOLE");
 	}
 	
-	@Override
-	public List<User> getAll() {
-		return new ArrayList<User>(users.values());
+	public User getUser(CommandSender sender) {
+		return get(sender.getName());
 	}
 	
 	@Override
