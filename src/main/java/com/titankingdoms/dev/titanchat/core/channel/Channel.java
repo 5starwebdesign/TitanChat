@@ -32,6 +32,14 @@ public abstract class Channel implements EndPoint {
 	}
 	
 	@Override
+	public boolean equals(Object object) {
+		if (object instanceof Channel)
+			return getName().equals(((Channel) object).getName());
+		
+		return false;
+	}
+	
+	@Override
 	public final String getName() {
 		return name;
 	}

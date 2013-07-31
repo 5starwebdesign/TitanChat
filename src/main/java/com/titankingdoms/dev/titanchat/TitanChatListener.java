@@ -36,6 +36,6 @@ public final class TitanChatListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		User user = plugin.getManager(UserManager.class).getUser(event.getPlayer());
-		user.onMessageOut(null, "", event.getMessage());
+		user.onMessageOut(user.getCurrentEndPoint(), "", event.getMessage());
 	}
 }

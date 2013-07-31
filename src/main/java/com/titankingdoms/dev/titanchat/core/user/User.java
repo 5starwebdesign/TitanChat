@@ -33,6 +33,8 @@ public abstract class User implements EndPoint {
 	
 	private final String name;
 	
+	private EndPoint current;
+	
 	private final Map<String, Meta> meta;
 	
 	public User(String name) {
@@ -41,7 +43,19 @@ public abstract class User implements EndPoint {
 		this.meta = new HashMap<String, Meta>();
 	}
 	
+	@Override
+	public boolean equals(Object object) {
+		if (object instanceof User)
+			return getName().equals(((User) object).getName());
+		
+		return false;
+	}
+	
 	public abstract CommandSender getCommandSender();
+	
+	public final EndPoint getCurrentEndPoint() {
+		return current;
+	}
 	
 	public Meta getMeta(String key, Meta def) {
 		if (key == null)
@@ -90,6 +104,22 @@ public abstract class User implements EndPoint {
 		sender.sendMessage(line);
 	}
 	
+	public final void setCurrentEndPoint(EndPoint endpoint) {
+		this.current = endpoint;
+	}
+	
+	public void setMeta(Meta meta) {
+		if (meta == null)
+			return;
+		
+		this.meta.put(meta.key(), meta);
+	}
+	
+	@Override
+	public String toString() {
+		return "User: {name: {" + getName() + "}";
+	}
+	
 	public static final class Meta {
 		
 		private final String key;
@@ -126,6 +156,11 @@ public abstract class User implements EndPoint {
 		
 		public String stringValue() {
 			return (value != null) ? value.toString() : "";
+		}
+		
+		@Override
+		public String toString() {
+			return "Meta: {key: " + key() + ", value: " + stringValue() + "}";
 		}
 		
 		public Object value() {
