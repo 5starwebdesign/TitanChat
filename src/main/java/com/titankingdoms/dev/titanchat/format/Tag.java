@@ -15,27 +15,13 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.addon;
+package com.titankingdoms.dev.titanchat.format;
 
-import com.titankingdoms.dev.titanchat.util.loading.Loadable;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 
-public class ChatAddon extends Loadable {
+public interface Tag {
 	
-	public ChatAddon(String name) {
-		super(name);
-	}
+	public String getTag();
 	
-	@Override
-	public boolean equals(Object object) {
-		if (object instanceof ChatAddon)
-			if (getName().equals(((ChatAddon) object).getName()))
-				return getFile().equals(((ChatAddon) object).getFile());
-		
-		return false;
-	}
-	
-	@Override
-	public String toString() {
-		return "ChatAddon: {name: " + getName() + ", file: " + getFile().getName() + "}";
-	}
+	public String getValue(EndPoint endpoint);
 }

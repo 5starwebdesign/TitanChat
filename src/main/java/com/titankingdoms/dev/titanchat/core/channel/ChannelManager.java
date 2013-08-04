@@ -63,10 +63,7 @@ public final class ChannelManager implements Manager<Channel> {
 	
 	@Override
 	public boolean has(Channel channel) {
-		if (channel == null)
-			return false;
-		
-		if (!has(channel.getName()))
+		if (channel == null || !has(channel.getName()))
 			return false;
 		
 		return get(channel.getName()).equals(channel);

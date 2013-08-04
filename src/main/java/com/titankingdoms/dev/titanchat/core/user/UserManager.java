@@ -65,10 +65,7 @@ public final class UserManager implements Manager<User> {
 	
 	@Override
 	public boolean has(User user) {
-		if (user == null)
-			return false;
-		
-		if (!has(user.getName()))
+		if (user == null || !has(user.getName()))
 			return false;
 		
 		return get(user.getName()).equals(user);

@@ -15,21 +15,23 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.event;
+package com.titankingdoms.dev.titanchat.format;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
+import java.util.regex.Pattern;
 
+import com.titankingdoms.dev.titanchat.Manager;
+import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
 
-public final class ChatProcessEvent extends Event {
+public abstract class TagParser implements Manager<Tag> {
 	
-	public ChatProcessEvent(EndPoint sender, EndPoint recipient, String format, String message) {
-		
+	protected final TitanChat plugin;
+	
+	protected final Pattern pattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
+	
+	public TagParser() {
+		this.plugin = TitanChat.getInstance();
 	}
 	
-	@Override
-	public HandlerList getHandlers() {
-		return null;
-	}
+	public abstract String parse(EndPoint endpoint, String line);
 }

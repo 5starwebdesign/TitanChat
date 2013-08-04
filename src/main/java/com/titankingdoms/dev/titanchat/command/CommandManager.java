@@ -54,10 +54,7 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public boolean has(Command command) {
-		if (command == null)
-			return false;
-		
-		if (!has(command.getName()))
+		if (command == null || !has(command.getName()))
 			return false;
 		
 		return get(command.getName()).equals(command);

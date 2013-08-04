@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.util.vault;
+package com.titankingdoms.dev.titanchat.util;
 
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -27,7 +27,7 @@ import org.bukkit.plugin.ServicesManager;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
-public final class Vault {
+public final class VaultUtils {
 	
 	private static Chat chat;
 	private static Permission permission;
@@ -82,6 +82,9 @@ public final class Vault {
 	}
 	
 	public static boolean hasPermission(Player player, String node) {
+		if (player == null)
+			return false;
+		
 		return hasPermission(player.getWorld(), player, node);
 	}
 	

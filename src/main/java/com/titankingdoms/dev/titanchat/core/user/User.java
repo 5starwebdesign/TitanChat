@@ -25,7 +25,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.util.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
 public abstract class User implements EndPoint {
 	
@@ -79,7 +79,7 @@ public abstract class User implements EndPoint {
 	}
 	
 	public boolean hasPermission(String node) {
-		return Vault.hasPermission(getCommandSender(), node);
+		return VaultUtils.hasPermission(getCommandSender(), node);
 	}
 	
 	@Override
@@ -112,7 +112,10 @@ public abstract class User implements EndPoint {
 		if (meta == null)
 			return;
 		
-		this.meta.put(meta.key(), meta);
+		if (meta.value() == null)
+			this.meta.remove(meta.key());
+		else
+			this.meta.put(meta.key(), meta);
 	}
 	
 	@Override

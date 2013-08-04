@@ -33,8 +33,10 @@ import com.titankingdoms.dev.titanchat.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.command.CommandManager;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.core.user.UserManager;
+import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
-import com.titankingdoms.dev.titanchat.util.vault.Vault;
+import com.titankingdoms.dev.titanchat.util.UpdateUtil;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
 public final class TitanChat extends JavaPlugin {
 	
@@ -43,6 +45,8 @@ public final class TitanChat extends JavaPlugin {
 	private final Logger log = Logger.getLogger("TitanLog");
 	
 	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
+	
+	private final UpdateUtil update = new UpdateUtil("titanchat", "5.0.0");
 	
 	public static TitanChat getInstance() {
 		if (instance == null)
@@ -62,6 +66,10 @@ public final class TitanChat extends JavaPlugin {
 	
 	public Set<Manager<?>> getManagers() {
 		return new HashSet<Manager<?>>(managers.values());
+	}
+	
+	public UpdateUtil getUpdateUtil() {
+		return update;
 	}
 	
 	public <T extends Manager<?>> boolean hasManager(Class<T> manager) {
@@ -130,7 +138,7 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Attempting to set up Vault...");
 		
-		if (!Vault.initialise(getServer()))
+		if (!VaultUtils.initialise(getServer()))
 			log(Level.INFO, "Failed to set up Vault");
 		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
@@ -138,6 +146,9 @@ public final class TitanChat extends JavaPlugin {
 		
 		if (!initMetrics())
 			log(Level.INFO, "Failed to set up Metrics");
+		
+		if (!verifyUpdate())
+			log(Level.INFO, "No updates available");
 		
 		log(Level.INFO, "Loading managers...");
 		
@@ -207,5 +218,16 @@ public final class TitanChat extends JavaPlugin {
 		synchronized (managers) {
 			managers.remove(manager.getClass());
 		}
+	}
+	
+	private boolean verifyUpdate() {
+		log(Level.INFO, "Attempting to verify for updates...");
+		
+		if (!getConfig().getBoolean("update-verify", false)) {
+			log(Level.INFO, "Verification Disabled");
+			return true;
+		}
+		
+		return update.verify();
 	}
 }

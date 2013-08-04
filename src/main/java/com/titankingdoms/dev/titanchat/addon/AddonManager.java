@@ -27,11 +27,11 @@ import java.util.logging.Level;
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 
-public final class AddonManager implements Manager<ChatAddon> {
+public final class AddonManager implements Manager<Addon> {
 	
 	private final TitanChat plugin;
 	
-	private final Map<String, ChatAddon> addons;
+	private final Map<String, Addon> addons;
 	
 	public AddonManager() {
 		this.plugin = TitanChat.getInstance();
@@ -39,17 +39,17 @@ public final class AddonManager implements Manager<ChatAddon> {
 		if (getAddonDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating addon directory...");
 		
-		this.addons = new TreeMap<String, ChatAddon>();
+		this.addons = new TreeMap<String, Addon>();
 	}
 	
 	@Override
-	public ChatAddon get(String name) {
+	public Addon get(String name) {
 		return (name != null) ? this.addons.get(name.toLowerCase()) : null;
 	}
 	
 	@Override
-	public List<ChatAddon> getAll() {
-		return new ArrayList<ChatAddon>(this.addons.values());
+	public List<Addon> getAll() {
+		return new ArrayList<Addon>(this.addons.values());
 	}
 	
 	public File getAddonDirectory() {
@@ -62,11 +62,8 @@ public final class AddonManager implements Manager<ChatAddon> {
 	}
 	
 	@Override
-	public boolean has(ChatAddon addon) {
-		if (addon == null)
-			return false;
-		
-		if (!has(addon.getName()))
+	public boolean has(Addon addon) {
+		if (addon == null || !has(addon.getName()))
 			return false;
 		
 		return get(addon.getName()).equals(addon);
@@ -78,11 +75,11 @@ public final class AddonManager implements Manager<ChatAddon> {
 	}
 	
 	@Override
-	public void registerAll(ChatAddon... addons) {
+	public void registerAll(Addon... addons) {
 		if (addons == null)
 			return;
 		
-		for (ChatAddon addon : addons) {
+		for (Addon addon : addons) {
 			if (addon == null)
 				continue;
 			
@@ -106,7 +103,7 @@ public final class AddonManager implements Manager<ChatAddon> {
 	}
 	
 	@Override
-	public void unregister(ChatAddon addon) {
+	public void unregister(Addon addon) {
 		if (addon == null || !has(addon))
 			return;
 		
