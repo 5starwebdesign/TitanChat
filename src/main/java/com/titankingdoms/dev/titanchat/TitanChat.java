@@ -46,7 +46,7 @@ public final class TitanChat extends JavaPlugin {
 	
 	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
 	
-	private final UpdateUtil update = new UpdateUtil("titanchat", "5.0.0");
+	private UpdateUtil update;
 	
 	public static TitanChat getInstance() {
 		if (instance == null)
@@ -68,10 +68,6 @@ public final class TitanChat extends JavaPlugin {
 		return new HashSet<Manager<?>>(managers.values());
 	}
 	
-	public UpdateUtil getUpdateUtil() {
-		return update;
-	}
-	
 	public <T extends Manager<?>> boolean hasManager(Class<T> manager) {
 		if (manager == null)
 			return false;
@@ -79,6 +75,13 @@ public final class TitanChat extends JavaPlugin {
 		synchronized (managers) {
 			return managers.containsKey(manager);
 		}
+	}
+	
+	public boolean hasUpdate() {
+		if (update == null)
+			throw new UnsupportedOperationException();
+		
+		return update.hasUpdate();
 	}
 	
 	private boolean initMetrics() {
@@ -147,8 +150,14 @@ public final class TitanChat extends JavaPlugin {
 		if (!initMetrics())
 			log(Level.INFO, "Failed to set up Metrics");
 		
-		if (!verifyUpdate())
+		if (searchUpdate()) {
+			log(Level.INFO, "A new version of TitanChat is available! (" + update.getNewName() + ")");
+			log(Level.INFO, "You are running " + update.getCurrentName() + " currently");
+			log(Level.INFO, "Update at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
+			
+		} else {
 			log(Level.INFO, "No updates available");
+		}
 		
 		log(Level.INFO, "Loading managers...");
 		
@@ -188,6 +197,15 @@ public final class TitanChat extends JavaPlugin {
 		if (instance == null)
 			instance = this;
 		
+		if (searchUpdate()) {
+			log(Level.INFO, "A new version of TitanChat is available! (" + update.getNewName() + ")");
+			log(Level.INFO, "You are running " + update.getCurrentName() + " currently");
+			log(Level.INFO, "Update at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
+			
+		} else {
+			log(Level.INFO, "No updates available");
+		}
+		
 		log(Level.INFO, "Reloading managers...");
 		
 		for (Manager<?> manager : getManagers())
@@ -208,6 +226,23 @@ public final class TitanChat extends JavaPlugin {
 		}
 	}
 	
+	private boolean searchUpdate() {
+		log(Level.INFO, "Attempting to search for updates...");
+		
+		if (!getConfig().getBoolean("update-search", false)) {
+			log(Level.INFO, "Search Disabled");
+			return true;
+		}
+		
+		if (update == null)
+			this.update = new UpdateUtil("titanchat", getDescription());
+		
+		update.readFeed();
+		update.checkAvailability();
+		
+		return update.hasUpdate();
+	}
+	
 	public void unregisterManager(Manager<?> manager) {
 		if (manager == null)
 			return;
@@ -218,16 +253,5 @@ public final class TitanChat extends JavaPlugin {
 		synchronized (managers) {
 			managers.remove(manager.getClass());
 		}
-	}
-	
-	private boolean verifyUpdate() {
-		log(Level.INFO, "Attempting to verify for updates...");
-		
-		if (!getConfig().getBoolean("update-verify", false)) {
-			log(Level.INFO, "Verification Disabled");
-			return true;
-		}
-		
-		return update.verify();
 	}
 }

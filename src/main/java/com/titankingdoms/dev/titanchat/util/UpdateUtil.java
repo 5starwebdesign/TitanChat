@@ -19,86 +19,106 @@ package com.titankingdoms.dev.titanchat.util;
 
 import java.net.URL;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.events.XMLEvent;
-
 import org.apache.commons.lang.math.NumberUtils;
+import org.bukkit.plugin.PluginDescriptionFile;
+
+import com.titankingdoms.dev.titanchat.util.xml.XMLDocument;
+import com.titankingdoms.dev.titanchat.util.xml.XMLElement;
+import com.titankingdoms.dev.titanchat.util.xml.XMLObject;
+import com.titankingdoms.dev.titanchat.util.xml.XMLObject.XMLType;
+import com.titankingdoms.dev.titanchat.util.xml.XMLParser;
+import com.titankingdoms.dev.titanchat.util.xml.XMLSection;
 
 public final class UpdateUtil {
 	
 	private final String rss;
+	
+	private final String currentName;
+	private String newName;
+	
 	private final String currentVersion;
 	private String newVersion;
 	
-	public UpdateUtil(String name, String currentVersion) {
+	private boolean available;
+	
+	public UpdateUtil(String name, PluginDescriptionFile pdf) {
 		this.rss = "http://dev.bukkit.org/bukkit-plugins/" + name + "/files.rss";
-		this.currentVersion = currentVersion;
+		this.currentName = pdf.getName() + " v" + pdf.getVersion();
+		this.newName = currentName;
+		this.currentVersion = pdf.getVersion().replace("#", ".").replaceAll("[^\\d\\.]", "");
 		this.newVersion = currentVersion;
+		this.available = false;
 	}
 	
-	public String check() {
-		try {
-			URL url = new URL(rss);
+	public boolean checkAvailability() {
+		if (!this.available) {
+			String[] currentDigits = currentVersion.split("\\.");
+			String[] newDigits = newVersion.split("\\.");
 			
-			XMLEventReader reader = XMLInputFactory.newInstance().createXMLEventReader(url.openStream());
+			int digits = Math.max(currentDigits.length, newDigits.length);
 			
-			boolean isItem = false;
-			
-			while (reader.hasNext()) {
-				XMLEvent event = reader.nextEvent();
-				
-				if (!isItem) {
-					isItem = event.toString().equals("<item>");
-					continue;
-				}
-				
-				if (!event.toString().equals("<title>"))
-					continue;
-				
-				this.newVersion = reader.nextEvent().toString().replaceAll("[^\\d\\.]", "");
-				break;
+			for (int digit = 0; digit < digits; digit++) {
+				try {
+					int currentDigit = NumberUtils.toInt(currentDigits[digit], 0);
+					int newDigit = NumberUtils.toInt(newDigits[digit], 0);
+					
+					if (newDigit == currentDigit)
+						continue;
+					
+					this.available = newDigit > currentDigit;
+					break;
+					
+				} catch (Exception e) {}
 			}
-			
-		} catch (Exception e) {
-			this.newVersion = currentVersion;
 		}
 		
-		return newVersion;
+		return available;
+	}
+	
+	public String getCurrentName() {
+		return currentName;
 	}
 	
 	public String getCurrentVersion() {
 		return currentVersion;
 	}
 	
+	public String getNewName() {
+		return newName;
+	}
+	
 	public String getNewVersion() {
 		return newVersion;
 	}
 	
-	public boolean newer(String version) {
-		String[] currentDigits = currentVersion.split("\\.");
-		String[] newDigits = version.split("\\.");
-		
-		int digits = Math.max(currentDigits.length, newDigits.length);
-		
-		for (int digit = 0; digit < digits; digit++) {
-			try {
-				int currentDigit = NumberUtils.toInt(currentDigits[digit], 0);
-				int newDigit = NumberUtils.toInt(newDigits[digit], 0);
-				
-				if (newDigit > currentDigit)
-					return true;
-				
-				if (newDigit < currentDigit)
-					break;
-				
-			} catch (Exception e) {}
-		}
-		
-		return false;
+	public boolean hasUpdate() {
+		return available;
 	}
 	
-	public boolean verify() {
-		return newer(check());
+	public String readFeed() {
+		try {
+			URL url = new URL(rss);
+			
+			XMLDocument document = XMLParser.parse(url.openStream());
+			
+			XMLObject section = document.getElements("item").get(0);
+			
+			if (!section.getType().equals(XMLType.SECTION))
+				throw new Exception();
+			
+			XMLObject element = ((XMLSection) section).getElements("title").get(0);
+			
+			if (!element.getType().equals(XMLType.ELEMENT))
+				throw new Exception();
+			
+			this.newName = ((XMLElement) element).getValue();
+			this.newVersion = newName.replace("#", ".").replaceAll("[^\\d\\.]", "");
+			
+		} catch (Exception e) {
+			this.newName = currentName;
+			this.newVersion = currentVersion;
+		}
+		
+		return newVersion;
 	}
 }
