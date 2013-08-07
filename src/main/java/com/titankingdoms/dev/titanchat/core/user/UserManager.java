@@ -58,6 +58,10 @@ public final class UserManager implements Manager<User> {
 		return get(sender.getName());
 	}
 	
+	public List<User> getUsers() {
+		return getAll();
+	}
+	
 	@Override
 	public boolean has(String name) {
 		return (name != null) ? users.containsKey(name.toLowerCase()) : false;
@@ -69,6 +73,14 @@ public final class UserManager implements Manager<User> {
 			return false;
 		
 		return get(user.getName()).equals(user);
+	}
+	
+	public boolean hasUser(String name) {
+		return has(name);
+	}
+	
+	public boolean hasUser(User user) {
+		return has(user);
 	}
 	
 	@Override

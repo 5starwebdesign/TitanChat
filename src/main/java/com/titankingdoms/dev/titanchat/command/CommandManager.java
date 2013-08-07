@@ -47,6 +47,14 @@ public final class CommandManager implements Manager<Command> {
 		return new ArrayList<Command>(commands.values());
 	}
 	
+	public Command getCommand(String name) {
+		return get(name);
+	}
+	
+	public List<Command> getCommands() {
+		return getAll();
+	}
+	
 	@Override
 	public boolean has(String name) {
 		return (name != null) ? commands.containsKey(name.toLowerCase()) : false;
@@ -58,6 +66,14 @@ public final class CommandManager implements Manager<Command> {
 			return false;
 		
 		return get(command.getName()).equals(command);
+	}
+	
+	public boolean hasCommand(String name) {
+		return has(name);
+	}
+	
+	public boolean hasCommand(Command command) {
+		return has(command);
 	}
 	
 	@Override

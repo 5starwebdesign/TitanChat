@@ -34,7 +34,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 === Dependencies
 
-* CraftBukkit 1.5.2-R1.0
+* CraftBukkit 1.6.2-R0.1
 * Vault (Required only for affixes of permissions plugins)
 
 ----
@@ -51,12 +51,11 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 === Changelog
 
-* 24.07.13 - Rewrite begins
-* 25.07.13 - Added Manager and EndPoint
+* 24.07.13 - Added several base classes
 * 26.07.13 - Added addon, channel and command packages
-* 27.07.13 - Added Debugger
 * 28.07.13 - Added user package
 * 30.07.13 - Added FormatUtils (Formerly com.titankingdoms.dev.titanchat.format in v4)
+* 31.07.13 - Added XML Parsing utils for UpdateUtil
 
 ----
 

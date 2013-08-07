@@ -52,8 +52,16 @@ public final class ChannelManager implements Manager<Channel> {
 		return new ArrayList<Channel>(channels.values());
 	}
 	
+	public Channel getChannel(String name) {
+		return get(name);
+	}
+	
 	public File getChannelDirectory() {
 		return new File(plugin.getDataFolder(), "channels");
+	}
+	
+	public List<Channel> getChannels() {
+		return getAll();
 	}
 	
 	@Override
@@ -67,6 +75,14 @@ public final class ChannelManager implements Manager<Channel> {
 			return false;
 		
 		return get(channel.getName()).equals(channel);
+	}
+	
+	public boolean hasChannel(String name) {
+		return has(name);
+	}
+	
+	public boolean hasChannel(Channel channel) {
+		return has(channel);
 	}
 	
 	@Override
