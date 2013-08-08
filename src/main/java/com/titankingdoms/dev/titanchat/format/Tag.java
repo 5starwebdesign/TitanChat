@@ -17,11 +17,11 @@
 
 package com.titankingdoms.dev.titanchat.format;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.event.ChatEvent;
 
 public interface Tag {
 	
 	public String getTag();
 	
-	public String getValue(EndPoint endpoint);
+	public String getValue(ChatEvent event);
 }

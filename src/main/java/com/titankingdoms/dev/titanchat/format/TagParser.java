@@ -17,11 +17,13 @@
 
 package com.titankingdoms.dev.titanchat.format;
 
+import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.event.ChatEvent;
 
 public abstract class TagParser implements Manager<Tag> {
 	
@@ -33,5 +35,35 @@ public abstract class TagParser implements Manager<Tag> {
 		this.plugin = TitanChat.getInstance();
 	}
 	
-	public abstract String parse(EndPoint endpoint, String line);
+	public final Tag getTag(String name) {
+		return get(name);
+	}
+	
+	public final List<Tag> getTags() {
+		return getAll();
+	}
+	
+	public final boolean hasTag(String name) {
+		return has(name);
+	}
+	
+	public final boolean hasTag(Tag tag) {
+		return has(tag);
+	}
+	
+	public String parse(ChatEvent event) {
+		StringBuffer format = new StringBuffer();
+		Matcher match = pattern.matcher(event.getFormat());
+		
+		while (match.find()) {
+			String replacement = match.group();
+			
+			if (hasTag(replacement))
+				replacement = getTag(replacement).getValue(event);
+			
+			match.appendReplacement(format, (replacement != null) ? replacement : "");
+		}
+		
+		return match.appendTail(format).toString();
+	}
 }

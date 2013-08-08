@@ -29,10 +29,10 @@ import org.bukkit.ChatColor;
 
 public final class FormatUtils {
 	
-	public static final ChatColor AMARANTH = ChatColor.RED;
 	public static final ChatColor AZURE = ChatColor.BLUE;
 	public static final ChatColor BLACK = ChatColor.BLACK;
 	public static final ChatColor BLUE = ChatColor.DARK_BLUE;
+	public static final ChatColor CRIMSON = ChatColor.RED;
 	public static final ChatColor CYAN = ChatColor.AQUA;
 	public static final ChatColor FUCHSIA = ChatColor.LIGHT_PURPLE;
 	public static final ChatColor GOLD = ChatColor.GOLD;
