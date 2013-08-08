@@ -131,7 +131,7 @@ public abstract class User implements EndPoint {
 				"type: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getType() : "\"\"")) +
 				"}" +
 				"}";
-		}
+	}
 	
 	public static final class Meta {
 		

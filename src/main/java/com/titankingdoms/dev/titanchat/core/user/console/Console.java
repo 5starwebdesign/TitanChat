@@ -36,4 +36,15 @@ public final class Console extends User {
 	public void sendRawLine(String line) {
 		getCommandSender().sendMessage(line);
 	}
+	
+	@Override
+	public String toString() {
+		return "User: {" +
+				"name: CONSOLE, " +
+				"current: {" +
+				"name: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getName() : "\"\"")) + ", " +
+				"type: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getType() : "\"\"")) +
+				"}" +
+				"}";
+	}
 }
