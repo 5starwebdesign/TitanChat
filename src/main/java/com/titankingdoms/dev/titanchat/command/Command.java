@@ -18,6 +18,7 @@
 package com.titankingdoms.dev.titanchat.command;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
 
 public abstract class Command {
 	
@@ -43,6 +44,8 @@ public abstract class Command {
 		
 		return false;
 	}
+	
+	public abstract void execute(CommandSender sender, String[] args);
 	
 	public String[] getAliases() {
 		return aliases;
