@@ -80,12 +80,12 @@ public abstract class Command {
 	@Override
 	public String toString() {
 		return "Command: {" +
-				"name: " + getName() + "," +
-				"aliases: [" + StringUtils.join(getAliases(), ", ") + "]," +
-				"description: " + getDescription() + "," +
-				"arguments: {" +
-				"min: " + getMinArguments() + "," +
-				"max: " + getMaxArguments() +
+				"name: " + getName() + ", " +
+				"aliases: [" + StringUtils.join(getAliases(), ", ") + "], " +
+				"description: " + getDescription() + ", " +
+				"range: {" +
+				"minArgs: " + getMinArguments() + ", " +
+				"maxArgs: " + getMaxArguments() +
 				"}" +
 				"}";
 	}

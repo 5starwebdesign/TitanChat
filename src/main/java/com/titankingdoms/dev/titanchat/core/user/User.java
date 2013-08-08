@@ -125,9 +125,9 @@ public abstract class User implements EndPoint {
 	@Override
 	public String toString() {
 		return "User: {" +
-				"name: " + getName() + "," +
+				"name: " + getName() + ", " +
 				"current: {" +
-				"name: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getName() : "\"\"")) + "," +
+				"name: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getName() : "\"\"")) + ", " +
 				"type: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getType() : "\"\"")) +
 				"}" +
 				"}";

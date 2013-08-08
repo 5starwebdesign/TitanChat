@@ -36,7 +36,7 @@ public class Addon extends Loadable {
 	@Override
 	public String toString() {
 		return "Addon: {" +
-				"name: " + getName() + "," +
+				"name: " + getName() + ", " +
 				"file: " + getFile().getName() +
 				"}";
 	}
