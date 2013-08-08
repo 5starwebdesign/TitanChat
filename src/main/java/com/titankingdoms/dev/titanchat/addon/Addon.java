@@ -28,14 +28,16 @@ public class Addon extends Loadable {
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Addon)
-			if (getName().equals(((Addon) object).getName()))
-				return getFile().equals(((Addon) object).getFile());
+			return toString().equals(object.toString());
 		
 		return false;
 	}
 	
 	@Override
 	public String toString() {
-		return "ChatAddon: {name: " + getName() + ", file: " + getFile().getName() + "}";
+		return "Addon: {" +
+				"name: " + getName() + "," +
+				"file: " + getFile().getName() +
+				"}";
 	}
 }

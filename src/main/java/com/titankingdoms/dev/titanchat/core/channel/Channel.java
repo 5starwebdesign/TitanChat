@@ -34,7 +34,7 @@ public abstract class Channel implements EndPoint {
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Channel)
-			return getName().equals(((Channel) object).getName());
+			return toString().equals(object.toString());
 		
 		return false;
 	}
@@ -60,6 +60,8 @@ public abstract class Channel implements EndPoint {
 	
 	@Override
 	public String toString() {
-		return "Channel: {name: " + getName() + "}";
+		return "Channel: {" +
+				"name: " + getName() +
+				"}";
 	}
 }

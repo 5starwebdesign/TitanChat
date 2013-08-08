@@ -46,7 +46,7 @@ public abstract class User implements EndPoint {
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof User)
-			return getName().equals(((User) object).getName());
+			return toString().equals(object.toString());
 		
 		return false;
 	}
@@ -80,6 +80,10 @@ public abstract class User implements EndPoint {
 	
 	public boolean hasPermission(String node) {
 		return VaultUtils.hasPermission(getCommandSender(), node);
+	}
+	
+	public boolean isCurrentEndPoint(EndPoint endpoint) {
+		return (current != null) ? current.equals(endpoint) : endpoint == null;
 	}
 	
 	@Override
@@ -120,8 +124,14 @@ public abstract class User implements EndPoint {
 	
 	@Override
 	public String toString() {
-		return "User: {name: {" + getName() + "}";
-	}
+		return "User: {" +
+				"name: " + getName() + "," +
+				"current: {" +
+				"name: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getName() : "\"\"")) + "," +
+				"type: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getType() : "\"\"")) +
+				"}" +
+				"}";
+		}
 	
 	public static final class Meta {
 		

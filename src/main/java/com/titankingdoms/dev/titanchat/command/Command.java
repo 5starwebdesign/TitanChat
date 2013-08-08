@@ -17,6 +17,8 @@
 
 package com.titankingdoms.dev.titanchat.command;
 
+import org.apache.commons.lang.StringUtils;
+
 public abstract class Command {
 	
 	private final String name;
@@ -37,7 +39,7 @@ public abstract class Command {
 	@Override
 	public boolean equals(Object object) {
 		if (object instanceof Command)
-			return getName().equals(((Command) object).getName());
+			return toString().equals(object.toString());
 		
 		return false;
 	}
@@ -77,6 +79,14 @@ public abstract class Command {
 	
 	@Override
 	public String toString() {
-		return "Command: {name: " + getName() + "}";
+		return "Command: {" +
+				"name: " + getName() + "," +
+				"aliases: [" + StringUtils.join(getAliases(), ", ") + "]," +
+				"description: " + getDescription() + "," +
+				"arguments: {" +
+				"min: " + getMinArguments() + "," +
+				"max: " + getMaxArguments() +
+				"}" +
+				"}";
 	}
 }
