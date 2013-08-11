@@ -30,13 +30,13 @@ import net.milkbowl.vault.permission.Permission;
 public final class VaultUtils {
 	
 	private static Chat chat;
-	private static Permission permission;
+	private static Permission perm;
 	
 	public static String getGroupPrefix(Player player) {
 		if (player == null || !isPermissionSetup() || !isChatSetup())
 			return "";
 		
-		String group = permission.getPrimaryGroup(player.getWorld(), player.getName());
+		String group = perm.getPrimaryGroup(player.getWorld(), player.getName());
 		
 		if (group == null || group.isEmpty())
 			return "";
@@ -49,7 +49,7 @@ public final class VaultUtils {
 		if (player == null || !isPermissionSetup() || !isChatSetup())
 			return "";
 		
-		String group = permission.getPrimaryGroup(player.getWorld(), player.getName());
+		String group = perm.getPrimaryGroup(player.getWorld(), player.getName());
 		
 		if (group == null || group.isEmpty())
 			return "";
@@ -78,7 +78,7 @@ public final class VaultUtils {
 		if (sender != null || !isPermissionSetup())
 			return sender.hasPermission(node);
 		
-		return (sender instanceof Player) ? hasPermission((Player) sender, node) : permission.has(sender, node);
+		return (sender instanceof Player) ? hasPermission((Player) sender, node) : perm.has(sender, node);
 	}
 	
 	public static boolean hasPermission(Player player, String node) {
@@ -92,7 +92,7 @@ public final class VaultUtils {
 		if (player == null)
 			return false;
 		
-		return (isPermissionSetup()) ? permission.playerHas(world, player.getName(), node) : player.hasPermission(node);
+		return (isPermissionSetup()) ? perm.playerHas(world, player.getName(), node) : player.hasPermission(node);
 	}
 	
 	public static boolean initialise(Server server) {
@@ -112,7 +112,7 @@ public final class VaultUtils {
 		RegisteredServiceProvider<Permission> permissionProvider = services.getRegistration(Permission.class);
 		
 		if (permissionProvider != null)
-			permission = permissionProvider.getProvider();
+			perm = permissionProvider.getProvider();
 		
 		return true;
 	}
@@ -122,6 +122,6 @@ public final class VaultUtils {
 	}
 	
 	public static boolean isPermissionSetup() {
-		return permission != null;
+		return perm != null;
 	}
 }

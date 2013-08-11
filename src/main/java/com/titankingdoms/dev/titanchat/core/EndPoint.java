@@ -17,15 +17,21 @@
 
 package com.titankingdoms.dev.titanchat.core;
 
+import java.util.Set;
+
+import com.titankingdoms.dev.titanchat.event.ChatEvent;
+
 public interface EndPoint {
 	
 	public String getName();
 	
+	public Set<EndPoint> getRelayedPoints();
+	
 	public String getType();
 	
-	public void onMessageIn(EndPoint sender, String format, String message);
+	public void onMessageReceive(ChatEvent event);
 	
-	public void onMessageOut(EndPoint recipient, String format, String message);
+	public void onMessageSend(ChatEvent event);
 	
 	public void sendNotice(String... messages);
 	

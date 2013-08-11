@@ -18,13 +18,16 @@
 package com.titankingdoms.dev.titanchat.core.user;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.event.ChatEvent;
 import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
 public abstract class User implements EndPoint {
@@ -37,10 +40,13 @@ public abstract class User implements EndPoint {
 	
 	private final Map<String, Meta> meta;
 	
+	private final Set<EndPoint> represent = new HashSet<EndPoint>();
+	
 	public User(String name) {
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
 		this.meta = new HashMap<String, Meta>();
+		this.represent.add(this);
 	}
 	
 	@Override
@@ -57,16 +63,30 @@ public abstract class User implements EndPoint {
 		return current;
 	}
 	
+	public String getDiplayName() {
+		return getMeta("display-name", getName()).stringValue();
+	}
+	
+	public Meta getMeta(String key) {
+		return (key != null) ? getMeta(key, new Meta(key, new Object())) : new Meta("", new Object());
+	}
+	
+	public Meta getMeta(String key, Object def) {
+		return (key != null) ? getMeta(key, new Meta(key, def)) : new Meta("", def);
+	}
+	
 	public Meta getMeta(String key, Meta def) {
-		if (key == null)
-			return (def != null) ? def : new Meta("", new Object());
-		
 		return (hasMeta(key)) ? meta.get(key) : def;
 	}
 	
 	@Override
 	public final String getName() {
 		return name;
+	}
+	
+	@Override
+	public Set<EndPoint> getRelayedPoints() {
+		return new HashSet<EndPoint>(represent);
 	}
 	
 	@Override
@@ -87,10 +107,10 @@ public abstract class User implements EndPoint {
 	}
 	
 	@Override
-	public void onMessageIn(EndPoint sender, String format, String message) {}
+	public void onMessageReceive(ChatEvent event) {}
 	
 	@Override
-	public void onMessageOut(EndPoint recipient, String format, String message) {}
+	public void onMessageSend(ChatEvent event) {}
 	
 	@Override
 	public void sendNotice(String... messages) {

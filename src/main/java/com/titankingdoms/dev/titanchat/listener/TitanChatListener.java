@@ -21,10 +21,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.user.User;
 import com.titankingdoms.dev.titanchat.core.user.UserManager;
+import com.titankingdoms.dev.titanchat.core.user.participant.Participant;
 
 public final class TitanChatListener implements Listener {
 	
@@ -35,8 +38,19 @@ public final class TitanChatListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-		User user = plugin.getManager(UserManager.class).getUser(event.getPlayer());
-		user.onMessageOut(user.getCurrentEndPoint(), "", event.getMessage());
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		UserManager manager = plugin.getManager(UserManager.class);
+		User user = new Participant(event.getPlayer());
+		manager.registerAll(user);
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		UserManager manager = plugin.getManager(UserManager.class);
+		User user = manager.get(event.getPlayer().getName());
+		manager.unregister(user);
 	}
 }

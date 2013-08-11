@@ -15,39 +15,37 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.core;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.core.user.User;
+import com.titankingdoms.dev.titanchat.core.user.UserManager;
 import com.titankingdoms.dev.titanchat.event.ChatEvent;
 
-public abstract class Channel implements EndPoint {
+public final class MinecraftChat implements EndPoint {
 	
-	protected final TitanChat plugin;
+	private final TitanChat plugin;
 	
-	private final String name;
-	
-	public Channel(String name) {
+	public MinecraftChat() {
 		this.plugin = TitanChat.getInstance();
-		this.name = name;
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Channel)
-			return toString().equals(object.toString());
-		
-		return false;
+	public String getName() {
+		return "MinecraftChat";
 	}
 	
 	@Override
-	public final String getName() {
-		return name;
+	public Set<EndPoint> getRelayedPoints() {
+		return new HashSet<EndPoint>();
 	}
 	
 	@Override
-	public final String getType() {
-		return "Channel";
+	public String getType() {
+		return "MinecraftChat";
 	}
 	
 	@Override
@@ -57,12 +55,14 @@ public abstract class Channel implements EndPoint {
 	public void onMessageSend(ChatEvent event) {}
 	
 	@Override
-	public void sendNotice(String... messages) {}
+	public void sendNotice(String... messages) {
+		for (User user : plugin.getManager(UserManager.class).getUsers())
+			user.sendNotice(messages);
+	}
 	
 	@Override
-	public String toString() {
-		return "Channel: {" +
-				"name: " + getName() +
-				"}";
+	public void sendRawLine(String line) {
+		for (User user : plugin.getManager(UserManager.class).getUsers())
+			user.sendRawLine(line);
 	}
 }
