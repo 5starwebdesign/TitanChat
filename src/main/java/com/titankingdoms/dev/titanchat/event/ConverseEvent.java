@@ -17,7 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.event;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +25,7 @@ import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.dev.titanchat.core.EndPoint;
 
-public final class ChatEvent extends Event implements Cloneable {
+public final class ConverseEvent extends Event implements Cloneable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
@@ -36,20 +35,20 @@ public final class ChatEvent extends Event implements Cloneable {
 	private String format;
 	private String message;
 	
-	public ChatEvent(EndPoint sender, Set<EndPoint> recipients, String format, String message) {
+	public ConverseEvent(EndPoint sender, Set<EndPoint> recipients, String format, String message) {
 		this.sender = sender;
 		this.recipients = recipients;
 		this.format = format;
 		this.message = (message != null) ? message : "";
 	}
 	
-	public ChatEvent(EndPoint sender, String format, String message) {
+	public ConverseEvent(EndPoint sender, String format, String message) {
 		this(sender, new HashSet<EndPoint>(), format, message);
 	}
 	
 	@Override
-	public ChatEvent clone() {
-		return new ChatEvent(sender, new HashSet<EndPoint>(recipients), format, message);
+	public ConverseEvent clone() {
+		return new ConverseEvent(sender, new HashSet<EndPoint>(recipients), format, message);
 	}
 	
 	public String getFormat() {
@@ -71,10 +70,6 @@ public final class ChatEvent extends Event implements Cloneable {
 	
 	public Set<EndPoint> getRecipients() {
 		return recipients;
-	}
-	
-	public Set<EndPoint> getRecipientsCopy() {
-		return Collections.unmodifiableSet(recipients);
 	}
 	
 	public EndPoint getSender() {

@@ -23,7 +23,7 @@ import java.util.Set;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.user.User;
 import com.titankingdoms.dev.titanchat.core.user.UserManager;
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 
 public final class MinecraftChat implements EndPoint {
 	
@@ -49,10 +49,14 @@ public final class MinecraftChat implements EndPoint {
 	}
 	
 	@Override
-	public void onMessageReceive(ChatEvent event) {}
+	public boolean onMessageReceive(ConverseEvent event) {
+		return true;
+	}
 	
 	@Override
-	public void onMessageSend(ChatEvent event) {}
+	public boolean onMessageSend(ConverseEvent event) {
+		return true;
+	}
 	
 	@Override
 	public void sendNotice(String... messages) {

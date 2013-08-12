@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.core.channel;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 
 public abstract class Channel implements EndPoint {
 	
@@ -51,10 +51,14 @@ public abstract class Channel implements EndPoint {
 	}
 	
 	@Override
-	public void onMessageReceive(ChatEvent event) {}
+	public boolean onMessageReceive(ConverseEvent event) {
+		return true;
+	}
 	
 	@Override
-	public void onMessageSend(ChatEvent event) {}
+	public boolean onMessageSend(ConverseEvent event) {
+		return true;
+	}
 	
 	@Override
 	public void sendNotice(String... messages) {}

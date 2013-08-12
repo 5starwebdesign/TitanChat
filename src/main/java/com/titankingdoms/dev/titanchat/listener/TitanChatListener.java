@@ -29,7 +29,7 @@ import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.user.User;
 import com.titankingdoms.dev.titanchat.core.user.UserManager;
 import com.titankingdoms.dev.titanchat.core.user.participant.Participant;
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 
 public final class TitanChatListener implements Listener {
 	
@@ -51,20 +51,22 @@ public final class TitanChatListener implements Listener {
 		if (recipient == null)
 			recipient = sender;
 		
-		ChatEvent chatEvent = new ChatEvent(sender, recipient.getRelayPoints(), format, message);
+		ConverseEvent chatEvent = new ConverseEvent(sender, recipient.getRelayPoints(), format, message);
 		
 		if (!chatEvent.getRecipients().contains(sender))
 			chatEvent.getRecipients().add(sender);
 		
-		sender.onMessageSend(chatEvent);
+		if (!sender.onMessageSend(chatEvent))
+			return;
 		
 		plugin.getServer().getPluginManager().callEvent(chatEvent);
 		
-		for (EndPoint relay : chatEvent.clone().getRecipients())
-			relay.onMessageReceive(chatEvent);
-		
-		for (EndPoint relay : chatEvent.getRecipients())
+		for (EndPoint relay : chatEvent.getRecipients()) {
+			if (!relay.onMessageReceive(chatEvent))
+				continue;
+			
 			relay.sendNotice(chatEvent.getFormat().replace("%message", chatEvent.getMessage()));
+		}
 		
 		if (chatEvent.getRecipients().size() < 2)
 			sender.sendNotice("Nobody heard you...");

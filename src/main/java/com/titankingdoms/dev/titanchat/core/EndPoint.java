@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.core;
 
 import java.util.Set;
 
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 
 public interface EndPoint {
 	
@@ -29,9 +29,9 @@ public interface EndPoint {
 	
 	public String getType();
 	
-	public void onMessageReceive(ChatEvent event);
+	public boolean onMessageReceive(ConverseEvent event);
 	
-	public void onMessageSend(ChatEvent event);
+	public boolean onMessageSend(ConverseEvent event);
 	
 	public void sendNotice(String... messages);
 	

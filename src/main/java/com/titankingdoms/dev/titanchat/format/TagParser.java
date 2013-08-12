@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.event.ChatEvent;
+import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 
 public abstract class TagParser implements Manager<Tag> {
 	
@@ -51,7 +51,7 @@ public abstract class TagParser implements Manager<Tag> {
 		return has(tag);
 	}
 	
-	public String parse(ChatEvent event) {
+	public String parse(ConverseEvent event) {
 		StringBuffer format = new StringBuffer();
 		Matcher match = pattern.matcher(event.getFormat());
 		
