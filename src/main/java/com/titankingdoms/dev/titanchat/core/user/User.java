@@ -85,7 +85,7 @@ public abstract class User implements EndPoint {
 	}
 	
 	@Override
-	public Set<EndPoint> getRelayedPoints() {
+	public Set<EndPoint> getRelayPoints() {
 		return new HashSet<EndPoint>(represent);
 	}
 	

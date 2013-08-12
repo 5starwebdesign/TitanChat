@@ -39,7 +39,7 @@ public final class MinecraftChat implements EndPoint {
 	}
 	
 	@Override
-	public Set<EndPoint> getRelayedPoints() {
+	public Set<EndPoint> getRelayPoints() {
 		return new HashSet<EndPoint>();
 	}
 	

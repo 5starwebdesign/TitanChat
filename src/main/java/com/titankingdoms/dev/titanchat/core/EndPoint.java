@@ -25,7 +25,7 @@ public interface EndPoint {
 	
 	public String getName();
 	
-	public Set<EndPoint> getRelayedPoints();
+	public Set<EndPoint> getRelayPoints();
 	
 	public String getType();
 	

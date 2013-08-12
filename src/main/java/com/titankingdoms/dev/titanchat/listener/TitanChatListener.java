@@ -25,9 +25,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.user.User;
 import com.titankingdoms.dev.titanchat.core.user.UserManager;
 import com.titankingdoms.dev.titanchat.core.user.participant.Participant;
+import com.titankingdoms.dev.titanchat.event.ChatEvent;
 
 public final class TitanChatListener implements Listener {
 	
@@ -38,7 +40,35 @@ public final class TitanChatListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {}
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+		event.setCancelled(true);
+		
+		User sender = plugin.getManager(UserManager.class).getUser(event.getPlayer());
+		EndPoint recipient = sender.getCurrentEndPoint();
+		String format = "";
+		String message = event.getMessage();
+		
+		if (recipient == null)
+			recipient = sender;
+		
+		ChatEvent chatEvent = new ChatEvent(sender, recipient.getRelayPoints(), format, message);
+		
+		if (!chatEvent.getRecipients().contains(sender))
+			chatEvent.getRecipients().add(sender);
+		
+		sender.onMessageSend(chatEvent);
+		
+		plugin.getServer().getPluginManager().callEvent(chatEvent);
+		
+		for (EndPoint relay : chatEvent.clone().getRecipients())
+			relay.onMessageReceive(chatEvent);
+		
+		for (EndPoint relay : chatEvent.getRecipients())
+			relay.sendNotice(chatEvent.getFormat().replace("%message", chatEvent.getMessage()));
+		
+		if (chatEvent.getRecipients().size() < 2)
+			sender.sendNotice("Nobody heard you...");
+	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
