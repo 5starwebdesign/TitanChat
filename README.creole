@@ -52,11 +52,12 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 === Changelog
 
 * 24.07.13 - Added several base classes
-* 26.07.13 - Added addon, channel and command packages
-* 28.07.13 - Added user package
+* 29.07.13 - Added user package
 * 30.07.13 - Added FormatUtils (Formerly com.titankingdoms.dev.titanchat.format in v4)
-* 06.08.13 - Added XML Parsing utils for UpdateUtil
-* 08.08.13 - Changed toString() for better representation and updated equals() to use toString()
+* 04.08.13 - Added some utilities
+* 06.08.13 - Added XMLParser library and rewrote UpdateUtil
+* 08.08.13 - Changed toString() in base classes and updated equals() to use toString() for checking
+* 11.08.13 - Added MinecraftChat for management when Channels are disabled
 
 ----
 
