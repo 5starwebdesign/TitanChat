@@ -131,7 +131,7 @@ public class Participant extends ChatEntity {
 		if (!isOnline() || ignorelist.contains(sender.getName()))
 			return;
 		
-		sendMessage(ChatUtils.wordWrap(format.replace("%message", message), 50));
+		sendMessage(format.replace("%message", message));
 	}
 	
 	/**
