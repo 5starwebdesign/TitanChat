@@ -31,11 +31,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.channel.standard.ServerChannel;
 import com.titankingdoms.dev.titanchat.core.channel.standard.StandardLoader;
 import com.titankingdoms.dev.titanchat.core.channel.temporary.TemporaryLoader;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.Permissions;
 import com.titankingdoms.dev.titanchat.util.loading.Loader;
@@ -265,7 +265,7 @@ public final class ChannelManager {
 			return;
 		
 		for (Channel channel : channels) {
-			if (channel == null || channel.getName().isEmpty() || channel.getStatus().equals(Status.TEMPORARY))
+			if (channel == null || channel.getStatus().equals(Status.TEMPORARY))
 				continue;
 			
 			if (getLimit() >= 0 && this.channels.size() >= getLimit())
@@ -302,7 +302,7 @@ public final class ChannelManager {
 			return;
 		
 		for (ChannelLoader loader : loaders) {
-			if (loader == null || loader.getName().isEmpty())
+			if (loader == null)
 				continue;
 			
 			if (hasLoader(loader)) {
@@ -339,8 +339,8 @@ public final class ChannelManager {
 		
 		for (Channel channel : getChannels()) {
 			if (!channel.getConfigFile().exists()) {
-				for (EndPoint endpoint : channel.getLinkedPoints())
-					channel.unlink(endpoint);
+				for (Participant participant : channel.getParticipants())
+					channel.leave(participant);
 				
 				unregisterChannel(channel);
 				continue;

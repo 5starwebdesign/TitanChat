@@ -1,35 +1,20 @@
 CONSOLE:
-    endpoints:
-        focus:
-            name: 'Default'
-            type: 'Channel'
-        all:
-            channel: [Default, Staff]
-            network: []
-            participant: []
-    meta:
+    channels:
+        current: 'Default'
+        all: [Default, Staff]
+    data:
         display-name: '&4Server&f'
 NodinChan:
-    endpoints:
-        focus:
-            name: 'Default'
-            type: 'Channel'
-        all:
-            channel: [Default]
-            network: []
-            participant: []
-    meta:
+    channels:
+        current: 'Default'
+        all: [Default]
+    data:
         prefix: '&4Dev&f'
 SomeRandomGuy:
-    endpoints:
-        focus:
-            name: 'Global'
-            type: 'Channel'
-        all:
-            channel: [Default, Global]
-            network: []
-            participant: []
-    meta:
+    channels:
+        current: 'Global'
+        all: [Default, Global]
+    data:
         display-name: 'Random Guy'
         prefix: 'This is a '
         suffix: ' on your Server'

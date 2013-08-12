@@ -11,14 +11,14 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * Channels with per-channel configuration available (Channels can be disabled in config.yml)
 * Built-in commands to manage your chat
 * Supports any permissions plugins that uses SuperPerms or is supported by [[http://dev.bukkit.org/server-mods/vault/|Vault]]
-** [[http://dev.bukkit.org/permissions/bpermissions/|bPermissions]]
-** [[http://dev.bukkit.org/permissions/permissionsex/|PermissionsEx]]
-** [[http://dev.bukkit.org/permissions/droxperms/|DroxPerms]]
-** [[http://dev.bukkit.org/permissions/permbukkit/|PermissionsBukkit]]
+** [[http://dev.bukkit.org/server-mods/bpermissions/|bPermissions]]
+** [[http://dev.bukkit.org/server-mods/permissionsex/|PermissionsEx]]
+** [[http://dev.bukkit.org/server-mods/droxperms/|DroxPerms]]
+** [[http://dev.bukkit.org/server-mods/permbukkit/|PermissionsBukkit]]
 ** SuperPerms
 ** GroupManager
-** [[http://dev.bukkit.org/permissions/privileges/|Privileges]]
-** [[http://dev.bukkit.org/permissions/zpermissions/|zPermissions]]
+** [[http://dev.bukkit.org/server-mods/privileges/|Privileges]]
+** [[http://dev.bukkit.org/server-mods/zpermissions/|zPermissions]]
 * Addons, custom channels and external commands can be used to support any kind of plugin, creating channels with different kind of behaviours and adding new features
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 === Dependecies
 
-* CraftBukkit 1.5.2-R1.0
+* CraftBukkit 1.5.2-R0.1
 * Vault (Required only for affixes of permissions plugins)
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 20.03.13 - Completed half of the rewrite, awaiting Bukkit 1.5 Beta Build
 * 22.03.13 - Completed most of the rewrite, completing commands
 * 05.04.13 - Ensure that code is compatible with Jenkins
-* 11.04.13 - Documented
+* 11.04.13 - JavaDocs
 * 30.04.13 - Fixed bugs
 * 07.05.13 - Added help section and private messaging
 * 09.05.13 - Improved private messaging, made commands more descriptive and added emoting
@@ -63,21 +63,13 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 14.05.13 - Added TemporaryChannels and some commands
 * 15.05.13 - Made commands treat multiple arguments within quotations as one argument
 * 16.05.13 - TitanChat v4.1 Release
-* 17.05.13 - Into v4.1.1 development as an improvement update
-* 18.05.13 - Fixed some minor issues
-* 20.05.13 - Into v4.2 development
-* 08.06.13 - Participant package refactor
-* 12.06.13 - Channel package refactor
-* 03.07.13 - Creativity block, rewrite on hold
 
 -----------------------------------------------------------------------------------------------------------------------
 
 === Todo
 
-* Complete basic addons
-* Per world support
-* Channel networks
-* Code improvements
+* v4.*
+** Create addons
 
 -----------------------------------------------------------------------------------------------------------------------
 

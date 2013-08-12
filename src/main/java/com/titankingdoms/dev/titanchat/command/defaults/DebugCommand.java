@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
@@ -42,11 +43,11 @@ public final class DebugCommand extends Command {
 		setAliases("db");
 		setArgumentRange(2, 1024);
 		setDescription("Enable/Disable the debugger");
-		setUsage("<start|stop> <id>...");
+		setUsage("<start/stop> <id>...");
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, Channel channel, String[] args) {
 		if (args[0].equalsIgnoreCase("start")) {
 			List<String> ids = Arrays.asList(Arrays.copyOfRange(args, 1, args.length));
 			
@@ -73,7 +74,7 @@ public final class DebugCommand extends Command {
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender) {
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return Vault.hasPermission(sender, "TitanChat.debug");
 	}
 }

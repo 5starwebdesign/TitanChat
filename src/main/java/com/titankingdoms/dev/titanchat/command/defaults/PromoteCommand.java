@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.ChannelCommand;
+import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -30,7 +30,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class PromoteCommand extends ChannelCommand {
+public final class PromoteCommand extends Command {
 	
 	public PromoteCommand() {
 		super("Promote");
@@ -55,12 +55,12 @@ public final class PromoteCommand extends ChannelCommand {
 		}
 		
 		channel.getOperators().add(participant.getName());
-		participant.notice("&6You have been promoted in " + channel.getName());
+		participant.sendMessage("&6You have been promoted in " + channel.getName());
 		
-		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
+		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been promoted");
 		
-		channel.notice(participant.getDisplayName() + " &6has been promoted");
+		channel.sendMessage(participant.getDisplayName() + " &6has been promoted");
 	}
 	
 	@Override

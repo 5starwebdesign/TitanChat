@@ -17,53 +17,43 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
- * {@link PrivMsgCommand} - Command for private messaging
+ * {@link WhoCommand} - Command for getting information about a player
  * 
  * @author NodinChan
  *
  */
-public final class PrivMsgCommand extends Command {
-
-	public PrivMsgCommand() {
-		super("PrivMsg");
-		setAliases("msg", "pm");
-		setArgumentRange(1, 1024);
-		setDescription("Private messaging");
-		setUsage("<player> [message]");
+public final class WhoCommand extends Command {
+	
+	public WhoCommand() {
+		super("Who");
+		setArgumentRange(0, 1);
+		setDescription("Get information about the player");
+		setUsage("[player]");
 	}
-
+	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
-		Participant target = plugin.getParticipantManager().getParticipant(args[0]);
-		
-		if (!target.isOnline()) {
-			sendMessage(sender, target.getDisplayName() + " &4is currently offline");
-			return;
-		}
-		
+	public void execute(CommandSender sender, Channel channel, String[] args) {
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);
-		participant.link(target);
-		sendMessage(sender, "&6You have started a private conversation with " + target.getDisplayName());
-		target.notice(participant.getDisplayName() + " &6has started a private conversation with you");
 		
-		String message = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
+		if (args.length > 0)
+			participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
-		if (args.length > 1)
-			target.processConversation(participant, target.getConversationFormat(), message);
+		sendMessage(sender, "&b" + StringUtils.center(participant.getName(), 50, '='));
+		sendMessage(sender, "&6Status: " + ((participant.isOnline()) ? "&2Online" : "&4Offline"));
+		sendMessage(sender, "&6Current Channel: &b" + participant.getCurrent());
+		sendMessage(sender, "&6Channels: &b" + StringUtils.join(participant.getChannelList(), ", "));
 	}
-
+	
 	@Override
-	public boolean permissionCheck(CommandSender sender) {
-		return Vault.hasPermission(sender, "TitanChat.privmsg");
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
+		return true;
 	}
 }

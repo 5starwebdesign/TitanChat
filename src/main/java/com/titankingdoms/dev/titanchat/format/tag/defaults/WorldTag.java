@@ -17,24 +17,28 @@
 
 package com.titankingdoms.dev.titanchat.format.tag.defaults;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
 /**
- * {@link ColourTag} - {@link Tag} for the chat display colour of the {@link Channel}
+ * {@link WorldTag} - {@link Tag} for the {@link World} of the {@link Participant}
  * 
  * @author NodinChan
  *
  */
-public final class ColourTag extends Tag {
+public final class WorldTag extends Tag {
 	
-	public ColourTag() {
-		super("%colour");
+	public WorldTag() {
+		super("%world");
 	}
 	
 	@Override
 	public String getVariable(Participant participant, Channel channel) {
-		return channel.getDisplayColour();
+		CommandSender sender = participant.asCommandSender();
+		return (sender instanceof Player) ? ((Player) sender).getWorld().getName() : "";
 	}
 }

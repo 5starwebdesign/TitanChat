@@ -15,26 +15,42 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.format.tag.defaults;
+package com.titankingdoms.dev.titanchat.core.channel.info;
 
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.format.tag.Tag;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * {@link ColourTag} - {@link Tag} for the chat display colour of the {@link Channel}
+ * {@link Status} - The {@link Channel} status
  * 
  * @author NodinChan
  *
  */
-public final class ColourTag extends Tag {
+public enum Status {
+	CONVERSATION("conversation"),
+	DEFAULT("default"),
+	NONE("none"),
+	STAFF("staff"),
+	TEMPORARY("temporary");
 	
-	public ColourTag() {
-		super("%colour");
+	private String name;
+	private static final Map<String, Status> NAME_MAP = new HashMap<String, Status>();
+	
+	private Status(String name) {
+		this.name = name;
 	}
 	
-	@Override
-	public String getVariable(Participant participant, Channel channel) {
-		return channel.getDisplayColour();
+	static {
+		for (Status type : EnumSet.allOf(Status.class))
+			NAME_MAP.put(type.name, type);
+	}
+	
+	public static Status fromName(String name) {
+		return NAME_MAP.get(name.toLowerCase());
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

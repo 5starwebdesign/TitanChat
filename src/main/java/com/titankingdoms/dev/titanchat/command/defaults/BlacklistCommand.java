@@ -22,7 +22,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.ChannelCommand;
+import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -33,18 +33,23 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class BlacklistCommand extends ChannelCommand {
+public final class BlacklistCommand extends Command {
 	
 	public BlacklistCommand() {
 		super("Blacklist");
 		setAliases("b");
 		setArgumentRange(1, 1024);
 		setDescription("Edit or view the blacklist of the channel");
-		setUsage("<add|remove|list> [player] [reason]");
+		setUsage("<add/remove/list> [player] [reason]");
 	}
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
+		if (channel == null) {
+			sendMessage(sender, "&4Channel not defined");
+			return;
+		}
+		
 		if (args[0].equals("list")) {
 			String list = StringUtils.join(channel.getBlacklist(), ", ");
 			sendMessage(sender, "&6" + channel.getName() + " Blacklist: " + list);
@@ -53,7 +58,9 @@ public final class BlacklistCommand extends ChannelCommand {
 		} else {
 			if (args.length < 2) {
 				sendMessage(sender, "&4Invalid argument length");
-				sendMessage(sender, "&6/titanchat [@<channel>] blacklist " + getUsage());
+				
+				String usage = "/titanchat [@<channel>] blacklist " + getUsage();
+				sendMessage(sender, "&6" + usage);
 				return;
 			}
 		}
@@ -66,19 +73,19 @@ public final class BlacklistCommand extends ChannelCommand {
 				return;
 			}
 			
-			channel.unlink(participant);
+			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
+			
+			channel.leave(participant);
 			channel.getBlacklist().add(participant.getName());
-			participant.notice("&4You have been added to the blacklist of " + channel.getName());
+			participant.sendMessage("&4You have been added to the blacklist of " + channel.getName());
 			
-			if (args.length > 2) {
-				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
-				participant.notice("&4Reason: " + reason);
-			}
+			if (!reason.isEmpty())
+				participant.sendMessage("&4Reason: " + reason);
 			
-			if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
+			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been added to the blacklist");
 			
-			channel.notice(participant.getDisplayName() + " &6has been added to the blacklist");
+			channel.sendMessage(participant.getDisplayName() + " &6has been added to the blacklist");
 			
 		} else if (args[0].equalsIgnoreCase("remove")) {
 			if (!channel.getBlacklist().contains(participant.getName())) {
@@ -86,18 +93,18 @@ public final class BlacklistCommand extends ChannelCommand {
 				return;
 			}
 			
+			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
+			
 			channel.getBlacklist().remove(participant.getName());
-			participant.notice("&6You have been removed from the blacklist of " + channel.getName());
+			participant.sendMessage("&6You have been removed from the blacklist of " + channel.getName());
 			
-			if (args.length > 2) {
-				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
-				participant.notice("&6Reason: " + reason);
-			}
+			if (!reason.isEmpty())
+				participant.sendMessage("&6Reason: " + reason);
 			
-			if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
+			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been removed from the blacklist");
 			
-			channel.notice(participant.getDisplayName() + " &6has been removed from the blacklist");
+			channel.sendMessage(participant.getDisplayName() + " &6has been removed from the blacklist");
 			
 		} else {
 			sendMessage(sender, "&4Incorrect usage: /titanchat [@<channel>] blacklist " + getUsage());

@@ -17,8 +17,8 @@
 
 package com.titankingdoms.dev.titanchat.core.channel.standard;
 
-import com.titankingdoms.dev.titanchat.core.channel.setting.Range;
-import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
+import com.titankingdoms.dev.titanchat.core.channel.info.Range;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 
 /**
  * {@link ServerChannel} - Global default channel

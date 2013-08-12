@@ -7,7 +7,7 @@
     <groupId>com.titankingdoms.dev</groupId>
     <artifactId>TitanChat</artifactId>
     <name>TitanChat</name>
-    <version>v4.2</version>
+    <version>v4.1</version>
     
     <description>TitanChat, a chat management and formatting plugin, its high flexibility is what makes it special. Instead of having a large bulk of hardcoded supports for other plugins, an addon system was implemented so that addons, custom channels and external commands can be coded to support other plugins and add new features. The built in commands in TitanChat help make your chat management task easier. Channels can also be disabled to have your old global Minecraft chat, but giving you more control over chat.</description>
     
@@ -57,14 +57,14 @@
         </repository>
         <repository>
             <id>theyeticave-repo</id>
-            <url>http://nexus.theyeticave.net/</url>
+            <url>http://ci.theyeticave.net/plugin/repository/everything/</url>
         </repository>
     </repositories>
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.5.2-R1.0</version>
+            <version>1.5.2-R0.1</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

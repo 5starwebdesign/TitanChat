@@ -20,15 +20,16 @@ package com.titankingdoms.dev.titanchat;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.util.Messaging;
-import com.titankingdoms.dev.titanchat.util.update.Update;
+import com.titankingdoms.dev.titanchat.util.update.UpdateVerify;
 
 /**
  * {@link TitanChatListener} - The listener of TitanChat
@@ -41,11 +42,11 @@ public final class TitanChatListener implements Listener {
 	private final TitanChat plugin;
 	
 	private final String site = "http://dev.bukkit.org/server-mods/titanchat/";
-	private final Update update;
+	private final UpdateVerify update;
 	
 	public TitanChatListener() {
 		this.plugin = TitanChat.getInstance();
-		this.update = new Update(site + "files.rss", "4.2");
+		this.update = new UpdateVerify(site + "files.rss", "4.1");
 	}
 	
 	/**
@@ -62,7 +63,6 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		String message = event.getMessage();
-		EndPoint target = participant.getCurrentEndPoint();
 		
 		if (message.startsWith("@") && message.split(" ").length > 1) {
 			Channel channel = plugin.getChannelManager().getChannel(message.split(" ")[0].substring(1));
@@ -72,10 +72,9 @@ public final class TitanChatListener implements Listener {
 				return;
 			}
 			
-			message = message.substring(message.indexOf(" ") + 1, message.length());
-		}
-		
-		target.processConversation(participant, target.getConversationFormat(), message);
+			participant.chatOut(channel, message.substring(message.indexOf(" ") + 1, message.length()));
+			
+		} else { participant.chatOut(message); }
 	}
 	
 	/**
@@ -90,17 +89,14 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		
-		if (participant.getCurrentEndPoint() != null)
-			participant.notice("&bYou are now speaking in " + participant.getCurrent());
-		
-		if (!plugin.getConfig().getBoolean("update-notify", true))
+		if (!plugin.getConfig().getBoolean("update-verify", true))
 			return;
 		
 		if (participant.hasPermission("TitanChat.update")) {
 			if (update.verify()) {
-				participant.notice("&5A new version of TitanChat is out!");
-				participant.notice("&5You are running &6v" + update.getCurrentVersion());
-				participant.notice("&5Update at &9" + site);
+				participant.sendMessage("&6" + update.getNewVersion() + " &5is out!");
+				participant.sendMessage("&5You are running &6" + update.getCurrentVersion());
+				participant.sendMessage("&5Update at &9" + site);
 			}
 		}
 	}
@@ -117,5 +113,19 @@ public final class TitanChatListener implements Listener {
 		
 		Participant participant = plugin.getParticipantManager().getParticipant(event.getPlayer());
 		plugin.getParticipantManager().unregisterParticipant(participant);
+	}
+	
+	/**
+	 * Colourises text on signs
+	 * 
+	 * @param event {@link SignChangeEvent}
+	 */
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onSignChange(SignChangeEvent event) {
+		if (event == null)
+			return;
+		
+		for (int line = 0; line < 4; line++)
+			event.setLine(line, Format.colourise(event.getLine(line)));
 	}
 }

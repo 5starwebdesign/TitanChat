@@ -17,56 +17,52 @@
 
 package com.titankingdoms.dev.titanchat.command.defaults;
 
+import java.util.Arrays;
+
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.event.ChannelDeletionEvent;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
- * {@link DeleteCommand} - Command for {@link Channel} deletion
+ * {@link PMCommand} - Command for private messaging
  * 
  * @author NodinChan
  *
  */
-public final class DeleteCommand extends Command {
-	
-	public DeleteCommand() {
-		super("Delete");
-		setAliases("d");
-		setArgumentRange(1, 1);
-		setDescription("Delete a channel");
-		setUsage("<channel>");
+public final class PMCommand extends Command {
+
+	public PMCommand() {
+		super("PM");
+		setAliases("msg", "privmsg");
+		setArgumentRange(1, 1024);
+		setDescription("Private messaging");
+		setUsage("<player> [message]");
 	}
 
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		if (!plugin.getChannelManager().hasChannel(args[0])) {
-			sendMessage(sender, "&4Channel does not exist");
+		Participant target = plugin.getParticipantManager().getParticipant(args[0]);
+		
+		if (!target.isOnline()) {
+			sendMessage(sender, target.getDisplayName() + " &4is currently offline");
 			return;
 		}
 		
-		channel = plugin.getChannelManager().getChannel(args[0]);
-		plugin.getChannelManager().unregisterChannel(channel);
+		Participant participant = plugin.getParticipantManager().getParticipant(sender);
+		participant.join(target.getPM());
+		sendMessage(sender, "&6You have started a private conversation with " + target.getDisplayName());
+		target.sendMessage(participant.getDisplayName() + " &6has started a private conversation with you");
 		
-		ChannelDeletionEvent event = new ChannelDeletionEvent(channel);
-		plugin.getServer().getPluginManager().callEvent(event);
-		
-		if (!channel.isParticipating(sender.getName()))
-			sendMessage(sender, "&6" + channel.getName() + " has been deleted");
-		
-		channel.sendMessage("&6" + channel.getName() + " has been deleted");
-		
-		for (Participant participant : channel.getParticipants())
-			channel.leave(participant);
-		
-		channel.getConfigFile().delete();
+		if (args.length > 1)
+			participant.chatOut(target.getPM(), StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " "));
 	}
 
 	@Override
 	public boolean permissionCheck(CommandSender sender, Channel channel) {
-		return Vault.hasPermission(sender, "TitanChat.delete");
+		return Vault.hasPermission(sender, "TitanChat.privmsg");
 	}
 }

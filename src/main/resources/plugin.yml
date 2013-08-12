@@ -1,5 +1,5 @@
 name: TitanChat
-version: '4.1.1 Build #${BUILD_NUMBER}'
+version: '4.1 Build #${BUILD_NUMBER}'
 author: NodinChan
 website: http://dev.bukkit.org/server-mods/titanchat/
 main: com.titankingdoms.dev.titanchat.TitanChat

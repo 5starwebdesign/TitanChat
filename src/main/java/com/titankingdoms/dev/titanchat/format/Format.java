@@ -29,7 +29,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
  */
 public final class Format {
 	
-	private static final String CHAT_FORMAT = "%eptag%prefix%display%suffix\u00A7f: %colour%message";
+	private static final String DEFAULT_FORMAT = "%prefix%display%suffix\u00A7f: %colour%message";
 	
 	/**
 	 * Colourises the text
@@ -86,21 +86,21 @@ public final class Format {
 	}
 	
 	/**
+	 * Gets the default format
+	 * 
+	 * @return The default format
+	 */
+	public static String getDefaultFormat() {
+		return DEFAULT_FORMAT;
+	}
+	
+	/**
 	 * Gets the format
 	 * 
 	 * @return The format
 	 */
 	public static String getFormat() {
 		FileConfiguration config = TitanChat.getInstance().getConfig();
-		return colourise(config.getString("formatting.chat", CHAT_FORMAT));
-	}
-	
-	/**
-	 * Gets the default format
-	 * 
-	 * @return The default format
-	 */
-	public static String getDefaultFormat() {
-		return CHAT_FORMAT;
+		return colourise(config.getString("formatting.format", DEFAULT_FORMAT));
 	}
 }

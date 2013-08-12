@@ -107,20 +107,24 @@ public final class ChatUtils {
 			
 		} else {
 			while (line.length() >= lineLength) {
-				int end = 0;
-				
 				if (line.contains("\n")) {
-					end = line.indexOf("\n");
+					int end = line.indexOf("\n");
+					
+					lines.add(line.substring(0, end));
+					line = ChatColor.getLastColors(lines.get(lines.size() - 1)) + line.substring(end + 1).trim();
 					
 				} else {
-					end = line.lastIndexOf(' ', lineLength + 1);
+					int end = line.lastIndexOf(' ', lineLength + 1);
 					
 					if (end == -1)
-						end = lineLength + ((line.length() > lineLength) ? 1 : 0);
+						end = lineLength + 1;
+					
+					if (end > line.length())
+						end = line.length();
+					
+					lines.add(line.substring(0, end));
+					line = ChatColor.getLastColors(lines.get(lines.size() - 1)) + line.substring(end - 1).trim();
 				}
-				
-				lines.add(line.substring(0, end));
-				line = ChatColor.getLastColors(lines.get(lines.size() - 1)) + line.substring(end).trim();
 			}
 		}
 		

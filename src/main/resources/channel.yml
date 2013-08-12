@@ -7,7 +7,7 @@ password: ''
 range: ''
 tag: ''
 whitelist: false
+data:
 blacklist: []
 whitelist: []
 operators: []
-output: []

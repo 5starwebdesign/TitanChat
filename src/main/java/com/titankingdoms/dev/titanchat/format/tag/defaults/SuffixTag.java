@@ -17,7 +17,7 @@
 
 package com.titankingdoms.dev.titanchat.format.tag.defaults;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
@@ -34,10 +34,7 @@ public final class SuffixTag extends Tag {
 	}
 	
 	@Override
-	public String getVariable(EndPoint sender, EndPoint recipient) {
-		if (!(sender instanceof Participant))
-			return "";
-		
-		return ((Participant) sender).getSuffix();
+	public String getVariable(Participant participant, Channel channel) {
+		return participant.getSuffix();
 	}
 }

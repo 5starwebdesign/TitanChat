@@ -21,7 +21,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
@@ -41,13 +41,13 @@ public final class JoinCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, Channel channel, String[] args) {
 		if (!plugin.getChannelManager().hasAlias(args[0])) {
 			sendMessage(sender, "&4Channel does not exist");
 			return;
 		}
 		
-		Channel channel = plugin.getChannelManager().getChannel(args[0]);
+		channel = plugin.getChannelManager().getChannel(args[0]);
 		
 		if (!channel.getOperators().contains(sender.getName())) {
 			if (!Vault.hasPermission(sender, "TitanChat.join." + channel.getName())) {
@@ -56,7 +56,7 @@ public final class JoinCommand extends Command {
 			}
 		}
 		
-		if (channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
+		if (channel.isParticipating(sender.getName())) {
 			sendMessage(sender, "&4You have already joined the channel");
 			return;
 		}
@@ -78,24 +78,24 @@ public final class JoinCommand extends Command {
 			}
 		}
 		
-		if (!channel.getConfig().getString("password", "").isEmpty()) {
+		if (!channel.getData("password", "").asString().isEmpty()) {
 			if (args.length < 2) {
 				sendMessage(sender, "&4Please enter a password");
 				return;
 			}
 			
-			if (!channel.getConfig().getString("password", "").equals(args[1])) {
+			if (!channel.getData("password").equals(args[1])) {
 				sendMessage(sender, "&4Incorrect password");
 				return;
 			}
 		}
 		
-		channel.link(plugin.getParticipantManager().getParticipant(sender));
+		channel.join(plugin.getParticipantManager().getParticipant(sender));
 		sendMessage(sender, "&6You have joined " + channel.getName());
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender) {
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return true;
 	}
 }

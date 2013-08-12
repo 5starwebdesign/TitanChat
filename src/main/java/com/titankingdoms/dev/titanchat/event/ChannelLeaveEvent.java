@@ -15,29 +15,45 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.format.tag.defaults;
+package com.titankingdoms.dev.titanchat.event;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import org.bukkit.event.HandlerList;
+
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.format.tag.Tag;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
 
 /**
- * {@link EndPointTag} - {@link Tag} for the tag of the {@link EndPoint}
+ * {@link ChannelLeaveEvent} - Called when a {@link Participant} leaves a {@link Channel}
  * 
  * @author NodinChan
  *
  */
-public final class EndPointTag extends Tag {
+public final class ChannelLeaveEvent extends ChannelEvent {
 	
-	public EndPointTag() {
-		super("%eptag");
+	private static final HandlerList handlers = new HandlerList();
+	
+	private final Participant participant;
+	
+	public ChannelLeaveEvent(Participant participant, Channel channel) {
+		super(channel);
+		this.participant = participant;
+	}
+	
+	public static HandlerList getHandlerList() {
+		return handlers;
 	}
 	
 	@Override
-	public String getVariable(EndPoint sender, EndPoint recipient) {
-		if (!(sender instanceof Channel))
-			return "";
-		
-		return ((Channel) recipient).getTag();
+	public HandlerList getHandlers() {
+		return handlers;
+	}
+	
+	/**
+	 * Gets the {@link Participant} involved
+	 * 
+	 * @return The {@link Participant}
+	 */
+	public Participant getParticipant() {
+		return participant;
 	}
 }

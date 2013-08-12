@@ -20,7 +20,7 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.ChannelCommand;
+import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
@@ -30,7 +30,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class EmoteCommand extends ChannelCommand {
+public final class EmoteCommand extends Command {
 	
 	public EmoteCommand() {
 		super("Emote");
@@ -42,10 +42,12 @@ public final class EmoteCommand extends ChannelCommand {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		String format = "* " + sender.getName() + " %message";
-		String message = StringUtils.join(args, " ");
+		if (channel == null) {
+			sendMessage(sender, "&4Channel not defined");
+			return;
+		}
 		
-		channel.processConversation(plugin.getParticipantManager().getParticipant(sender), format, message);
+		plugin.getParticipantManager().getParticipant(sender).emote(channel, StringUtils.join(args, " "));
 	}
 	
 	@Override

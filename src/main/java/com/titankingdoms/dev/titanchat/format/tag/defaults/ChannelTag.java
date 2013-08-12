@@ -15,41 +15,26 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel.setting;
+package com.titankingdoms.dev.titanchat.format.tag.defaults;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
 /**
- * {@link Status} - The {@link Channel} status
+ * {@link ChannelTag} - {@link Tag} for the tag of the {@link Channel}
  * 
  * @author NodinChan
  *
  */
-public enum Status {
-	DEFAULT("default"),
-	NONE("none"),
-	STAFF("staff"),
-	TEMPORARY("temporary");
+public final class ChannelTag extends Tag {
 	
-	private String name;
-	private static final Map<String, Status> NAME_MAP = new HashMap<String, Status>();
-	
-	private Status(String name) {
-		this.name = name;
+	public ChannelTag() {
+		super("%chtag");
 	}
 	
-	static {
-		for (Status type : EnumSet.allOf(Status.class))
-			NAME_MAP.put(type.name, type);
-	}
-	
-	public static Status fromName(String name) {
-		return NAME_MAP.get(name.toLowerCase());
-	}
-	
-	public String getName() {
-		return name;
+	@Override
+	public String getVariable(Participant participant, Channel channel) {
+		return channel.getTag();
 	}
 }

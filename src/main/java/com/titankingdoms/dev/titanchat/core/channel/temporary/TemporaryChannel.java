@@ -18,8 +18,8 @@
 package com.titankingdoms.dev.titanchat.core.channel.temporary;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.channel.setting.Range;
-import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
+import com.titankingdoms.dev.titanchat.core.channel.info.Range;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.format.Format;
 
 /**
@@ -39,11 +39,13 @@ public final class TemporaryChannel extends Channel {
 		return new String[0];
 	}
 	
+	@Override
 	public String getDisplayColour() {
 		return "";
 	}
 	
-	public String getConversationFormat() {
+	@Override
+	public String getFormat() {
 		return Format.getFormat();
 	}
 	
@@ -52,6 +54,7 @@ public final class TemporaryChannel extends Channel {
 		return Range.CHANNEL;
 	}
 	
+	@Override
 	public String getTag() {
 		return getName();
 	}

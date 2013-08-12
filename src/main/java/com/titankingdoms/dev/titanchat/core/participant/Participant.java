@@ -17,50 +17,404 @@
 
 package com.titankingdoms.dev.titanchat.core.participant;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
-import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.event.ChatProcessEvent;
+import com.titankingdoms.dev.titanchat.core.ChatEntity;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.core.participant.privmsg.PrivateMessage;
+import com.titankingdoms.dev.titanchat.event.ChannelChatEvent;
+import com.titankingdoms.dev.titanchat.event.ChannelEmoteEvent;
+import com.titankingdoms.dev.titanchat.format.Censor;
+import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
-public class Participant implements EndPoint {
-	
-	protected final TitanChat plugin;
+/**
+ * {@link Participant} - Represents a {@link CommandSender}
+ * 
+ * @author NodinChan
+ *
+ */
+public class Participant extends ChatEntity {
 	
 	private final Debugger db = new Debugger(4, "Participant");
 	
-	private final String name;
+	private Channel current;
 	
-	private EndPoint current;
+	private final Map<String, Channel> channels;
 	
-	private final Map<String, EndPoint> endpoints;
-	private final Map<String, Meta> meta;
+	private final Set<String> ignorelist;
 	
-	private final Set<EndPoint> basePoint;
+	private final PrivateMessage pm;
 	
 	public Participant(String name) {
-		this.plugin = TitanChat.getInstance();
-		this.name = name;
-		this.endpoints = new HashMap<String, EndPoint>();
-		this.meta = new HashMap<String, Meta>();
+		super("Participant", name);
+		this.channels = new HashMap<String, Channel>();
+		this.ignorelist = new HashSet<String>();
+		this.pm = new PrivateMessage(this);
 		
-		this.basePoint = new HashSet<EndPoint>();
-		this.basePoint.add(this);
+		FileConfiguration config = plugin.getParticipantManager().getConfig();
+		ConfigurationSection section = config.getConfigurationSection(getName());
+		
+		if (section == null) {
+			section = config.createSection(getName());
+			section.set("channels.all", new ArrayList<String>());
+			section.set("channels.current", "");
+		}
+		
+		if (section.get("channels.all") != null) {
+			for (String channelName : section.getStringList("channels.all")) {
+				if (!plugin.getChannelManager().hasChannel(channelName))
+					continue;
+				
+				join(plugin.getChannelManager().getChannel(channelName));
+			}
+		}
+		
+		if (channels.size() <= 1) {
+			for (Channel channel : plugin.getChannelManager().getChannels(Status.DEFAULT).values())
+				join(channel);
+		}
+		
+		for (Channel channel : plugin.getChannelManager().getChannels()) {
+			if (Vault.hasPermission(asCommandSender(), "TitanChat.auto.join." + channel.getName()))
+				join(channel);
+			
+			if (Vault.hasPermission(asCommandSender(), "TitanChat.auto.leave." + channel.getName()))
+				leave(channel);
+		}
+		
+		if (!section.getString("channels.current", "").isEmpty())
+			direct(plugin.getChannelManager().getChannel(section.getString("channels.current", "")));
+		
+		init();
 	}
 	
+	/**
+	 * Gets the {@link CommandSender} represented by this {@link Participant}
+	 * 
+	 * @return The {@link CommandSender} if online
+	 */
 	public CommandSender asCommandSender() {
 		return null;
+	}
+	
+	/**
+	 * Receives chat from the {@link Participant}
+	 * 
+	 * @param sender The message sender
+	 * 
+	 * @param format The message format
+	 * 
+	 * @param message The message
+	 */
+	public void chatIn(Participant sender, String format, String message) {
+		if (!isOnline() || ignorelist.contains(sender.getName()))
+			return;
+		
+		sendMessage(ChatUtils.wordWrap(format.replace("%message", message), 50));
+	}
+	
+	/**
+	 * Chats in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to chat in
+	 * 
+	 * @param message The message
+	 */
+	public void chatOut(Channel channel, String message) {
+		if (!isOnline())
+			return;
+		
+		if (channel == null) {
+			sendMessage("&4Please join a channel to speak");
+			return;
+		}
+		
+		if (!channel.getStatus().equals(Status.CONVERSATION)) {
+			if (!hasPermission("TitanChat.speak." + channel.getName())) {
+				if (!channel.getOperators().contains(getName())) {
+					sendMessage("&4You do not have permission");
+					return;
+				}
+			}
+		}
+		
+		db.debug(Level.INFO, getName() + " Chat: " + channel.getName() + ":" + message);
+		
+		String format = channel.getFormat();
+		
+		if (format == null || format.isEmpty())
+			format = Format.getFormat();
+		
+		Set<Participant> recipients = new HashSet<Participant>();
+		
+		switch (channel.getRange()) {
+		
+		case CHANNEL:
+			recipients.addAll(channel.getParticipants());
+			break;
+			
+		case GLOBAL:
+			recipients.addAll(plugin.getParticipantManager().getParticipants());
+			break;
+			
+		case LOCAL:
+			if (asCommandSender() instanceof Player) {
+				double radius = plugin.getConfig().getDouble("channels.range", 15.0);
+				
+				for (Entity entity : ((Player) asCommandSender()).getNearbyEntities(radius, radius, radius))
+					if (entity instanceof Player)
+						recipients.add(plugin.getParticipantManager().getParticipant((Player) entity));
+				
+			} else {
+				recipients.add(plugin.getParticipantManager().getConsoleParticipant());
+			}
+			break;
+			
+		case WORLD:
+			if (asCommandSender() instanceof Player)
+				for (Player player : ((Player) asCommandSender()).getWorld().getEntitiesByClass(Player.class))
+					recipients.add(plugin.getParticipantManager().getParticipant(player));
+			break;
+		}
+		
+		if (!recipients.contains(this))
+			recipients.add(this);
+		
+		ChannelChatEvent event = new ChannelChatEvent(this, channel, format, message);
+		event.getRecipients().addAll(recipients);
+		plugin.getServer().getPluginManager().callEvent(event);
+		
+		db.debug(Level.INFO, getName() + " Chat Message: " + event.getMessage());
+		db.debug(Level.INFO, getName() + " Chat Format: " + event.getFormat());
+		
+		StringBuilder recipientList = new StringBuilder();
+		
+		for (Participant recipient : event.getRecipients()) {
+			if (recipientList.length() > 0)
+				recipientList.append(", ");
+			
+			recipientList.append(recipient.getName());
+		}
+		
+		db.debug(Level.INFO, getName() + " Chat Recipients: " + recipientList.toString());
+		
+		List<String> phrases = plugin.getConfig().getStringList("filtering.phrases");
+		String censor = plugin.getConfig().getString("filtering.censor");
+		
+		message = Format.colourise(Censor.filter(event.getMessage(), phrases, censor));
+		
+		StringBuffer parsedFormat = new StringBuffer();
+		
+		Pattern tagPattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
+		Matcher tagMatch = tagPattern.matcher(event.getFormat());
+		
+		while (tagMatch.find()) {
+			String replacement = tagMatch.group();
+			
+			if (plugin.getTagManager().hasTag(tagMatch.group())) {
+				Tag tag = plugin.getTagManager().getTag(tagMatch.group());
+				
+				String var = tag.getVariable(this, channel);
+				replacement = (var != null && !var.isEmpty()) ? tag.getFormat().replace("%tag%", var) : "";
+			}
+			
+			tagMatch.appendReplacement(parsedFormat, replacement);
+		}
+		
+		format = Format.colourise(tagMatch.appendTail(parsedFormat).toString());
+		
+		for (Participant recipient : event.getRecipients())
+			recipient.chatIn(this, format, message);
+		
+		if (event.getRecipients().size() <= 1)
+			sendMessage("&6Nobody else heard you...");
+		
+		if (!plugin.getConfig().getBoolean("logging.chat.log", false))
+			return;
+		
+		ConsoleCommandSender console = plugin.getServer().getConsoleSender();
+		String log = format.replace("%message", event.getMessage());
+		
+		if (plugin.getConfig().getBoolean("logging.chat.colour", true))
+			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 50));
+		else
+			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 50));
+	}
+	
+	/**
+	 * Chats in the current {@link Channel}
+	 * 
+	 * @param message The message
+	 */
+	public void chatOut(String message) {
+		chatOut(current, message);
+	}
+	
+	/**
+	 * Directs the focus of the {@link Participant} to the specified {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to direct to
+	 */
+	public final void direct(Channel channel) {
+		this.current = channel;
+		
+		if (channel != null && !isParticipating(channel))
+			join(channel);
+	}
+	
+	/**
+	 * Emotes in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to emote in
+	 * 
+	 * @param emote The emote
+	 */
+	public final void emote(Channel channel, String emote) {
+		if (!isOnline())
+			return;
+		
+		if (channel == null) {
+			sendMessage("&4Please join a channel to speak");
+			return;
+		}
+		
+		if (!channel.getStatus().equals(Status.CONVERSATION)) {
+			if (!hasPermission("TitanChat.speak." + channel.getName())) {
+				if (!channel.getOperators().contains(getName())) {
+					sendMessage("&4You do not have permission");
+					return;
+				}
+			}
+		}
+		
+		db.debug(Level.INFO, getName() + " Emote: " + channel.getName() + ":" + emote);
+		
+		String format = plugin.getConfig().getString("emote.format", "* %prefix%display%suffix %colour%message");
+		
+		Set<Participant> recipients = new HashSet<Participant>();
+		
+		switch (channel.getRange()) {
+		
+		case CHANNEL:
+			recipients.addAll(channel.getParticipants());
+			break;
+			
+		case GLOBAL:
+			recipients.addAll(plugin.getParticipantManager().getParticipants());
+			break;
+			
+		case LOCAL:
+			if (asCommandSender() instanceof Player) {
+				double radius = plugin.getConfig().getDouble("channels.range", 15.0);
+				
+				for (Entity entity : ((Player) asCommandSender()).getNearbyEntities(radius, radius, radius))
+					if (entity instanceof Player)
+						recipients.add(plugin.getParticipantManager().getParticipant((Player) entity));
+				
+			} else {
+				recipients.add(plugin.getParticipantManager().getConsoleParticipant());
+			}
+			break;
+			
+		case WORLD:
+			if (asCommandSender() instanceof Player)
+				for (Player player : ((Player) asCommandSender()).getWorld().getEntitiesByClass(Player.class))
+					recipients.add(plugin.getParticipantManager().getParticipant(player));
+			break;
+		}
+		
+		if (!recipients.contains(this))
+			recipients.add(this);
+		
+		ChannelEmoteEvent event = new ChannelEmoteEvent(this, channel, format, emote);
+		event.getRecipients().addAll(recipients);
+		plugin.getServer().getPluginManager().callEvent(event);
+		
+		db.debug(Level.INFO, getName() + " Emote Action: " + event.getEmote());
+		db.debug(Level.INFO, getName() + " Emote Format: " + event.getFormat());
+		
+		StringBuilder recipientList = new StringBuilder();
+		
+		for (Participant recipient : event.getRecipients()) {
+			if (recipientList.length() > 0)
+				recipientList.append(", ");
+			
+			recipientList.append(recipient.getName());
+		}
+		
+		db.debug(Level.INFO, getName() + " Emote Recipients: " + recipientList.toString());
+		
+		List<String> phrases = plugin.getConfig().getStringList("filtering.phrases");
+		String censor = plugin.getConfig().getString("filtering.censor");
+		
+		emote = Format.colourise(Censor.filter(event.getEmote(), phrases, censor));
+		
+		StringBuffer parsedFormat = new StringBuffer();
+		
+		Pattern tagPattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
+		Matcher tagMatch = tagPattern.matcher(event.getFormat());
+		
+		while (tagMatch.find()) {
+			String replacement = tagMatch.group();
+			
+			if (plugin.getTagManager().hasTag(tagMatch.group())) {
+				Tag tag = plugin.getTagManager().getTag(tagMatch.group());
+				
+				String var = tag.getVariable(this, channel);
+				replacement = (var != null && !var.isEmpty()) ? tag.getFormat().replace("%tag%", var) : "";
+			}
+			
+			tagMatch.appendReplacement(parsedFormat, replacement);
+		}
+		
+		format = Format.colourise(tagMatch.appendTail(parsedFormat).toString());
+		
+		for (Participant recipient : event.getRecipients())
+			recipient.chatIn(this, format, emote);
+		
+		if (event.getRecipients().size() <= 1)
+			sendMessage("&6Nobody else saw you...");
+		
+		if (!plugin.getConfig().getBoolean("logging.chat.log", false))
+			return;
+		
+		ConsoleCommandSender console = plugin.getServer().getConsoleSender();
+		String log = format.replace("%message", event.getEmote());
+		
+		if (plugin.getConfig().getBoolean("logging.chat.colour", true))
+			console.sendMessage(ChatUtils.wordWrap(Format.colourise(log), 50));
+		else
+			console.sendMessage(ChatUtils.wordWrap(Format.decolourise(log), 50));
+	}
+	
+	/**
+	 * Emotes in the current {@link Channel}
+	 * 
+	 * @param emote The emote
+	 */
+	public final void emote(String emote) {
+		emote(current, emote);
 	}
 	
 	@Override
@@ -71,259 +425,259 @@ public class Participant implements EndPoint {
 		return false;
 	}
 	
-	public final void focus(EndPoint endpoint) {
-		this.current = endpoint;
-		
-		if (endpoint != null && !isLinked(endpoint))
-			link(endpoint);
+	/**
+	 * Gets a list of the names of all joined {@link Channel}s
+	 * 
+	 * @return A list of the names of all joined {@link Channel}s
+	 */
+	public final List<String> getChannelList() {
+		List<String> list = new ArrayList<String>(channels.keySet());
+		Collections.sort(list);
+		return list;
 	}
 	
-	public Set<EndPoint> getBasePoints() {
-		return Collections.unmodifiableSet(basePoint);
+	/**
+	 * Gets all joined {@link Channel}s
+	 * 
+	 * @return All joined {@link Channel}s
+	 */
+	public final Set<Channel> getChannels() {
+		return new HashSet<Channel>(channels.values());
 	}
 	
-	public final ConfigurationSection getConfiguration() {
-		return plugin.getParticipantManager().getConfig().getConfigurationSection(name);
+	@Override
+	public FileConfiguration getConfig() {
+		throw new UnsupportedOperationException("Participants do not have config files");
 	}
 	
-	public String getConversationFormat() {
-		return "";
-	}
-	
+	/**
+	 * Gets the name of the current (@link Channel}
+	 * 
+	 * @return The name of the current {@link Channel}
+	 */
 	public final String getCurrent() {
 		return (current != null) ? current.getName() : "";
 	}
 	
-	public final EndPoint getCurrentEndPoint() {
+	/**
+	 * Gets the current {@link Channel}
+	 * 
+	 * @return The current {@link Channel}
+	 */
+	public final Channel getCurrentChannel() {
 		return current;
 	}
 	
+	@Override
+	public ConfigurationSection getDataSection() {
+		FileConfiguration config = plugin.getParticipantManager().getConfig();
+		return config.getConfigurationSection(getName() + ".data");
+	}
+	
+	/**
+	 * Gets the display name of the {@link Participant}
+	 * 
+	 * @return The display name
+	 */
 	public String getDisplayName() {
-		return getMeta("display-name", getName()).stringValue();
+		return getData("display-name", getName()).asString();
 	}
 	
-	public int getLinkedPointCount() {
-		return endpoints.size();
+	/**
+	 * Gets the ignore list of the {@link Participant}
+	 * 
+	 * @return The ignore list
+	 */
+	public Set<String> getIgnoreList() {
+		return ignorelist;
 	}
 	
-	public <T extends EndPoint> int getLinkedPointCountByClass(Class<T> pointClass) {
-		int count = 0;
-		
-		if (pointClass == null)
-			return count;
-		
-		for (EndPoint endpoint : getLinkedPoints()) {
-			if (pointClass.isAssignableFrom(endpoint.getClass()))
-				count++;
-		}
-		
-		return count;
+	/**
+	 * Gets the {@link PrivateMessage} {@link Channel}
+	 * 
+	 * @return The {@link PrivateMessage} {@link Channel}
+	 */
+	public PrivateMessage getPM() {
+		return pm;
 	}
 	
-	public final Set<EndPoint> getLinkedPoints() {
-		return new HashSet<EndPoint>(endpoints.values());
-	}
-	
-	@SuppressWarnings("unchecked")
-	public <T extends EndPoint> Set<T> getLinkedPointsByClass(Class<T> pointClass) {
-		Set<T> endpoints = new HashSet<T>();
-		
-		if (pointClass == null)
-			return endpoints;
-		
-		for (EndPoint endpoint : getLinkedPoints()) {
-			if (pointClass.isAssignableFrom(endpoint.getClass()))
-				endpoints.add((T) endpoint);
-		}
-		
-		return endpoints;
-	}
-	
-	public Map<String, Meta> getMeta() {
-		return new HashMap<String, Meta>(meta);
-	}
-	
-	public Meta getMeta(String key, Meta def) {
-		if (key == null)
-			return (def != null) ? def : new Meta("", new Object());
-		
-		return (meta.containsKey(key)) ? this.meta.get(key) : def;
-	}
-	
-	public final Meta getMeta(String key, Object def) {
-		if (key == null)
-			return new Meta("", (def != null) ? def : new Object());
-		
-		return getMeta(key, new Meta(key, def));
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public String getPointType() {
-		return "Participant";
-	}
-	
+	/**
+	 * Gets the prefix of the {@link Participant}
+	 * 
+	 * @return The prefix
+	 */
 	public String getPrefix() {
-		return getMeta("prefix", "").stringValue();
+		return getData("prefix", "").asString();
 	}
 	
+	/**
+	 * Gets the suffix of the {@link Participant}
+	 * 
+	 * @return The suffix
+	 */
 	public String getSuffix() {
-		return getMeta("suffix", "").stringValue();
+		return getData("suffix", "").asString();
 	}
 	
-	public ChatProcessEvent processConversation(EndPoint sender, String format, String message) {
-		return new ChatProcessEvent(sender, new HashSet<EndPoint>(), format, message);
-	}
-	
+	/**
+	 * Checks the permission of the {@link Participant}
+	 * 
+	 * @param node The permission node
+	 * 
+	 * @return True if the {@link Participant} has the permission
+	 */
 	public final boolean hasPermission(String node) {
 		return Vault.hasPermission(asCommandSender(), node);
 	}
 	
-	public final boolean isLinked(EndPoint endpoint) {
-		if (endpoint == null)
-			return false;
-		
-		return endpoints.containsKey((endpoint.getPointType() + ":" + endpoint.getName()).toLowerCase());
+	@Override
+	public final void init() {
+		super.init();
+		ignorelist.addAll(plugin.getParticipantManager().getConfig().getStringList("ignore"));
 	}
 	
+	/**
+	 * Checks if the {@link Participant} is focused at the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if focused at the {@link Channel}
+	 */
+	public final boolean isDirected(String channel) {
+		if ((channel == null || channel.isEmpty()) && current == null)
+			return true;
+		
+		return current.getName().equalsIgnoreCase(channel);
+	}
+	
+	/**
+	 * CHecks if the {@link Participant} is focused at the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if focused at the {@link Channel}
+	 */
+	public final boolean isDirected(Channel channel) {
+		return isDirected((channel != null) ? channel.getName() : "");
+	}
+	
+	/**
+	 * Checks if the {@link Participant} is online
+	 * 
+	 * @return True if the {@link Participant} is online
+	 */
 	public final boolean isOnline() {
 		return asCommandSender() != null;
 	}
 	
-	public final boolean isRegistered() {
-		return plugin.getParticipantManager().hasParticipant(getName());
+	/**
+	 * Checks if the {@link Participant} is participating in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if participating in the {@link Channel}
+	 */
+	public final boolean isParticipating(String channel) {
+		return channels.containsKey((channel != null) ? channel.toLowerCase() : "");
 	}
 	
-	public final void link(EndPoint endpoint) {
-		if (endpoint == null)
+	/**
+	 * Checks if the {@link Participant} is participating in the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel}
+	 * 
+	 * @return True if participating in the {@link Channel}
+	 */
+	public final boolean isParticipating(Channel channel) {
+		return (channel != null) ? isParticipating(channel.getName()) : false;
+	}
+	
+	/**
+	 * Joins the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to join
+	 */
+	public final void join(Channel channel) {
+		if (channel == null)
 			return;
 		
-		if (!isLinked(endpoint))
-			endpoints.put((endpoint.getPointType() + ":" + endpoint.getName()).toLowerCase(), endpoint);
+		if (!isParticipating(channel))
+			this.channels.put(channel.getName().toLowerCase(), channel);
 		
-		if (!endpoint.isLinked(this))
-			endpoint.link(this);
+		if (!channel.isParticipating(this))
+			channel.join(this);
 		
-		if (!endpoint.equals(current))
-			focus(endpoint);
+		if (!channel.equals(current))
+			direct(channel);
 	}
 	
-	public void messageIn(EndPoint sender, String format, String message) {
+	/**
+	 * Leaves the {@link Channel}
+	 * 
+	 * @param channel The {@link Channel} to leave
+	 */
+	public final void leave(Channel channel) {
+		if (channel == null)
+			return;
 		
+		if (isParticipating(channel))
+			this.channels.remove(channel.getName().toLowerCase());
+		
+		if (channel.isParticipating(this))
+			channel.leave(this);
+		
+		if (channel.equals(current))
+			direct(getChannels().iterator().hasNext() ? getChannels().iterator().next() : null);
 	}
 	
-	public void messageOut(EndPoint recipient, String format, String message) {
-		
+	@Override
+	public void reloadConfig() {
+		throw new UnsupportedOperationException("Participants do not have config files");
 	}
 	
-	public void notice(String... messages) {
+	@Override
+	public void save() {
+		super.save();
+		plugin.getParticipantManager().getConfig().set(getName() + ".channels.current", getCurrent());
+		plugin.getParticipantManager().getConfig().set(getName() + ".channels.all", getChannelList());
+		plugin.getParticipantManager().getConfig().set(getName() + ".ignore", new ArrayList<String>(ignorelist));
+		plugin.getParticipantManager().saveConfig();
+	}
+	
+	@Override
+	public void saveConfig() {
+		throw new UnsupportedOperationException("Participants do not have config files");
+	}
+	
+	@Override
+	public void sendMessage(String... messages) {
 		if (isOnline())
 			asCommandSender().sendMessage(Format.colourise(messages));
 	}
 	
-	public final void reloadMeta() {
-		ConfigurationSection meta = getConfiguration().getConfigurationSection("meta");
-		
-		if (meta == null)
-			return;
-		
-		for (String key : getMeta().keySet())
-			setMeta(key, null);
-		
-		for (String key : meta.getKeys(false))
-			setMeta(key, meta.get(key));
-	}
-	
-	public void saveMeta() {
-		ConfigurationSection meta = getConfiguration().getConfigurationSection("meta");
-		
-		if (meta == null)
-			return;
-		
-		for (String key : meta.getKeys(false))
-			meta.set(key, null);
-		
-		for (String key : getMeta().keySet())
-			meta.set(key, getMeta().get(key));
-	}
-	
+	/**
+	 * Sets the display name of the {@link Participant}
+	 * 
+	 * @param name The new display name
+	 */
 	public void setDisplayName(String name) {
-		setMeta("display-name", name);
+		setData("display-name", name);
 	}
 	
-	public void setMeta(Meta meta) {
-		if (meta == null || meta.key() == null || meta.key().isEmpty())
-			return;
+	/**
+	 * Gets the {@link Participant}
+	 * 
+	 * @return The {@link Participant} if online, otherwise this
+	 */
+	public Participant toParticipant() {
+		if (getName().equals("CONSOLE"))
+			return plugin.getParticipantManager().getConsoleParticipant();
 		
-		if (meta.value() == null)
-			this.meta.remove(meta.key());
-		else
-			this.meta.put(meta.key(), meta);
-	}
-	
-	public final void setMeta(String key, Object meta) {
-		if (key == null || key.isEmpty())
-			return;
+		Player player = plugin.getServer().getPlayerExact(getName());
 		
-		setMeta(new Meta(key, meta));
-	}
-	
-	public final void unlink(EndPoint endpoint) {
-		if (endpoint == null)
-			return;
+		if (player == null)
+			return this;
 		
-		if (isLinked(endpoint))
-			endpoints.remove((endpoint.getPointType() + ":" + endpoint.getName()).toLowerCase());
-		
-		if (endpoint.isLinked(this))
-			endpoint.unlink(this);
-		
-		if (endpoint.equals(current))
-			focus((!getLinkedPoints().isEmpty()) ? getLinkedPoints().iterator().next() : null);
-	}
-	
-	public static final class Meta {
-		
-		private final String key;
-		private final Object value;
-		
-		public Meta(String key, Object value) {
-			this.key = key;
-			this.value = value;
-		}
-		
-		public boolean booleanValue() {
-			return Boolean.valueOf(stringValue());
-		}
-		
-		public double doubleValue() {
-			return NumberUtils.toDouble(stringValue(), 0.0D);
-		}
-		
-		public float floatValue() {
-			return NumberUtils.toFloat(stringValue(), 0.0F);
-		}
-		
-		public int intValue() {
-			return NumberUtils.toInt(stringValue(), 0);
-		}
-		
-		public String key() {
-			return key;
-		}
-		
-		public long longValue() {
-			return NumberUtils.toLong(stringValue(), 0L);
-		}
-		
-		public String stringValue() {
-			return (value != null) ? value.toString() : "";
-		}
-		
-		public Object value() {
-			return value;
-		}
+		return plugin.getParticipantManager().getParticipant(player.getName());
 	}
 }

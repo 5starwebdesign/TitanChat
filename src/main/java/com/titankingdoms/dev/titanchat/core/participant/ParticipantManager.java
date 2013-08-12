@@ -32,7 +32,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.util.Debugger;
 
 public final class ParticipantManager {
@@ -168,7 +168,7 @@ public final class ParticipantManager {
 			return;
 		
 		for (Participant participant : participants) {
-			if (participant == null || participant.getName().isEmpty())
+			if (participant == null)
 				continue;
 			
 			if (hasParticipant(participant)) {
@@ -240,12 +240,12 @@ public final class ParticipantManager {
 		if (participant == null || !hasParticipant(participant))
 			return;
 		
-		participant.saveMeta();
+		participant.save();
 		
 		this.participants.remove(participant.getName().toLowerCase());
 		db.debug(Level.INFO, "Unregistered participant: " + participant.getName());
 		
-		for (EndPoint endpoint : participant.getLinkedPoints())
-			endpoint.unlink(participant);
+		for (Channel channel : participant.getChannels())
+			channel.leave(participant);
 	}
 }

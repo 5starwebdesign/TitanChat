@@ -35,7 +35,7 @@ import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.command.CommandManager;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
-import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.core.participant.ParticipantManager;
 import com.titankingdoms.dev.titanchat.format.tag.TagManager;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
@@ -160,7 +160,7 @@ public final class TitanChat extends JavaPlugin {
 	 */
 	public void log(Level level, String message) {
 		if (message != null && !message.isEmpty())
-			log.log((level != null) ? level : Level.INFO, "[TitanChat v4.2] " + message);
+			log.log((level != null) ? level : Level.INFO, "[TitanChat v4.1] " + message);
 	}
 	
 	@Override
@@ -178,8 +178,25 @@ public final class TitanChat extends JavaPlugin {
 				return true;
 			}
 			
-			String cmdName = args[0];
-			args = Arrays.copyOfRange(args, 1, args.length);
+			String cmdName = "";
+			String chName = "";
+			
+			if (args[0].startsWith("@")) {
+				if (args.length < 2) {
+					cmdName = "join";
+					chName = args[0].substring(1);
+					args = new String[] { args[0].substring(1) };
+					
+				} else {
+					cmdName = args[1];
+					chName = args[0].substring(1);
+					args = Arrays.copyOfRange(args, 2, args.length);
+				}
+				
+			} else {
+				cmdName = args[0];
+				args = Arrays.copyOfRange(args, 1, args.length);
+			}
 			
 			List<String> arguments = new ArrayList<String>();
 			
@@ -191,17 +208,30 @@ public final class TitanChat extends JavaPlugin {
 			args = arguments.toArray(new String[0]);
 			
 			db.debug(Level.INFO, "Command: " + cmdName);
+			db.debug(Level.INFO, "Channel:" + ((chName.isEmpty()) ? "" : " " + chName));
 			db.debug(Level.INFO, "Arguments:" + ((args != null) ? " " + StringUtils.join(args, ", ") : ""));
 			
-			onCommand(sender, cmdName, args);
+			Channel ch = null;
+			
+			if (!chName.isEmpty()) {
+				if (!channel.hasChannel(chName)) {
+					Messaging.sendMessage(sender, "&4Channel does not exist");
+					return true;
+				}
+				
+				ch = channel.getChannel(chName);
+				
+			} else { ch = participant.getParticipant(sender).getCurrentChannel(); }
+			
+			onCommand(sender, ch, cmdName, args);
 			return true;
 			
 		} else if (cmd.getName().equalsIgnoreCase("chat")) {
-			onCommand(sender, "chat", args);
+			onCommand(sender, participant.getParticipant(sender).getCurrentChannel(), "chat", args);
 			return true;
 			
 		} else if (cmd.getName().equalsIgnoreCase("pm")) {
-			onCommand(sender, "pm", args);
+			onCommand(sender, (Channel) null, "pm", args);
 			return true;
 		}
 		
@@ -219,25 +249,25 @@ public final class TitanChat extends JavaPlugin {
 	 * 
 	 * @param args The arguments of the command
 	 */
-	private void onCommand(CommandSender sender, String label, String[] args) {
+	private void onCommand(CommandSender sender, Channel ch, String label, String[] args) {
 		if (command.hasLabel(label)) {
 			Command cmd = command.getCommand(label);
 			
 			if (args.length < cmd.getMinArguments() || args.length > cmd.getMaxArguments()) {
 				Messaging.sendMessage(sender, "&4Invalid argument length");
 				
-				String cmdLbl = "/titanchat [@<channel>] " + cmd.getName().toLowerCase();
-				String cmdArgs = (!cmd.getUsage().isEmpty()) ? " " + cmd.getUsage().toLowerCase() : "";
-				Messaging.sendMessage(sender, "&6" + cmdLbl + cmdArgs);
+				String pre = "/titanchat [@<channel>] " + cmd.getName();
+				String suf = (!cmd.getUsage().isEmpty()) ? " " + cmd.getUsage() : "";
+				Messaging.sendMessage(sender, "&6" + pre + suf);
 				return;
 			}
 			
-			if (!cmd.permissionCheck(sender)) {
+			if (!cmd.permissionCheck(sender, ch)) {
 				Messaging.sendMessage(sender, "&4You do not have permission");
 				return;
 			}
 			
-			cmd.execute(sender, args);
+			cmd.execute(sender, ch, args);
 			return;
 		}
 		

@@ -22,8 +22,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
@@ -42,7 +41,7 @@ public final class ListCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, Channel channel, String[] args) {
 		String header = "&b" + StringUtils.center(" Channel List ", 50, '=');
 		
 		StringBuilder list = new StringBuilder();
@@ -65,7 +64,7 @@ public final class ListCommand extends Command {
 			if (list.length() > 0)
 				list.append(", ");
 			
-			list.append(ch.getName() + " (" + ch.getLinkedPointCountByClass(Participant.class) + ")");
+			list.append(ch.getName() + " (" + ch.getParticipants().size() + ")");
 		}
 		
 		sender.sendMessage(header);
@@ -73,7 +72,7 @@ public final class ListCommand extends Command {
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender) {
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return true;
 	}
 }

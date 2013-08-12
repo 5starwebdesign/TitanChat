@@ -68,9 +68,6 @@ public final class PlayerParticipant extends Participant {
 		if (name == null)
 			name = "";
 		
-		if (name.length() > 16)
-			name = name.substring(0, 16);
-		
 		if (isOnline()) {
 			Player player = asCommandSender();
 			
@@ -82,5 +79,10 @@ public final class PlayerParticipant extends Participant {
 		}
 		
 		super.setDisplayName(name);
+	}
+	
+	@Override
+	public Participant toParticipant() {
+		return this;
 	}
 }

@@ -22,7 +22,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.ChannelCommand;
+import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -33,7 +33,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class PlaceCommand extends ChannelCommand {
+public final class PlaceCommand extends Command {
 	
 	public PlaceCommand() {
 		super("Place");
@@ -44,22 +44,27 @@ public final class PlaceCommand extends ChannelCommand {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
+		if (channel == null) {
+			sendMessage(sender, "&4Channel not defined");
+			return;
+		}
+		
 		Participant participant = plugin.getParticipantManager().getParticipant(args[0]);
 		
-		if (channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
+		if (channel.isParticipating(participant)) {
 			sendMessage(sender, participant.getDisplayName() + " &4is already on the channel");
 			return;
 		}
 		
 		String reason = StringUtils.join(Arrays.copyOfRange(args, 1, args.length));
 		
-		channel.link(participant);
-		participant.notice("&4You have been placed in " + channel.getName() + ": " + reason);
+		channel.join(participant);
+		participant.sendMessage("&4You have been placed in " + channel.getName() + ": " + reason);
 		
-		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
+		if (!channel.isParticipating(sender.getName()))
 			sendMessage(sender, participant.getDisplayName() + " &6has been placed");
 		
-		channel.notice(participant.getDisplayName() + " &6has been placed");
+		channel.sendMessage(participant.getDisplayName() + " &6has been placed");
 	}
 	
 	@Override

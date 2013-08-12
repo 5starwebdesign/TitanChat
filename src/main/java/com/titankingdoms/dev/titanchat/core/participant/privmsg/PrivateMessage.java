@@ -15,50 +15,55 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel.standard;
+package com.titankingdoms.dev.titanchat.core.participant.privmsg;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.info.Range;
 import com.titankingdoms.dev.titanchat.core.channel.info.Status;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.format.Format;
 
-/**
- * {@link StandardChannel} - Standard channels for communication
- * 
- * @author NodinChan
- *
- */
-public class StandardChannel extends Channel {
+public final class PrivateMessage extends Channel {
 	
-	public StandardChannel(String name, Status status) {
-		super(name, "Standard", status);
+	public PrivateMessage(Participant participant) {
+		super(participant.getName(), "Conversation", Status.CONVERSATION);
+		super.join(participant);
 	}
 	
 	@Override
 	public String[] getAliases() {
-		if (getConfig().get("aliases", null) == null)
-			return new String[0];
-		
-		return getConfig().getStringList("aliases").toArray(new String[0]);
+		return new String[0];
 	}
 	
 	@Override
 	public String getDisplayColour() {
-		return getConfig().getString("display-colour", "");
+		return plugin.getConfig().getString("pm.display-colour", "");
 	}
 	
 	@Override
 	public String getFormat() {
-		return getConfig().getString("format", Format.getFormat());
+		return plugin.getConfig().getString("pm.format", Format.getFormat());
 	}
 	
 	@Override
 	public Range getRange() {
-		return Range.fromName(getConfig().getString("range", "channel"));
+		return Range.CHANNEL;
 	}
 	
 	@Override
 	public String getTag() {
-		return getConfig().getString("tag", "");
+		return "";
 	}
+	
+	@Override
+	public void init() {}
+	
+	@Override
+	public void join(Participant participant) {}
+	
+	@Override
+	public void leave(Participant participant) {}
+	
+	@Override
+	public void save() {}
 }

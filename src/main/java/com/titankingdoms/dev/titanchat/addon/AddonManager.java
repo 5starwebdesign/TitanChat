@@ -124,7 +124,7 @@ public final class AddonManager {
 			return;
 		
 		for (ChatAddon addon : addons) {
-			if (addon == null || addon.getName().isEmpty())
+			if (addon == null)
 				continue;
 			
 			if (hasAddon(addon)) {

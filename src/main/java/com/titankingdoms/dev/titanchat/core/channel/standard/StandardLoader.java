@@ -21,7 +21,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelLoader;
-import com.titankingdoms.dev.titanchat.core.channel.setting.Status;
+import com.titankingdoms.dev.titanchat.core.channel.info.Status;
 
 /**
  * {@link StandardLoader} - Loads {@link StandardChannel}s

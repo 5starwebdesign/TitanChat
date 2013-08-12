@@ -20,11 +20,8 @@ package com.titankingdoms.dev.titanchat.command.defaults;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.ChannelCommand;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.participant.Participant;
-import com.titankingdoms.dev.titanchat.event.ChatProcessEvent;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
 
 /**
@@ -33,7 +30,7 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class ChatCommand extends ChannelCommand {
+public final class ChatCommand extends Command {
 	
 	public ChatCommand() {
 		super("Chat");
@@ -45,14 +42,12 @@ public final class ChatCommand extends ChannelCommand {
 	
 	@Override
 	public void execute(CommandSender sender, Channel channel, String[] args) {
-		EndPoint msgSender = plugin.getParticipantManager().getParticipant(sender);
-		EndPoint msgRecipient = channel;
+		if (channel == null) {
+			sendMessage(sender, "&4Channel not defined");
+			return;
+		}
 		
-		String format = msgRecipient.getConversationFormat();
-		String message = StringUtils.join(args, " ");
-		
-		ChatProcessEvent event = msgRecipient.processConversation(msgSender, format, message);
-		plugin.getServer().getPluginManager().callEvent(event);
+		plugin.getParticipantManager().getParticipant(sender).chatOut(channel, StringUtils.join(args, " "));
 	}
 	
 	@Override

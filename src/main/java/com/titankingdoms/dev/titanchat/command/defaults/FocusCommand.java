@@ -40,35 +40,32 @@ public final class FocusCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, Channel channel, String[] args) {
 		if (!plugin.getChannelManager().hasAlias(args[0])) {
 			sendMessage(sender, "&4Channel does not exist");
 			return;
 		}
 		
-		Channel channel = plugin.getChannelManager().getChannel(args[0]);
+		channel = plugin.getChannelManager().getChannel(args[0]);
 		
-		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
+		if (!channel.isParticipating(sender.getName())) {
 			plugin.getServer().dispatchCommand(sender, "titanchat join " + channel.getName());
 			return;
 		}
 		
-		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
-			return;
-		
 		Participant participant = plugin.getParticipantManager().getParticipant(sender);
 		
-		if (channel.equals(participant.getCurrentEndPoint())) {
+		if (channel.equals(participant.getCurrentChannel())) {
 			sendMessage(sender, "&4You are already speaking in the channel");
 			return;
 		}
 		
-		participant.focus(channel);
+		participant.direct(channel);
 		sendMessage(sender, "&6You are now speaking in " + channel.getName());
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender) {
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return true;
 	}
 }

@@ -127,9 +127,10 @@ public final class CommandManager {
 				new CreateCommand(), new DeleteCommand(), new ListCommand(),
 				new BlacklistCommand(), new KickCommand(), new PlaceCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
-				new FocusCommand(), new JoinCommand(), new LeaveCommand(),
+				new FocusCommand(), new IgnoreCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
-				new ChatCommand(), new EmoteCommand(), new NickCommand(), new PrivMsgCommand()
+				new ChatCommand(), new EmoteCommand(), new PMCommand(),
+				new WhoCommand()
 		);
 		
 		registerCommands(Loader.load(Command.class, getCommandDirectory()).toArray(new Command[0]));
@@ -148,7 +149,7 @@ public final class CommandManager {
 			return;
 		
 		for (Command command : commands) {
-			if (command == null || command.getName().isEmpty())
+			if (command == null)
 				continue;
 			
 			if (hasCommand(command)) {
@@ -178,9 +179,10 @@ public final class CommandManager {
 				new CreateCommand(), new DeleteCommand(), new ListCommand(),
 				new BlacklistCommand(), new KickCommand(), new PlaceCommand(), new WhitelistCommand(),
 				new DemoteCommand(), new PromoteCommand(),
-				new FocusCommand(), new JoinCommand(), new LeaveCommand(),
+				new FocusCommand(), new IgnoreCommand(), new JoinCommand(), new LeaveCommand(),
 				new DebugCommand(), new HelpCommand(), new ReloadCommand(),
-				new ChatCommand(), new EmoteCommand(), new NickCommand(), new PrivMsgCommand()
+				new ChatCommand(), new EmoteCommand(), new PMCommand(),
+				new WhoCommand()
 		);
 		
 		registerCommands(Loader.load(Command.class, getCommandDirectory()).toArray(new Command[0]));

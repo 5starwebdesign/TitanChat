@@ -40,13 +40,13 @@ public final class LeaveCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, Channel channel, String[] args) {
 		if (!plugin.getChannelManager().hasAlias(args[0])) {
 			sendMessage(sender, "&4Channel does not exist");
 			return;
 		}
 		
-		Channel channel = plugin.getChannelManager().getChannel(args[0]);
+		channel = plugin.getChannelManager().getChannel(args[0]);
 		
 		if (!channel.getOperators().contains(sender.getName())) {
 			if (!Vault.hasPermission(sender, "TitanChat.leave." + channel.getName())) {
@@ -55,17 +55,17 @@ public final class LeaveCommand extends Command {
 			}
 		}
 		
-		if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender))) {
+		if (!channel.isParticipating(sender.getName())) {
 			sendMessage(sender, "&4You have not joined the channel");
 			return;
 		}
 		
-		channel.unlink(plugin.getParticipantManager().getParticipant(sender));
+		channel.leave(plugin.getParticipantManager().getParticipant(sender));
 		sendMessage(sender, "&6You have left " + channel.getName());
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender) {
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return true;
 	}
 }

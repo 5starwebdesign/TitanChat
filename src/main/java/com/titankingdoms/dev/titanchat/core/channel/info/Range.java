@@ -15,7 +15,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.titankingdoms.dev.titanchat.core.channel.setting;
+package com.titankingdoms.dev.titanchat.core.channel.info;
 
 import java.util.EnumSet;
 import java.util.HashMap;

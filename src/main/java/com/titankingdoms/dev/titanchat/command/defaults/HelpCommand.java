@@ -22,6 +22,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.format.ChatUtils;
 import com.titankingdoms.dev.titanchat.format.Format;
 import com.titankingdoms.dev.titanchat.topic.Index;
@@ -42,11 +43,11 @@ public final class HelpCommand extends Command {
 		setAliases("?", "topic");
 		setArgumentRange(0, 1024);
 		setDescription("Get information about TitanChat");
-		setUsage("[topic|page]...");
+		setUsage("[topic/page]...");
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, Channel channel, String[] args) {
 		TopicManager manager = plugin.getTopicManager();
 		
 		Topic topic = manager.getGeneralIndex();
@@ -95,7 +96,7 @@ public final class HelpCommand extends Command {
 	}
 	
 	@Override
-	public boolean permissionCheck(CommandSender sender) {
+	public boolean permissionCheck(CommandSender sender, Channel channel) {
 		return true;
 	}
 }

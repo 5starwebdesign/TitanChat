@@ -22,7 +22,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.command.ChannelCommand;
+import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.core.channel.Channel;
 import com.titankingdoms.dev.titanchat.core.participant.Participant;
 import com.titankingdoms.dev.titanchat.util.vault.Vault;
@@ -33,14 +33,14 @@ import com.titankingdoms.dev.titanchat.util.vault.Vault;
  * @author NodinChan
  *
  */
-public final class WhitelistCommand extends ChannelCommand {
+public final class WhitelistCommand extends Command {
 	
 	public WhitelistCommand() {
 		super("Whitelist");
 		setAliases("w");
 		setArgumentRange(1, 1024);
 		setDescription("Edit or view the whitelist of the channel");
-		setUsage("<add|list|remove> [player] [reason]");
+		setUsage("<add/list/remove> [player] [reason]");
 	}
 	
 	@Override
@@ -78,18 +78,18 @@ public final class WhitelistCommand extends ChannelCommand {
 				return;
 			}
 			
+			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
+			
 			channel.getWhitelist().add(participant.getName());
-			participant.notice("&6You have been added to the whitelist of " + channel.getName());
+			participant.sendMessage("&6You have been added to the whitelist of " + channel.getName());
 			
-			if (args.length > 2) {
-				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
-				participant.notice("&6Reason: " + reason);
-			}
+			if (!reason.isEmpty())
+				participant.sendMessage("&6Reason: " + reason);
 			
-			if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
+			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been added to the whitelist");
 			
-			channel.notice(participant.getDisplayName() + " &6has been added to the whitelist");
+			channel.sendMessage(participant.getDisplayName() + " &6has been added to the whitelist");
 			
 		} else if (args[0].equalsIgnoreCase("remove")) {
 			if (!channel.getWhitelist().contains(participant.getName())) {
@@ -97,18 +97,18 @@ public final class WhitelistCommand extends ChannelCommand {
 				return;
 			}
 			
+			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length)).trim();
+			
 			channel.getWhitelist().remove(participant.getName());
-			participant.notice("&4You have been removed from the whitelisted of " + channel.getName());
+			participant.sendMessage("&4You have been removed from the whitelisted of " + channel.getName());
 			
-			if (args.length > 2) {
-				String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), " ").trim();
-				participant.notice("&4Reason: " + reason);
-			}
+			if (!reason.isEmpty())
+				participant.sendMessage("&4Reason: " + reason);
 			
-			if (!channel.isLinked(plugin.getParticipantManager().getParticipant(sender)))
+			if (!channel.isParticipating(sender.getName()))
 				sendMessage(sender, participant.getDisplayName() + " &6has been removed from the whitelist");
 			
-			channel.notice(participant.getDisplayName() + " &6has been removed from the whitelist");
+			channel.sendMessage(participant.getDisplayName() + " &6has been removed from the whitelist");
 			
 		} else {
 			sendMessage(sender, "&4Incorrect usage: /titanchat [@<channel>] whitelist " + getUsage());

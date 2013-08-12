@@ -20,32 +20,45 @@ package com.titankingdoms.dev.titanchat.event;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.core.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.Format;
 
-public final class ChatProcessEvent extends Event {
+/**
+ * {@link ChannelChatEvent} - Called when {@link Participant}s chat in {@link Channel}s
+ * 
+ * @author NodinChan
+ *
+ */
+public final class ChannelChatEvent extends ChannelEvent {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
-	private final EndPoint sender;
-	private final Set<EndPoint> recipients;
+	private final Participant sender;
+	private final Set<Participant> recipients;
 	
 	private String format;
 	private String message;
 	
-	public ChatProcessEvent(EndPoint sender, Set<EndPoint> recipients, String format, String message) {
+	public ChannelChatEvent(Participant sender, Channel channel, String message) {
+		this(sender, channel, Format.getFormat(), message);
+	}
+	
+	public ChannelChatEvent(Participant sender, Channel channel, String format, String message) {
+		super(channel);
 		this.sender = sender;
-		this.recipients = (recipients != null) ? recipients : new HashSet<EndPoint>();
-		this.format = (format != null) ? format : "";
-		this.message = (message != null) ? message : "";
+		this.recipients = new HashSet<Participant>();
+		this.format = format;
+		this.message = message;
 	}
 	
-	public ChatProcessEvent(EndPoint sender, String format, String message) {
-		this(sender, new HashSet<EndPoint>(), format, message);
-	}
-	
+	/**
+	 * Gets the format to be used
+	 * 
+	 * @return The format
+	 */
 	public String getFormat() {
 		return format;
 	}
@@ -59,23 +72,48 @@ public final class ChatProcessEvent extends Event {
 		return handlers;
 	}
 	
+	/**
+	 * Gets the message to be sent
+	 * 
+	 * @return The message
+	 */
 	public String getMessage() {
 		return message;
 	}
 	
-	public Set<EndPoint> getRecipients() {
+	/**
+	 * Gets the recipients of the message
+	 * 
+	 * @return The recipients
+	 */
+	public Set<Participant> getRecipients() {
 		return recipients;
 	}
 	
-	public EndPoint getSender() {
+	/**
+	 * Gets the sender of the message
+	 * 
+	 * @return The sender
+	 */
+	public Participant getSender() {
 		return sender;
 	}
 	
+	/**
+	 * Sets the format to be used
+	 * 
+	 * @param format The new format
+	 */
 	public void setFormat(String format) {
-		this.format = (format != null) ? format : "";
+		this.format = format;
 	}
 	
+	/**
+	 * Sets the message to be sent
+	 * 
+	 * @param message The new message
+	 */
 	public void setMessage(String message) {
-		this.message = (message != null) ? message : "";
+		this.message = message;
 	}
 }
