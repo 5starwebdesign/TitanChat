@@ -17,9 +17,17 @@
 
 package com.titankingdoms.dev.titanchat.command;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class Command implements CommandBase {
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
+
+import com.titankingdoms.dev.titanchat.TitanChat;
+
+public abstract class Command {
+	
+	protected final TitanChat plugin;
 	
 	private final String name;
 	
@@ -28,12 +36,29 @@ public abstract class Command implements CommandBase {
 	private int maxArgs;
 	private int minArgs;
 	
-	public Command(String name) {
-		this.name = name;
-		this.aliases = new String[0];
-		this.description = "";
+	public Command(String name, String[] aliases, String description) {
+		this.plugin = TitanChat.getInstance();
+		this.name = (name != null) ? name : "";
+		this.aliases = (aliases != null) ? aliases : new String[0];
+		this.description = (description != null) ? description : "";
 		this.maxArgs = 0;
 		this.minArgs = 0;
+	}
+	
+	public Command(String name, String description, String... aliases) {
+		this(name, aliases, description);
+	}
+	
+	public Command(String name, String[] aliases) {
+		this(name, aliases, "");
+	}
+	
+	public Command(String name, String description) {
+		this(name, new String[0], description);
+	}
+	
+	public Command(String name) {
+		this(name, new String[0], "");
 	}
 	
 	@Override
@@ -44,29 +69,30 @@ public abstract class Command implements CommandBase {
 		return false;
 	}
 	
-	@Override
+	public abstract void execute(CommandSender sender, String[] args);
+	
 	public String[] getAliases() {
 		return aliases;
 	}
 	
-	@Override
 	public String getDescription() {
 		return description;
 	}
 	
-	@Override
 	public int getMaxArguments() {
 		return maxArgs;
 	}
 	
-	@Override
 	public int getMinArguments() {
 		return minArgs;
 	}
 	
-	@Override
 	public final String getName() {
 		return name;
+	}
+	
+	public boolean isPermitted(CommandSender sender, String[] args) {
+		return true;
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -74,12 +100,16 @@ public abstract class Command implements CommandBase {
 	}
 	
 	protected void setArgumentRange(int minArgs, int maxArgs) {
-		this.maxArgs = maxArgs;
-		this.minArgs = minArgs;
+		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : minArgs;
+		this.minArgs = (minArgs >= 0) ? minArgs : 0;
 	}
 	
 	protected void setDescription(String description) {
 		this.description = (description != null) ? description : "";
+	}
+	
+	public List<String> tab(CommandSender sender, String[] args) {
+		return new ArrayList<String>();
 	}
 	
 	@Override

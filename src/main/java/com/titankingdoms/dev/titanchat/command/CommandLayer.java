@@ -27,15 +27,29 @@ import java.util.TreeMap;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-public abstract class CommandLayer implements CommandBase {
+public abstract class CommandLayer extends Command {
 	
-	private final String name;
+	private final Map<String, Command> commands;
 	
-	private final Map<String, CommandBase> commands;
+	public CommandLayer(String name, String[] aliases, String description) {
+		super(name, aliases, description);
+		this.commands = new TreeMap<String, Command>();
+	}
+	
+	public CommandLayer(String name, String description, String... aliases) {
+		this(name, aliases, description);
+	}
+	
+	public CommandLayer(String name, String[] aliases) {
+		this(name, aliases, "");
+	}
+	
+	public CommandLayer(String name, String description) {
+		this(name, new String[0], description);
+	}
 	
 	public CommandLayer(String name) {
-		this.name = name;
-		this.commands = new TreeMap<String, CommandBase>();
+		this(name, new String[0], "");
 	}
 	
 	@Override
@@ -47,38 +61,63 @@ public abstract class CommandLayer implements CommandBase {
 	}
 	
 	@Override
-	public final void execute(CommandSender sender, String[] args) {
+	public void execute(CommandSender sender, String[] args) {
 		if (args.length < 1 || !hasNextLayer(args[0]))
 			return;
 		
-		getNextLayer(args[0]).execute(sender, Arrays.copyOfRange(args, 1, args.length));
+		Command next = getNextLayer(args[0]);
+		String[] arguments = Arrays.copyOfRange(args, 1, args.length);
+		
+		if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments())
+			return;
+		
+		if (!next.isPermitted(sender, arguments))
+			return;
+		
+		next.execute(sender, arguments);
 	}
 	
-	@Override
-	public final String getName() {
-		return name;
-	}
-	
-	protected final CommandBase getNextLayer(String name) {
+	protected final Command getNextLayer(String name) {
 		return (hasNextLayer(name)) ? commands.get(name.toLowerCase()) : null;
 	}
 	
-	protected final List<CommandBase> getNextLayers() {
-		return new ArrayList<CommandBase>(commands.values());
+	protected final List<Command> getNextLayers() {
+		return new ArrayList<Command>(commands.values());
 	}
 	
 	protected final boolean hasNextLayer(String name) {
 		return (name != null) ? commands.containsKey(name.toLowerCase()) : false;
 	}
 	
-	protected final boolean hasNextLayer(CommandBase command) {
+	protected final boolean hasNextLayer(Command command) {
 		if (command == null || !hasNextLayer(command.getName()))
 			return false;
 		
 		return getNextLayer(command.getName()).equals(command);
 	}
 	
-	protected final void registerNextLayer(CommandBase command) {
+	@Override
+	public boolean isPermitted(CommandSender sender, String[] args) {
+		boolean permitted = false;
+		
+		switch (args.length) {
+		
+		case 0:
+			permitted = true;
+			break;
+			
+		default:
+			if (!hasNextLayer(args[0]))
+				break;
+			
+			permitted = getNextLayer(args[0]).isPermitted(sender, Arrays.copyOfRange(args, 1, args.length));
+			break;
+		}
+		
+		return permitted;
+	}
+	
+	protected final void registerNextLayer(Command command) {
 		if (command == null || hasNextLayer(command))
 			return;
 		
@@ -86,22 +125,24 @@ public abstract class CommandLayer implements CommandBase {
 	}
 	
 	@Override
-	public final List<String> tab(CommandSender sender, String[] args) {
+	public List<String> tab(CommandSender sender, String[] args) {
 		List<String> tabCompletions = new ArrayList<String>();
 		
 		switch (args.length) {
-		
-		case 0:
-			tabCompletions.addAll(commands.keySet());
-			break;
 			
 		case 1:
-			for (String name : commands.keySet()) {
-				if (!name.startsWith(args[0]))
-					continue;
+			if (!args[0].isEmpty()) {
+				for (String name : commands.keySet()) {
+					if (!name.startsWith(args[0]))
+						continue;
+					
+					tabCompletions.add(name);
+				}
 				
-				tabCompletions.add(name);
+				break;
 			}
+			
+			tabCompletions.addAll(commands.keySet());
 			break;
 			
 		default:
@@ -130,7 +171,7 @@ public abstract class CommandLayer implements CommandBase {
 				"}";
 	}
 	
-	protected final void unregisterNextLayer(CommandBase command) {
+	protected final void unregisterNextLayer(Command command) {
 		if (command == null || !hasNextLayer(command))
 			return;
 		

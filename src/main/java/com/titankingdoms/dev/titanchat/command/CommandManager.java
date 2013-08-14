@@ -25,7 +25,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 
-public final class CommandManager extends CommandLayer implements Manager<CommandBase> {
+public final class CommandManager extends CommandLayer implements Manager<Command> {
 	
 	private final TitanChat plugin;
 	
@@ -35,7 +35,7 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	}
 	
 	@Override
-	public CommandBase get(String name) {
+	public Command get(String name) {
 		return getNextLayer(name);
 	}
 	
@@ -45,15 +45,15 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	}
 	
 	@Override
-	public List<CommandBase> getAll() {
+	public List<Command> getAll() {
 		return getNextLayers();
 	}
 	
-	public CommandBase getCommand(String name) {
+	public Command getCommand(String name) {
 		return get(name);
 	}
 	
-	public List<CommandBase> getCommands() {
+	public List<Command> getCommands() {
 		return getAll();
 	}
 	
@@ -78,7 +78,7 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	}
 	
 	@Override
-	public boolean has(CommandBase command) {
+	public boolean has(Command command) {
 		return hasNextLayer(command);
 	}
 	
@@ -86,12 +86,12 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 		return has(name);
 	}
 	
-	public boolean hasCommand(CommandBase command) {
+	public boolean hasCommand(Command command) {
 		return has(command);
 	}
 	
 	@Override
-	public boolean isPermitted(CommandSender sender) {
+	public boolean isPermitted(CommandSender sender, String[] args) {
 		return true;
 	}
 	
@@ -101,11 +101,11 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	}
 	
 	@Override
-	public void registerAll(CommandBase... commands) {
+	public void registerAll(Command... commands) {
 		if (commands == null)
 			return;
 		
-		for (CommandBase command : commands) {
+		for (Command command : commands) {
 			if (command == null)
 				continue;
 			
@@ -129,7 +129,7 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	}
 	
 	@Override
-	public void unregister(CommandBase command) {
+	public void unregister(Command command) {
 		unregisterNextLayer(command);
 	}
 }

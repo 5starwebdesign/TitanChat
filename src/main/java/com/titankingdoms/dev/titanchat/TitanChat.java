@@ -18,8 +18,10 @@
 package com.titankingdoms.dev.titanchat;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -114,6 +116,11 @@ public final class TitanChat extends JavaPlugin {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (command.getName().equalsIgnoreCase("TitanChat")) {
+			getManager(CommandManager.class).execute(sender, args);
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -212,6 +219,14 @@ public final class TitanChat extends JavaPlugin {
 			manager.reload();
 		
 		log(Level.INFO, "TitanChat is now reloaded");
+	}
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+		if (command.getName().equalsIgnoreCase("TitanChat"))
+			return getManager(CommandManager.class).tab(sender, args);
+		
+		return new ArrayList<String>();
 	}
 	
 	public void registerManager(Manager<?> manager) {

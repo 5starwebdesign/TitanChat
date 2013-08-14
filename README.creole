@@ -45,7 +45,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 # Place in plugins folder
 # Start up to load default configuration
 # Configure
-# DOne!
+# Done!
 
 ----
 
@@ -58,7 +58,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 06.08.13 - Added XMLParser library and rewrote UpdateUtil
 * 08.08.13 - Changed toString() in base classes and updated equals() to use toString() for checking
 * 11.08.13 - Added MinecraftChat for management when Channels are disabled
-* 14.08.13 - Changed the command system to be handled like layers
+* 14.08.13 - Changed the command system to be able to handle commands in layers
 
 ----
 
