@@ -17,63 +17,82 @@
 
 package com.titankingdoms.dev.titanchat.command;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
+
+import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 
-public final class CommandManager implements Manager<Command> {
+public final class CommandManager extends CommandLayer implements Manager<CommandBase> {
 	
 	private final TitanChat plugin;
 	
-	private final Map<String, Command> commands;
-	
 	public CommandManager() {
+		super("TitanChat");
 		this.plugin = TitanChat.getInstance();
-		this.commands = new TreeMap<String, Command>();
 	}
 	
 	@Override
-	public Command get(String name) {
-		return (name != null) ? commands.get(name.toLowerCase()) : null;
+	public CommandBase get(String name) {
+		return getNextLayer(name);
 	}
 	
 	@Override
-	public List<Command> getAll() {
-		return new ArrayList<Command>(commands.values());
+	public String[] getAliases() {
+		return plugin.getCommand("titanchat").getAliases().toArray(new String[0]);
 	}
 	
-	public Command getCommand(String name) {
+	@Override
+	public List<CommandBase> getAll() {
+		return getNextLayers();
+	}
+	
+	public CommandBase getCommand(String name) {
 		return get(name);
 	}
 	
-	public List<Command> getCommands() {
+	public List<CommandBase> getCommands() {
 		return getAll();
 	}
 	
 	@Override
-	public boolean has(String name) {
-		return (name != null) ? commands.containsKey(name.toLowerCase()) : false;
+	public String getDescription() {
+		return plugin.getCommand("titanchat").getDescription();
 	}
 	
 	@Override
-	public boolean has(Command command) {
-		if (command == null || !has(command.getName()))
-			return false;
-		
-		return get(command.getName()).equals(command);
+	public int getMaxArguments() {
+		return Integer.MAX_VALUE;
+	}
+	
+	@Override
+	public int getMinArguments() {
+		return 0;
+	}
+	
+	@Override
+	public boolean has(String name) {
+		return hasNextLayer(name);
+	}
+	
+	@Override
+	public boolean has(CommandBase command) {
+		return hasNextLayer(command);
 	}
 	
 	public boolean hasCommand(String name) {
 		return has(name);
 	}
 	
-	public boolean hasCommand(Command command) {
+	public boolean hasCommand(CommandBase command) {
 		return has(command);
+	}
+	
+	@Override
+	public boolean isPermitted(CommandSender sender) {
+		return true;
 	}
 	
 	@Override
@@ -82,11 +101,11 @@ public final class CommandManager implements Manager<Command> {
 	}
 	
 	@Override
-	public void registerAll(Command... commands) {
+	public void registerAll(CommandBase... commands) {
 		if (commands == null)
 			return;
 		
-		for (Command command : commands) {
+		for (CommandBase command : commands) {
 			if (command == null)
 				continue;
 			
@@ -95,7 +114,7 @@ public final class CommandManager implements Manager<Command> {
 				continue;
 			}
 			
-			this.commands.put(command.getName().toLowerCase(), command);
+			registerNextLayer(command);
 		}
 	}
 	
@@ -110,10 +129,7 @@ public final class CommandManager implements Manager<Command> {
 	}
 	
 	@Override
-	public void unregister(Command command) {
-		if (command == null || !has(command))
-			return;
-		
-		this.commands.remove(command.getName().toLowerCase());
+	public void unregister(CommandBase command) {
+		unregisterNextLayer(command);
 	}
 }

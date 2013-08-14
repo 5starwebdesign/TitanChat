@@ -18,9 +18,8 @@
 package com.titankingdoms.dev.titanchat.command;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.command.CommandSender;
 
-public abstract class Command {
+public abstract class Command implements CommandBase {
 	
 	private final String name;
 	
@@ -45,24 +44,27 @@ public abstract class Command {
 		return false;
 	}
 	
-	public abstract void execute(CommandSender sender, String[] args);
-	
+	@Override
 	public String[] getAliases() {
 		return aliases;
 	}
 	
+	@Override
 	public String getDescription() {
 		return description;
 	}
 	
+	@Override
 	public int getMaxArguments() {
 		return maxArgs;
 	}
 	
+	@Override
 	public int getMinArguments() {
 		return minArgs;
 	}
 	
+	@Override
 	public final String getName() {
 		return name;
 	}
