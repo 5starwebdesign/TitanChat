@@ -1,2 +1,4 @@
+format:
+    converse: "%prefix%display%suffix: %message"
 metrics-statistics: true
 update-search: false

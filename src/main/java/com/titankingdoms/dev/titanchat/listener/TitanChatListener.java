@@ -35,6 +35,8 @@ public final class TitanChatListener implements Listener {
 	
 	private final TitanChat plugin;
 	
+	private final String DEFAULT_FORMAT = "%prefix%display%suffix: %message";
+	
 	public TitanChatListener() {
 		this.plugin = TitanChat.getInstance();
 	}
@@ -45,7 +47,7 @@ public final class TitanChatListener implements Listener {
 		
 		User sender = plugin.getManager(UserManager.class).getUser(event.getPlayer());
 		EndPoint recipient = sender.getCurrentEndPoint();
-		String format = "";
+		String format = plugin.getConfig().getString("format.converse", DEFAULT_FORMAT);
 		String message = event.getMessage();
 		
 		if (recipient == null)
@@ -65,7 +67,7 @@ public final class TitanChatListener implements Listener {
 			if (!relay.onMessageReceive(chatEvent))
 				continue;
 			
-			relay.sendNotice(chatEvent.getFormat().replace("%message", chatEvent.getMessage()));
+			relay.sendRawLine(chatEvent.getFormat().replace("%message", chatEvent.getMessage()));
 		}
 		
 		if (chatEvent.getRecipients().size() < 2)
