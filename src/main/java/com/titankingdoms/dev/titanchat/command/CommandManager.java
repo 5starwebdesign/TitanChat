@@ -25,7 +25,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 
-public final class CommandManager extends CommandLayer implements Manager<Command> {
+public final class CommandManager extends Command implements Manager<Command> {
 	
 	private final TitanChat plugin;
 	
@@ -35,8 +35,13 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	}
 	
 	@Override
+	public void execute(CommandSender sender, String[] args) {
+		getLayer().execute(sender, args);
+	}
+	
+	@Override
 	public Command get(String name) {
-		return getNextLayer(name);
+		return getLayer().get(name);
 	}
 	
 	@Override
@@ -46,7 +51,7 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	
 	@Override
 	public List<Command> getAll() {
-		return getNextLayers();
+		return getLayer().getAll();
 	}
 	
 	public Command getCommand(String name) {
@@ -74,12 +79,12 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	
 	@Override
 	public boolean has(String name) {
-		return hasNextLayer(name);
+		return getLayer().has(name);
 	}
 	
 	@Override
 	public boolean has(Command command) {
-		return hasNextLayer(command);
+		return getLayer().has(command);
 	}
 	
 	public boolean hasCommand(String name) {
@@ -96,9 +101,7 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 	}
 	
 	@Override
-	public void load() {
-		
-	}
+	public void load() {}
 	
 	@Override
 	public void registerAll(Command... commands) {
@@ -114,22 +117,23 @@ public final class CommandManager extends CommandLayer implements Manager<Comman
 				continue;
 			}
 			
-			registerNextLayer(command);
+			getLayer().registerAll(command);
 		}
 	}
 	
 	@Override
-	public void reload() {
-		
+	public void reload() {}
+	
+	@Override
+	public List<String> tab(CommandSender sender, String[] args) {
+		return getLayer().tab(sender, args);
 	}
 	
 	@Override
-	public void unload() {
-		
-	}
+	public void unload() {}
 	
 	@Override
 	public void unregister(Command command) {
-		unregisterNextLayer(command);
+		getLayer().unregister(command);
 	}
 }

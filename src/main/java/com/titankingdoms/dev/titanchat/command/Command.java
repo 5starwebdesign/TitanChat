@@ -18,11 +18,16 @@
 package com.titankingdoms.dev.titanchat.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
+import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 
 public abstract class Command {
@@ -36,6 +41,8 @@ public abstract class Command {
 	private int maxArgs;
 	private int minArgs;
 	
+	private final Layer layers;
+	
 	public Command(String name, String[] aliases, String description) {
 		this.plugin = TitanChat.getInstance();
 		this.name = (name != null) ? name : "";
@@ -43,6 +50,7 @@ public abstract class Command {
 		this.description = (description != null) ? description : "";
 		this.maxArgs = 0;
 		this.minArgs = 0;
+		this.layers = new Layer();
 	}
 	
 	public Command(String name, String description, String... aliases) {
@@ -77,6 +85,10 @@ public abstract class Command {
 	
 	public String getDescription() {
 		return description;
+	}
+	
+	protected final Layer getLayer() {
+		return layers;
 	}
 	
 	public int getMaxArguments() {
@@ -123,5 +135,119 @@ public abstract class Command {
 				"maxArgs: " + getMaxArguments() +
 				"}" +
 				"}";
+	}
+	
+	public final class Layer implements Manager<Command> {
+		
+		protected final TitanChat plugin;
+		
+		private final Map<String, Command> commands;
+		
+		public Layer() {
+			this.plugin = TitanChat.getInstance();
+			this.commands = new TreeMap<String, Command>();
+		}
+		
+		public void execute(CommandSender sender, String[] args) {
+			if (args.length < 1 || !has(args[0]))
+				return;
+			
+			Command next = get(args[0]);
+			String[] arguments = Arrays.copyOfRange(args, 1, args.length);
+			
+			if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments())
+				return;
+			
+			if (!next.isPermitted(sender, arguments))
+				return;
+			
+			next.execute(sender, arguments);
+		}
+		
+		@Override
+		public Command get(String name) {
+			return (has(name)) ? commands.get(name.toLowerCase()) : null;
+		}
+		
+		@Override
+		public List<Command> getAll() {
+			return new ArrayList<Command>(commands.values());
+		}
+		
+		@Override
+		public boolean has(String name) {
+			return (name != null) ? commands.containsKey(name.toLowerCase()) : false;
+		}
+		
+		@Override
+		public boolean has(Command command) {
+			if (command == null || !has(command.getName()))
+				return false;
+			
+			return get(command.getName()).equals(command);
+		}
+		
+		@Override
+		public void load() {}
+		
+		@Override
+		public void registerAll(Command... commands) {
+			if (commands == null)
+				return;
+			
+			for (Command command : commands) {
+				if (command == null || has(command))
+					continue;
+				
+				this.commands.put(command.getName().toLowerCase(), command);
+			}
+		}
+		
+		@Override
+		public void reload() {}
+		
+		public List<String> tab(CommandSender sender, String[] args) {
+			List<String> tabCompletions = new ArrayList<String>();
+			
+			switch (args.length) {
+				
+			case 1:
+				if (!args[0].isEmpty()) {
+					for (String name : commands.keySet()) {
+						if (!name.startsWith(args[0]))
+							continue;
+						
+						tabCompletions.add(name);
+					}
+					
+					break;
+				}
+				
+				tabCompletions.addAll(commands.keySet());
+				break;
+				
+			default:
+				if (!has(args[0]))
+					break;
+				
+				tabCompletions.addAll(get(args[0]).tab(sender, Arrays.copyOfRange(args, 1, args.length)));
+				break;
+			}
+			
+			Collections.sort(tabCompletions);
+			
+			return tabCompletions;
+		}
+		
+		@Override
+		public void unload() {}
+		
+		@Override
+		public void unregister(Command command) {
+			if (command == null || !has(command))
+				return;
+			
+			this.commands.remove(command.getName().toLowerCase());
+		}
 	}
 }
