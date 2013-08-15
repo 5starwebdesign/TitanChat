@@ -40,7 +40,7 @@ public final class MinecraftChat implements EndPoint {
 	
 	@Override
 	public Set<EndPoint> getRelayPoints() {
-		return new HashSet<EndPoint>();
+		return new HashSet<EndPoint>(plugin.getManager(UserManager.class).getAll());
 	}
 	
 	@Override
@@ -60,13 +60,13 @@ public final class MinecraftChat implements EndPoint {
 	
 	@Override
 	public void sendNotice(String... messages) {
-		for (User user : plugin.getManager(UserManager.class).getUsers())
+		for (User user : plugin.getManager(UserManager.class).getAll())
 			user.sendNotice(messages);
 	}
 	
 	@Override
 	public void sendRawLine(String line) {
-		for (User user : plugin.getManager(UserManager.class).getUsers())
+		for (User user : plugin.getManager(UserManager.class).getAll())
 			user.sendRawLine(line);
 	}
 }
