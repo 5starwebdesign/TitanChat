@@ -24,8 +24,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.util.loading.Loader;
 
 public final class AddonManager implements Manager<Addon> {
 	
@@ -87,7 +90,10 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public void load() {
+		registerAll(Loader.load(Addon.class, getAddonDirectory()).toArray(new Addon[0]));
 		
+		if (!addons.isEmpty())
+			plugin.log(Level.INFO, "Addons loaded: " + StringUtils.join(addons.keySet(), ", "));
 	}
 	
 	@Override
@@ -110,20 +116,19 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public void reload() {
-		
+		unload();
+		load();
 	}
 	
 	@Override
 	public void unload() {
-		
+		for (Addon addon : getAddons())
+			unregister(addon);
 	}
 	
 	@Override
 	public void unregister(Addon addon) {
 		if (addon == null || !has(addon))
-			return;
-		
-		if (!has(addon))
 			return;
 		
 		this.addons.remove(addon.getName().toLowerCase());
