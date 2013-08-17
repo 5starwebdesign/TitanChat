@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.util.Messaging;
 
 public abstract class Command {
 	
@@ -149,17 +150,26 @@ public abstract class Command {
 		}
 		
 		public void execute(CommandSender sender, String[] args) {
-			if (args.length < 1 || !has(args[0]))
+			if (args.length < 1)
 				return;
+			
+			if (!has(args[0])) {
+				Messaging.sendMessage(sender, "&4Invalid command");
+				return;
+			}
 			
 			Command next = get(args[0]);
 			String[] arguments = Arrays.copyOfRange(args, 1, args.length);
 			
-			if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments())
+			if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
+				Messaging.sendMessage(sender, "&4Invalid argument length");
 				return;
+			}
 			
-			if (!next.isPermitted(sender, arguments))
+			if (!next.isPermitted(sender, arguments)) {
+				Messaging.sendMessage(sender, "&4You do not have permission");
 				return;
+			}
 			
 			next.execute(sender, arguments);
 		}

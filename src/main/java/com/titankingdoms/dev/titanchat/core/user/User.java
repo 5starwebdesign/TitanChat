@@ -106,6 +106,8 @@ public abstract class User implements EndPoint {
 		return (current != null) ? current.equals(endpoint) : endpoint == null;
 	}
 	
+	public abstract boolean isOnline();
+	
 	@Override
 	public boolean onMessageReceive(ConverseEvent event) {
 		return true;

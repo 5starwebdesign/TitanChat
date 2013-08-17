@@ -59,6 +59,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 08.08.13 - Changed toString() in base classes and updated equals() to use toString() for checking
 * 11.08.13 - Added MinecraftChat for management when Channels are disabled
 * 14.08.13 - Changed the command system to be able to handle commands in layers
+* 17.08.13 - Quotations in arguments are now recognised and arguments will be reassembled
 
 ----
 

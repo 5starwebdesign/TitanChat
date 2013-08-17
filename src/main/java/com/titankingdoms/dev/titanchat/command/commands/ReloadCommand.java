@@ -15,41 +15,36 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user.console;
+package com.titankingdoms.dev.titanchat.command.commands;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-import com.titankingdoms.dev.titanchat.core.user.User;
+import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.util.Messaging;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
-public final class Console extends User {
+public final class ReloadCommand extends Command {
 	
-	public Console() {
-		super("CONSOLE");
+	public ReloadCommand(String name) {
+		super("Reload");
+		setAliases("rl");
+		setDescription("Reload TitanChat");
 	}
 	
 	@Override
-	public CommandSender getCommandSender() {
-		return plugin.getServer().getConsoleSender();
+	public void execute(CommandSender sender, String[] args) {
+		if (sender instanceof Player)
+			Messaging.sendMessage(sender, "&6TitanChat is reloading...");
+		
+		plugin.onReload();
+		
+		if (sender instanceof Player)
+			Messaging.sendMessage(sender, "&6TitanChat is reloaded");
 	}
 	
 	@Override
-	public boolean isOnline() {
-		return true;
-	}
-	
-	@Override
-	public void sendRawLine(String line) {
-		getCommandSender().sendMessage(line);
-	}
-	
-	@Override
-	public String toString() {
-		return "User: {" +
-				"name: CONSOLE, " +
-				"current: {" +
-				"name: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getName() : "\"\"")) + ", " +
-				"type: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getType() : "\"\"")) +
-				"}" +
-				"}";
+	public boolean isPermitted(CommandSender sender, String[] args) {
+		return VaultUtils.hasPermission(sender, "TitanChat.reload");
 	}
 }

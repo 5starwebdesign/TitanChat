@@ -26,7 +26,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -117,7 +120,7 @@ public final class TitanChat extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (command.getName().equalsIgnoreCase("TitanChat")) {
-			getManager(CommandManager.class).execute(sender, args);
+			getManager(CommandManager.class).execute(sender, reassembleArguments(args));
 			return true;
 		}
 		
@@ -224,9 +227,20 @@ public final class TitanChat extends JavaPlugin {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		if (command.getName().equalsIgnoreCase("TitanChat"))
-			return getManager(CommandManager.class).tab(sender, args);
+			return getManager(CommandManager.class).tab(sender, reassembleArguments(args));
 		
 		return new ArrayList<String>();
+	}
+	
+	private String[] reassembleArguments(String[] args) {
+		List<String> arguments = new ArrayList<String>();
+		
+		Matcher match = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(StringUtils.join(args, ' '));
+		
+		while (match.find())
+			arguments.add(match.group().replace("\"", ""));
+		
+		return arguments.toArray(new String[0]);
 	}
 	
 	public void registerManager(Manager<?> manager) {

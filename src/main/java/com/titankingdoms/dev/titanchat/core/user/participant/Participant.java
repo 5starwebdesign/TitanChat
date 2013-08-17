@@ -42,6 +42,7 @@ public final class Participant extends User {
 		return "Participant";
 	}
 	
+	@Override
 	public boolean isOnline() {
 		return getPlayer() != null;
 	}
