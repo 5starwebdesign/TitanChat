@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.titankingdoms.dev.titanchat.addon.AddonManager;
@@ -139,6 +140,9 @@ public final class TitanChat extends JavaPlugin {
 		for (Manager<?> manager : getManagers())
 			manager.unload();
 		
+		HandlerList.unregisterAll(this);
+		log(Level.INFO, "Unregistered listeners");
+		
 		log(Level.INFO, "TitanChat is now disabled");
 	}
 	
@@ -149,10 +153,10 @@ public final class TitanChat extends JavaPlugin {
 		if (instance == null)
 			instance = this;
 		
-		log(Level.INFO, "Attempting to set up Vault...");
+		log(Level.INFO, "Attempting to set up VaultUtils...");
 		
 		if (!VaultUtils.initialise(getServer()))
-			log(Level.INFO, "Failed to set up Vault");
+			log(Level.INFO, "Failed to set up VaultUtils");
 		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
 		log(Level.INFO, "Registered listeners");
@@ -173,6 +177,9 @@ public final class TitanChat extends JavaPlugin {
 		
 		for (Manager<?> manager : getManagers())
 			manager.load();
+		
+		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
+		log(Level.INFO, "Registered listeners");
 		
 		log(Level.INFO, "TitanChat is now enabled");
 	}
