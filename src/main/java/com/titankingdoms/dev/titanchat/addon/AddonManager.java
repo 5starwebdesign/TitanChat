@@ -47,7 +47,7 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public Addon get(String name) {
-		return (name != null) ? this.addons.get(name.toLowerCase()) : null;
+		return (name != null) ? addons.get(name.toLowerCase()) : null;
 	}
 	
 	public Addon getAddon(String name) {
@@ -60,7 +60,7 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public List<Addon> getAll() {
-		return new ArrayList<Addon>(this.addons.values());
+		return new ArrayList<Addon>(addons.values());
 	}
 	
 	public File getAddonDirectory() {
@@ -69,7 +69,7 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public boolean has(String name) {
-		return (name != null) ? this.addons.containsKey(name.toLowerCase()) : false;
+		return (name != null) ? addons.containsKey(name.toLowerCase()) : false;
 	}
 	
 	@Override
