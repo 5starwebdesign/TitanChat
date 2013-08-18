@@ -31,6 +31,8 @@ public interface Manager<T> {
 	
 	public void load();
 	
+	public List<String> match(String name);
+	
 	public void registerAll(T... items);
 	
 	public void reload();

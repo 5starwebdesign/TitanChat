@@ -19,6 +19,7 @@ package com.titankingdoms.dev.titanchat.addon;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -94,6 +95,25 @@ public final class AddonManager implements Manager<Addon> {
 		
 		if (!addons.isEmpty())
 			plugin.log(Level.INFO, "Addons loaded: " + StringUtils.join(addons.keySet(), ", "));
+	}
+	
+	@Override
+	public List<String> match(String name) {
+		if (name == null || name.isEmpty())
+			return new ArrayList<String>(addons.keySet());
+		
+		List<String> matches = new ArrayList<String>();
+		
+		for (String addon : addons.keySet()) {
+			if (!addon.startsWith(name.toLowerCase()))
+				continue;
+			
+			matches.add(addon);
+		}
+		
+		Collections.sort(matches);
+		
+		return matches;
 	}
 	
 	@Override

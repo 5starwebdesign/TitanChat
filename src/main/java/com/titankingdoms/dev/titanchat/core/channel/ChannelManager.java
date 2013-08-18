@@ -19,6 +19,7 @@ package com.titankingdoms.dev.titanchat.core.channel;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -86,8 +87,25 @@ public final class ChannelManager implements Manager<Channel> {
 	}
 	
 	@Override
-	public void load() {
+	public void load() {}
+	
+	@Override
+	public List<String> match(String name) {
+		if (name == null || name.isEmpty())
+			return new ArrayList<String>(channels.keySet());
 		
+		List<String> matches = new ArrayList<String>();
+		
+		for (String channel : channels.keySet()) {
+			if (!channel.startsWith(name.toLowerCase()))
+				continue;
+			
+			matches.add(channel);
+		}
+		
+		Collections.sort(matches);
+		
+		return matches;
 	}
 	
 	@Override
@@ -107,14 +125,10 @@ public final class ChannelManager implements Manager<Channel> {
 	}
 	
 	@Override
-	public void reload() {
-		
-	}
+	public void reload() {}
 	
 	@Override
-	public void unload() {
-		
-	}
+	public void unload() {}
 	
 	@Override
 	public void unregister(Channel channel) {

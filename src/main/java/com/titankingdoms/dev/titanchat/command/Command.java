@@ -201,6 +201,25 @@ public abstract class Command {
 		public void load() {}
 		
 		@Override
+		public List<String> match(String name) {
+			if (name == null || name.isEmpty())
+				return new ArrayList<String>(commands.keySet());
+			
+			List<String> matches = new ArrayList<String>();
+			
+			for (String command : commands.keySet()) {
+				if (!command.startsWith(name.toLowerCase()))
+					continue;
+				
+				matches.add(command);
+			}
+			
+			Collections.sort(matches);
+			
+			return matches;
+		}
+		
+		@Override
 		public void registerAll(Command... commands) {
 			if (commands == null)
 				return;
@@ -217,36 +236,13 @@ public abstract class Command {
 		public void reload() {}
 		
 		public List<String> tab(CommandSender sender, String[] args) {
-			List<String> tabCompletions = new ArrayList<String>();
+			if (args.length < 2)
+				return match(args[0]);
 			
-			switch (args.length) {
-				
-			case 1:
-				if (!args[0].isEmpty()) {
-					for (String name : commands.keySet()) {
-						if (!name.startsWith(args[0]))
-							continue;
-						
-						tabCompletions.add(name);
-					}
-					
-					break;
-				}
-				
-				tabCompletions.addAll(commands.keySet());
-				break;
-				
-			default:
-				if (!has(args[0]))
-					break;
-				
-				tabCompletions.addAll(get(args[0]).tab(sender, Arrays.copyOfRange(args, 1, args.length)));
-				break;
-			}
+			if (has(args[0]))
+				return get(args[0]).tab(sender, Arrays.copyOfRange(args, 1, args.length));
 			
-			Collections.sort(tabCompletions);
-			
-			return tabCompletions;
+			return new ArrayList<String>();
 		}
 		
 		@Override

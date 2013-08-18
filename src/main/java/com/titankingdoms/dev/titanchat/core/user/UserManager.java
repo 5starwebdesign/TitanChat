@@ -18,6 +18,7 @@
 package com.titankingdoms.dev.titanchat.core.user;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,25 @@ public final class UserManager implements Manager<User> {
 	@Override
 	public void load() {
 		
+	}
+	
+	@Override
+	public List<String> match(String name) {
+		if (name == null || name.isEmpty())
+			return new ArrayList<String>(users.keySet());
+		
+		List<String> matches = new ArrayList<String>();
+		
+		for (String user : users.keySet()) {
+			if (!user.startsWith(name.toLowerCase()))
+				continue;
+			
+			matches.add(user);
+		}
+		
+		Collections.sort(matches);
+		
+		return matches;
 	}
 	
 	@Override

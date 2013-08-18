@@ -104,6 +104,11 @@ public final class CommandManager extends Command implements Manager<Command> {
 	public void load() {}
 	
 	@Override
+	public List<String> match(String name) {
+		return getLayer().match(name);
+	}
+	
+	@Override
 	public void registerAll(Command... commands) {
 		if (commands == null)
 			return;
