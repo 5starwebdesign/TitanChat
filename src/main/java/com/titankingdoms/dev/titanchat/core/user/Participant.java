@@ -15,12 +15,11 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user.participant;
+package com.titankingdoms.dev.titanchat.core.user;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.dev.titanchat.core.user.User;
 
 public final class Participant extends User {
 	

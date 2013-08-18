@@ -25,10 +25,10 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.user.console.Console;
 
 public final class UserManager implements Manager<User> {
 	
@@ -43,7 +43,7 @@ public final class UserManager implements Manager<User> {
 	
 	@Override
 	public User get(String name) {
-		return (name != null) ? users.get(name.toLowerCase()) : null;
+		return (name != null) ? users.get(name.toLowerCase()) : new OfflineUser(name);
 	}
 	
 	@Override
@@ -86,7 +86,10 @@ public final class UserManager implements Manager<User> {
 	
 	@Override
 	public void load() {
+		registerAll(new Console());
 		
+		for (Player player : plugin.getServer().getOnlinePlayers())
+			registerAll(new Participant(player));
 	}
 	
 	@Override
@@ -128,12 +131,19 @@ public final class UserManager implements Manager<User> {
 	
 	@Override
 	public void reload() {
+		for (User user : getAll())
+			unregister(user);
 		
+		registerAll(new Console());
+		
+		for (Player player : plugin.getServer().getOnlinePlayers())
+			registerAll(new Participant(player));
 	}
 	
 	@Override
 	public void unload() {
-		
+		for (User user : getAll())
+			unregister(user);
 	}
 	
 	@Override

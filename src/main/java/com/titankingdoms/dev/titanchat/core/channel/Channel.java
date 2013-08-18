@@ -17,6 +17,9 @@
 
 package com.titankingdoms.dev.titanchat.core.channel;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
 import com.titankingdoms.dev.titanchat.event.ConverseEvent;
@@ -27,9 +30,14 @@ public abstract class Channel implements EndPoint {
 	
 	private final String name;
 	
+	private final Set<String> blacklist;
+	private final Set<String> whitelist;
+	
 	public Channel(String name) {
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
+		this.blacklist = new HashSet<String>();
+		this.whitelist = new HashSet<String>();
 	}
 	
 	@Override
@@ -40,6 +48,10 @@ public abstract class Channel implements EndPoint {
 		return false;
 	}
 	
+	public Set<String> getBlacklist() {
+		return blacklist;
+	}
+	
 	@Override
 	public final String getName() {
 		return name;
@@ -48,6 +60,10 @@ public abstract class Channel implements EndPoint {
 	@Override
 	public final String getType() {
 		return "Channel";
+	}
+	
+	public Set<String> getWhitelist() {
+		return whitelist;
 	}
 	
 	@Override

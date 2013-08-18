@@ -15,41 +15,32 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user.console;
+package com.titankingdoms.dev.titanchat.core.user;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.core.user.User;
-
-public final class Console extends User {
+public final class OfflineUser extends User {
 	
-	public Console() {
-		super("CONSOLE");
+	public OfflineUser(String name) {
+		super(name);
 	}
 	
 	@Override
 	public CommandSender getCommandSender() {
-		return plugin.getServer().getConsoleSender();
+		return null;
+	}
+	
+	public User getOnlineUser() {
+		UserManager manager = plugin.getManager(UserManager.class);
+		
+		if (!manager.has(getName()))
+			return null;
+		
+		return manager.get(getName());
 	}
 	
 	@Override
 	public boolean isOnline() {
-		return true;
-	}
-	
-	@Override
-	public void sendRawLine(String line) {
-		getCommandSender().sendMessage(line);
-	}
-	
-	@Override
-	public String toString() {
-		return "User: {" +
-				"name: CONSOLE, " +
-				"current: {" +
-				"name: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getName() : "\"\"")) + ", " +
-				"type: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getType() : "\"\"")) +
-				"}" +
-				"}";
+		return false;
 	}
 }
