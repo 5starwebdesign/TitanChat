@@ -56,7 +56,7 @@ public final class TitanChat extends JavaPlugin {
 	
 	public static TitanChat getInstance() {
 		if (instance == null)
-			throw new UnsupportedOperationException();
+			throw new IllegalStateException("TitanChat is not operating");
 		
 		return instance;
 	}
@@ -84,9 +84,6 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public boolean hasUpdate() {
-		if (update == null)
-			throw new UnsupportedOperationException();
-		
 		return update.hasUpdate();
 	}
 	
@@ -265,13 +262,13 @@ public final class TitanChat extends JavaPlugin {
 	private boolean searchUpdate() {
 		log(Level.INFO, "Attempting to search for updates...");
 		
+		if (update == null)
+			this.update = new UpdateUtil("titanchat", getDescription());
+		
 		if (!getConfig().getBoolean("update-search", false)) {
 			log(Level.INFO, "Search Disabled");
 			return true;
 		}
-		
-		if (update == null)
-			this.update = new UpdateUtil("titanchat", getDescription());
 		
 		update.readFeed();
 		update.checkAvailability();
