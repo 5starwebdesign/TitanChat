@@ -157,7 +157,7 @@ public class Metrics {
 		boolean isValueNumeric = false;
 		
 		try {
-			if (value.equals("0") || !value.endsWith(")")) {
+			if (value.equals("0") || !value.endsWith("0")) {
 				Double.parseDouble(value);
 				isValueNumeric = true;
 			}
