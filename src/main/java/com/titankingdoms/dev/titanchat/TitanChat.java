@@ -96,7 +96,12 @@ public final class TitanChat extends JavaPlugin {
 			if (metrics.isOptOut())
 				return true;
 			
-			return metrics.start();
+			boolean initialised = metrics.start();
+			
+			if (initialised)
+				log(Level.INFO, "Metrics has been successfully initialised");
+			
+			return initialised;
 			
 		} catch (Exception e) {}
 		
@@ -156,14 +161,8 @@ public final class TitanChat extends JavaPlugin {
 		if (!initMetrics())
 			log(Level.INFO, "Failed to set up Metrics");
 		
-		if (searchUpdate()) {
-			log(Level.INFO, "A new version of TitanChat is available! (" + update.getNewName() + ")");
-			log(Level.INFO, "You are running " + update.getCurrentName() + " currently");
-			log(Level.INFO, "Update at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
-			
-		} else {
+		if (!searchUpdate())
 			log(Level.INFO, "No updates available");
-		}
 		
 		log(Level.INFO, "Loading managers...");
 		
@@ -206,14 +205,8 @@ public final class TitanChat extends JavaPlugin {
 		if (instance == null)
 			instance = this;
 		
-		if (searchUpdate()) {
-			log(Level.INFO, "A new version of TitanChat is available! (" + update.getNewName() + ")");
-			log(Level.INFO, "You are running " + update.getCurrentName() + " currently");
-			log(Level.INFO, "Update at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
-			
-		} else {
+		if (!searchUpdate())
 			log(Level.INFO, "No updates available");
-		}
 		
 		log(Level.INFO, "Reloading managers...");
 		
@@ -268,7 +261,15 @@ public final class TitanChat extends JavaPlugin {
 		update.readFeed();
 		update.checkAvailability();
 		
-		return update.hasUpdate();
+		boolean available = update.hasUpdate();
+		
+		if (available) {
+			log(Level.INFO, "A new version of TitanChat is available! (" + update.getNewName() + ")");
+			log(Level.INFO, "You are running " + update.getCurrentName() + " currently");
+			log(Level.INFO, "Update at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
+		}
+		
+		return available;
 	}
 	
 	public void unregisterManager(Manager<?> manager) {
