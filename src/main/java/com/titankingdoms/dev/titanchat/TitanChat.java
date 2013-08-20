@@ -56,7 +56,7 @@ public final class TitanChat extends JavaPlugin {
 	
 	public static TitanChat getInstance() {
 		if (instance == null)
-			throw new IllegalStateException("TitanChat is not operating");
+			throw new IllegalStateException("TitanChat is in operation");
 		
 		return instance;
 	}
