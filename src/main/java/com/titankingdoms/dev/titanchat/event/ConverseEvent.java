@@ -20,6 +20,7 @@ package com.titankingdoms.dev.titanchat.event;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -36,10 +37,14 @@ public final class ConverseEvent extends Event implements Cloneable {
 	private String message;
 	
 	public ConverseEvent(EndPoint sender, Set<EndPoint> recipients, String format, String message) {
+		Validate.notNull(sender, "A sender is needed");
+		Validate.notEmpty((format != null) ? format : "", "A format is needed");
+		Validate.notEmpty((message != null) ? message : "", "A message is needed");
+		
 		this.sender = sender;
-		this.recipients = recipients;
+		this.recipients = (recipients != null) ? recipients : new HashSet<EndPoint>();
 		this.format = format;
-		this.message = (message != null) ? message : "";
+		this.message = message;
 	}
 	
 	public ConverseEvent(EndPoint sender, String format, String message) {
@@ -77,10 +82,12 @@ public final class ConverseEvent extends Event implements Cloneable {
 	}
 	
 	public void setFormat(String format) {
+		Validate.notEmpty((format != null) ? format : "", "A format is needed");
 		this.format = format;
 	}
 	
 	public void setMessage(String message) {
-		this.message = (message != null) ? message : "";
+		Validate.notEmpty((message != null) ? message : "", "A message is needed");
+		this.message = message;
 	}
 }
