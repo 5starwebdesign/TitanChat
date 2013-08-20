@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
 public abstract class User implements EndPoint {
@@ -104,16 +103,6 @@ public abstract class User implements EndPoint {
 	}
 	
 	public abstract boolean isOnline();
-	
-	@Override
-	public boolean onMessageReceive(ConverseEvent event) {
-		return true;
-	}
-	
-	@Override
-	public boolean onMessageSend(ConverseEvent event) {
-		return true;
-	}
 	
 	@Override
 	public void sendNotice(String... messages) {

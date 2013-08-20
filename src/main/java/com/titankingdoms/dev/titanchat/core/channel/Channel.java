@@ -22,7 +22,6 @@ import java.util.Set;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 
 public abstract class Channel implements EndPoint {
 	
@@ -64,16 +63,6 @@ public abstract class Channel implements EndPoint {
 	
 	public Set<String> getWhitelist() {
 		return whitelist;
-	}
-	
-	@Override
-	public boolean onMessageReceive(ConverseEvent event) {
-		return true;
-	}
-	
-	@Override
-	public boolean onMessageSend(ConverseEvent event) {
-		return true;
 	}
 	
 	@Override

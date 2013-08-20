@@ -55,20 +55,13 @@ public final class TitanChatListener implements Listener {
 		
 		ConverseEvent chatEvent = new ConverseEvent(sender, recipient.getRelayPoints(), format, message);
 		
+		plugin.getServer().getPluginManager().callEvent(chatEvent);
+		
 		if (!chatEvent.getRecipients().contains(sender))
 			chatEvent.getRecipients().add(sender);
 		
-		if (!sender.onMessageSend(chatEvent))
-			return;
-		
-		plugin.getServer().getPluginManager().callEvent(chatEvent);
-		
-		for (EndPoint relay : chatEvent.getRecipients()) {
-			if (!relay.onMessageReceive(chatEvent))
-				continue;
-			
+		for (EndPoint relay : chatEvent.getRecipients())
 			relay.sendRawLine(chatEvent.getFormat().replace("%message", chatEvent.getMessage()));
-		}
 		
 		if (chatEvent.getRecipients().size() < 2)
 			sender.sendNotice("Nobody heard you...");

@@ -19,8 +19,6 @@ package com.titankingdoms.dev.titanchat.core;
 
 import java.util.Set;
 
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
-
 public interface EndPoint {
 	
 	public String getName();
@@ -28,10 +26,6 @@ public interface EndPoint {
 	public Set<EndPoint> getRelayPoints();
 	
 	public String getType();
-	
-	public boolean onMessageReceive(ConverseEvent event);
-	
-	public boolean onMessageSend(ConverseEvent event);
 	
 	public void sendNotice(String... messages);
 	
