@@ -20,7 +20,6 @@ package com.titankingdoms.dev.titanchat.core.user;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-
 public final class Participant extends User {
 	
 	public Participant(Player player) {

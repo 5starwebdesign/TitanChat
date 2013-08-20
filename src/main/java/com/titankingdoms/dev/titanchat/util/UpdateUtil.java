@@ -22,12 +22,8 @@ import java.net.URL;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.plugin.PluginDescriptionFile;
 
-import com.titankingdoms.dev.titanchat.util.xml.XMLDocument;
-import com.titankingdoms.dev.titanchat.util.xml.XMLElement;
-import com.titankingdoms.dev.titanchat.util.xml.XMLObject;
+import com.titankingdoms.dev.titanchat.util.xml.*;
 import com.titankingdoms.dev.titanchat.util.xml.XMLObject.XMLType;
-import com.titankingdoms.dev.titanchat.util.xml.XMLParser;
-import com.titankingdoms.dev.titanchat.util.xml.XMLSection;
 
 public final class UpdateUtil {
 	

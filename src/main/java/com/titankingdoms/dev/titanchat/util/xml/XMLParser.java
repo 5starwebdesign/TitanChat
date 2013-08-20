@@ -23,10 +23,7 @@ import java.util.Iterator;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Attribute;
-import javax.xml.stream.events.StartDocument;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+import javax.xml.stream.events.*;
 
 import com.titankingdoms.dev.titanchat.util.xml.XMLObject.XMLType;
 

@@ -19,7 +19,6 @@ package com.titankingdoms.dev.titanchat.core.user;
 
 import org.bukkit.command.CommandSender;
 
-
 public final class Console extends User {
 	
 	public Console() {

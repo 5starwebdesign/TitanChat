@@ -18,11 +18,7 @@
 package com.titankingdoms.dev.titanchat.addon;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.StringUtils;
