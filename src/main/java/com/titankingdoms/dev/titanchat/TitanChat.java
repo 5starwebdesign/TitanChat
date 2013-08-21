@@ -159,7 +159,7 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "Registered listeners");
 		
 		if (!initMetrics())
-			log(Level.INFO, "Failed to set up Metrics");
+			log(Level.INFO, "Failed to initialise Metrics");
 		
 		if (!searchUpdate())
 			log(Level.INFO, "No updates available");
