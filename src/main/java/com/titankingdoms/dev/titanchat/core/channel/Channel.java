@@ -36,7 +36,7 @@ public abstract class Channel implements EndPoint {
 	private final Set<String> whitelist;
 	
 	public Channel(String name) {
-		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
 		
 		this.plugin = TitanChat.getInstance();

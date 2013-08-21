@@ -41,7 +41,7 @@ public abstract class User implements EndPoint {
 	private final Set<EndPoint> represent = new HashSet<EndPoint>();
 	
 	public User(String name) {
-		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(!Pattern.compile("\\W").matcher(name).find(), "Name cannot contain non-word characters");
 		Validate.isTrue(name.length() <= 16, "Name cannot be longer than 16 characters");
 		

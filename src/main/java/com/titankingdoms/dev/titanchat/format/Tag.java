@@ -27,7 +27,7 @@ public abstract class Tag {
 	private final String tag;
 	
 	public Tag(String name) {
-		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
 		
 		this.tag = "%" + name;

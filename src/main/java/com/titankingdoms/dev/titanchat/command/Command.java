@@ -41,7 +41,7 @@ public abstract class Command {
 	private final Layer layers;
 	
 	public Command(String name, String[] aliases, String description) {
-		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
 		
 		this.plugin = TitanChat.getInstance();

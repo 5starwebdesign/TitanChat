@@ -38,8 +38,8 @@ public final class ConverseEvent extends Event implements Cloneable {
 	
 	public ConverseEvent(EndPoint sender, Set<EndPoint> recipients, String format, String message) {
 		Validate.notNull(sender, "Sender cannot be null");
-		Validate.notEmpty((format != null) ? format : "", "Format cannot be empty");
-		Validate.notEmpty((message != null) ? message : "", "Message cannot be empty");
+		Validate.notEmpty(format, "Format cannot be empty");
+		Validate.notEmpty(message, "Message cannot be empty");
 		
 		this.sender = sender;
 		this.recipients = (recipients != null) ? recipients : new HashSet<EndPoint>();
