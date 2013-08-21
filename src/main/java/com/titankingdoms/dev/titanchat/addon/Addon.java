@@ -17,6 +17,12 @@
 
 package com.titankingdoms.dev.titanchat.addon;
 
+import com.titankingdoms.dev.titanchat.command.Command;
+import com.titankingdoms.dev.titanchat.command.CommandManager;
+import com.titankingdoms.dev.titanchat.core.channel.Channel;
+import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
+import com.titankingdoms.dev.titanchat.format.Tag;
+import com.titankingdoms.dev.titanchat.format.TagParser;
 import com.titankingdoms.dev.titanchat.util.loading.Loadable;
 
 public class Addon extends Loadable {
@@ -31,6 +37,18 @@ public class Addon extends Loadable {
 			return toString().equals(object.toString());
 		
 		return false;
+	}
+	
+	public final void registerChannels(Channel... channels) {
+		plugin.getManager(ChannelManager.class).registerAll(channels);
+	}
+	
+	public final void registerCommands(Command... commands) {
+		plugin.getManager(CommandManager.class).registerAll(commands);
+	}
+	
+	public final void registerTags(Tag... tags) {
+		plugin.getManager(TagParser.class).registerAll(tags);
 	}
 	
 	@Override
