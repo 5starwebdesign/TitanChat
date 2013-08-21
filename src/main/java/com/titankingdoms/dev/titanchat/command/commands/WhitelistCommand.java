@@ -20,6 +20,7 @@ package com.titankingdoms.dev.titanchat.command.commands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
@@ -76,6 +77,12 @@ public final class WhitelistCommand extends Command {
 			}
 			
 			Channel channel = chManager.get(args[0]);
+			
+			if (Pattern.compile("\\W").matcher(args[1]).find()) {
+				Messaging.sendMessage(sender, "&4Users cannot have non-word characters in names");
+				return;
+			}
+			
 			User user = plugin.getManager(UserManager.class).get(args[1]);
 			
 			if (channel.getWhitelist().contains(user.getName())) {
@@ -126,6 +133,12 @@ public final class WhitelistCommand extends Command {
 			}
 			
 			Channel channel = chManager.get(args[0]);
+			
+			if (Pattern.compile("\\W").matcher(args[1]).find()) {
+				Messaging.sendMessage(sender, "&4Users cannot have non-word characters in names");
+				return;
+			}
+			
 			User user = plugin.getManager(UserManager.class).get(args[1]);
 			
 			if (!channel.getWhitelist().contains(user.getName())) {

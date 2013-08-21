@@ -20,6 +20,8 @@ package com.titankingdoms.dev.titanchat.util.loading;
 import java.io.File;
 import java.io.InputStream;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
@@ -43,6 +45,9 @@ public class Loadable implements Comparable<Loadable>, Listener {
 	private boolean initialised = false;
 	
 	public Loadable(String name) {
+		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
+		
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
 	}

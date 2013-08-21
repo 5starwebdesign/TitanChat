@@ -20,6 +20,9 @@ package com.titankingdoms.dev.titanchat.core.channel;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
 
@@ -33,6 +36,9 @@ public abstract class Channel implements EndPoint {
 	private final Set<String> whitelist;
 	
 	public Channel(String name) {
+		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
+		
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
 		this.blacklist = new HashSet<String>();

@@ -18,7 +18,9 @@
 package com.titankingdoms.dev.titanchat.core.user;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
@@ -39,6 +41,9 @@ public abstract class User implements EndPoint {
 	private final Set<EndPoint> represent = new HashSet<EndPoint>();
 	
 	public User(String name) {
+		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.isTrue(!Pattern.compile("\\W").matcher(name).find(), "Name cannot contain non-word characters");
+		
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
 		this.meta = new HashMap<String, Meta>();

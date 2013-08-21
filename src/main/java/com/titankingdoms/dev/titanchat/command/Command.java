@@ -20,6 +20,7 @@ package com.titankingdoms.dev.titanchat.command;
 import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.Manager;
@@ -40,6 +41,9 @@ public abstract class Command {
 	private final Layer layers;
 	
 	public Command(String name, String[] aliases, String description) {
+		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
+		
 		this.plugin = TitanChat.getInstance();
 		this.name = (name != null) ? name : "";
 		this.aliases = (aliases != null) ? aliases : new String[0];
