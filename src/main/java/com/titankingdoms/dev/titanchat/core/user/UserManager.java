@@ -19,6 +19,7 @@ package com.titankingdoms.dev.titanchat.core.user;
 
 import java.util.*;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,7 +40,10 @@ public final class UserManager implements Manager<User> {
 	
 	@Override
 	public User get(String name) {
-		return (name != null) ? users.get(name.toLowerCase()) : new OfflineUser(name);
+		if (name == null || Pattern.compile("\\W").matcher(name).find())
+			return null;
+		
+		return (has(name)) ? users.get(name.toLowerCase()) : new OfflineUser(name);
 	}
 	
 	@Override
@@ -93,6 +97,9 @@ public final class UserManager implements Manager<User> {
 		if (name == null || name.isEmpty())
 			return new ArrayList<String>(users.keySet());
 		
+		if (Pattern.compile("\\W").matcher(name).find())
+			return new ArrayList<String>();
+		
 		List<String> matches = new ArrayList<String>();
 		
 		for (String user : users.keySet()) {
@@ -115,6 +122,11 @@ public final class UserManager implements Manager<User> {
 		for (User user : users) {
 			if (user == null)
 				continue;
+			
+			if (Pattern.compile("\\W").matcher(user.getName()).find()) {
+				plugin.log(Level.WARNING, "Invalid user name: " + user.getName());
+				continue;
+			}
 			
 			if (has(user)) {
 				plugin.log(Level.WARNING, "Duplicate: " + user);
