@@ -86,7 +86,7 @@ public final class BlacklistCommand extends Command {
 			User user = plugin.getManager(UserManager.class).get(args[1]);
 			
 			if (channel.getBlacklist().contains(user.getName())) {
-				Messaging.sendMessage(sender, user.getDiplayName() + " &4is already on the blacklist");
+				Messaging.sendMessage(sender, user.getDisplayName() + " &4is already on the blacklist");
 				return;
 			}
 			
@@ -96,7 +96,7 @@ public final class BlacklistCommand extends Command {
 			if (args.length > 2)
 				user.sendNotice("&4Reason: " + StringUtils.join(Arrays.copyOfRange(args, 2, args.length), ' '));
 			
-			channel.sendNotice(user.getDiplayName() + " &6has been added to the blacklist");
+			channel.sendNotice(user.getDisplayName() + " &6has been added to the blacklist");
 		}
 		
 		@Override
@@ -142,7 +142,7 @@ public final class BlacklistCommand extends Command {
 			User user = plugin.getManager(UserManager.class).get(args[1]);
 			
 			if (!channel.getBlacklist().contains(user.getName())) {
-				Messaging.sendMessage(sender, user.getDiplayName() + " &4is not on the blacklist");
+				Messaging.sendMessage(sender, user.getDisplayName() + " &4is not on the blacklist");
 				return;
 			}
 			
@@ -152,7 +152,7 @@ public final class BlacklistCommand extends Command {
 			if (args.length > 2)
 				user.sendNotice("&6Reason: " + StringUtils.join(Arrays.copyOfRange(args, 2, args.length), ' '));
 			
-			channel.sendNotice(user.getDiplayName() + " &6has been removed from the blacklist");
+			channel.sendNotice(user.getDisplayName() + " &6has been removed from the blacklist");
 		}
 		
 		@Override

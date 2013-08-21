@@ -86,7 +86,7 @@ public final class WhitelistCommand extends Command {
 			User user = plugin.getManager(UserManager.class).get(args[1]);
 			
 			if (channel.getWhitelist().contains(user.getName())) {
-				Messaging.sendMessage(sender, user.getDiplayName() + " &4is already on the whitelist");
+				Messaging.sendMessage(sender, user.getDisplayName() + " &4is already on the whitelist");
 				return;
 			}
 			
@@ -96,7 +96,7 @@ public final class WhitelistCommand extends Command {
 			if (args.length > 2)
 				user.sendNotice("&6Reason: " + StringUtils.join(Arrays.copyOfRange(args, 2, args.length), ' '));
 			
-			channel.sendNotice(user.getDiplayName() + " &6has been added to the whitelist");
+			channel.sendNotice(user.getDisplayName() + " &6has been added to the whitelist");
 		}
 		
 		@Override
@@ -142,7 +142,7 @@ public final class WhitelistCommand extends Command {
 			User user = plugin.getManager(UserManager.class).get(args[1]);
 			
 			if (!channel.getWhitelist().contains(user.getName())) {
-				Messaging.sendMessage(sender, user.getDiplayName() + " &4is not on the whitelist");
+				Messaging.sendMessage(sender, user.getDisplayName() + " &4is not on the whitelist");
 				return;
 			}
 			
@@ -152,7 +152,7 @@ public final class WhitelistCommand extends Command {
 			if (args.length > 2)
 				user.sendNotice("&4Reason: " + StringUtils.join(Arrays.copyOfRange(args, 2, args.length), ' '));
 			
-			channel.sendNotice(user.getDiplayName() + " &6has been removed from the whitelist");
+			channel.sendNotice(user.getDisplayName() + " &6has been removed from the whitelist");
 		}
 		
 		@Override

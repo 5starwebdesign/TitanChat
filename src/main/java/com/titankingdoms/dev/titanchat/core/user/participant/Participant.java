@@ -33,6 +33,20 @@ public final class Participant extends User {
 		return getPlayer();
 	}
 	
+	@Override
+	public String getDisplayName() {
+		if (!hasDisplayName())
+			return getName();
+		
+		Player player = getPlayer();
+		String name = super.getDisplayName();
+		
+		if (player != null && !player.getDisplayName().equals(name))
+			setDisplayName(name);
+		
+		return name;
+	}
+	
 	public Player getPlayer() {
 		return plugin.getServer().getPlayerExact(getName());
 	}
@@ -45,5 +59,18 @@ public final class Participant extends User {
 	@Override
 	public boolean isOnline() {
 		return getPlayer() != null;
+	}
+	
+	@Override
+	public void setDisplayName(String name) {
+		super.setDisplayName(name);
+		
+		Player player = getPlayer();
+		
+		if (player == null)
+			return;
+		
+		player.setDisplayName(name);
+		player.setPlayerListName((name.length() <= 16) ? name : name.substring(0, 16));
 	}
 }

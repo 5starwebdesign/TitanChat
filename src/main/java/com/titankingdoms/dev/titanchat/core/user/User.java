@@ -68,8 +68,8 @@ public abstract class User implements EndPoint {
 		return current;
 	}
 	
-	public String getDiplayName() {
-		return getMetadata().getString("display-name", getName());
+	public String getDisplayName() {
+		return getMetadata().getString("display-name", name);
 	}
 	
 	public Metadata getMetadata() {
@@ -89,6 +89,10 @@ public abstract class User implements EndPoint {
 	@Override
 	public String getType() {
 		return "User";
+	}
+	
+	public boolean hasDisplayName() {
+		return name.equals(getDisplayName());
 	}
 	
 	public boolean hasPermission(String node) {
