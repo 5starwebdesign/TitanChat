@@ -53,6 +53,14 @@ public final class TagParser implements Manager<Tag> {
 		return new ArrayList<Tag>(tags.values());
 	}
 	
+	public Tag getTag(String name) {
+		return get(name);
+	}
+	
+	public List<Tag> getTags() {
+		return getAll();
+	}
+	
 	@Override
 	public boolean has(String name) {
 		return (name != null) ? tags.containsKey(name.toLowerCase()) : false;
@@ -64,6 +72,14 @@ public final class TagParser implements Manager<Tag> {
 			return false;
 		
 		return get(tag.getTag()).equals(tag);
+	}
+	
+	public boolean hasTag(String name) {
+		return has(name);
+	}
+	
+	public boolean hasTag(Tag tag) {
+		return has(tag);
 	}
 	
 	@Override
