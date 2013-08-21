@@ -17,11 +17,32 @@
 
 package com.titankingdoms.dev.titanchat.format;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
+
 import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 
-public interface Tag {
+public abstract class Tag {
 	
-	public String getTag();
+	private final String tag;
 	
-	public String getValue(ConverseEvent event);
+	public Tag(String name) {
+		Validate.notEmpty((name != null) ? name : "", "Name cannot be empty");
+		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
+		
+		this.tag = "%" + name;
+	}
+	
+	public final String getTag() {
+		return tag;
+	}
+	
+	public abstract String getValue(ConverseEvent event);
+	
+	@Override
+	public String toString() {
+		return "Tag: {" +
+				"tag: " + getTag() +
+				"}";
+	}
 }

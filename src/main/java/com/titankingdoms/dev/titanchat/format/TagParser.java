@@ -17,7 +17,12 @@
 
 package com.titankingdoms.dev.titanchat.format;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,30 +30,62 @@ import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 
-public abstract class TagParser implements Manager<Tag> {
+public final class TagParser implements Manager<Tag> {
 	
-	protected final TitanChat plugin;
+	private final TitanChat plugin;
 	
-	protected final Pattern pattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
+	private final Pattern pattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
+	
+	private final Map<String, Tag> tags;
 	
 	public TagParser() {
 		this.plugin = TitanChat.getInstance();
+		this.tags = new HashMap<String, Tag>();
 	}
 	
-	public final Tag getTag(String name) {
-		return get(name);
+	@Override
+	public Tag get(String name) {
+		return (has(name)) ? tags.get(name.toLowerCase()) : null;
 	}
 	
-	public final List<Tag> getTags() {
-		return getAll();
+	@Override
+	public List<Tag> getAll() {
+		return new ArrayList<Tag>(tags.values());
 	}
 	
-	public final boolean hasTag(String name) {
-		return has(name);
+	@Override
+	public boolean has(String name) {
+		return (name != null) ? tags.containsKey(name.toLowerCase()) : false;
 	}
 	
-	public final boolean hasTag(Tag tag) {
-		return has(tag);
+	@Override
+	public boolean has(Tag tag) {
+		if (tag == null || !has(tag.getTag()))
+			return false;
+		
+		return get(tag.getTag()).equals(tag);
+	}
+	
+	@Override
+	public void load() {}
+	
+	@Override
+	public List<String> match(String name) {
+		if (name == null || name.isEmpty())
+			return new ArrayList<String>(tags.keySet());
+		
+		List<String> matches = new ArrayList<String>();
+		
+		for (String tag : tags.keySet()) {
+			if (!tag.startsWith(name.toLowerCase()))
+				continue;
+			
+			matches.add(tag);
+		}
+		
+		Collections.sort(matches);
+		
+		return matches;
 	}
 	
 	public String parse(ConverseEvent event) {
@@ -58,12 +95,44 @@ public abstract class TagParser implements Manager<Tag> {
 		while (match.find()) {
 			String replacement = match.group();
 			
-			if (hasTag(replacement))
-				replacement = getTag(replacement).getValue(event);
+			if (has(replacement))
+				replacement = get(replacement).getValue(event.clone());
 			
 			match.appendReplacement(format, (replacement != null) ? replacement : "");
 		}
 		
 		return match.appendTail(format).toString();
+	}
+	
+	@Override
+	public void registerAll(Tag... tags) {
+		if (tags == null)
+			return;
+		
+		for (Tag tag : tags) {
+			if (tag == null)
+				continue;
+			
+			if (has(tag)) {
+				plugin.log(Level.INFO, "Duplicate: " + tag);
+				continue;
+			}
+			
+			this.tags.put(tag.getTag().toLowerCase(), tag);
+		}
+	}
+	
+	@Override
+	public void reload() {}
+	
+	@Override
+	public void unload() {}
+	
+	@Override
+	public void unregister(Tag tag) {
+		if (tag == null || !has(tag))
+			return;
+		
+		this.tags.remove(tag.getTag().toLowerCase());
 	}
 }

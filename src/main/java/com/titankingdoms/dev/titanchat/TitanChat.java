@@ -34,6 +34,7 @@ import com.titankingdoms.dev.titanchat.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.command.CommandManager;
 import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.core.user.UserManager;
+import com.titankingdoms.dev.titanchat.format.TagParser;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.util.UpdateUtil;
@@ -183,9 +184,10 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Registering managers...");
 		
-		registerManager(new CommandManager());
 		registerManager(new ChannelManager());
 		registerManager(new UserManager());
+		registerManager(new CommandManager());
+		registerManager(new TagParser());
 		registerManager(new AddonManager());
 		
 		if (!new File(getDataFolder(), "config.yml").exists()) {

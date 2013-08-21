@@ -30,6 +30,7 @@ import com.titankingdoms.dev.titanchat.core.user.Participant;
 import com.titankingdoms.dev.titanchat.core.user.User;
 import com.titankingdoms.dev.titanchat.core.user.UserManager;
 import com.titankingdoms.dev.titanchat.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.format.TagParser;
 
 public final class TitanChatListener implements Listener {
 	
@@ -53,17 +54,22 @@ public final class TitanChatListener implements Listener {
 		if (recipient == null)
 			recipient = sender;
 		
-		ConverseEvent chatEvent = new ConverseEvent(sender, recipient.getRelayPoints(), format, message);
+		ConverseEvent ce = new ConverseEvent(sender, recipient.getRelayPoints(), format, message);
 		
-		plugin.getServer().getPluginManager().callEvent(chatEvent);
+		if (!ce.getRecipients().contains(sender))
+			ce.getRecipients().add(sender);
 		
-		if (!chatEvent.getRecipients().contains(sender))
-			chatEvent.getRecipients().add(sender);
+		plugin.getServer().getPluginManager().callEvent(ce);
 		
-		for (EndPoint relay : chatEvent.getRecipients())
-			relay.sendRawLine(chatEvent.getFormat().replace("%message", chatEvent.getMessage()));
+		String line = plugin.getManager(TagParser.class).parse(ce).replace("%message", ce.getMessage());
 		
-		if (chatEvent.getRecipients().size() < 2)
+		if (!ce.getRecipients().contains(sender))
+			ce.getRecipients().add(sender);
+		
+		for (EndPoint relay : ce.getRecipients())
+			relay.sendRawLine(line);
+		
+		if (ce.getRecipients().size() < 2)
 			sender.sendNotice("Nobody heard you...");
 	}
 	
