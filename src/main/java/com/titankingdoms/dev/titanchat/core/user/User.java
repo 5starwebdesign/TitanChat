@@ -130,6 +130,10 @@ public abstract class User implements EndPoint {
 		this.current = endpoint;
 	}
 	
+	public void setDisplayName(String name) {
+		setMeta("display-name", name);
+	}
+	
 	public void setMeta(Meta meta) {
 		if (meta == null)
 			return;
@@ -138,6 +142,10 @@ public abstract class User implements EndPoint {
 			this.meta.remove(meta.key());
 		else
 			this.meta.put(meta.key(), meta);
+	}
+	
+	public void setMeta(String key, Object value) {
+		setMeta(new Meta(key, value));
 	}
 	
 	@Override
