@@ -17,21 +17,30 @@
 
 package com.titankingdoms.dev.titanchat.core.user;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.core.user.console.Console;
+import com.titankingdoms.dev.titanchat.core.user.participant.Participant;
 
 public final class UserManager implements Manager<User> {
 	
 	private final TitanChat plugin;
 	
 	private final Map<String, User> users;
+	
+	private File configFile;
+	private FileConfiguration config;
 	
 	public UserManager() {
 		this.plugin = TitanChat.getInstance();
@@ -49,6 +58,13 @@ public final class UserManager implements Manager<User> {
 	@Override
 	public List<User> getAll() {
 		return new ArrayList<User>(users.values());
+	}
+	
+	public FileConfiguration getConfig() {
+		if (config == null)
+			reloadConfig();
+		
+		return config;
 	}
 	
 	public Console getConsole() {
@@ -146,6 +162,25 @@ public final class UserManager implements Manager<User> {
 		
 		for (Player player : plugin.getServer().getOnlinePlayers())
 			registerAll(new Participant(player));
+	}
+	
+	public void reloadConfig() {
+		if (configFile == null)
+			configFile = new File(plugin.getDataFolder(), "users.yml");
+		
+		config = YamlConfiguration.loadConfiguration(configFile);
+		
+		InputStream defConfigStream = plugin.getResource("users.yml");
+		
+		if (defConfigStream != null)
+			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
+	}
+	
+	public void saveConfig() {
+		if (configFile == null || config == null)
+			return;
+		
+		try { config.save(configFile); } catch (Exception e) {}
 	}
 	
 	@Override

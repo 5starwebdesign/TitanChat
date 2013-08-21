@@ -26,9 +26,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.user.Participant;
 import com.titankingdoms.dev.titanchat.core.user.User;
 import com.titankingdoms.dev.titanchat.core.user.UserManager;
+import com.titankingdoms.dev.titanchat.core.user.participant.Participant;
 import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.format.TagParser;
 

@@ -21,8 +21,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
@@ -31,12 +31,13 @@ import com.titankingdoms.dev.titanchat.util.VaultUtils;
 public abstract class User implements EndPoint {
 	
 	protected final TitanChat plugin;
+	private final UserManager manager;
 	
 	private final String name;
 	
 	private EndPoint current;
 	
-	private final Map<String, Meta> meta;
+	private Metadata metadata;
 	
 	private final Set<EndPoint> represent = new HashSet<EndPoint>();
 	
@@ -46,9 +47,11 @@ public abstract class User implements EndPoint {
 		Validate.isTrue(name.length() <= 16, "Name cannot be longer than 16 characters");
 		
 		this.plugin = TitanChat.getInstance();
+		this.manager = plugin.getManager(UserManager.class);
 		this.name = name;
-		this.meta = new HashMap<String, Meta>();
 		this.represent.add(this);
+		
+		loadMetadata();
 	}
 	
 	@Override
@@ -66,19 +69,11 @@ public abstract class User implements EndPoint {
 	}
 	
 	public String getDiplayName() {
-		return getMeta("display-name", getName()).stringValue();
+		return getMetadata().getString("display-name", getName());
 	}
 	
-	public Meta getMeta(String key) {
-		return (key != null) ? getMeta(key, new Meta(key, new Object())) : new Meta("", new Object());
-	}
-	
-	public Meta getMeta(String key, Object def) {
-		return (key != null) ? getMeta(key, new Meta(key, def)) : new Meta("", def);
-	}
-	
-	public Meta getMeta(String key, Meta def) {
-		return (hasMeta(key)) ? meta.get(key) : def;
+	public Metadata getMetadata() {
+		return metadata;
 	}
 	
 	@Override
@@ -96,10 +91,6 @@ public abstract class User implements EndPoint {
 		return "User";
 	}
 	
-	public boolean hasMeta(String key) {
-		return (key != null) ? meta.containsKey(key) : false;
-	}
-	
 	public boolean hasPermission(String node) {
 		return VaultUtils.hasPermission(getCommandSender(), node);
 	}
@@ -109,6 +100,22 @@ public abstract class User implements EndPoint {
 	}
 	
 	public abstract boolean isOnline();
+	
+	public final void loadMetadata() {
+		ConfigurationSection metadata = manager.getConfig().getConfigurationSection(name.toLowerCase());
+		
+		if (metadata == null)
+			metadata = manager.getConfig().createSection(name.toLowerCase());
+		
+		this.metadata = new Metadata(metadata);
+	}
+	
+	public final void saveMetadata() {
+		if (metadata == null)
+			return;
+		
+		this.manager.saveConfig();
+	}
 	
 	@Override
 	public void sendNotice(String... messages) {
@@ -131,21 +138,7 @@ public abstract class User implements EndPoint {
 	}
 	
 	public void setDisplayName(String name) {
-		setMeta("display-name", name);
-	}
-	
-	public void setMeta(Meta meta) {
-		if (meta == null)
-			return;
-		
-		if (meta.value() == null)
-			this.meta.remove(meta.key());
-		else
-			this.meta.put(meta.key(), meta);
-	}
-	
-	public void setMeta(String key, Object value) {
-		setMeta(new Meta(key, value));
+		getMetadata().set("display-name", name);
 	}
 	
 	@Override
@@ -157,53 +150,5 @@ public abstract class User implements EndPoint {
 				"type: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getType() : "\"\"")) +
 				"}" +
 				"}";
-	}
-	
-	public static final class Meta {
-		
-		private final String key;
-		private final Object value;
-		
-		public Meta(String key, Object value) {
-			this.key = key;
-			this.value = value;
-		}
-		
-		public boolean booleanValue() {
-			return Boolean.valueOf(stringValue());
-		}
-		
-		public double doubleValue() {
-			return NumberUtils.toDouble(stringValue(), 0.0D);
-		}
-		
-		public float floatValue() {
-			return NumberUtils.toFloat(stringValue(), 0.0F);
-		}
-		
-		public int intValue() {
-			return NumberUtils.toInt(stringValue(), 0);
-		}
-		
-		public String key() {
-			return key;
-		}
-		
-		public long longValue() {
-			return NumberUtils.toLong(stringValue(), 0L);
-		}
-		
-		public String stringValue() {
-			return (value != null) ? value.toString() : "";
-		}
-		
-		@Override
-		public String toString() {
-			return "Meta: {key: " + key() + ", value: " + stringValue() + "}";
-		}
-		
-		public Object value() {
-			return value;
-		}
 	}
 }
