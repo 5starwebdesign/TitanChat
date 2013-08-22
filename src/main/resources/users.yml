@@ -1,0 +1,9 @@
+CONSOLE:
+    metadata:
+        display-name: "&4Server&f"
+NodinChan:
+    metadata:
+        prefix: "&f[&4Dev&f]"
+Notch:
+    metadata:
+        suffix: " &fthe &6Creator&f"

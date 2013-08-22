@@ -37,7 +37,7 @@ public abstract class User implements EndPoint {
 	
 	private EndPoint current;
 	
-	private Metadata metadata;
+	private final Metadata metadata;
 	
 	private final Set<EndPoint> represent = new HashSet<EndPoint>();
 	
@@ -49,6 +49,7 @@ public abstract class User implements EndPoint {
 		this.plugin = TitanChat.getInstance();
 		this.manager = plugin.getManager(UserManager.class);
 		this.name = name;
+		this.metadata = new Metadata();
 		this.represent.add(this);
 		
 		loadMetadata();
@@ -114,17 +115,21 @@ public abstract class User implements EndPoint {
 	public abstract boolean isOnline();
 	
 	public final void loadMetadata() {
-		ConfigurationSection metadata = manager.getConfig().getConfigurationSection(name.toLowerCase());
+		String path = name.toLowerCase() + ".metadata";
 		
-		if (metadata == null)
-			metadata = manager.getConfig().createSection(name.toLowerCase());
+		ConfigurationSection metadata = null;
 		
-		this.metadata = new Metadata(metadata);
+		if (manager.getConfig().get(path, null) != null)
+			metadata = manager.getConfig().getConfigurationSection(path);
+		else
+			metadata = manager.getConfig().createSection(path);
+		
+		this.metadata.setMetadata(metadata);
 	}
 	
 	public final void saveMetadata() {
-		if (metadata == null)
-			return;
+		if (this.metadata.isEmpty())
+			manager.getConfig().set(name.toLowerCase() + ".metadata", null);
 		
 		this.manager.saveConfig();
 	}

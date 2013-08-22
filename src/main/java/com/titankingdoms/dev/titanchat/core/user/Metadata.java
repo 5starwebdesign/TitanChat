@@ -21,11 +21,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public final class Metadata {
 	
-	private final ConfigurationSection metadata;
-	
-	public Metadata(ConfigurationSection metadata) {
-		this.metadata = metadata;
-	}
+	private ConfigurationSection metadata;
 	
 	public Object get(String key, Object def) {
 		return (contains(key)) ? metadata.get(key) : def;
@@ -79,10 +75,18 @@ public final class Metadata {
 		return (metadata != null && key != null) ? metadata.get(key, null) != null : false;
 	}
 	
+	public boolean isEmpty() {
+		return metadata.getKeys(false).isEmpty();
+	}
+	
 	public void set(String key, Object value) {
 		if (metadata == null)
 			return;
 		
 		metadata.set(key, value);
+	}
+	
+	protected void setMetadata(ConfigurationSection metadata) {
+		this.metadata = metadata;
 	}
 }
