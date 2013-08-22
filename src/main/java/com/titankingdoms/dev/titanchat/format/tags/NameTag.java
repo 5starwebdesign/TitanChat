@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user.format;
+package com.titankingdoms.dev.titanchat.format.tags;
 
 import com.titankingdoms.dev.titanchat.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.format.Tag;
