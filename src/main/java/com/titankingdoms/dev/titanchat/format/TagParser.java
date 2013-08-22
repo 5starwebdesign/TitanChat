@@ -17,11 +17,7 @@
 
 package com.titankingdoms.dev.titanchat.format;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +25,7 @@ import java.util.regex.Pattern;
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.format.tags.*;
 
 public final class TagParser implements Manager<Tag> {
 	
@@ -83,7 +80,14 @@ public final class TagParser implements Manager<Tag> {
 	}
 	
 	@Override
-	public void load() {}
+	public void load() {
+		registerAll(
+				new DisplayNameTag(),
+				new NameTag(),
+				new PrefixTag(),
+				new SuffixTag()
+		);
+	}
 	
 	@Override
 	public List<String> match(String name) {
@@ -139,10 +143,16 @@ public final class TagParser implements Manager<Tag> {
 	}
 	
 	@Override
-	public void reload() {}
+	public void reload() {
+		unload();
+		load();
+	}
 	
 	@Override
-	public void unload() {}
+	public void unload() {
+		for (Tag tag : getAll())
+			unregister(tag);
+	}
 	
 	@Override
 	public void unregister(Tag tag) {
