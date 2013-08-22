@@ -32,12 +32,13 @@ import com.titankingdoms.dev.titanchat.util.VaultUtils;
 public abstract class User implements EndPoint {
 	
 	protected final TitanChat plugin;
+	protected final UserManager manager;
 	
 	private final String name;
 	
 	private EndPoint current;
 	
-	private final Metadata metadata;
+	private final Map<String, Metadata> metadata;
 	
 	private final Set<EndPoint> represent = new HashSet<EndPoint>();
 	
@@ -47,8 +48,9 @@ public abstract class User implements EndPoint {
 		Validate.isTrue(name.length() <= 16, "Name cannot be longer than 16 characters");
 		
 		this.plugin = TitanChat.getInstance();
+		this.manager = plugin.getManager(UserManager.class);
 		this.name = name;
-		this.metadata = new Metadata();
+		this.metadata = new HashMap<String, Metadata>();
 		this.represent.add(this);
 	}
 	
@@ -63,7 +65,7 @@ public abstract class User implements EndPoint {
 	public abstract CommandSender getCommandSender();
 	
 	public final ConfigurationSection getConfig() {
-		FileConfiguration config = plugin.getManager(UserManager.class).getConfig();
+		FileConfiguration config = manager.getConfig();
 		
 		if (config.get(name.toLowerCase(), null) == null)
 			return config.createSection(name.toLowerCase());
@@ -76,11 +78,22 @@ public abstract class User implements EndPoint {
 	}
 	
 	public String getDisplayName() {
-		return getMetadata().getString("display-name", name);
+		return getMetadata("display-name", name).getValue();
 	}
 	
-	public final Metadata getMetadata() {
-		return metadata;
+	public final Set<Metadata> getMetadata() {
+		return new HashSet<Metadata>(metadata.values());
+	}
+	
+	public final Metadata getMetadata(String key, String def) {
+		if (key == null)
+			return null;
+		
+		return (hasMetadata(key)) ? metadata.get(key) : new Metadata(key, def);
+	}
+	
+	public final Metadata getMetadata(String key) {
+		return getMetadata(key, "");
 	}
 	
 	@Override
@@ -89,7 +102,7 @@ public abstract class User implements EndPoint {
 	}
 	
 	public String getPrefix() {
-		return getMetadata().getString("prefix");
+		return getMetadata("prefix").getValue();
 	}
 	
 	@Override
@@ -98,7 +111,7 @@ public abstract class User implements EndPoint {
 	}
 	
 	public String getSuffix() {
-		return getMetadata().getString("suffix");
+		return getMetadata("suffix").getValue();
 	}
 	
 	@Override
@@ -107,7 +120,15 @@ public abstract class User implements EndPoint {
 	}
 	
 	public boolean hasDisplayName() {
-		return name.equals(getDisplayName());
+		return name.equals(getMetadata("display-name", name).getValue());
+	}
+	
+	public final boolean hasMetadata() {
+		return !metadata.isEmpty();
+	}
+	
+	public final boolean hasMetadata(String key) {
+		return (key != null) ? metadata.containsKey(key) : false;
 	}
 	
 	public boolean hasPermission(String node) {
@@ -121,21 +142,22 @@ public abstract class User implements EndPoint {
 	public abstract boolean isOnline();
 	
 	public final void loadMetadata() {
-		ConfigurationSection metadata = null;
+		if (getConfig().get("metadata", null) == null)
+			return;
 		
-		if (getConfig().get("metadata", null) != null)
-			metadata = getConfig().getConfigurationSection("metadata");
-		else
-			metadata = getConfig().createSection("metadata");
+		ConfigurationSection metadata = getConfig().getConfigurationSection("metadata");
 		
-		this.metadata.setMetadata(metadata);
+		for (String key : metadata.getKeys(false))
+			setMetadata(key, metadata.getString(key, ""));
 	}
 	
 	public final void saveMetadata() {
-		if (this.metadata.isEmpty())
-			getConfig().set("metadata", null);
+		ConfigurationSection metadata = getConfig().createSection("metadata");
 		
-		plugin.getManager(UserManager.class).saveConfig();
+		for (Metadata kv : getMetadata())
+			metadata.set(kv.getKey(), kv.getValue());
+		
+		manager.saveConfig();
 	}
 	
 	@Override
@@ -159,13 +181,28 @@ public abstract class User implements EndPoint {
 	}
 	
 	public void setDisplayName(String name) {
-		getMetadata().set("display-name", name);
+		setMetadata("display-name", name);
+	}
+	
+	public final void setMetadata(Metadata metadata) {
+		if (metadata == null)
+			return;
+		
+		this.metadata.put(metadata.getKey(), metadata);
+	}
+	
+	public final void setMetadata(String key, String value) {
+		if (key == null || key.isEmpty() || value == null)
+			return;
+		
+		setMetadata(new Metadata(key, value));
 	}
 	
 	@Override
 	public String toString() {
 		return "User: {" +
 				"name: " + getName() + ", " +
+				"online: " + isOnline() + ", " +
 				"current: {" +
 				"name: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getName() : "\"\"")) + ", " +
 				"type: " + (((!isCurrentEndPoint(null)) ? getCurrentEndPoint().getType() : "\"\"")) +

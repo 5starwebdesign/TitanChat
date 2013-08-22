@@ -40,6 +40,11 @@ public final class OfflineUser extends User {
 	}
 	
 	@Override
+	public String getType() {
+		return "OfflineUser";
+	}
+	
+	@Override
 	public boolean isOnline() {
 		return false;
 	}

@@ -112,6 +112,9 @@ public final class UserManager implements Manager<User> {
 	
 	@Override
 	public void load() {
+		getConfig().options().copyDefaults(true);
+		saveConfig();
+		
 		registerAll(new Console());
 		
 		for (Player player : plugin.getServer().getOnlinePlayers())
@@ -146,7 +149,7 @@ public final class UserManager implements Manager<User> {
 			return;
 		
 		for (User user : users) {
-			if (user == null)
+			if (user == null || user.getType().equals("OfflineUser"))
 				continue;
 			
 			if (Pattern.compile("\\W").matcher(user.getName()).find()) {
@@ -160,6 +163,7 @@ public final class UserManager implements Manager<User> {
 			}
 			
 			this.users.put(user.getName().toLowerCase(), user);
+			user.loadMetadata();
 		}
 	}
 	
@@ -167,6 +171,8 @@ public final class UserManager implements Manager<User> {
 	public void reload() {
 		for (User user : getAll())
 			unregister(user);
+		
+		reloadConfig();
 		
 		registerAll(new Console());
 		
@@ -201,9 +207,10 @@ public final class UserManager implements Manager<User> {
 	
 	@Override
 	public void unregister(User user) {
-		if (user == null || !has(user))
+		if (user == null || user.getType().equals("OfflineUser") || !has(user))
 			return;
 		
 		this.users.remove(user.getName().toLowerCase());
+		user.saveMetadata();
 	}
 }

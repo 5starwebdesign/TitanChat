@@ -149,7 +149,7 @@ public final class TagParser implements Manager<Tag> {
 				continue;
 			
 			if (has(tag)) {
-				plugin.log(Level.INFO, "Duplicate: " + tag);
+				plugin.log(Level.WARNING, "Duplicate: " + tag);
 				continue;
 			}
 			
