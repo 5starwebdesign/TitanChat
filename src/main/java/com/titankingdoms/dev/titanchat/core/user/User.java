@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.EndPoint;
@@ -31,7 +32,6 @@ import com.titankingdoms.dev.titanchat.util.VaultUtils;
 public abstract class User implements EndPoint {
 	
 	protected final TitanChat plugin;
-	private final UserManager manager;
 	
 	private final String name;
 	
@@ -47,12 +47,9 @@ public abstract class User implements EndPoint {
 		Validate.isTrue(name.length() <= 16, "Name cannot be longer than 16 characters");
 		
 		this.plugin = TitanChat.getInstance();
-		this.manager = plugin.getManager(UserManager.class);
 		this.name = name;
 		this.metadata = new Metadata();
 		this.represent.add(this);
-		
-		loadMetadata();
 	}
 	
 	@Override
@@ -65,6 +62,15 @@ public abstract class User implements EndPoint {
 	
 	public abstract CommandSender getCommandSender();
 	
+	public final ConfigurationSection getConfig() {
+		FileConfiguration config = plugin.getManager(UserManager.class).getConfig();
+		
+		if (config.get(name.toLowerCase(), null) == null)
+			return config.createSection(name.toLowerCase());
+		
+		return config.getConfigurationSection(name.toLowerCase());
+	}
+	
 	public final EndPoint getCurrentEndPoint() {
 		return current;
 	}
@@ -73,7 +79,7 @@ public abstract class User implements EndPoint {
 		return getMetadata().getString("display-name", name);
 	}
 	
-	public Metadata getMetadata() {
+	public final Metadata getMetadata() {
 		return metadata;
 	}
 	
@@ -115,23 +121,21 @@ public abstract class User implements EndPoint {
 	public abstract boolean isOnline();
 	
 	public final void loadMetadata() {
-		String path = name.toLowerCase() + ".metadata";
-		
 		ConfigurationSection metadata = null;
 		
-		if (manager.getConfig().get(path, null) != null)
-			metadata = manager.getConfig().getConfigurationSection(path);
+		if (getConfig().get("metadata", null) != null)
+			metadata = getConfig().getConfigurationSection("metadata");
 		else
-			metadata = manager.getConfig().createSection(path);
+			metadata = getConfig().createSection("metadata");
 		
 		this.metadata.setMetadata(metadata);
 	}
 	
 	public final void saveMetadata() {
 		if (this.metadata.isEmpty())
-			manager.getConfig().set(name.toLowerCase() + ".metadata", null);
+			getConfig().set("metadata", null);
 		
-		this.manager.saveConfig();
+		plugin.getManager(UserManager.class).saveConfig();
 	}
 	
 	@Override
