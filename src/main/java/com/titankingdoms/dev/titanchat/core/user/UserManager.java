@@ -31,7 +31,10 @@ import org.bukkit.entity.Player;
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.core.user.console.Console;
+import com.titankingdoms.dev.titanchat.core.user.format.DisplayNameTag;
+import com.titankingdoms.dev.titanchat.core.user.format.NameTag;
 import com.titankingdoms.dev.titanchat.core.user.participant.Participant;
+import com.titankingdoms.dev.titanchat.format.TagParser;
 
 public final class UserManager implements Manager<User> {
 	
@@ -45,6 +48,7 @@ public final class UserManager implements Manager<User> {
 	public UserManager() {
 		this.plugin = TitanChat.getInstance();
 		this.users = new HashMap<String, User>();
+		plugin.getManager(TagParser.class).registerAll(new DisplayNameTag(), new NameTag());
 	}
 	
 	@Override
@@ -106,6 +110,8 @@ public final class UserManager implements Manager<User> {
 		
 		for (Player player : plugin.getServer().getOnlinePlayers())
 			registerAll(new Participant(player));
+		
+		plugin.getManager(TagParser.class).registerAll(new DisplayNameTag(), new NameTag());
 	}
 	
 	@Override

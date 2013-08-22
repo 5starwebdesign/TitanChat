@@ -184,10 +184,10 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Registering managers...");
 		
+		registerManager(new TagParser());
 		registerManager(new ChannelManager());
 		registerManager(new UserManager());
 		registerManager(new CommandManager());
-		registerManager(new TagParser());
 		registerManager(new AddonManager());
 		
 		if (!new File(getDataFolder(), "config.yml").exists()) {
