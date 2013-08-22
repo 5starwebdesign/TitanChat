@@ -81,9 +81,17 @@ public abstract class User implements EndPoint {
 		return name;
 	}
 	
+	public String getPrefix() {
+		return getMetadata().getString("prefix");
+	}
+	
 	@Override
 	public Set<EndPoint> getRelayPoints() {
 		return new HashSet<EndPoint>(represent);
+	}
+	
+	public String getSuffix() {
+		return getMetadata().getString("suffix");
 	}
 	
 	@Override
