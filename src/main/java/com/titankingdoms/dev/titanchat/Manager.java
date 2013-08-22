@@ -25,6 +25,10 @@ public interface Manager<T> {
 	
 	public List<T> getAll();
 	
+	public String getName();
+	
+	public String getStatusMessage();
+	
 	public boolean has(String name);
 	
 	public boolean has(T item);

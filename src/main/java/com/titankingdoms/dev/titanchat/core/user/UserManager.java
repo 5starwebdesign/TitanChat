@@ -71,6 +71,16 @@ public final class UserManager implements Manager<User> {
 		return (Console) get("CONSOLE");
 	}
 	
+	@Override
+	public String getName() {
+		return "UserManager";
+	}
+	
+	@Override
+	public String getStatusMessage() {
+		return "";
+	}
+	
 	public User getUser(CommandSender sender) {
 		return get(sender.getName());
 	}

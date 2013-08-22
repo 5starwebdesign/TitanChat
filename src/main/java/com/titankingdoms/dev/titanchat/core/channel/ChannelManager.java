@@ -21,6 +21,8 @@ import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 
@@ -59,6 +61,19 @@ public final class ChannelManager implements Manager<Channel> {
 	
 	public List<Channel> getChannels() {
 		return getAll();
+	}
+	
+	@Override
+	public String getName() {
+		return "ChannelManager";
+	}
+	
+	@Override
+	public String getStatusMessage() {
+		if (channels.isEmpty())
+			return "No channels loaded";
+		
+		return "Channels loaded: " + StringUtils.join(channels.keySet(), ", ");
 	}
 	
 	@Override

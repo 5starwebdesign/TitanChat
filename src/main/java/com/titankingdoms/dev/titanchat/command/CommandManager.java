@@ -20,38 +20,34 @@ package com.titankingdoms.dev.titanchat.command;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
 
-public final class CommandManager extends Command implements Manager<Command> {
+public final class CommandManager implements Manager<Command> {
 	
 	private final TitanChat plugin;
 	
+	private final MainCommand command;
+	
 	public CommandManager() {
-		super("TitanChat");
 		this.plugin = TitanChat.getInstance();
+		this.command = new MainCommand();
 	}
 	
-	@Override
 	public void execute(CommandSender sender, String[] args) {
-		getLayer().execute(sender, args);
+		command.execute(sender, args);
 	}
 	
-	@Override
 	public Command get(String name) {
-		return getLayer().get(name);
-	}
-	
-	@Override
-	public String[] getAliases() {
-		return plugin.getCommand("titanchat").getAliases().toArray(new String[0]);
+		return command.getLayer().get(name);
 	}
 	
 	@Override
 	public List<Command> getAll() {
-		return getLayer().getAll();
+		return command.getLayer().getAll();
 	}
 	
 	public Command getCommand(String name) {
@@ -63,28 +59,26 @@ public final class CommandManager extends Command implements Manager<Command> {
 	}
 	
 	@Override
-	public String getDescription() {
-		return plugin.getCommand("titanchat").getDescription();
+	public String getName() {
+		return "CommandManager";
 	}
 	
 	@Override
-	public int getMaxArguments() {
-		return Integer.MAX_VALUE;
-	}
-	
-	@Override
-	public int getMinArguments() {
-		return 0;
+	public String getStatusMessage() {
+		if (getAll().isEmpty())
+			return "No commands loaded";
+		
+		return "Commands loaded: " + StringUtils.join(match(""), ", ");
 	}
 	
 	@Override
 	public boolean has(String name) {
-		return getLayer().has(name);
+		return command.getLayer().has(name);
 	}
 	
 	@Override
 	public boolean has(Command command) {
-		return getLayer().has(command);
+		return command.getLayer().has(command);
 	}
 	
 	public boolean hasCommand(String name) {
@@ -96,16 +90,11 @@ public final class CommandManager extends Command implements Manager<Command> {
 	}
 	
 	@Override
-	public boolean isPermitted(CommandSender sender, String[] args) {
-		return true;
-	}
-	
-	@Override
 	public void load() {}
 	
 	@Override
 	public List<String> match(String name) {
-		return getLayer().match(name);
+		return command.getLayer().match(name);
 	}
 	
 	@Override
@@ -122,16 +111,15 @@ public final class CommandManager extends Command implements Manager<Command> {
 				continue;
 			}
 			
-			getLayer().registerAll(command);
+			command.getLayer().registerAll(command);
 		}
 	}
 	
 	@Override
 	public void reload() {}
 	
-	@Override
 	public List<String> tab(CommandSender sender, String[] args) {
-		return getLayer().tab(sender, args);
+		return command.tab(sender, args);
 	}
 	
 	@Override
@@ -139,6 +127,26 @@ public final class CommandManager extends Command implements Manager<Command> {
 	
 	@Override
 	public void unregister(Command command) {
-		getLayer().unregister(command);
+		command.getLayer().unregister(command);
+	}
+	
+	private final class MainCommand extends Command {
+		
+		public MainCommand() {
+			super("TitanChat");
+			setAliases(plugin.getCommand("titanchat").getAliases().toArray(new String[0]));
+			setArgumentRange(0, 256);
+			setDescription(plugin.getCommand("titanchat").getDescription());
+		}
+		
+		@Override
+		public void execute(CommandSender sender, String[] args) {
+			getLayer().execute(sender, args);
+		}
+		
+		@Override
+		public List<String> tab(CommandSender sender, String[] args) {
+			return getLayer().tab(sender, args);
+		}
 	}
 }

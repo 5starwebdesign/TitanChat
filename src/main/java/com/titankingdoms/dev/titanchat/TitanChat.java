@@ -170,6 +170,15 @@ public final class TitanChat extends JavaPlugin {
 		for (Manager<?> manager : getManagers())
 			manager.load();
 		
+		for (Manager<?> manager : getManagers()) {
+			String status = manager.getStatusMessage();
+			
+			if (status == null || status.isEmpty())
+				continue;
+			
+			log(Level.INFO, "[" + manager.getName() + "] " + status);
+		}
+		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
 		log(Level.INFO, "Registered listeners");
 		
@@ -214,6 +223,15 @@ public final class TitanChat extends JavaPlugin {
 		
 		for (Manager<?> manager : getManagers())
 			manager.reload();
+		
+		for (Manager<?> manager : getManagers()) {
+			String status = manager.getStatusMessage();
+			
+			if (status == null || status.isEmpty())
+				continue;
+			
+			log(Level.INFO, "[" + manager.getName() + "] " + status);
+		}
 		
 		log(Level.INFO, "TitanChat is now reloaded");
 	}

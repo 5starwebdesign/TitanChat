@@ -184,6 +184,16 @@ public abstract class Command {
 		}
 		
 		@Override
+		public String getName() {
+			return "Layer";
+		}
+		
+		@Override
+		public String getStatusMessage() {
+			return "";
+		}
+		
+		@Override
 		public boolean has(String name) {
 			return (name != null) ? commands.containsKey(name.toLowerCase()) : false;
 		}

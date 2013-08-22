@@ -65,6 +65,19 @@ public final class AddonManager implements Manager<Addon> {
 	}
 	
 	@Override
+	public String getName() {
+		return "AddonManager";
+	}
+	
+	@Override
+	public String getStatusMessage() {
+		if (addons.isEmpty())
+			return "No addons loaded";
+		
+		return "Addons loaded: " + StringUtils.join(addons.keySet(), ", ");
+	}
+	
+	@Override
 	public boolean has(String name) {
 		return (name != null) ? addons.containsKey(name.toLowerCase()) : false;
 	}
@@ -88,9 +101,6 @@ public final class AddonManager implements Manager<Addon> {
 	@Override
 	public void load() {
 		registerAll(Loader.load(Addon.class, getAddonDirectory()).toArray(new Addon[0]));
-		
-		if (!addons.isEmpty())
-			plugin.log(Level.INFO, "Addons loaded: " + StringUtils.join(addons.keySet(), ", "));
 	}
 	
 	@Override
