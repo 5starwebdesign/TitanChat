@@ -27,7 +27,7 @@ public interface Manager<T> {
 	
 	public String getName();
 	
-	public String getStatusMessage();
+	public String getStatus();
 	
 	public boolean has(String name);
 	

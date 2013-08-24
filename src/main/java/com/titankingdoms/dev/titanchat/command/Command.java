@@ -189,7 +189,7 @@ public abstract class Command {
 		}
 		
 		@Override
-		public String getStatusMessage() {
+		public String getStatus() {
 			return "";
 		}
 		

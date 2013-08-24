@@ -67,7 +67,22 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public Set<Manager<?>> getManagers() {
-		return new HashSet<Manager<?>>(managers.values());
+		synchronized (managers) {
+			return new HashSet<Manager<?>>(managers.values());
+		}
+	}
+	
+	public void getManagerStatuses() {
+		synchronized (managers) {
+			for (Manager<?> manager : getManagers()) {
+				String status = manager.getStatus();
+				
+				if (status == null || status.isEmpty())
+					continue;
+				
+				log(Level.INFO, "[" + manager.getName() + "] " + status);
+			}
+		}
 	}
 	
 	public <T extends Manager<?>> boolean hasManager(Class<T> manager) {
@@ -170,14 +185,7 @@ public final class TitanChat extends JavaPlugin {
 		for (Manager<?> manager : getManagers())
 			manager.load();
 		
-		for (Manager<?> manager : getManagers()) {
-			String status = manager.getStatusMessage();
-			
-			if (status == null || status.isEmpty())
-				continue;
-			
-			log(Level.INFO, "[" + manager.getName() + "] " + status);
-		}
+		getManagerStatuses();
 		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
 		log(Level.INFO, "Registered listeners");
@@ -224,14 +232,7 @@ public final class TitanChat extends JavaPlugin {
 		for (Manager<?> manager : getManagers())
 			manager.reload();
 		
-		for (Manager<?> manager : getManagers()) {
-			String status = manager.getStatusMessage();
-			
-			if (status == null || status.isEmpty())
-				continue;
-			
-			log(Level.INFO, "[" + manager.getName() + "] " + status);
-		}
+		getManagerStatuses();
 		
 		log(Level.INFO, "TitanChat is now reloaded");
 	}

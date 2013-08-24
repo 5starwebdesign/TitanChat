@@ -69,7 +69,7 @@ public final class ChannelManager implements Manager<Channel> {
 	}
 	
 	@Override
-	public String getStatusMessage() {
+	public String getStatus() {
 		if (channels.isEmpty())
 			return "No channels loaded";
 		

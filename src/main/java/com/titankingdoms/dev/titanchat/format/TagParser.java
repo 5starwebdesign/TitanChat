@@ -58,7 +58,7 @@ public final class TagParser implements Manager<Tag> {
 	}
 	
 	@Override
-	public String getStatusMessage() {
+	public String getStatus() {
 		if (tags.isEmpty())
 			return "No tags loaded";
 		

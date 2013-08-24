@@ -70,7 +70,7 @@ public final class AddonManager implements Manager<Addon> {
 	}
 	
 	@Override
-	public String getStatusMessage() {
+	public String getStatus() {
 		if (addons.isEmpty())
 			return "No addons loaded";
 		

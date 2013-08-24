@@ -77,8 +77,8 @@ public final class UserManager implements Manager<User> {
 	}
 	
 	@Override
-	public String getStatusMessage() {
-		return "";
+	public String getStatus() {
+		return users.size() + " users loaded";
 	}
 	
 	public User getUser(CommandSender sender) {
