@@ -52,6 +52,14 @@ public final class TagParser implements Manager<Tag> {
 		return new ArrayList<Tag>(tags.values());
 	}
 	
+	public String getDefaultFormat() {
+		return plugin.getConfig().getString("tag.format.default", "%tag%");
+	}
+	
+	public String getFormat(String name) {
+		return plugin.getConfig().getString("tag.format.tags." + name.toLowerCase(), getDefaultFormat());
+	}
+	
 	@Override
 	public String getName() {
 		return "TagParser";
@@ -130,10 +138,17 @@ public final class TagParser implements Manager<Tag> {
 		while (match.find()) {
 			String replacement = match.group();
 			
-			if (has(replacement))
+			if (has(replacement)) {
 				replacement = get(replacement).getValue(event.clone());
+				
+				if (replacement == null)
+					replacement = "";
+				
+				if (!replacement.isEmpty())
+					replacement = getFormat(match.group()).replace("%tag%", replacement);
+			}
 			
-			match.appendReplacement(format, (replacement != null) ? replacement : "");
+			match.appendReplacement(format, replacement);
 		}
 		
 		return match.appendTail(format).toString();
