@@ -17,21 +17,19 @@
 
 package com.titankingdoms.dev.titanchat.command.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
+import com.titankingdoms.dev.titanchat.channel.Channel;
+import com.titankingdoms.dev.titanchat.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
-import com.titankingdoms.dev.titanchat.core.user.User;
-import com.titankingdoms.dev.titanchat.core.user.UserManager;
+import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.UserManager;
 import com.titankingdoms.dev.titanchat.util.Messaging;
-import com.titankingdoms.dev.titanchat.util.VaultUtils;
+import com.titankingdoms.dev.titanchat.vault.VaultUtils;
 
 public final class WhitelistCommand extends Command {
 	
@@ -72,31 +70,33 @@ public final class WhitelistCommand extends Command {
 			ChannelManager chManager = plugin.getManager(ChannelManager.class);
 			
 			if (!chManager.has(args[0])) {
-				Messaging.sendMessage(sender, "&4" + args[0] + " does not exist");
+				Messaging.sendNotice(sender, "&4" + args[0] + " does not exist");
 				return;
 			}
 			
 			Channel channel = chManager.get(args[0]);
 			
 			if (Pattern.compile("\\W").matcher(args[1]).find()) {
-				Messaging.sendMessage(sender, "&4Users cannot have non-word characters in names");
+				Messaging.sendNotice(sender, "&4Users cannot have non-word characters in names");
 				return;
 			}
 			
 			User user = plugin.getManager(UserManager.class).get(args[1]);
 			
 			if (channel.getWhitelist().contains(user.getName())) {
-				Messaging.sendMessage(sender, user.getDisplayName() + " &4is already on the whitelist");
+				Messaging.sendNotice(sender, user.getDisplayName() + " &4is already on the whitelist");
 				return;
 			}
 			
 			channel.getWhitelist().add(user.getName());
-			user.sendNotice("&6You have been added to the whitelist of " + channel.getName());
+			Messaging.sendNotice(user, "&6You have been added to the whitelist of " + channel.getName());
+			
+			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), ' ');
 			
 			if (args.length > 2)
-				user.sendNotice("&6Reason: " + StringUtils.join(Arrays.copyOfRange(args, 2, args.length), ' '));
+				Messaging.sendNotice(user, "&6Reason: " + reason);
 			
-			channel.sendNotice(user.getDisplayName() + " &6has been added to the whitelist");
+			Messaging.sendNotice(channel, user.getDisplayName() + " &6has been added to the whitelist");
 		}
 		
 		@Override
@@ -128,31 +128,33 @@ public final class WhitelistCommand extends Command {
 			ChannelManager chManager = plugin.getManager(ChannelManager.class);
 			
 			if (!chManager.has(args[0])) {
-				Messaging.sendMessage(sender, "&4" + args[0] + " does not exist");
+				Messaging.sendNotice(sender, "&4" + args[0] + " does not exist");
 				return;
 			}
 			
 			Channel channel = chManager.get(args[0]);
 			
 			if (Pattern.compile("\\W").matcher(args[1]).find()) {
-				Messaging.sendMessage(sender, "&4Users cannot have non-word characters in names");
+				Messaging.sendNotice(sender, "&4Users cannot have non-word characters in names");
 				return;
 			}
 			
 			User user = plugin.getManager(UserManager.class).get(args[1]);
 			
 			if (!channel.getWhitelist().contains(user.getName())) {
-				Messaging.sendMessage(sender, user.getDisplayName() + " &4is not on the whitelist");
+				Messaging.sendNotice(sender, user.getDisplayName() + " &4is not on the whitelist");
 				return;
 			}
 			
 			channel.getWhitelist().remove(user.getName());
-			user.sendNotice("&4You have been removed from the whitelist of " + channel.getName());
+			Messaging.sendNotice(user, "&4You have been removed from the whitelist of " + channel.getName());
+			
+			String reason = StringUtils.join(Arrays.copyOfRange(args, 2, args.length), ' ');
 			
 			if (args.length > 2)
-				user.sendNotice("&4Reason: " + StringUtils.join(Arrays.copyOfRange(args, 2, args.length), ' '));
+				Messaging.sendNotice(user, "&4Reason: " + reason);
 			
-			channel.sendNotice(user.getDisplayName() + " &6has been removed from the whitelist");
+			Messaging.sendNotice(channel, user.getDisplayName() + " &6has been removed from the whitelist");
 		}
 		
 		@Override
@@ -184,13 +186,13 @@ public final class WhitelistCommand extends Command {
 			ChannelManager chManager = plugin.getManager(ChannelManager.class);
 			
 			if (!chManager.has(args[0])) {
-				Messaging.sendMessage(sender, "&4" + args[0] + " does not exist");
+				Messaging.sendNotice(sender, "&4" + args[0] + " does not exist");
 				return;
 			}
 			
 			Channel channel = chManager.get(args[0]);
 			
-			Messaging.sendMessage(sender, "Whitelistlist: " + StringUtils.join(channel.getWhitelist(), ", "));
+			Messaging.sendNotice(sender, "Whitelistlist: " + StringUtils.join(channel.getWhitelist(), ", "));
 		}
 		
 		@Override

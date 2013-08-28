@@ -15,26 +15,31 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.tags;
+package com.titankingdoms.dev.titanchat.api;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.user.User;
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.Tag;
+import java.util.List;
 
-public final class PrefixTag extends Tag {
+public interface Manager<T> {
 	
-	public PrefixTag() {
-		super("prefix");
-	}
+	public T get(String name);
 	
-	@Override
-	public String getValue(ConverseEvent event) {
-		EndPoint sender = event.getSender();
-		
-		if (!sender.getType().equals("User"))
-			return "";
-		
-		return ((User) sender).getPrefix();
-	}
+	public List<T> getAll();
+	
+	public String getName();
+	
+	public boolean has(String name);
+	
+	public boolean has(T item);
+	
+	public void load();
+	
+	public List<String> match(String name);
+	
+	public void registerAll(T... items);
+	
+	public void reload();
+	
+	public void unload();
+	
+	public void unregister(T item);
 }

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user;
+package com.titankingdoms.dev.titanchat.user;
 
 import java.io.File;
 import java.io.InputStream;
@@ -28,10 +28,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.user.console.Console;
-import com.titankingdoms.dev.titanchat.core.user.participant.Participant;
+import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.user.users.*;
 
 public final class UserManager implements Manager<User> {
 	
@@ -74,11 +73,6 @@ public final class UserManager implements Manager<User> {
 	@Override
 	public String getName() {
 		return "UserManager";
-	}
-	
-	@Override
-	public String getStatus() {
-		return users.size() + " users loaded";
 	}
 	
 	public User getUser(CommandSender sender) {

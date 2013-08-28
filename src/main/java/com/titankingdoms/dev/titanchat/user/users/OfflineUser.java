@@ -15,36 +15,40 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.command.commands;
+package com.titankingdoms.dev.titanchat.user.users;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.util.Messaging;
-import com.titankingdoms.dev.titanchat.vault.VaultUtils;
+import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.UserManager;
 
-public final class ReloadCommand extends Command {
+public final class OfflineUser extends User {
 	
-	public ReloadCommand(String name) {
-		super("Reload");
-		setAliases("rl");
-		setDescription("Reload TitanChat");
+	public OfflineUser(String name) {
+		super(name);
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
-		if (sender instanceof Player)
-			Messaging.sendNotice(sender, "&6TitanChat is reloading...");
+	public CommandSender getCommandSender() {
+		return null;
+	}
+	
+	public User getOnlineUser() {
+		UserManager manager = plugin.getManager(UserManager.class);
 		
-		plugin.onReload();
+		if (!manager.has(getName()))
+			return null;
 		
-		if (sender instanceof Player)
-			Messaging.sendNotice(sender, "&6TitanChat is reloaded");
+		return manager.get(getName());
 	}
 	
 	@Override
-	public boolean isPermitted(CommandSender sender, String[] args) {
-		return VaultUtils.hasPermission(sender, "TitanChat.reload");
+	public String getType() {
+		return "OfflineUser";
+	}
+	
+	@Override
+	public boolean isOnline() {
+		return false;
 	}
 }

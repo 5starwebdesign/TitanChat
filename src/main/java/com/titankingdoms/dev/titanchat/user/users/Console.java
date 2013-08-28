@@ -15,11 +15,11 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user.console;
+package com.titankingdoms.dev.titanchat.user.users;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.core.user.User;
+import com.titankingdoms.dev.titanchat.user.User;
 
 public final class Console extends User {
 	

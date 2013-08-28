@@ -15,27 +15,27 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user;
+package com.titankingdoms.dev.titanchat.format.tag;
 
-import org.apache.commons.lang.Validate;
+import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.format.Tag;
+import com.titankingdoms.dev.titanchat.user.User;
 
-public class Metadata {
-	
-	private final String key;
-	private final String value;
-	
-	public Metadata(String key, String value) {
-		Validate.notEmpty(key, "Key cannot be empty");
+public final class SuffixTag extends Tag {
+
+	public SuffixTag() {
+		super("suffix");
+	}
+
+	@Override
+	public String getValue(ConverseEvent event) {
+		EndPoint sender = event.getSender();
 		
-		this.key = key;
-		this.value = (value != null) ? value : "";
+		if (!sender.getType().equals("User"))
+			return "";
+		
+		return ((User) sender).getSuffix();
 	}
-	
-	public final String getKey() {
-		return key;
-	}
-	
-	public final String getValue() {
-		return value;
-	}
+
 }

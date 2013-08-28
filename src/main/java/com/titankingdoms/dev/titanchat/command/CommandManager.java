@@ -20,11 +20,10 @@ package com.titankingdoms.dev.titanchat.command;
 import java.util.List;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class CommandManager extends Command implements Manager<Command> {
 	
@@ -54,14 +53,6 @@ public final class CommandManager extends Command implements Manager<Command> {
 	
 	public List<Command> getCommands() {
 		return getAll();
-	}
-	
-	@Override
-	public String getStatus() {
-		if (getLayer().getAll().isEmpty())
-			return "No commands loaded";
-		
-		return "Commands loaded: " + StringUtils.join(getLayer().match(""), ", ");
 	}
 	
 	@Override

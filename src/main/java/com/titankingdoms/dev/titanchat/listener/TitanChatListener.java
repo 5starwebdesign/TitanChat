@@ -17,20 +17,16 @@
 
 package com.titankingdoms.dev.titanchat.listener;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.*;
+import org.bukkit.event.player.*;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.user.User;
-import com.titankingdoms.dev.titanchat.core.user.UserManager;
-import com.titankingdoms.dev.titanchat.core.user.participant.Participant;
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.format.TagParser;
+import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.UserManager;
+import com.titankingdoms.dev.titanchat.user.users.Participant;
 
 public final class TitanChatListener implements Listener {
 	
@@ -70,7 +66,7 @@ public final class TitanChatListener implements Listener {
 			relay.sendRawLine(line);
 		
 		if (ce.getRecipients().size() < 2)
-			sender.sendNotice("Nobody heard you...");
+			sender.sendRawLine("&7Nobody heard you...");
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

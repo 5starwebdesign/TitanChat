@@ -15,27 +15,35 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.tags;
+package com.titankingdoms.dev.titanchat.channel.standard;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.user.User;
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.Tag;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class SuffixTag extends Tag {
-
-	public SuffixTag() {
-		super("suffix");
+public enum Range {
+	LOCAL("local"),
+	GLOBAL("global"),
+	STANDARD("standard"),
+	WORLD("world");
+	
+	private String name;
+	private static final Map<String, Range> NAME_MAP = new HashMap<String, Range>();
+	
+	private Range(String name) {
+		this.name = name;
 	}
-
-	@Override
-	public String getValue(ConverseEvent event) {
-		EndPoint sender = event.getSender();
-		
-		if (!sender.getType().equals("User"))
-			return "";
-		
-		return ((User) sender).getSuffix();
+	
+	static {
+		for (Range range : EnumSet.allOf(Range.class))
+			NAME_MAP.put(range.name, range);
 	}
-
+	
+	public static Range fromName(String name) {
+		return NAME_MAP.get(name.toLowerCase());
+	}
+	
+	public String getName() {
+		return name;
+	}
 }

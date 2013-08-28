@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.util;
+package com.titankingdoms.dev.titanchat.vault;
 
 import org.bukkit.Server;
 import org.bukkit.World;

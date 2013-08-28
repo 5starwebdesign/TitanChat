@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core;
+package com.titankingdoms.dev.titanchat.api;
 
 import java.util.Set;
 
@@ -26,8 +26,6 @@ public interface EndPoint {
 	public Set<EndPoint> getRelayPoints();
 	
 	public String getType();
-	
-	public void sendNotice(String... messages);
 	
 	public void sendRawLine(String line);
 }

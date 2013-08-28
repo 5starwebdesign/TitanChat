@@ -15,12 +15,14 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.addon;
+package com.titankingdoms.dev.titanchat.api.addon;
 
+import com.titankingdoms.dev.titanchat.channel.Channel;
+import com.titankingdoms.dev.titanchat.channel.ChannelManager;
+import com.titankingdoms.dev.titanchat.channel.factory.Factory;
+import com.titankingdoms.dev.titanchat.channel.factory.FactoryManager;
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.command.CommandManager;
-import com.titankingdoms.dev.titanchat.core.channel.Channel;
-import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.format.Tag;
 import com.titankingdoms.dev.titanchat.format.TagParser;
 import com.titankingdoms.dev.titanchat.util.loading.Loadable;
@@ -45,6 +47,10 @@ public class Addon extends Loadable {
 	
 	public final void registerCommands(Command... commands) {
 		plugin.getManager(CommandManager.class).registerAll(commands);
+	}
+	
+	public final void registerFactories(Factory... factories) {
+		plugin.getManager(FactoryManager.class).registerAll(factories);
 	}
 	
 	public final void registerTags(Tag... tags) {

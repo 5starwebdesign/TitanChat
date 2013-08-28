@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.event;
+package com.titankingdoms.dev.titanchat.api.event;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +24,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.api.EndPoint;
 
 public final class ConverseEvent extends Event implements Cloneable {
 	

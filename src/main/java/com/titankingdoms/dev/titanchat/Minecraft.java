@@ -15,26 +15,41 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.tags;
+package com.titankingdoms.dev.titanchat;
 
-import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.core.user.User;
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.Tag;
+import java.util.HashSet;
+import java.util.Set;
 
-public final class DisplayNameTag extends Tag {
+import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.UserManager;
+
+public final class Minecraft implements EndPoint {
 	
-	public DisplayNameTag() {
-		super("display");
+	private final UserManager manager;
+	
+	public Minecraft() {
+		this.manager = TitanChat.getInstance().getManager(UserManager.class);
 	}
 	
 	@Override
-	public String getValue(ConverseEvent event) {
-		EndPoint sender = event.getSender();
-		
-		if (!sender.getType().equals("User"))
-			return sender.getName();
-		
-		return ((User) sender).getDisplayName();
+	public String getName() {
+		return "Minecraft";
+	}
+	
+	@Override
+	public Set<EndPoint> getRelayPoints() {
+		return new HashSet<EndPoint>(manager.getAll());
+	}
+	
+	@Override
+	public String getType() {
+		return "Minecraft";
+	}
+	
+	@Override
+	public void sendRawLine(String line) {
+		for (User user : manager.getAll())
+			user.sendRawLine(line);
 	}
 }

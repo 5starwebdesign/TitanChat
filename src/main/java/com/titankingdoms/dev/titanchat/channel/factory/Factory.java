@@ -15,47 +15,44 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core;
+package com.titankingdoms.dev.titanchat.channel.factory;
 
-import java.util.HashSet;
-import java.util.Set;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.user.User;
-import com.titankingdoms.dev.titanchat.core.user.UserManager;
+import com.titankingdoms.dev.titanchat.channel.Channel;
 
-public final class MinecraftChat implements EndPoint {
+public abstract class Factory {
 	
-	private final TitanChat plugin;
+	protected final TitanChat plugin;
 	
-	public MinecraftChat() {
+	private final String name;
+	
+	public Factory(String name) {
 		this.plugin = TitanChat.getInstance();
+		this.name = name;
 	}
 	
 	@Override
-	public String getName() {
-		return "MinecraftChat";
+	public boolean equals(Object object) {
+		if (object instanceof Factory)
+			return toString().equals(object.toString());
+		
+		return false;
 	}
 	
-	@Override
-	public Set<EndPoint> getRelayPoints() {
-		return new HashSet<EndPoint>(plugin.getManager(UserManager.class).getAll());
+	public final String getName() {
+		return name;
 	}
 	
-	@Override
-	public String getType() {
-		return "MinecraftChat";
-	}
+	public abstract Channel loadChannel(FileConfiguration config);
+	
+	public abstract void saveChannel(Channel channel);
 	
 	@Override
-	public void sendNotice(String... messages) {
-		for (User user : plugin.getManager(UserManager.class).getAll())
-			user.sendNotice(messages);
-	}
-	
-	@Override
-	public void sendRawLine(String line) {
-		for (User user : plugin.getManager(UserManager.class).getAll())
-			user.sendRawLine(line);
+	public String toString() {
+		return "ChannelFactory: {" +
+				"name: " + getName() +
+				"}";
 	}
 }

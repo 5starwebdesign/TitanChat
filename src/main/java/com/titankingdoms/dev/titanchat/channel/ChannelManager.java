@@ -15,16 +15,14 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.channel;
 
 import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class ChannelManager implements Manager<Channel> {
 	
@@ -66,14 +64,6 @@ public final class ChannelManager implements Manager<Channel> {
 	@Override
 	public String getName() {
 		return "ChannelManager";
-	}
-	
-	@Override
-	public String getStatus() {
-		if (channels.isEmpty())
-			return "No channels loaded";
-		
-		return "Channels loaded: " + StringUtils.join(channels.keySet(), ", ");
 	}
 	
 	@Override

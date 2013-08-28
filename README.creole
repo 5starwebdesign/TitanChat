@@ -60,6 +60,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 11.08.13 - Added MinecraftChat for management when Channels are disabled
 * 14.08.13 - Changed the command system to be able to handle commands in layers
 * 17.08.13 - Quotations in arguments are now recognised and arguments will be reassembled
+* 29.08.13 - Changed structure of packaging
 
 ----
 

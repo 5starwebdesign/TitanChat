@@ -17,9 +17,7 @@
 
 package com.titankingdoms.dev.titanchat.util.loading;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;

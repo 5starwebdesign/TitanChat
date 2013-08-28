@@ -20,9 +20,7 @@ package com.titankingdoms.dev.titanchat.util.xml;
 import java.io.InputStream;
 import java.util.Iterator;
 
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.*;
 import javax.xml.stream.events.*;
 
 import com.titankingdoms.dev.titanchat.util.xml.XMLObject.XMLType;

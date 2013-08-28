@@ -15,37 +15,19 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user;
+package com.titankingdoms.dev.titanchat.format.tag;
 
-import org.bukkit.command.CommandSender;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.format.Tag;
 
-public final class OfflineUser extends User {
+public final class NameTag extends Tag {
 	
-	public OfflineUser(String name) {
-		super(name);
+	public NameTag() {
+		super("name");
 	}
 	
 	@Override
-	public CommandSender getCommandSender() {
-		return null;
-	}
-	
-	public User getOnlineUser() {
-		UserManager manager = plugin.getManager(UserManager.class);
-		
-		if (!manager.has(getName()))
-			return null;
-		
-		return manager.get(getName());
-	}
-	
-	@Override
-	public String getType() {
-		return "OfflineUser";
-	}
-	
-	@Override
-	public boolean isOnline() {
-		return false;
+	public String getValue(ConverseEvent event) {
+		return event.getSender().getName();
 	}
 }

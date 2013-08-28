@@ -15,16 +15,14 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.addon;
+package com.titankingdoms.dev.titanchat.api.addon;
 
 import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.util.loading.Loader;
 
 public final class AddonManager implements Manager<Addon> {
@@ -67,14 +65,6 @@ public final class AddonManager implements Manager<Addon> {
 	@Override
 	public String getName() {
 		return "AddonManager";
-	}
-	
-	@Override
-	public String getStatus() {
-		if (addons.isEmpty())
-			return "No addons loaded";
-		
-		return "Addons loaded: " + StringUtils.join(addons.keySet(), ", ");
 	}
 	
 	@Override

@@ -15,33 +15,27 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat;
+package com.titankingdoms.dev.titanchat.user;
 
-import java.util.List;
+import org.apache.commons.lang.Validate;
 
-public interface Manager<T> {
+public class Metadata {
 	
-	public T get(String name);
+	private final String key;
+	private final String value;
 	
-	public List<T> getAll();
+	public Metadata(String key, String value) {
+		Validate.notEmpty(key, "Key cannot be empty");
+		
+		this.key = key;
+		this.value = (value != null) ? value : "";
+	}
 	
-	public String getName();
+	public final String getKey() {
+		return key;
+	}
 	
-	public String getStatus();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void load();
-	
-	public List<String> match(String name);
-	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public final String getValue() {
+		return value;
+	}
 }

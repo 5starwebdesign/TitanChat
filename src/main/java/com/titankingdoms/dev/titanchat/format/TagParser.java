@@ -22,12 +22,10 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
-
-import com.titankingdoms.dev.titanchat.Manager;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.tags.*;
+import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.format.tag.*;
 
 public final class TagParser implements Manager<Tag> {
 	
@@ -63,14 +61,6 @@ public final class TagParser implements Manager<Tag> {
 	@Override
 	public String getName() {
 		return "TagParser";
-	}
-	
-	@Override
-	public String getStatus() {
-		if (tags.isEmpty())
-			return "No tags loaded";
-		
-		return "Tags loaded: " + StringUtils.join(tags.keySet(), ", ");
 	}
 	
 	public Tag getTag(String name) {

@@ -39,12 +39,12 @@ public final class ClearCommand extends Command {
 	@Override
 	public void execute(CommandSender sender, String[] args) {
 		if (!(sender instanceof Player)) {
-			Messaging.sendMessage(sender, "You cannot clear the console");
+			Messaging.sendNotice(sender, "You cannot clear the console");
 			return;
 		}
 		
 		if (args.length < 1)
-			Messaging.sendMessage(sender, StringUtils.repeat("\n", 20));
+			Messaging.sendNotice(sender, StringUtils.repeat("\n", 20));
 		else
 			getLayer().execute(sender, args);
 	}
@@ -66,11 +66,11 @@ public final class ClearCommand extends Command {
 		@Override
 		public void execute(CommandSender sender, String[] args) {
 			if (!(sender instanceof Player)) {
-				Messaging.sendMessage(sender, "You cannot clear the console");
+				Messaging.sendNotice(sender, "You cannot clear the console");
 				return;
 			}
 			
-			Messaging.sendMessage(sender, StringUtils.repeat("\n", 100));
+			Messaging.sendNotice(sender, StringUtils.repeat("\n", 100));
 		}
 	}
 }

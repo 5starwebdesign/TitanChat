@@ -15,19 +15,26 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.tags;
+package com.titankingdoms.dev.titanchat.format.tag;
 
-import com.titankingdoms.dev.titanchat.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.format.Tag;
+import com.titankingdoms.dev.titanchat.user.User;
 
-public final class NameTag extends Tag {
+public final class PrefixTag extends Tag {
 	
-	public NameTag() {
-		super("name");
+	public PrefixTag() {
+		super("prefix");
 	}
 	
 	@Override
 	public String getValue(ConverseEvent event) {
-		return event.getSender().getName();
+		EndPoint sender = event.getSender();
+		
+		if (!sender.getType().equals("User"))
+			return "";
+		
+		return ((User) sender).getPrefix();
 	}
 }

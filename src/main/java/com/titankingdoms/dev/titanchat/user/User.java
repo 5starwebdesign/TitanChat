@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.user;
+package com.titankingdoms.dev.titanchat.user;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -26,8 +26,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
-import com.titankingdoms.dev.titanchat.util.VaultUtils;
+import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.vault.VaultUtils;
 
 public abstract class User implements EndPoint {
 	
@@ -158,12 +158,6 @@ public abstract class User implements EndPoint {
 			metadata.set(kv.getKey(), kv.getValue());
 		
 		manager.saveConfig();
-	}
-	
-	@Override
-	public void sendNotice(String... messages) {
-		for (String message : messages)
-			sendRawLine("[TitanChat] " + message);
 	}
 	
 	@Override

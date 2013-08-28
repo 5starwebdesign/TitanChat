@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.core.channel;
+package com.titankingdoms.dev.titanchat.channel;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.EndPoint;
+import com.titankingdoms.dev.titanchat.api.EndPoint;
 
 public abstract class Channel implements EndPoint {
 	
@@ -70,9 +70,6 @@ public abstract class Channel implements EndPoint {
 	public Set<String> getWhitelist() {
 		return whitelist;
 	}
-	
-	@Override
-	public void sendNotice(String... messages) {}
 	
 	@Override
 	public String toString() {

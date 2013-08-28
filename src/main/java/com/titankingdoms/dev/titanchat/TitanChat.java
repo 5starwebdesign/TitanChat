@@ -30,15 +30,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.titankingdoms.dev.titanchat.addon.AddonManager;
+import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
+import com.titankingdoms.dev.titanchat.channel.ChannelManager;
+import com.titankingdoms.dev.titanchat.channel.factory.FactoryManager;
 import com.titankingdoms.dev.titanchat.command.CommandManager;
-import com.titankingdoms.dev.titanchat.core.channel.ChannelManager;
-import com.titankingdoms.dev.titanchat.core.user.UserManager;
 import com.titankingdoms.dev.titanchat.format.TagParser;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
+import com.titankingdoms.dev.titanchat.user.UserManager;
 import com.titankingdoms.dev.titanchat.util.UpdateUtil;
-import com.titankingdoms.dev.titanchat.util.VaultUtils;
+import com.titankingdoms.dev.titanchat.vault.VaultUtils;
 
 public final class TitanChat extends JavaPlugin {
 	
@@ -72,19 +74,6 @@ public final class TitanChat extends JavaPlugin {
 		}
 	}
 	
-	public void getManagerStatuses() {
-		synchronized (managers) {
-			for (Manager<?> manager : getManagers()) {
-				String status = manager.getStatus();
-				
-				if (status == null || status.isEmpty())
-					continue;
-				
-				log(Level.INFO, "[" + manager.getName() + "] " + status);
-			}
-		}
-	}
-	
 	public <T extends Manager<?>> boolean hasManager(Class<T> manager) {
 		if (manager == null)
 			return false;
@@ -94,12 +83,8 @@ public final class TitanChat extends JavaPlugin {
 		}
 	}
 	
-	public boolean hasUpdate() {
-		return update.hasUpdate();
-	}
-	
 	private boolean initMetrics() {
-		log(Level.INFO, "Attempting to set up Metrics...");
+		log(Level.INFO, "Attempting to initialise Metrics...");
 		
 		if (!getConfig().getBoolean("metrics-statistics", true)) {
 			log(Level.INFO, "Metrics Disabled");
@@ -114,10 +99,11 @@ public final class TitanChat extends JavaPlugin {
 			
 			boolean initialised = metrics.start();
 			
-			if (initialised)
-				log(Level.INFO, "Metrics has been successfully initialised");
+			if (!initialised)
+				return false;
 			
-			return initialised;
+			log(Level.INFO, "Metrics has been successfully initialised");
+			return true;
 			
 		} catch (Exception e) {}
 		
@@ -185,8 +171,6 @@ public final class TitanChat extends JavaPlugin {
 		for (Manager<?> manager : getManagers())
 			manager.load();
 		
-		getManagerStatuses();
-		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
 		log(Level.INFO, "Registered listeners");
 		
@@ -201,11 +185,12 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Registering managers...");
 		
+		registerManager(new CommandManager());
+		registerManager(new FactoryManager());
 		registerManager(new TagParser());
+		registerManager(new AddonManager());
 		registerManager(new ChannelManager());
 		registerManager(new UserManager());
-		registerManager(new CommandManager());
-		registerManager(new AddonManager());
 		
 		if (!new File(getDataFolder(), "config.yml").exists()) {
 			log(Level.INFO, "Generating default config.yml...");
@@ -232,8 +217,6 @@ public final class TitanChat extends JavaPlugin {
 		for (Manager<?> manager : getManagers())
 			manager.reload();
 		
-		getManagerStatuses();
-		
 		log(Level.INFO, "TitanChat is now reloaded");
 	}
 	
@@ -257,10 +240,7 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public void registerManager(Manager<?> manager) {
-		if (manager == null)
-			return;
-		
-		if (hasManager(manager.getClass()))
+		if (manager == null || hasManager(manager.getClass()))
 			return;
 		
 		synchronized (managers) {
@@ -284,20 +264,17 @@ public final class TitanChat extends JavaPlugin {
 		
 		boolean available = update.hasUpdate();
 		
-		if (available) {
-			log(Level.INFO, "A new version of TitanChat is available! (" + update.getNewName() + ")");
-			log(Level.INFO, "You are running " + update.getCurrentName() + " currently");
-			log(Level.INFO, "Update at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
-		}
+		if (!available)
+			return false;
 		
-		return available;
+		log(Level.INFO, "A new version of TitanChat is available! (" + update.getNewName() + ")");
+		log(Level.INFO, "You are running " + update.getCurrentName() + " currently");
+		log(Level.INFO, "Update at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
+		return true;
 	}
 	
 	public void unregisterManager(Manager<?> manager) {
-		if (manager == null)
-			return;
-		
-		if (!hasManager(manager.getClass()))
+		if (manager == null || !hasManager(manager.getClass()))
 			return;
 		
 		synchronized (managers) {
