@@ -27,6 +27,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.vault.VaultUtils;
 
 public abstract class User implements EndPoint {
@@ -106,7 +107,7 @@ public abstract class User implements EndPoint {
 	}
 	
 	@Override
-	public Set<EndPoint> getRelayPoints() {
+	public Set<EndPoint> getRelayPoints(ConverseEvent event) {
 		return new HashSet<EndPoint>(represent);
 	}
 	
@@ -121,6 +122,11 @@ public abstract class User implements EndPoint {
 	
 	public boolean hasDisplayName() {
 		return name.equals(getMetadata("display-name", name).getValue());
+	}
+	
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
 	}
 	
 	public final boolean hasMetadata() {

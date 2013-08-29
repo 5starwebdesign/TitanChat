@@ -19,11 +19,13 @@ package com.titankingdoms.dev.titanchat.api;
 
 import java.util.Set;
 
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+
 public interface EndPoint {
 	
 	public String getName();
 	
-	public Set<EndPoint> getRelayPoints();
+	public Set<EndPoint> getRelayPoints(ConverseEvent event);
 	
 	public String getType();
 	

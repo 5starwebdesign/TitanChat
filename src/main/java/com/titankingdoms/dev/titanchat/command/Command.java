@@ -103,6 +103,11 @@ public abstract class Command {
 		return name;
 	}
 	
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+	
 	public boolean isPermitted(CommandSender sender, String[] args) {
 		return true;
 	}

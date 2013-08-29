@@ -15,44 +15,43 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.channel.factory;
+package com.titankingdoms.dev.titanchat.legacy;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.channel.Channel;
+import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.UserManager;
 
-public abstract class Factory {
+public final class LegacyChat implements EndPoint {
 	
-	protected final TitanChat plugin;
+	private final UserManager manager;
 	
-	private final String name;
-	
-	public Factory(String name) {
-		this.plugin = TitanChat.getInstance();
-		this.name = name;
+	public LegacyChat() {
+		this.manager = TitanChat.getInstance().getManager(UserManager.class);
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Factory)
-			return toString().equals(object.toString());
-		
-		return false;
+	public String getName() {
+		return "Minecraft";
 	}
-	
-	public final String getName() {
-		return name;
-	}
-	
-	public abstract Channel loadChannel(FileConfiguration config);
-	
-	public abstract void saveChannel(Channel channel);
 	
 	@Override
-	public String toString() {
-		return "ChannelFactory: {" +
-				"name: " + getName() +
-				"}";
+	public Set<EndPoint> getRelayPoints(ConverseEvent event) {
+		return new HashSet<EndPoint>(manager.getAll());
+	}
+	
+	@Override
+	public String getType() {
+		return "Minecraft";
+	}
+	
+	@Override
+	public void sendRawLine(String line) {
+		for (User user : manager.getAll())
+			user.sendRawLine(line);
 	}
 }

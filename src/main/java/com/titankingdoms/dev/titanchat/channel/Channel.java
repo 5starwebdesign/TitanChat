@@ -17,11 +17,15 @@
 
 package com.titankingdoms.dev.titanchat.channel;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.EndPoint;
@@ -31,6 +35,9 @@ public abstract class Channel implements EndPoint {
 	protected final TitanChat plugin;
 	
 	private final String name;
+	
+	private File configFile;
+	private FileConfiguration config;
 	
 	private final Set<String> blacklist;
 	private final Set<String> whitelist;
@@ -57,6 +64,13 @@ public abstract class Channel implements EndPoint {
 		return blacklist;
 	}
 	
+	public FileConfiguration getConfig() {
+		if (config == null)
+			reloadConfig();
+		
+		return config;
+	}
+	
 	@Override
 	public final String getName() {
 		return name;
@@ -69,6 +83,30 @@ public abstract class Channel implements EndPoint {
 	
 	public Set<String> getWhitelist() {
 		return whitelist;
+	}
+	
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+	
+	public void reloadConfig() {
+		if (configFile == null)
+			configFile = new File(plugin.getManager(ChannelManager.class).getDirectory(), getName() + ".yml");
+		
+		config = YamlConfiguration.loadConfiguration(configFile);
+		
+		InputStream defConfigStream = plugin.getResource("channel.yml");
+		
+		if (defConfigStream != null)
+			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
+	}
+	
+	public void saveConfig() {
+		if (configFile == null || config == null)
+			return;
+		
+		try { config.save(configFile); } catch (Exception e) {}
 	}
 	
 	@Override

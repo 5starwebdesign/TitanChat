@@ -15,22 +15,34 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.addon;
+package com.titankingdoms.dev.titanchat.channel;
 
-import com.titankingdoms.dev.titanchat.util.loading.Loadable;
+import org.bukkit.configuration.file.FileConfiguration;
 
-public class Addon extends Loadable {
+import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.channel.Channel;
+
+public abstract class Factory {
 	
-	public Addon(String name) {
-		super(name);
+	protected final TitanChat plugin;
+	
+	private final String name;
+	
+	public Factory(String name) {
+		this.plugin = TitanChat.getInstance();
+		this.name = name;
 	}
 	
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof Addon)
+		if (object instanceof Factory)
 			return toString().equals(object.toString());
 		
 		return false;
+	}
+	
+	public final String getName() {
+		return name;
 	}
 	
 	@Override
@@ -38,11 +50,14 @@ public class Addon extends Loadable {
 		return toString().hashCode();
 	}
 	
+	public abstract Channel loadChannel(FileConfiguration config);
+	
+	public abstract void saveChannel(Channel channel);
+	
 	@Override
 	public String toString() {
-		return "Addon: {" +
-				"name: " + getName() + ", " +
-				"file: " + getFile().getName() +
+		return "ChannelFactory: {" +
+				"name: " + getName() +
 				"}";
 	}
 }

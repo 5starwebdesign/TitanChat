@@ -15,41 +15,21 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat;
+package com.titankingdoms.dev.titanchat.tag;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 
-import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.user.User;
-import com.titankingdoms.dev.titanchat.user.UserManager;
-
-public final class Minecraft implements EndPoint {
+public final class StaticTag extends Tag {
 	
-	private final UserManager manager;
+	private final String value;
 	
-	public Minecraft() {
-		this.manager = TitanChat.getInstance().getManager(UserManager.class);
+	public StaticTag(String name, String value) {
+		super(name);
+		this.value = (value != null) ? value : "";
 	}
 	
 	@Override
-	public String getName() {
-		return "Minecraft";
-	}
-	
-	@Override
-	public Set<EndPoint> getRelayPoints() {
-		return new HashSet<EndPoint>(manager.getAll());
-	}
-	
-	@Override
-	public String getType() {
-		return "Minecraft";
-	}
-	
-	@Override
-	public void sendRawLine(String line) {
-		for (User user : manager.getAll())
-			user.sendRawLine(line);
+	public String getValue(ConverseEvent event) {
+		return value;
 	}
 }

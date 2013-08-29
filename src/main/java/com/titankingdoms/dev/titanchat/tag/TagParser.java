@@ -15,23 +15,30 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format;
+package com.titankingdoms.dev.titanchat.tag;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.tag.*;
 
 public final class TagParser implements Manager<Tag> {
 	
 	private final TitanChat plugin;
 	
 	private final Pattern pattern = Pattern.compile("(?i)(%)([a-z0-9]+)");
+	
+	private File configFile;
+	private FileConfiguration config;
 	
 	private final Map<String, Tag> tags;
 	
@@ -50,12 +57,19 @@ public final class TagParser implements Manager<Tag> {
 		return new ArrayList<Tag>(tags.values());
 	}
 	
+	public FileConfiguration getConfig() {
+		if (config == null)
+			reloadConfig();
+		
+		return config;
+	}
+	
 	public String getDefaultFormat() {
-		return plugin.getConfig().getString("tag.format.default", "%tag%");
+		return getConfig().getString("format.default", "%tag%");
 	}
 	
 	public String getFormat(String name) {
-		return plugin.getConfig().getString("tag.format.tags." + name.toLowerCase(), getDefaultFormat());
+		return getConfig().getString("format.tags." + name.toLowerCase(), getDefaultFormat());
 	}
 	
 	@Override
@@ -93,14 +107,7 @@ public final class TagParser implements Manager<Tag> {
 	}
 	
 	@Override
-	public void load() {
-		registerAll(
-				new DisplayNameTag(),
-				new NameTag(),
-				new PrefixTag(),
-				new SuffixTag()
-		);
-	}
+	public void load() {}
 	
 	@Override
 	public List<String> match(String name) {
@@ -166,6 +173,25 @@ public final class TagParser implements Manager<Tag> {
 	public void reload() {
 		unload();
 		load();
+	}
+	
+	public void reloadConfig() {
+		if (configFile == null)
+			configFile = new File(plugin.getDataFolder(), "tag.yml");
+		
+		config = YamlConfiguration.loadConfiguration(configFile);
+		
+		InputStream defConfigStream = plugin.getResource("tag.yml");
+		
+		if (defConfigStream != null)
+			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
+	}
+	
+	public void saveConfig() {
+		if (configFile == null || config == null)
+			return;
+		
+		try { config.save(configFile); } catch (Exception e) {}
 	}
 	
 	@Override

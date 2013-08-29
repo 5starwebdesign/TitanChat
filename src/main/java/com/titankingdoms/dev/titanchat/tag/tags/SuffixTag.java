@@ -15,11 +15,11 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.tag;
+package com.titankingdoms.dev.titanchat.tag.tags;
 
 import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.Tag;
+import com.titankingdoms.dev.titanchat.tag.Tag;
 import com.titankingdoms.dev.titanchat.user.User;
 
 public final class SuffixTag extends Tag {

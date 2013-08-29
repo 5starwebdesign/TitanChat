@@ -1,7 +1,4 @@
 format:
     converse: "%prefix%display%suffix: %message"
-tag:
-    format:
-        default: "%tag%"
 metrics-statistics: true
 update-search: false

@@ -33,7 +33,7 @@ public final class ChannelManager implements Manager<Channel> {
 	public ChannelManager() {
 		this.plugin = TitanChat.getInstance();
 		
-		if (getChannelDirectory().mkdirs())
+		if (getDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating channel directory...");
 		
 		this.channels = new TreeMap<String, Channel>();
@@ -53,7 +53,7 @@ public final class ChannelManager implements Manager<Channel> {
 		return get(name);
 	}
 	
-	public File getChannelDirectory() {
+	public File getDirectory() {
 		return new File(plugin.getDataFolder(), "channels");
 	}
 	

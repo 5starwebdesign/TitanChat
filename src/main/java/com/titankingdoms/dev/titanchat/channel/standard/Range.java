@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Range {
-	LOCAL("local"),
 	GLOBAL("global"),
+	LOCAL("local"),
 	STANDARD("standard"),
 	WORLD("world");
 	

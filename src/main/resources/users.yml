@@ -3,7 +3,7 @@ CONSOLE:
         display-name: "&4Server&f"
 NodinChan:
     metadata:
-        prefix: "&f[&4Dev&f]"
+        prefix: "&4Dev"
 Notch:
     metadata:
-        suffix: " &fthe &6Creator&f"
+        suffix: " the &6Creator"

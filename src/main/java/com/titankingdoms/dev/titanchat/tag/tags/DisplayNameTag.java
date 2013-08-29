@@ -15,34 +15,26 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format;
+package com.titankingdoms.dev.titanchat.tag.tags;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-
+import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.tag.Tag;
+import com.titankingdoms.dev.titanchat.user.User;
 
-public abstract class Tag {
+public final class DisplayNameTag extends Tag {
 	
-	private final String tag;
-	
-	public Tag(String name) {
-		Validate.notEmpty(name, "Name cannot be empty");
-		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
-		
-		this.tag = "%" + name;
+	public DisplayNameTag() {
+		super("display");
 	}
-	
-	public final String getTag() {
-		return tag;
-	}
-	
-	public abstract String getValue(ConverseEvent event);
 	
 	@Override
-	public String toString() {
-		return "Tag: {" +
-				"tag: " + getTag() +
-				"}";
+	public String getValue(ConverseEvent event) {
+		EndPoint sender = event.getSender();
+		
+		if (!sender.getType().equals("User"))
+			return sender.getName();
+		
+		return ((User) sender).getDisplayName();
 	}
 }

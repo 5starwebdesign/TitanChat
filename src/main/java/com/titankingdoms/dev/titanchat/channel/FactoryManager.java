@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.channel.factory;
+package com.titankingdoms.dev.titanchat.channel;
 
 import java.util.*;
 import java.util.logging.Level;
