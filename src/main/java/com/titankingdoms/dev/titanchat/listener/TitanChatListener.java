@@ -22,8 +22,6 @@ import org.bukkit.event.player.*;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.tag.TagParser;
 import com.titankingdoms.dev.titanchat.user.User;
 import com.titankingdoms.dev.titanchat.user.UserManager;
 import com.titankingdoms.dev.titanchat.user.users.Participant;
@@ -50,24 +48,7 @@ public final class TitanChatListener implements Listener {
 		if (recipient == null)
 			recipient = sender;
 		
-		ConverseEvent ce = new ConverseEvent(sender, format, message);
-		ce.getRecipients().addAll(recipient.getRelayPoints(ce));
-		
-		if (!ce.getRecipients().contains(sender))
-			ce.getRecipients().add(sender);
-		
-		plugin.getServer().getPluginManager().callEvent(ce);
-		
-		String line = plugin.getManager(TagParser.class).parse(ce).replace("%message", ce.getMessage());
-		
-		if (!ce.getRecipients().contains(sender))
-			ce.getRecipients().add(sender);
-		
-		for (EndPoint relay : ce.getRecipients())
-			relay.sendRawLine(line);
-		
-		if (ce.getRecipients().size() < 2)
-			sender.sendRawLine("&7Nobody heard you...");
+		plugin.convsere(sender, recipient, format, message);
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

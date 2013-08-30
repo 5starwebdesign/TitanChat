@@ -26,7 +26,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.channel.Channel;
 import com.titankingdoms.dev.titanchat.user.User;
 import com.titankingdoms.dev.titanchat.user.UserManager;
@@ -38,7 +37,7 @@ public final class StandardChannel extends Channel {
 	private String password;
 	
 	public StandardChannel(String name) {
-		super(name);
+		super(name, "Standard");
 		this.range = Range.STANDARD;
 		this.radius = 15;
 		this.password = "";
@@ -57,54 +56,49 @@ public final class StandardChannel extends Channel {
 	}
 	
 	@Override
-	public Set<EndPoint> getRelayPoints(ConverseEvent event) {
+	public Set<EndPoint> getRelayPoints(EndPoint sender) {
 		Set<EndPoint> points = new HashSet<EndPoint>();
+		
+		UserManager manager = plugin.getManager(UserManager.class);
 		
 		switch (range) {
 		
 		case GLOBAL:
-			points.addAll(plugin.getManager(UserManager.class).getAll());
+			points.addAll(manager.getAll());
 			break;
 			
 		case LOCAL:
-			EndPoint lclSender = event.getSender();
-			
-			if (!lclSender.getType().equals("User"))
+		case WORLD:
+			if (!sender.getType().equals("User"))
 				break;
 			
-			CommandSender lclCmdSender = ((User) lclSender).getCommandSender();
+			CommandSender cmdSender = ((User) sender).getCommandSender();
 			
-			if (!(lclCmdSender instanceof Player))
+			if (!(cmdSender instanceof Player))
 				break;
 			
-			UserManager lclManager = plugin.getManager(UserManager.class);
+			switch (range) {
 			
-			for (Entity entity : ((Player) lclCmdSender).getNearbyEntities(radius, radius, radius)) {
-				if (!entity.getType().equals(EntityType.PLAYER))
-					continue;
+			case LOCAL:
+				for (Entity entity : ((Player) cmdSender).getNearbyEntities(radius, radius, radius)) {
+					if (!entity.getType().equals(EntityType.PLAYER))
+						continue;
+					
+					points.add(manager.getUser((Player) entity));
+				}
+				break;
 				
-				points.add(lclManager.getUser((Player) entity));
+			case WORLD:
+				for (Player player : ((Player) cmdSender).getWorld().getPlayers())
+					points.add(manager.getUser(player));
+				break;
+				
+			default:
+				break;
 			}
 			break;
 			
 		case STANDARD:
-			break;
-			
-		case WORLD:
-			EndPoint wSender = event.getSender();
-			
-			if (!wSender.getType().equals("User"))
-				break;
-			
-			CommandSender wCmdSender = ((User) wSender).getCommandSender();
-			
-			if (!(wCmdSender instanceof Player))
-				break;
-			
-			UserManager wManager = plugin.getManager(UserManager.class);
-			
-			for (Player player : ((Player) wCmdSender).getWorld().getPlayers())
-				points.add(wManager.getUser(player));
 			break;
 		}
 		
@@ -119,7 +113,7 @@ public final class StandardChannel extends Channel {
 	}
 	
 	public void setRadius(int radius) {
-		this.radius = radius;
+		this.radius = (radius >= 0) ? radius : 0;
 	}
 	
 	public void setRange(Range range) {
@@ -127,6 +121,6 @@ public final class StandardChannel extends Channel {
 	}
 	
 	public void setRange(String range) {
-		setRange(Range.fromName(range));
+		setRange((range != null) ? Range.fromName(range) : Range.STANDARD);
 	}
 }

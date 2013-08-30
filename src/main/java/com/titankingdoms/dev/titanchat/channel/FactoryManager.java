@@ -23,25 +23,25 @@ import java.util.logging.Level;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 
-public final class FactoryManager implements Manager<Factory> {
+public final class FactoryManager implements Manager<Factory<?>> {
 	
 	private final TitanChat plugin;
 	
-	private final Map<String, Factory> factories;
+	private final Map<String, Factory<?>> factories;
 	
 	public FactoryManager() {
 		this.plugin = TitanChat.getInstance();
-		this.factories = new HashMap<String, Factory>();
+		this.factories = new HashMap<String, Factory<?>>();
 	}
 	
 	@Override
-	public Factory get(String name) {
+	public Factory<?> get(String name) {
 		return (has(name)) ? factories.get(name.toLowerCase()) : null;
 	}
 	
 	@Override
-	public List<Factory> getAll() {
-		return new ArrayList<Factory>(factories.values());
+	public List<Factory<?>> getAll() {
+		return new ArrayList<Factory<?>>(factories.values());
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public final class FactoryManager implements Manager<Factory> {
 	}
 	
 	@Override
-	public boolean has(Factory factory) {
+	public boolean has(Factory<?> factory) {
 		if (factory == null || !has(factory.getName()))
 			return false;
 		
@@ -85,11 +85,11 @@ public final class FactoryManager implements Manager<Factory> {
 	}
 	
 	@Override
-	public void registerAll(Factory... factories) {
+	public void registerAll(Factory<?>... factories) {
 		if (factories == null)
 			return;
 		
-		for (Factory factory : factories) {
+		for (Factory<?> factory : factories) {
 			if (factory == null)
 				continue;
 			
@@ -109,7 +109,7 @@ public final class FactoryManager implements Manager<Factory> {
 	public void unload() {}
 	
 	@Override
-	public void unregister(Factory factory) {
+	public void unregister(Factory<?> factory) {
 		if (factory == null || !has(factory))
 			return;
 		

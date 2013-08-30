@@ -15,26 +15,21 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.tag.tags;
+package com.titankingdoms.dev.titanchat.format.var;
 
-import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.tag.Tag;
-import com.titankingdoms.dev.titanchat.user.User;
 
-public final class DisplayNameTag extends Tag {
+public final class StaticVariable extends Variable {
 	
-	public DisplayNameTag() {
-		super("display");
+	private final String value;
+	
+	public StaticVariable(String name, String value) {
+		super(name);
+		this.value = (value != null) ? value : "";
 	}
 	
 	@Override
 	public String getValue(ConverseEvent event) {
-		EndPoint sender = event.getSender();
-		
-		if (!sender.getType().equals("User"))
-			return sender.getName();
-		
-		return ((User) sender).getDisplayName();
+		return value;
 	}
 }

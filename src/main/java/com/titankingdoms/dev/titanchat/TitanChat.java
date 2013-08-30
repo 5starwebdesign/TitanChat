@@ -30,14 +30,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.channel.FactoryManager;
 import com.titankingdoms.dev.titanchat.command.CommandManager;
+import com.titankingdoms.dev.titanchat.format.TagParser;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
-import com.titankingdoms.dev.titanchat.tag.TagParser;
 import com.titankingdoms.dev.titanchat.user.UserManager;
 import com.titankingdoms.dev.titanchat.util.UpdateUtil;
 import com.titankingdoms.dev.titanchat.vault.VaultUtils;
@@ -51,6 +53,26 @@ public final class TitanChat extends JavaPlugin {
 	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
 	
 	private UpdateUtil update;
+	
+	public void convsere(EndPoint sender, EndPoint recipient, String format, String message) {
+		ConverseEvent event = new ConverseEvent(sender, recipient.getRelayPoints(sender), format, message);
+		
+		if (!event.getRecipients().contains(sender))
+			event.getRecipients().add(sender);
+		
+		getServer().getPluginManager().callEvent(event);
+		
+		String line = getManager(TagParser.class).parse(event).replace("%message", event.getMessage());
+		
+		if (!event.getRecipients().contains(sender))
+			event.getRecipients().add(sender);
+		
+		for (EndPoint relay : event.getRecipients())
+			relay.sendRawLine(line);
+		
+		if (event.getRecipients().size() < 2)
+			sender.sendRawLine("&7Nobody heard you...");
+	}
 	
 	public static TitanChat getInstance() {
 		if (instance == null)

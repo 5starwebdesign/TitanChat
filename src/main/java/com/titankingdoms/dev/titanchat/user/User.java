@@ -27,7 +27,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.vault.VaultUtils;
 
 public abstract class User implements EndPoint {
@@ -45,8 +44,8 @@ public abstract class User implements EndPoint {
 	
 	public User(String name) {
 		Validate.notEmpty(name, "Name cannot be empty");
-		Validate.isTrue(!Pattern.compile("\\W").matcher(name).find(), "Name cannot contain non-word characters");
-		Validate.isTrue(name.length() <= 16, "Name cannot be longer than 16 characters");
+		Validate.isTrue(!Pattern.compile("\\W").matcher(name).find(), "Name cannot contain non-word chars");
+		Validate.isTrue(name.length() <= 16, "Name cannot be longer than 16 chars");
 		
 		this.plugin = TitanChat.getInstance();
 		this.manager = plugin.getManager(UserManager.class);
@@ -107,7 +106,7 @@ public abstract class User implements EndPoint {
 	}
 	
 	@Override
-	public Set<EndPoint> getRelayPoints(ConverseEvent event) {
+	public Set<EndPoint> getRelayPoints(EndPoint sender) {
 		return new HashSet<EndPoint>(represent);
 	}
 	
@@ -146,6 +145,9 @@ public abstract class User implements EndPoint {
 	}
 	
 	public abstract boolean isOnline();
+	
+	@Override
+	public void linkPoint(EndPoint point) {}
 	
 	public final void loadMetadata() {
 		if (getConfig().get("metadata", null) == null)
@@ -209,4 +211,7 @@ public abstract class User implements EndPoint {
 				"}" +
 				"}";
 	}
+	
+	@Override
+	public void unlinkPoint(EndPoint point) {}
 }

@@ -35,6 +35,7 @@ public abstract class Channel implements EndPoint {
 	protected final TitanChat plugin;
 	
 	private final String name;
+	private final String factory;
 	
 	private File configFile;
 	private FileConfiguration config;
@@ -42,12 +43,15 @@ public abstract class Channel implements EndPoint {
 	private final Set<String> blacklist;
 	private final Set<String> whitelist;
 	
-	public Channel(String name) {
+	public Channel(String name, String factory) {
 		Validate.notEmpty(name, "Name cannot be empty");
-		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
+		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric chars");
+		Validate.notEmpty(factory, "Factory cannot be empty");
+		Validate.isTrue(StringUtils.isAlphanumeric(factory), "Factory cannot contain non-alphanumeric chars");
 		
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
+		this.factory = factory;
 		this.blacklist = new HashSet<String>();
 		this.whitelist = new HashSet<String>();
 	}
@@ -71,6 +75,10 @@ public abstract class Channel implements EndPoint {
 		return config;
 	}
 	
+	public final String getFactory() {
+		return factory;
+	}
+	
 	@Override
 	public final String getName() {
 		return name;
@@ -89,6 +97,9 @@ public abstract class Channel implements EndPoint {
 	public int hashCode() {
 		return toString().hashCode();
 	}
+	
+	@Override
+	public void linkPoint(EndPoint point) {}
 	
 	public void reloadConfig() {
 		if (configFile == null)
@@ -115,4 +126,7 @@ public abstract class Channel implements EndPoint {
 				"name: " + getName() +
 				"}";
 	}
+	
+	@Override
+	public void unlinkPoint(EndPoint point) {}
 }

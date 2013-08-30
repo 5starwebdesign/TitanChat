@@ -17,18 +17,23 @@
 
 package com.titankingdoms.dev.titanchat.channel;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.channel.Channel;
 
-public abstract class Factory {
+public abstract class Factory<T extends Channel> {
 	
 	protected final TitanChat plugin;
 	
 	private final String name;
 	
 	public Factory(String name) {
+		Validate.notEmpty(name, "Name cannot be empty");
+		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric chars");
+		
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
 	}
@@ -50,9 +55,9 @@ public abstract class Factory {
 		return toString().hashCode();
 	}
 	
-	public abstract Channel loadChannel(FileConfiguration config);
+	public abstract T loadChannel(String name, FileConfiguration config);
 	
-	public abstract void saveChannel(Channel channel);
+	public abstract void saveChannel(T channel);
 	
 	@Override
 	public String toString() {

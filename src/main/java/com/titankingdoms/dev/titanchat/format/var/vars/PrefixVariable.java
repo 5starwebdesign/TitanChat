@@ -15,47 +15,26 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.tag;
+package com.titankingdoms.dev.titanchat.format.var.vars;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
-
+import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.format.var.Variable;
+import com.titankingdoms.dev.titanchat.user.User;
 
-public abstract class Tag {
+public final class PrefixVariable extends Variable {
 	
-	private final String tag;
+	public PrefixVariable() {
+		super("prefix");
+	}
 	
-	public Tag(String name) {
-		Validate.notEmpty(name, "Name cannot be empty");
-		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
+	@Override
+	public String getValue(ConverseEvent event) {
+		EndPoint sender = event.getSender();
 		
-		this.tag = "%" + name;
-	}
-	
-	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Tag)
-			return toString().equals(object.toString());
+		if (!sender.getType().equals("User"))
+			return "";
 		
-		return false;
-	}
-	
-	public final String getTag() {
-		return tag;
-	}
-	
-	public abstract String getValue(ConverseEvent event);
-	
-	@Override
-	public int hashCode() {
-		return toString().hashCode();
-	}
-	
-	@Override
-	public String toString() {
-		return "Tag: {" +
-				"tag: " + getTag() +
-				"}";
+		return ((User) sender).getPrefix();
 	}
 }

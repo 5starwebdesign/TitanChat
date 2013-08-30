@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.tag;
+package com.titankingdoms.dev.titanchat.format;
 
 import java.io.File;
 import java.io.InputStream;
@@ -30,8 +30,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.format.var.Variable;
 
-public final class TagParser implements Manager<Tag> {
+public final class TagParser implements Manager<Variable> {
 	
 	private final TitanChat plugin;
 	
@@ -40,21 +41,21 @@ public final class TagParser implements Manager<Tag> {
 	private File configFile;
 	private FileConfiguration config;
 	
-	private final Map<String, Tag> tags;
+	private final Map<String, Variable> vars;
 	
 	public TagParser() {
 		this.plugin = TitanChat.getInstance();
-		this.tags = new HashMap<String, Tag>();
+		this.vars = new HashMap<String, Variable>();
 	}
 	
 	@Override
-	public Tag get(String name) {
-		return (has(name)) ? tags.get(name.toLowerCase()) : null;
+	public Variable get(String name) {
+		return (has(name)) ? vars.get(name.toLowerCase()) : null;
 	}
 	
 	@Override
-	public List<Tag> getAll() {
-		return new ArrayList<Tag>(tags.values());
+	public List<Variable> getAll() {
+		return new ArrayList<Variable>(vars.values());
 	}
 	
 	public FileConfiguration getConfig() {
@@ -65,11 +66,11 @@ public final class TagParser implements Manager<Tag> {
 	}
 	
 	public String getDefaultFormat() {
-		return getConfig().getString("format.default", "%tag%");
+		return getConfig().getString("format.default", "%var%");
 	}
 	
 	public String getFormat(String name) {
-		return getConfig().getString("format.tags." + name.toLowerCase(), getDefaultFormat());
+		return getConfig().getString("format.vars." + name.toLowerCase(), getDefaultFormat());
 	}
 	
 	@Override
@@ -77,33 +78,33 @@ public final class TagParser implements Manager<Tag> {
 		return "TagParser";
 	}
 	
-	public Tag getTag(String name) {
+	public Variable getVariable(String name) {
 		return get(name);
 	}
 	
-	public List<Tag> getTags() {
+	public List<Variable> getVariables() {
 		return getAll();
 	}
 	
 	@Override
 	public boolean has(String name) {
-		return (name != null) ? tags.containsKey(name.toLowerCase()) : false;
+		return (name != null) ? vars.containsKey(name.toLowerCase()) : false;
 	}
 	
 	@Override
-	public boolean has(Tag tag) {
-		if (tag == null || !has(tag.getTag()))
+	public boolean has(Variable var) {
+		if (var == null || !has(var.getTag()))
 			return false;
 		
-		return get(tag.getTag()).equals(tag);
+		return get(var.getTag()).equals(var);
 	}
 	
-	public boolean hasTag(String name) {
+	public boolean hasVariable(String name) {
 		return has(name);
 	}
 	
-	public boolean hasTag(Tag tag) {
-		return has(tag);
+	public boolean hasVariable(Variable var) {
+		return has(var);
 	}
 	
 	@Override
@@ -112,11 +113,11 @@ public final class TagParser implements Manager<Tag> {
 	@Override
 	public List<String> match(String name) {
 		if (name == null || name.isEmpty())
-			return new ArrayList<String>(tags.keySet());
+			return new ArrayList<String>(vars.keySet());
 		
 		List<String> matches = new ArrayList<String>();
 		
-		for (String tag : tags.keySet()) {
+		for (String tag : vars.keySet()) {
 			if (!tag.startsWith(name.toLowerCase()))
 				continue;
 			
@@ -142,7 +143,7 @@ public final class TagParser implements Manager<Tag> {
 					replacement = "";
 				
 				if (!replacement.isEmpty())
-					replacement = getFormat(match.group()).replace("%tag%", replacement);
+					replacement = getFormat(match.group()).replace("%var%", replacement);
 			}
 			
 			match.appendReplacement(format, replacement);
@@ -152,20 +153,20 @@ public final class TagParser implements Manager<Tag> {
 	}
 	
 	@Override
-	public void registerAll(Tag... tags) {
-		if (tags == null)
+	public void registerAll(Variable... vars) {
+		if (vars == null)
 			return;
 		
-		for (Tag tag : tags) {
-			if (tag == null)
+		for (Variable var : vars) {
+			if (var == null)
 				continue;
 			
-			if (has(tag)) {
-				plugin.log(Level.WARNING, "Duplicate: " + tag);
+			if (has(var)) {
+				plugin.log(Level.WARNING, "Duplicate: " + var);
 				continue;
 			}
 			
-			this.tags.put(tag.getTag().toLowerCase(), tag);
+			this.vars.put(var.getTag().toLowerCase(), var);
 		}
 	}
 	
@@ -177,11 +178,11 @@ public final class TagParser implements Manager<Tag> {
 	
 	public void reloadConfig() {
 		if (configFile == null)
-			configFile = new File(plugin.getDataFolder(), "tag.yml");
+			configFile = new File(plugin.getDataFolder(), "var.yml");
 		
 		config = YamlConfiguration.loadConfiguration(configFile);
 		
-		InputStream defConfigStream = plugin.getResource("tag.yml");
+		InputStream defConfigStream = plugin.getResource("var.yml");
 		
 		if (defConfigStream != null)
 			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
@@ -196,15 +197,15 @@ public final class TagParser implements Manager<Tag> {
 	
 	@Override
 	public void unload() {
-		for (Tag tag : getAll())
-			unregister(tag);
+		for (Variable var : getAll())
+			unregister(var);
 	}
 	
 	@Override
-	public void unregister(Tag tag) {
-		if (tag == null || !has(tag))
+	public void unregister(Variable var) {
+		if (var == null || !has(var))
 			return;
 		
-		this.tags.remove(tag.getTag().toLowerCase());
+		this.vars.remove(var.getTag().toLowerCase());
 	}
 }

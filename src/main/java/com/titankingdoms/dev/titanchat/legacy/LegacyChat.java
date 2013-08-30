@@ -22,7 +22,6 @@ import java.util.Set;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.user.User;
 import com.titankingdoms.dev.titanchat.user.UserManager;
 
@@ -40,7 +39,7 @@ public final class LegacyChat implements EndPoint {
 	}
 	
 	@Override
-	public Set<EndPoint> getRelayPoints(ConverseEvent event) {
+	public Set<EndPoint> getRelayPoints(EndPoint sender) {
 		return new HashSet<EndPoint>(manager.getAll());
 	}
 	
@@ -50,8 +49,14 @@ public final class LegacyChat implements EndPoint {
 	}
 	
 	@Override
+	public void linkPoint(EndPoint point) {}
+	
+	@Override
 	public void sendRawLine(String line) {
 		for (User user : manager.getAll())
 			user.sendRawLine(line);
 	}
+	
+	@Override
+	public void unlinkPoint(EndPoint point) {}
 }

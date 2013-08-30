@@ -15,16 +15,16 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.tag.tags;
+package com.titankingdoms.dev.titanchat.format.var.vars;
 
 import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.tag.Tag;
+import com.titankingdoms.dev.titanchat.format.var.Variable;
 import com.titankingdoms.dev.titanchat.user.User;
 
-public final class SuffixTag extends Tag {
+public final class SuffixVariable extends Variable {
 
-	public SuffixTag() {
+	public SuffixVariable() {
 		super("suffix");
 	}
 
