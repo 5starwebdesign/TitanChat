@@ -23,9 +23,8 @@ import java.util.logging.Level;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.Manager;
 
-public final class CommandManager extends Command implements Manager<Command> {
+public final class CommandManager extends Command {
 	
 	private final TitanChat plugin;
 	
@@ -35,16 +34,7 @@ public final class CommandManager extends Command implements Manager<Command> {
 	}
 	
 	public void execute(CommandSender sender, String[] args) {
-		getLayer().execute(sender, args);
-	}
-	
-	public Command get(String name) {
-		return getLayer().get(name);
-	}
-	
-	@Override
-	public List<Command> getAll() {
-		return getLayer().getAll();
+		executeLayer(sender, args);
 	}
 	
 	public Command getCommand(String name) {
@@ -53,16 +43,6 @@ public final class CommandManager extends Command implements Manager<Command> {
 	
 	public List<Command> getCommands() {
 		return getAll();
-	}
-	
-	@Override
-	public boolean has(String name) {
-		return getLayer().has(name);
-	}
-	
-	@Override
-	public boolean has(Command command) {
-		return getLayer().has(command);
 	}
 	
 	public boolean hasCommand(String name) {
@@ -75,11 +55,6 @@ public final class CommandManager extends Command implements Manager<Command> {
 	
 	@Override
 	public void load() {}
-	
-	@Override
-	public List<String> match(String name) {
-		return getLayer().match(name);
-	}
 	
 	@Override
 	public void registerAll(Command... commands) {
@@ -95,7 +70,7 @@ public final class CommandManager extends Command implements Manager<Command> {
 				continue;
 			}
 			
-			getLayer().registerAll(command);
+			registerAll(command);
 		}
 	}
 	
@@ -103,14 +78,9 @@ public final class CommandManager extends Command implements Manager<Command> {
 	public void reload() {}
 	
 	public List<String> tab(CommandSender sender, String[] args) {
-		return getLayer().tab(sender, args);
+		return tabLayer(sender, args);
 	}
 	
 	@Override
 	public void unload() {}
-	
-	@Override
-	public void unregister(Command command) {
-		getLayer().unregister(command);
-	}
 }

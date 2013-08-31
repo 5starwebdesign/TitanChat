@@ -39,12 +39,12 @@ public final class BlacklistCommand extends Command {
 		setAliases("b");
 		setArgumentRange(2, 1024);
 		setDescription("Edit or view the blacklist");
-		getLayer().registerAll(new Add(), new Remove(), new View());
+		registerAll(new Add(), new Remove(), new View());
 	}
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		getLayer().execute(sender, args);
+		executeLayer(sender, args);
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public final class BlacklistCommand extends Command {
 	
 	@Override
 	public List<String> tab(CommandSender sender, String[] args) {
-		return getLayer().tab(sender, args);
+		return tabLayer(sender, args);
 	}
 	
 	public final class Add extends Command {

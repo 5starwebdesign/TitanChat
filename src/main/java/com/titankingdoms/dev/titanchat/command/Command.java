@@ -27,7 +27,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.util.Messaging;
 
-public abstract class Command {
+public abstract class Command implements Manager<Command> {
 	
 	protected final TitanChat plugin;
 	
@@ -38,7 +38,7 @@ public abstract class Command {
 	private int maxArgs;
 	private int minArgs;
 	
-	private final Layer layers;
+	private final Map<String, Command> commands;
 	
 	public Command(String name, String[] aliases, String description) {
 		Validate.notEmpty(name, "Name cannot be empty");
@@ -50,7 +50,7 @@ public abstract class Command {
 		this.description = (description != null) ? description : "";
 		this.maxArgs = 0;
 		this.minArgs = 0;
-		this.layers = new Layer();
+		this.commands = new TreeMap<String, Command>();
 	}
 	
 	public Command(String name, String description, String... aliases) {
@@ -79,16 +79,47 @@ public abstract class Command {
 	
 	public abstract void execute(CommandSender sender, String[] args);
 	
+	public void executeLayer(CommandSender sender, String[] args) {
+		if (args.length < 1)
+			return;
+		
+		if (!has(args[0])) {
+			Messaging.sendNotice(sender, "&4Invalid command");
+			return;
+		}
+		
+		Command next = get(args[0]);
+		String[] arguments = Arrays.copyOfRange(args, 1, args.length);
+		
+		if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
+			Messaging.sendNotice(sender, "&4Invalid argument length");
+			return;
+		}
+		
+		if (!next.isPermitted(sender, arguments)) {
+			Messaging.sendNotice(sender, "&4You do not have permission");
+			return;
+		}
+		
+		next.execute(sender, arguments);
+	}
+	
+	@Override
+	public Command get(String name) {
+		return (has(name)) ? commands.get(name.toLowerCase()) : null;
+	}
+	
 	public String[] getAliases() {
 		return aliases;
 	}
 	
-	public String getDescription() {
-		return description;
+	@Override
+	public List<Command> getAll() {
+		return new ArrayList<Command>(commands.values());
 	}
 	
-	protected final Layer getLayer() {
-		return layers;
+	public String getDescription() {
+		return description;
 	}
 	
 	public int getMaxArguments() {
@@ -104,6 +135,19 @@ public abstract class Command {
 	}
 	
 	@Override
+	public boolean has(String name) {
+		return (name != null) ? commands.containsKey(name.toLowerCase()) : false;
+	}
+	
+	@Override
+	public boolean has(Command command) {
+		if (command == null || !has(command.getName()))
+			return false;
+		
+		return get(command.getName()).equals(command);
+	}
+	
+	@Override
 	public int hashCode() {
 		return toString().hashCode();
 	}
@@ -111,6 +155,44 @@ public abstract class Command {
 	public boolean isPermitted(CommandSender sender, String[] args) {
 		return true;
 	}
+	
+	@Override
+	public void load() {}
+	
+	@Override
+	public List<String> match(String name) {
+		if (name == null || name.isEmpty())
+			return new ArrayList<String>(commands.keySet());
+		
+		List<String> matches = new ArrayList<String>();
+		
+		for (String command : commands.keySet()) {
+			if (!command.startsWith(name.toLowerCase()))
+				continue;
+			
+			matches.add(command);
+		}
+		
+		Collections.sort(matches);
+		
+		return matches;
+	}
+	
+	@Override
+	public void registerAll(Command... commands) {
+		if (commands == null)
+			return;
+		
+		for (Command command : commands) {
+			if (command == null || has(command))
+				continue;
+			
+			this.commands.put(command.getName().toLowerCase(), command);
+		}
+	}
+	
+	@Override
+	public void reload() {}
 	
 	protected void setAliases(String... aliases) {
 		this.aliases = (aliases != null) ? aliases : new String[0];
@@ -129,6 +211,16 @@ public abstract class Command {
 		return new ArrayList<String>();
 	}
 	
+	public List<String> tabLayer(CommandSender sender, String[] args) {
+		if (args.length < 2)
+			return match(args[0]);
+		
+		if (has(args[0]))
+			return get(args[0]).tab(sender, Arrays.copyOfRange(args, 1, args.length));
+		
+		return new ArrayList<String>();
+	}
+	
 	@Override
 	public String toString() {
 		return "Command: {" +
@@ -142,127 +234,14 @@ public abstract class Command {
 				"}";
 	}
 	
-	public final class Layer implements Manager<Command> {
+	@Override
+	public void unload() {}
+	
+	@Override
+	public void unregister(Command command) {
+		if (command == null || !has(command))
+			return;
 		
-		protected final TitanChat plugin;
-		
-		private final Map<String, Command> commands;
-		
-		public Layer() {
-			this.plugin = TitanChat.getInstance();
-			this.commands = new TreeMap<String, Command>();
-		}
-		
-		public void execute(CommandSender sender, String[] args) {
-			if (args.length < 1)
-				return;
-			
-			if (!has(args[0])) {
-				Messaging.sendNotice(sender, "&4Invalid command");
-				return;
-			}
-			
-			Command next = get(args[0]);
-			String[] arguments = Arrays.copyOfRange(args, 1, args.length);
-			
-			if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
-				Messaging.sendNotice(sender, "&4Invalid argument length");
-				return;
-			}
-			
-			if (!next.isPermitted(sender, arguments)) {
-				Messaging.sendNotice(sender, "&4You do not have permission");
-				return;
-			}
-			
-			next.execute(sender, arguments);
-		}
-		
-		@Override
-		public Command get(String name) {
-			return (has(name)) ? commands.get(name.toLowerCase()) : null;
-		}
-		
-		@Override
-		public List<Command> getAll() {
-			return new ArrayList<Command>(commands.values());
-		}
-		
-		@Override
-		public String getName() {
-			return "Layer";
-		}
-		
-		@Override
-		public boolean has(String name) {
-			return (name != null) ? commands.containsKey(name.toLowerCase()) : false;
-		}
-		
-		@Override
-		public boolean has(Command command) {
-			if (command == null || !has(command.getName()))
-				return false;
-			
-			return get(command.getName()).equals(command);
-		}
-		
-		@Override
-		public void load() {}
-		
-		@Override
-		public List<String> match(String name) {
-			if (name == null || name.isEmpty())
-				return new ArrayList<String>(commands.keySet());
-			
-			List<String> matches = new ArrayList<String>();
-			
-			for (String command : commands.keySet()) {
-				if (!command.startsWith(name.toLowerCase()))
-					continue;
-				
-				matches.add(command);
-			}
-			
-			Collections.sort(matches);
-			
-			return matches;
-		}
-		
-		@Override
-		public void registerAll(Command... commands) {
-			if (commands == null)
-				return;
-			
-			for (Command command : commands) {
-				if (command == null || has(command))
-					continue;
-				
-				this.commands.put(command.getName().toLowerCase(), command);
-			}
-		}
-		
-		@Override
-		public void reload() {}
-		
-		public List<String> tab(CommandSender sender, String[] args) {
-			if (args.length < 2)
-				return match(args[0]);
-			
-			if (has(args[0]))
-				return get(args[0]).tab(sender, Arrays.copyOfRange(args, 1, args.length));
-			
-			return new ArrayList<String>();
-		}
-		
-		@Override
-		public void unload() {}
-		
-		@Override
-		public void unregister(Command command) {
-			if (command == null || !has(command))
-				return;
-			
-			this.commands.remove(command.getName().toLowerCase());
-		}
+		this.commands.remove(command.getName().toLowerCase());
 	}
 }

@@ -33,7 +33,7 @@ public final class ClearCommand extends Command {
 		setAliases("clr");
 		setArgumentRange(0, 1);
 		setDescription("Clear chat");
-		getLayer().registerAll(new Scrollback());
+		registerAll(new Scrollback());
 	}
 	
 	@Override
@@ -46,12 +46,12 @@ public final class ClearCommand extends Command {
 		if (args.length < 1)
 			Messaging.sendNotice(sender, StringUtils.repeat("\n", 20));
 		else
-			getLayer().execute(sender, args);
+			executeLayer(sender, args);
 	}
 	
 	@Override
 	public List<String> tab(CommandSender sender, String[] args) {
-		return getLayer().tab(sender, args);
+		return tabLayer(sender, args);
 	}
 	
 	public final class Scrollback extends Command {
