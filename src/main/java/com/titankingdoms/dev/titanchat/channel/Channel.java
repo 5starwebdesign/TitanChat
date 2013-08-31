@@ -42,6 +42,7 @@ public abstract class Channel implements EndPoint {
 	
 	private final Set<String> blacklist;
 	private final Set<String> whitelist;
+	private final Set<String> operators;
 	
 	public Channel(String name, String factory) {
 		Validate.notEmpty(name, "Name cannot be empty");
@@ -54,6 +55,7 @@ public abstract class Channel implements EndPoint {
 		this.factory = factory;
 		this.blacklist = new HashSet<String>();
 		this.whitelist = new HashSet<String>();
+		this.operators = new HashSet<String>();
 	}
 	
 	@Override
@@ -87,6 +89,10 @@ public abstract class Channel implements EndPoint {
 	@Override
 	public final String getName() {
 		return name;
+	}
+	
+	public Set<String> getOperators() {
+		return operators;
 	}
 	
 	@Override

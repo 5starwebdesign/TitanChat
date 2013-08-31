@@ -28,11 +28,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.tag.Tag;
+import com.titankingdoms.dev.titanchat.format.variable.*;
+import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.users.Participant;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
-public final class TagParser implements Manager<Tag> {
+public final class TagParser implements Manager<Variable> {
 	
 	private final TitanChat plugin;
 	
@@ -41,21 +45,21 @@ public final class TagParser implements Manager<Tag> {
 	private File configFile;
 	private FileConfiguration config;
 	
-	private final Map<String, Tag> vars;
+	private final Map<String, Variable> vars;
 	
 	public TagParser() {
 		this.plugin = TitanChat.getInstance();
-		this.vars = new HashMap<String, Tag>();
+		this.vars = new HashMap<String, Variable>();
 	}
 	
 	@Override
-	public Tag get(String name) {
+	public Variable get(String name) {
 		return (has(name)) ? vars.get(name.toLowerCase()) : null;
 	}
 	
 	@Override
-	public List<Tag> getAll() {
-		return new ArrayList<Tag>(vars.values());
+	public List<Variable> getAll() {
+		return new ArrayList<Variable>(vars.values());
 	}
 	
 	public FileConfiguration getConfig() {
@@ -78,11 +82,11 @@ public final class TagParser implements Manager<Tag> {
 		return "TagParser";
 	}
 	
-	public Tag getVariable(String name) {
+	public Variable getVariable(String name) {
 		return get(name);
 	}
 	
-	public List<Tag> getVariables() {
+	public List<Variable> getVariables() {
 		return getAll();
 	}
 	
@@ -92,7 +96,7 @@ public final class TagParser implements Manager<Tag> {
 	}
 	
 	@Override
-	public boolean has(Tag var) {
+	public boolean has(Variable var) {
 		if (var == null || !has(var.getTag()))
 			return false;
 		
@@ -103,12 +107,74 @@ public final class TagParser implements Manager<Tag> {
 		return has(name);
 	}
 	
-	public boolean hasVariable(Tag var) {
+	public boolean hasVariable(Variable var) {
 		return has(var);
 	}
 	
 	@Override
-	public void load() {}
+	public void load() {
+		registerAll(new Variable("display") {
+					
+						@Override
+						public String getValue(ConverseEvent event) {
+							EndPoint sender = event.getSender();
+							
+							if (!sender.getType().equals("User"))
+								return sender.getName();
+							
+							return ((User) sender).getDisplayName();
+						}
+					},
+					new Variable("name") {
+					
+						@Override
+						public String getValue(ConverseEvent event) {
+							return event.getSender().getName();
+						}
+					},
+					new Variable("prefix") {
+						
+						@Override
+						public String getValue(ConverseEvent event) {
+							EndPoint sender = event.getSender();
+							
+							if (!sender.getType().equals("User"))
+								return "";
+							
+							User user = (User) sender;
+							
+							if (user.getName().equals("CONSOLE"))
+								return user.getMetadata("prefix", "").getValue();
+							
+							String prefix = VaultUtils.getPlayerPrefix(((Participant) user).getPlayer());
+							return (!prefix.isEmpty()) ? prefix : user.getMetadata("prefix", "").getValue();
+						}
+					},
+					new Variable("suffix") {
+						
+						@Override
+						public String getValue(ConverseEvent event) {
+							EndPoint sender = event.getSender();
+							
+							if (!sender.getType().equals("User"))
+								return "";
+							
+							User user = (User) sender;
+							
+							if (user.getName().equals("CONSOLE"))
+								return user.getMetadata("suffix", "").getValue();
+							
+							String suffix = VaultUtils.getPlayerSuffix(((Participant) user).getPlayer());
+							return (!suffix.isEmpty()) ? suffix : user.getMetadata("suffix", "").getValue();
+						}
+					}
+		);
+		
+		if (getConfig().get("static", null) != null) {
+			for (String name : getConfig().getConfigurationSection("static").getKeys(false))
+				registerAll(new StaticVar(name, getConfig().getString("static." + name, "")));
+		}
+	}
 	
 	@Override
 	public List<String> match(String name) {
@@ -153,11 +219,11 @@ public final class TagParser implements Manager<Tag> {
 	}
 	
 	@Override
-	public void registerAll(Tag... vars) {
+	public void registerAll(Variable... vars) {
 		if (vars == null)
 			return;
 		
-		for (Tag var : vars) {
+		for (Variable var : vars) {
 			if (var == null)
 				continue;
 			
@@ -197,12 +263,12 @@ public final class TagParser implements Manager<Tag> {
 	
 	@Override
 	public void unload() {
-		for (Tag var : getAll())
+		for (Variable var : getAll())
 			unregister(var);
 	}
 	
 	@Override
-	public void unregister(Tag var) {
+	public void unregister(Variable var) {
 		if (var == null || !has(var))
 			return;
 		

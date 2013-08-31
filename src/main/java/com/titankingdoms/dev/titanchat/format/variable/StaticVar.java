@@ -15,47 +15,21 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.tag;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.Validate;
+package com.titankingdoms.dev.titanchat.format.variable;
 
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 
-public abstract class Tag {
+public final class StaticVar extends Variable {
 	
-	private final String tag;
+	private final String value;
 	
-	public Tag(String name) {
-		Validate.notEmpty(name, "Name cannot be empty");
-		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric chars");
-		
-		this.tag = "%" + name;
+	public StaticVar(String name, String value) {
+		super(name);
+		this.value = (value != null) ? value : "";
 	}
 	
 	@Override
-	public boolean equals(Object object) {
-		if (object instanceof Tag)
-			return toString().equals(object.toString());
-		
-		return false;
-	}
-	
-	public final String getTag() {
-		return tag;
-	}
-	
-	public abstract String getValue(ConverseEvent event);
-	
-	@Override
-	public int hashCode() {
-		return toString().hashCode();
-	}
-	
-	@Override
-	public String toString() {
-		return "Tag: {" +
-				"tag: " + getTag() +
-				"}";
+	public String getValue(ConverseEvent event) {
+		return value;
 	}
 }

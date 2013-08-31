@@ -1,6 +1,6 @@
 format:
     default: "%var%"
-    tags:
+    vars:
         prefix: "&f[%var%&f]"
         suffix: "&f%var%&f"
 static:

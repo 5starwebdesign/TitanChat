@@ -47,6 +47,9 @@ public final class StandardFactory extends Factory<StandardChannel> {
 		if (config.get("whitelist", null) != null)
 			channel.getWhitelist().addAll(config.getStringList("whitelist"));
 		
+		if (config.get("operators", null) != null)
+			channel.getOperators().addAll(config.getStringList("operators"));
+		
 		return channel;
 	}
 	
@@ -60,5 +63,6 @@ public final class StandardFactory extends Factory<StandardChannel> {
 		channel.getConfig().set("password", channel.getPassword());
 		channel.getConfig().set("blacklist", new ArrayList<String>(channel.getBlacklist()));
 		channel.getConfig().set("whitelist", new ArrayList<String>(channel.getWhitelist()));
+		channel.getConfig().set("operators", new ArrayList<String>(channel.getOperators()));
 	}
 }
