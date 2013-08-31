@@ -21,7 +21,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.user.User;
-import com.titankingdoms.dev.titanchat.vault.VaultUtils;
 
 public final class Participant extends User {
 	
@@ -48,30 +47,13 @@ public final class Participant extends User {
 		return name;
 	}
 	
+	@Override
+	public String getFormat() {
+		return "";
+	}
+	
 	public Player getPlayer() {
 		return plugin.getServer().getPlayerExact(getName());
-	}
-	
-	@Override
-	public String getPrefix() {
-		Player player = getPlayer();
-		
-		if (player == null)
-			return super.getPrefix();
-		
-		String prefix = VaultUtils.getPlayerPrefix(player);
-		return (!prefix.isEmpty()) ? prefix : super.getPrefix();
-	}
-	
-	@Override
-	public String getSuffix() {
-		Player player = getPlayer();
-		
-		if (player == null)
-			return super.getSuffix();
-		
-		String suffix = VaultUtils.getPlayerSuffix(player);
-		return (!suffix.isEmpty()) ? suffix : super.getSuffix();
 	}
 	
 	@Override

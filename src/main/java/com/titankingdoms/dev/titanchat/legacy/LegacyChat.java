@@ -22,15 +22,24 @@ import java.util.Set;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.user.User;
-import com.titankingdoms.dev.titanchat.user.UserManager;
+import com.titankingdoms.dev.titanchat.user.*;
 
 public final class LegacyChat implements EndPoint {
 	
+	private final TitanChat plugin;
+	
 	private final UserManager manager;
 	
+	private final String DEFAULT_FORMAT = "%prefix%display%suffix: %message";
+	
 	public LegacyChat() {
-		this.manager = TitanChat.getInstance().getManager(UserManager.class);
+		this.plugin = TitanChat.getInstance();
+		this.manager = plugin.getManager(UserManager.class);
+	}
+	
+	@Override
+	public String getFormat() {
+		return plugin.getConfig().getString("format.converse", DEFAULT_FORMAT);
 	}
 	
 	@Override

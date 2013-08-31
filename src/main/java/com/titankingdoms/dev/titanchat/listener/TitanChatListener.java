@@ -17,13 +17,16 @@
 
 package com.titankingdoms.dev.titanchat.listener;
 
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.user.User;
-import com.titankingdoms.dev.titanchat.user.UserManager;
+import com.titankingdoms.dev.titanchat.user.*;
 import com.titankingdoms.dev.titanchat.user.users.Participant;
 
 public final class TitanChatListener implements Listener {

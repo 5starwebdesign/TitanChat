@@ -22,7 +22,7 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.command.Command;
 import com.titankingdoms.dev.titanchat.util.Messaging;
-import com.titankingdoms.dev.titanchat.vault.VaultUtils;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
 public final class ReloadCommand extends Command {
 	

@@ -22,7 +22,6 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.channel.Channel;
 
 public abstract class Factory<T extends Channel> {
 	

@@ -15,18 +15,18 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.var;
+package com.titankingdoms.dev.titanchat.format.tag;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 
-public abstract class Variable {
+public abstract class Tag {
 	
 	private final String tag;
 	
-	public Variable(String name) {
+	public Tag(String name) {
 		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric chars");
 		
@@ -35,7 +35,7 @@ public abstract class Variable {
 	
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof Variable)
+		if (object instanceof Tag)
 			return toString().equals(object.toString());
 		
 		return false;

@@ -21,6 +21,8 @@ import java.util.Set;
 
 public interface EndPoint {
 	
+	public String getFormat();
+	
 	public String getName();
 	
 	public Set<EndPoint> getRelayPoints(EndPoint sender);

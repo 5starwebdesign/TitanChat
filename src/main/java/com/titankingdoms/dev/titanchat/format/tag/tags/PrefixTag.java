@@ -15,19 +15,34 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.var.vars;
+package com.titankingdoms.dev.titanchat.format.tag.tags;
 
+import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.var.Variable;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
+import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.users.Participant;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
-public final class NameVariable extends Variable {
+public final class PrefixTag extends Tag {
 	
-	public NameVariable() {
-		super("name");
+	public PrefixTag() {
+		super("prefix");
 	}
 	
 	@Override
 	public String getValue(ConverseEvent event) {
-		return event.getSender().getName();
+		EndPoint sender = event.getSender();
+		
+		if (!sender.getType().equals("User"))
+			return "";
+		
+		User user = (User) sender;
+		
+		if (user.getName().equals("CONSOLE"))
+			return user.getMetadata("prefix", "").getValue();
+		
+		String prefix = VaultUtils.getPlayerPrefix(((Participant) user).getPlayer());
+		return (!prefix.isEmpty()) ? prefix : user.getMetadata("prefix", "").getValue();
 	}
 }

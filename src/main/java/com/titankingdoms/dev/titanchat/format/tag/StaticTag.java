@@ -15,15 +15,15 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.var;
+package com.titankingdoms.dev.titanchat.format.tag;
 
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 
-public final class StaticVariable extends Variable {
+public final class StaticTag extends Tag {
 	
 	private final String value;
 	
-	public StaticVariable(String name, String value) {
+	public StaticTag(String name, String value) {
 		super(name);
 		this.value = (value != null) ? value : "";
 	}

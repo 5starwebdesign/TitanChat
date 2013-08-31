@@ -17,7 +17,9 @@
 
 package com.titankingdoms.dev.titanchat.command.commands;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -26,10 +28,9 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.channel.Channel;
 import com.titankingdoms.dev.titanchat.channel.ChannelManager;
 import com.titankingdoms.dev.titanchat.command.Command;
-import com.titankingdoms.dev.titanchat.user.User;
-import com.titankingdoms.dev.titanchat.user.UserManager;
+import com.titankingdoms.dev.titanchat.user.*;
 import com.titankingdoms.dev.titanchat.util.Messaging;
-import com.titankingdoms.dev.titanchat.vault.VaultUtils;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
 public final class WhitelistCommand extends Command {
 	

@@ -80,6 +80,11 @@ public abstract class Channel implements EndPoint {
 	}
 	
 	@Override
+	public String getFormat() {
+		return "";
+	}
+	
+	@Override
 	public final String getName() {
 		return name;
 	}

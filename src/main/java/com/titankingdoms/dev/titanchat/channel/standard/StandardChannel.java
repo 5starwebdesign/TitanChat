@@ -27,8 +27,7 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.channel.Channel;
-import com.titankingdoms.dev.titanchat.user.User;
-import com.titankingdoms.dev.titanchat.user.UserManager;
+import com.titankingdoms.dev.titanchat.user.*;
 
 public final class StandardChannel extends Channel {
 	

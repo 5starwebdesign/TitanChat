@@ -30,9 +30,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.var.Variable;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
-public final class TagParser implements Manager<Variable> {
+public final class TagParser implements Manager<Tag> {
 	
 	private final TitanChat plugin;
 	
@@ -41,21 +41,21 @@ public final class TagParser implements Manager<Variable> {
 	private File configFile;
 	private FileConfiguration config;
 	
-	private final Map<String, Variable> vars;
+	private final Map<String, Tag> vars;
 	
 	public TagParser() {
 		this.plugin = TitanChat.getInstance();
-		this.vars = new HashMap<String, Variable>();
+		this.vars = new HashMap<String, Tag>();
 	}
 	
 	@Override
-	public Variable get(String name) {
+	public Tag get(String name) {
 		return (has(name)) ? vars.get(name.toLowerCase()) : null;
 	}
 	
 	@Override
-	public List<Variable> getAll() {
-		return new ArrayList<Variable>(vars.values());
+	public List<Tag> getAll() {
+		return new ArrayList<Tag>(vars.values());
 	}
 	
 	public FileConfiguration getConfig() {
@@ -78,11 +78,11 @@ public final class TagParser implements Manager<Variable> {
 		return "TagParser";
 	}
 	
-	public Variable getVariable(String name) {
+	public Tag getVariable(String name) {
 		return get(name);
 	}
 	
-	public List<Variable> getVariables() {
+	public List<Tag> getVariables() {
 		return getAll();
 	}
 	
@@ -92,7 +92,7 @@ public final class TagParser implements Manager<Variable> {
 	}
 	
 	@Override
-	public boolean has(Variable var) {
+	public boolean has(Tag var) {
 		if (var == null || !has(var.getTag()))
 			return false;
 		
@@ -103,7 +103,7 @@ public final class TagParser implements Manager<Variable> {
 		return has(name);
 	}
 	
-	public boolean hasVariable(Variable var) {
+	public boolean hasVariable(Tag var) {
 		return has(var);
 	}
 	
@@ -153,11 +153,11 @@ public final class TagParser implements Manager<Variable> {
 	}
 	
 	@Override
-	public void registerAll(Variable... vars) {
+	public void registerAll(Tag... vars) {
 		if (vars == null)
 			return;
 		
-		for (Variable var : vars) {
+		for (Tag var : vars) {
 			if (var == null)
 				continue;
 			
@@ -197,12 +197,12 @@ public final class TagParser implements Manager<Variable> {
 	
 	@Override
 	public void unload() {
-		for (Variable var : getAll())
+		for (Tag var : getAll())
 			unregister(var);
 	}
 	
 	@Override
-	public void unregister(Variable var) {
+	public void unregister(Tag var) {
 		if (var == null || !has(var))
 			return;
 		

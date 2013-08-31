@@ -15,17 +15,19 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.var.vars;
+package com.titankingdoms.dev.titanchat.format.tag.tags;
 
 import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.var.Variable;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
 import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.users.Participant;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
-public final class DisplayNameVariable extends Variable {
+public final class SuffixTag extends Tag {
 	
-	public DisplayNameVariable() {
-		super("display");
+	public SuffixTag() {
+		super("suffix");
 	}
 	
 	@Override
@@ -33,8 +35,14 @@ public final class DisplayNameVariable extends Variable {
 		EndPoint sender = event.getSender();
 		
 		if (!sender.getType().equals("User"))
-			return sender.getName();
+			return "";
 		
-		return ((User) sender).getDisplayName();
+		User user = (User) sender;
+		
+		if (user.getName().equals("CONSOLE"))
+			return user.getMetadata("suffix", "").getValue();
+		
+		String suffix = VaultUtils.getPlayerSuffix(((Participant) user).getPlayer());
+		return (!suffix.isEmpty()) ? suffix : user.getMetadata("suffix", "").getValue();
 	}
 }

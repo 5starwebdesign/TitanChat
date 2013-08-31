@@ -4,9 +4,12 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.format.FormatUtils;
 
 public final class Messaging {
 	

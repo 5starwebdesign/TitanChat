@@ -30,8 +30,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.*;
 import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 import com.titankingdoms.dev.titanchat.channel.ChannelManager;
@@ -42,7 +41,7 @@ import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.user.UserManager;
 import com.titankingdoms.dev.titanchat.util.UpdateUtil;
-import com.titankingdoms.dev.titanchat.vault.VaultUtils;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
 public final class TitanChat extends JavaPlugin {
 	
@@ -61,6 +60,9 @@ public final class TitanChat extends JavaPlugin {
 			event.getRecipients().add(sender);
 		
 		getServer().getPluginManager().callEvent(event);
+		
+		if (event.isCancelled())
+			return;
 		
 		String line = getManager(TagParser.class).parse(event).replace("%message", event.getMessage());
 		

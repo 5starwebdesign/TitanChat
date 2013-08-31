@@ -21,12 +21,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.dev.titanchat.api.EndPoint;
 
-public final class ConverseEvent extends Event implements Cloneable {
+public final class ConverseEvent extends Event implements Cancellable, Cloneable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
@@ -35,6 +36,8 @@ public final class ConverseEvent extends Event implements Cloneable {
 	
 	private String format;
 	private String message;
+	
+	private boolean cancelled;
 	
 	public ConverseEvent(EndPoint sender, Set<EndPoint> recipients, String format, String message) {
 		Validate.notNull(sender, "Sender cannot be null");
@@ -45,6 +48,7 @@ public final class ConverseEvent extends Event implements Cloneable {
 		this.recipients = (recipients != null) ? recipients : new HashSet<EndPoint>();
 		this.format = format;
 		this.message = message;
+		this.cancelled = false;
 	}
 	
 	public ConverseEvent(EndPoint sender, String format, String message) {
@@ -79,6 +83,16 @@ public final class ConverseEvent extends Event implements Cloneable {
 	
 	public EndPoint getSender() {
 		return sender;
+	}
+	
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
+	}
+	
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
 	}
 	
 	public void setFormat(String format) {

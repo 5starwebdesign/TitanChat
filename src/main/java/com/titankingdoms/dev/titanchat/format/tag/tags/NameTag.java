@@ -15,26 +15,19 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.format.var.vars;
+package com.titankingdoms.dev.titanchat.format.tag.tags;
 
-import com.titankingdoms.dev.titanchat.api.EndPoint;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.format.var.Variable;
-import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.format.tag.Tag;
 
-public final class PrefixVariable extends Variable {
+public final class NameTag extends Tag {
 	
-	public PrefixVariable() {
-		super("prefix");
+	public NameTag() {
+		super("name");
 	}
 	
 	@Override
 	public String getValue(ConverseEvent event) {
-		EndPoint sender = event.getSender();
-		
-		if (!sender.getType().equals("User"))
-			return "";
-		
-		return ((User) sender).getPrefix();
+		return event.getSender().getName();
 	}
 }

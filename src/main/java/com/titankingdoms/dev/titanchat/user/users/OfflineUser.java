@@ -19,8 +19,7 @@ package com.titankingdoms.dev.titanchat.user.users;
 
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.user.User;
-import com.titankingdoms.dev.titanchat.user.UserManager;
+import com.titankingdoms.dev.titanchat.user.*;
 
 public final class OfflineUser extends User {
 	
@@ -31,6 +30,11 @@ public final class OfflineUser extends User {
 	@Override
 	public CommandSender getCommandSender() {
 		return null;
+	}
+	
+	@Override
+	public String getFormat() {
+		return "";
 	}
 	
 	public User getOnlineUser() {

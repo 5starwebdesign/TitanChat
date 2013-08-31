@@ -27,7 +27,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.EndPoint;
-import com.titankingdoms.dev.titanchat.vault.VaultUtils;
+import com.titankingdoms.dev.titanchat.util.VaultUtils;
 
 public abstract class User implements EndPoint {
 	
@@ -101,17 +101,9 @@ public abstract class User implements EndPoint {
 		return name;
 	}
 	
-	public String getPrefix() {
-		return getMetadata("prefix").getValue();
-	}
-	
 	@Override
 	public Set<EndPoint> getRelayPoints(EndPoint sender) {
 		return new HashSet<EndPoint>(represent);
-	}
-	
-	public String getSuffix() {
-		return getMetadata("suffix").getValue();
 	}
 	
 	@Override

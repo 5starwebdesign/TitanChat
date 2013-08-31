@@ -33,6 +33,11 @@ public final class Console extends User {
 	}
 	
 	@Override
+	public String getFormat() {
+		return "";
+	}
+	
+	@Override
 	public boolean isOnline() {
 		return true;
 	}
