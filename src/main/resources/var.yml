@@ -1,8 +1,0 @@
-format:
-    default: "%var%"
-    vars:
-        prefix: "&f[%var%&f]"
-        suffix: "&f%var%&f"
-static:
-    tag: "value"
-    plugin: "TitanChat"

@@ -15,34 +15,27 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.tools.xml;
 
-import java.util.Collection;
-import java.util.List;
-
-public interface Manager<T> {
+public class XMLElement extends XMLObject {
 	
-	public T get(String name);
+	private String value;
 	
-	public Collection<T> getAll();
+	public XMLElement(String name) {
+		super(name);
+		this.value = "";
+	}
 	
-	public String getName();
+	public String getValue() {
+		return value;
+	}
 	
-	public boolean has(String name);
+	@Override
+	public XMLType getType() {
+		return XMLType.ELEMENT;
+	}
 	
-	public boolean has(T item);
-	
-	public void init();
-	
-	public void load();
-	
-	public List<String> match(String name);
-	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public void setValue(String value) {
+		this.value = (value != null) ? value : "";
+	}
 }

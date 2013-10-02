@@ -15,34 +15,15 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.core.conversation;
 
 import java.util.Collection;
-import java.util.List;
 
-public interface Manager<T> {
+import com.titankingdoms.dev.titanchat.api.Point;
+
+public interface Provider {
 	
-	public T get(String name);
+	public Collection<Point> getPoints(String... names);
 	
-	public Collection<T> getAll();
-	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void init();
-	
-	public void load();
-	
-	public List<String> match(String name);
-	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public String getType();
 }

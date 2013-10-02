@@ -1,4 +1,15 @@
-format:
-    converse: "%prefix%display%suffix: %message"
+use-legacy: false
+var:
+    static:
+        var: "value"
+        plugin: "TitanChat"
+    format:
+        default: "%var%"
+        vars:
+            prefix: "&f[%var%&f]"
+            suffix: "&f%var%&f"
+censorship:
+    items: []
+    censor: "*"
 metrics-statistics: true
 update-search: false

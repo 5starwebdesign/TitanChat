@@ -15,34 +15,31 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.core.command;
 
-import java.util.Collection;
-import java.util.List;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-public interface Manager<T> {
+import com.titankingdoms.dev.titanchat.api.command.Command;
+import com.titankingdoms.dev.titanchat.tools.Messaging;
+
+public final class ClearCommand extends Command {
 	
-	public T get(String name);
+	public ClearCommand() {
+		super("Clear");
+		setAliases("clr");
+		setArgumentRange(0, 1);
+		setDescription("Clear chat");
+	}
 	
-	public Collection<T> getAll();
-	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void init();
-	
-	public void load();
-	
-	public List<String> match(String name);
-	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	@Override
+	public void execute(CommandSender sender, String[] args, CommandData data) {
+		if (!(sender instanceof Player)) {
+			Messaging.sendNotice(sender, "&4Unable to clear");
+			return;
+		}
+		
+		Messaging.sendNotice(sender, StringUtils.repeat("\n", 20));
+	}
 }

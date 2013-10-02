@@ -15,34 +15,13 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.api.event.user;
 
-import java.util.Collection;
-import java.util.List;
+import com.titankingdoms.dev.titanchat.core.user.User;
 
-public interface Manager<T> {
+public final class UserUnregistrationEvent extends UserEvent {
 	
-	public T get(String name);
-	
-	public Collection<T> getAll();
-	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void init();
-	
-	public void load();
-	
-	public List<String> match(String name);
-	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public UserUnregistrationEvent(User user) {
+		super(user);
+	}
 }

@@ -17,20 +17,22 @@
 
 package com.titankingdoms.dev.titanchat.api.addon;
 
-import com.titankingdoms.dev.titanchat.util.loading.Loadable;
+import com.titankingdoms.dev.titanchat.api.event.addon.AddonDisableEvent;
+import com.titankingdoms.dev.titanchat.api.event.addon.AddonEnableEvent;
+import com.titankingdoms.dev.titanchat.tools.loading.Loadable;
 
 public class Addon extends Loadable {
 	
+	private boolean enabled;
+	
 	public Addon(String name) {
 		super(name);
+		this.enabled = false;
 	}
 	
 	@Override
 	public boolean equals(Object object) {
-		if (object instanceof Addon)
-			return toString().equals(object.toString());
-		
-		return false;
+		return (object instanceof Addon) ? toString().equals(object.toString()) : false;
 	}
 	
 	@Override
@@ -38,11 +40,31 @@ public class Addon extends Loadable {
 		return toString().hashCode();
 	}
 	
+	public final boolean isEnabled() {
+		return enabled;
+	}
+	
+	public void onDisable() {
+		setEnabled(false);
+		plugin.getServer().getPluginManager().callEvent(new AddonDisableEvent(this));
+	}
+	
+	public void onEnable() {
+		setEnabled(true);
+		plugin.getServer().getPluginManager().callEvent(new AddonEnableEvent(this));
+	}
+	
+	public void onReload() {}
+	
+	private final void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	
 	@Override
 	public String toString() {
-		return "Addon: {" +
-				"name: " + getName() + ", " +
-				"file: " + getFile().getName() +
+		return "\"Addon\": {" +
+				"\"name\": \"" + getName() + "\", " +
+				"\"file\": \"" + getFile().getName() + "\"" +
 				"}";
 	}
 }

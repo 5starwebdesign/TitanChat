@@ -17,47 +17,50 @@
 
 package com.titankingdoms.dev.titanchat.api.event;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.titankingdoms.dev.titanchat.api.EndPoint;
+import com.titankingdoms.dev.titanchat.api.Point;
 
 public final class ConverseEvent extends Event implements Cancellable, Cloneable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
-	private final EndPoint sender;
-	private final Set<EndPoint> recipients;
+	private final Point sender;
+	private final Point recipient;
+	private final Collection<Point> relay;
 	
 	private String format;
 	private String message;
 	
 	private boolean cancelled;
 	
-	public ConverseEvent(EndPoint sender, Set<EndPoint> recipients, String format, String message) {
+	public ConverseEvent(Point sender, Point recipient, Collection<Point> relay, String format, String message) {
 		Validate.notNull(sender, "Sender cannot be null");
+		Validate.notNull(recipient, "Recipient cannot be null");
 		Validate.notEmpty(format, "Format cannot be empty");
 		Validate.notEmpty(message, "Message cannot be empty");
 		
 		this.sender = sender;
-		this.recipients = (recipients != null) ? recipients : new HashSet<EndPoint>();
+		this.recipient = recipient;
+		this.relay = (relay != null) ? relay : new HashSet<Point>();
 		this.format = format;
 		this.message = message;
 		this.cancelled = false;
 	}
 	
-	public ConverseEvent(EndPoint sender, String format, String message) {
-		this(sender, new HashSet<EndPoint>(), format, message);
+	public ConverseEvent(Point sender, Point recipient, String format, String message) {
+		this(sender, recipient, recipient.getRecipients(sender), format, message);
 	}
 	
 	@Override
 	public ConverseEvent clone() {
-		return new ConverseEvent(sender, new HashSet<EndPoint>(recipients), format, message);
+		return new ConverseEvent(sender, recipient, new HashSet<Point>(relay), format, message);
 	}
 	
 	public String getFormat() {
@@ -77,11 +80,15 @@ public final class ConverseEvent extends Event implements Cancellable, Cloneable
 		return message;
 	}
 	
-	public Set<EndPoint> getRecipients() {
-		return recipients;
+	public Point getRecipient() {
+		return recipient;
 	}
 	
-	public EndPoint getSender() {
+	public Collection<Point> getRelayPoints() {
+		return relay;
+	}
+	
+	public Point getSender() {
 		return sender;
 	}
 	

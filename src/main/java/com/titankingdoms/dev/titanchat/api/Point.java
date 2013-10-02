@@ -18,31 +18,24 @@
 package com.titankingdoms.dev.titanchat.api;
 
 import java.util.Collection;
-import java.util.List;
 
-public interface Manager<T> {
+public interface Point {
 	
-	public T get(String name);
+	public String getDisplayName();
 	
-	public Collection<T> getAll();
+	public String getFormat();
 	
 	public String getName();
 	
-	public boolean has(String name);
+	public Collection<Point> getRecipients(Point sender);
 	
-	public boolean has(T item);
+	public String getType();
 	
-	public void init();
+	public boolean isLinked(Point point);
 	
-	public void load();
+	public void linkPoint(Point point);
 	
-	public List<String> match(String name);
+	public void sendRawLine(String line);
 	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public void unlinkPoint(Point point);
 }

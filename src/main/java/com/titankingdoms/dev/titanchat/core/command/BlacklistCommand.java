@@ -15,34 +15,30 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.core.command;
 
-import java.util.Collection;
 import java.util.List;
 
-public interface Manager<T> {
+import org.bukkit.command.CommandSender;
+
+import com.titankingdoms.dev.titanchat.api.command.Command;
+
+public final class BlacklistCommand extends Command {
 	
-	public T get(String name);
+	public BlacklistCommand() {
+		super("Blacklist");
+		setAliases("b");
+		setArgumentRange(2, 1024);
+		setDescription("Blacklist Actions");
+	}
 	
-	public Collection<T> getAll();
+	@Override
+	public void execute(CommandSender sender, String[] args, CommandData data) {
+		executeLayer(sender, args, data);
+	}
 	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void init();
-	
-	public void load();
-	
-	public List<String> match(String name);
-	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	@Override
+	public List<String> tab(CommandSender sender, String[] args, CommandData data) {
+		return tabLayer(sender, args, data);
+	}
 }

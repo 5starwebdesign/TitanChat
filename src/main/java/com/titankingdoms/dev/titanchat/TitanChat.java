@@ -25,23 +25,29 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.titankingdoms.dev.titanchat.api.*;
+import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.Point;
 import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
+import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.channel.ChannelManager;
-import com.titankingdoms.dev.titanchat.channel.FactoryManager;
-import com.titankingdoms.dev.titanchat.command.CommandManager;
-import com.titankingdoms.dev.titanchat.format.TagParser;
-import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
-import com.titankingdoms.dev.titanchat.metrics.Metrics;
-import com.titankingdoms.dev.titanchat.user.UserManager;
-import com.titankingdoms.dev.titanchat.util.UpdateUtil;
-import com.titankingdoms.dev.titanchat.util.VaultUtils;
+import com.titankingdoms.dev.titanchat.api.event.manager.ManagerLoadEvent;
+import com.titankingdoms.dev.titanchat.api.event.manager.ManagerReloadEvent;
+import com.titankingdoms.dev.titanchat.api.event.manager.ManagerUnloadEvent;
+import com.titankingdoms.dev.titanchat.api.format.var.VarFormat;
+import com.titankingdoms.dev.titanchat.core.CoreListener;
+import com.titankingdoms.dev.titanchat.core.conversation.ProvisionManager;
+import com.titankingdoms.dev.titanchat.core.user.UserManager;
+import com.titankingdoms.dev.titanchat.tools.Debugger;
+import com.titankingdoms.dev.titanchat.tools.metrics.Metrics;
+import com.titankingdoms.dev.titanchat.tools.util.FormatUtils;
+import com.titankingdoms.dev.titanchat.tools.util.UpdateUtil;
+import com.titankingdoms.dev.titanchat.tools.util.VaultUtils;
 
 public final class TitanChat extends JavaPlugin {
 	
@@ -51,40 +57,54 @@ public final class TitanChat extends JavaPlugin {
 	
 	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
 	
-	private UpdateUtil update;
+	private final Debugger db = new Debugger(0);
 	
-	public void convsere(EndPoint sender, EndPoint recipient, String format, String message) {
-		ConverseEvent event = new ConverseEvent(sender, recipient.getRelayPoints(sender), format, message);
+	public void converse(Point sender, Point recipient, String format, String message) {
+		Validate.notNull(sender, "Sender cannot be null");
+		Validate.notNull(recipient, "Recipient cannot be null");
+		Validate.notEmpty(format, "Format cannot be empty");
+		Validate.notEmpty(message, "Message cannot be empty");
 		
-		if (!event.getRecipients().contains(sender))
-			event.getRecipients().add(sender);
+		ConverseEvent event = new ConverseEvent(sender, recipient, format, message);
+		
+		if (!event.getRelayPoints().contains(sender))
+			event.getRelayPoints().add(sender);
 		
 		getServer().getPluginManager().callEvent(event);
 		
 		if (event.isCancelled())
 			return;
 		
-		String line = getManager(TagParser.class).parse(event).replace("%message", event.getMessage());
+		String processedFormat = getManager(VarFormat.class).parse(event);
 		
-		if (!event.getRecipients().contains(sender))
-			event.getRecipients().add(sender);
+		List<String> items = getConfig().getStringList("censorship.items");
+		String censor = getConfig().getString("censorship.censor", "*");
 		
-		for (EndPoint relay : event.getRecipients())
+		String processedMessage = FormatUtils.censor(message, items, censor);
+		
+		String line = processedFormat.replace("%message", processedMessage);
+		
+		if (!event.getRelayPoints().contains(sender))
+			event.getRelayPoints().add(sender);
+		
+		for (Point relay : event.getRelayPoints())
 			relay.sendRawLine(line);
 		
-		if (event.getRecipients().size() < 2)
+		if (event.getRelayPoints().size() < 2)
 			sender.sendRawLine("&7Nobody heard you...");
 	}
 	
 	public static TitanChat getInstance() {
 		if (instance == null)
-			throw new IllegalStateException("TitanChat is in operation");
+			throw new IllegalStateException("TitanChat is not in operation");
 		
 		return instance;
 	}
 	
 	public <T extends Manager<?>> T getManager(Class<T> manager) {
-		if (manager == null || !hasManager(manager))
+		Validate.notNull(manager, "Manager Class cannot be null");
+		
+		if (!hasManager(manager))
 			return null;
 		
 		synchronized (managers) {
@@ -92,15 +112,14 @@ public final class TitanChat extends JavaPlugin {
 		}
 	}
 	
-	public Set<Manager<?>> getManagers() {
+	public List<Manager<?>> getManagers() {
 		synchronized (managers) {
-			return new HashSet<Manager<?>>(managers.values());
+			return new LinkedList<Manager<?>>(managers.values());
 		}
 	}
 	
 	public <T extends Manager<?>> boolean hasManager(Class<T> manager) {
-		if (manager == null)
-			return false;
+		Validate.notNull(manager, "Manager Class cannot be null");
 		
 		synchronized (managers) {
 			return managers.containsKey(manager);
@@ -135,14 +154,17 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public void log(Level level, String message) {
-		if (message == null || message.isEmpty())
-			return;
-		
+		Validate.notEmpty(message, "Message cannot be empty");
 		log.log((level != null) ? level : Level.INFO, "[TitanChat v5.0.0] " + message);
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		Validate.notNull(sender, "Sender cannot be null");
+		Validate.notNull(command, "Command cannot be null");
+		Validate.notEmpty(label, "Label cannot be empty");
+		Validate.notNull(args, "Arguments cannot be null");
+		
 		if (command.getName().equalsIgnoreCase("TitanChat")) {
 			getManager(CommandManager.class).execute(sender, reassembleArguments(args));
 			return true;
@@ -158,13 +180,19 @@ public final class TitanChat extends JavaPlugin {
 		if (instance != null)
 			instance = null;
 		
-		log(Level.INFO, "Unloading managers...");
-		
-		for (Manager<?> manager : getManagers())
-			manager.unload();
-		
 		HandlerList.unregisterAll(this);
 		log(Level.INFO, "Unregistered listeners");
+		
+		log(Level.INFO, "Unloading managers...");
+		
+		long managers = System.currentTimeMillis();
+		
+		for (Manager<?> manager : getManagers()) {
+			manager.unload();
+			getServer().getPluginManager().callEvent(new ManagerUnloadEvent(manager));
+		}
+		
+		db.debug(Level.INFO, "Time: " + (System.currentTimeMillis() - managers) + "ms");
 		
 		log(Level.INFO, "TitanChat is now disabled");
 	}
@@ -181,7 +209,7 @@ public final class TitanChat extends JavaPlugin {
 		if (!VaultUtils.initialise(getServer()))
 			log(Level.INFO, "Failed to set up VaultUtils");
 		
-		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
+		getServer().getPluginManager().registerEvents(new CoreListener(), this);
 		log(Level.INFO, "Registered listeners");
 		
 		if (!initMetrics())
@@ -192,10 +220,16 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Loading managers...");
 		
-		for (Manager<?> manager : getManagers())
-			manager.load();
+		long managers = System.currentTimeMillis();
 		
-		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
+		for (Manager<?> manager : getManagers()) {
+			manager.load();
+			getServer().getPluginManager().callEvent(new ManagerLoadEvent(manager));
+		}
+		
+		db.debug(Level.INFO, "Time: " + (System.currentTimeMillis() - managers) + "ms");
+		
+		getServer().getPluginManager().registerEvents(new CoreListener(), this);
 		log(Level.INFO, "Registered listeners");
 		
 		log(Level.INFO, "TitanChat is now enabled");
@@ -210,11 +244,10 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "Registering managers...");
 		
 		registerManager(new CommandManager());
-		registerManager(new FactoryManager());
-		registerManager(new TagParser());
-		registerManager(new AddonManager());
-		registerManager(new ChannelManager());
+		registerManager(new VarFormat());
+		registerManager(new ProvisionManager());
 		registerManager(new UserManager());
+		registerManager(new AddonManager());
 		
 		if (!new File(getDataFolder(), "config.yml").exists()) {
 			log(Level.INFO, "Generating default config.yml...");
@@ -223,6 +256,9 @@ public final class TitanChat extends JavaPlugin {
 		
 		getConfig().options().copyDefaults(true);
 		saveConfig();
+		
+		for (Manager<?> manager : getManagers())
+			manager.init();
 		
 		log(Level.INFO, "TitanChat is now loaded");
 	}
@@ -238,14 +274,25 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Reloading managers...");
 		
-		for (Manager<?> manager : getManagers())
+		long managers = System.currentTimeMillis();
+		
+		for (Manager<?> manager : getManagers()) {
 			manager.reload();
+			getServer().getPluginManager().callEvent(new ManagerReloadEvent(manager));
+		}
+		
+		db.debug(Level.INFO, "Time: " + (System.currentTimeMillis() - managers) + "ms");
 		
 		log(Level.INFO, "TitanChat is now reloaded");
 	}
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+		Validate.notNull(sender, "Sender cannot be null");
+		Validate.notNull(command, "Command cannot be null");
+		Validate.notEmpty(label, "Label cannot be empty");
+		Validate.notNull(args, "Arguments cannot be null");
+		
 		if (command.getName().equalsIgnoreCase("TitanChat"))
 			return getManager(CommandManager.class).tab(sender, reassembleArguments(args));
 		
@@ -253,18 +300,25 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	private String[] reassembleArguments(String[] args) {
+		Validate.notNull(args, "Arguments cannot be null");
+		
+		if (args.length < 1)
+			return new String[0];
+		
 		List<String> arguments = new ArrayList<String>();
 		
 		Matcher match = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(StringUtils.join(args, ' '));
 		
 		while (match.find())
-			arguments.add(match.group().replace("\"", ""));
+			arguments.add(match.group().replace("\"", "").trim());
 		
 		return arguments.toArray(new String[0]);
 	}
 	
 	public void registerManager(Manager<?> manager) {
-		if (manager == null || hasManager(manager.getClass()))
+		Validate.notNull(manager, "Manager cannot be null");
+		
+		if (hasManager(manager.getClass()))
 			return;
 		
 		synchronized (managers) {
@@ -275,16 +329,19 @@ public final class TitanChat extends JavaPlugin {
 	private boolean searchUpdate() {
 		log(Level.INFO, "Attempting to search for updates...");
 		
-		if (update == null)
-			this.update = new UpdateUtil("titanchat", getDescription());
-		
 		if (!getConfig().getBoolean("update-search", false)) {
 			log(Level.INFO, "Search Disabled");
 			return true;
 		}
 		
+		UpdateUtil update = new UpdateUtil("titanchat", getDescription());
+		
+		long search = System.currentTimeMillis();
+		
 		update.readFeed();
 		update.checkAvailability();
+		
+		db.debug(Level.INFO, "Time: " + (System.currentTimeMillis() - search) + "ms");
 		
 		boolean available = update.hasUpdate();
 		
@@ -298,7 +355,9 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public void unregisterManager(Manager<?> manager) {
-		if (manager == null || !hasManager(manager.getClass()))
+		Validate.notNull(manager, "Manager cannot be null");
+		
+		if (!hasManager(manager.getClass()))
 			return;
 		
 		synchronized (managers) {

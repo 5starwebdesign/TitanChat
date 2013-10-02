@@ -15,34 +15,33 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.api.event.user;
 
-import java.util.Collection;
-import java.util.List;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
-public interface Manager<T> {
+import com.titankingdoms.dev.titanchat.core.user.User;
+
+public abstract class UserEvent extends Event {
 	
-	public T get(String name);
+	private static final HandlerList handlers = new HandlerList();
 	
-	public Collection<T> getAll();
+	private final User user;
 	
-	public String getName();
+	public UserEvent(User user) {
+		this.user = user;
+	}
 	
-	public boolean has(String name);
+	public static HandlerList getHandlerList() {
+		return handlers;
+	}
 	
-	public boolean has(T item);
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
+	}
 	
-	public void init();
-	
-	public void load();
-	
-	public List<String> match(String name);
-	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public User getUser() {
+		return user;
+	}
 }

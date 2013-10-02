@@ -15,34 +15,22 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.core.format.var;
 
-import java.util.Collection;
-import java.util.List;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.api.format.var.Var;
 
-public interface Manager<T> {
+public final class StaticVar extends Var {
 	
-	public T get(String name);
+	private final String value;
 	
-	public Collection<T> getAll();
+	public StaticVar(String name, String value) {
+		super(name);
+		this.value = (value != null) ? value : "";
+	}
 	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void init();
-	
-	public void load();
-	
-	public List<String> match(String name);
-	
-	public void registerAll(T... items);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	@Override
+	public String getValue(ConverseEvent event) {
+		return value;
+	}
 }

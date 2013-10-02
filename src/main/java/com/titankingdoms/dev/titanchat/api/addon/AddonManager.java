@@ -23,7 +23,7 @@ import java.util.logging.Level;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
-import com.titankingdoms.dev.titanchat.util.loading.Loader;
+import com.titankingdoms.dev.titanchat.tools.loading.Loader;
 
 public final class AddonManager implements Manager<Addon> {
 	
@@ -34,7 +34,7 @@ public final class AddonManager implements Manager<Addon> {
 	public AddonManager() {
 		this.plugin = TitanChat.getInstance();
 		
-		if (getAddonDirectory().mkdirs())
+		if (getDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating addon directory...");
 		
 		this.addons = new TreeMap<String, Addon>();
@@ -42,23 +42,23 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public Addon get(String name) {
-		return (name != null) ? addons.get(name.toLowerCase()) : null;
+		return (has(name)) ? addons.get(name.toLowerCase()) : null;
 	}
 	
 	public Addon getAddon(String name) {
 		return get(name);
 	}
 	
-	public List<Addon> getAddons() {
+	public Collection<Addon> getAddons() {
 		return getAll();
 	}
 	
 	@Override
-	public List<Addon> getAll() {
-		return new ArrayList<Addon>(addons.values());
+	public Collection<Addon> getAll() {
+		return new HashSet<Addon>(addons.values());
 	}
 	
-	public File getAddonDirectory() {
+	public File getDirectory() {
 		return new File(plugin.getDataFolder(), "addons");
 	}
 	
@@ -69,15 +69,12 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public boolean has(String name) {
-		return (name != null) ? addons.containsKey(name.toLowerCase()) : false;
+		return (name != null && !name.isEmpty()) ? addons.containsKey(name.toLowerCase()) : false;
 	}
 	
 	@Override
 	public boolean has(Addon addon) {
-		if (addon == null || !has(addon.getName()))
-			return false;
-		
-		return get(addon.getName()).equals(addon);
+		return (addon != null && has(addon.getName())) ? get(addon.getName()).equals(addon) : false;
 	}
 	
 	public boolean hasAddon(String name) {
@@ -89,8 +86,14 @@ public final class AddonManager implements Manager<Addon> {
 	}
 	
 	@Override
+	public void init() {
+		registerAll(Loader.load(Addon.class, getDirectory()).toArray(new Addon[0]));
+	}
+	
+	@Override
 	public void load() {
-		registerAll(Loader.load(Addon.class, getAddonDirectory()).toArray(new Addon[0]));
+		for (Addon addon : getAll())
+			addon.onEnable();
 	}
 	
 	@Override
@@ -132,13 +135,30 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public void reload() {
-		unload();
-		load();
+		for (Addon addon : getAll()) {
+			if (addon.getFile().exists()) {
+				addon.onReload();
+				continue;
+			}
+			
+			unregister(addon);
+			addon.onDisable();
+		}
+		
+		for (Addon addon : Loader.load(Addon.class, getDirectory())) {
+			if (has(addon))
+				continue;
+			
+			registerAll(addon);
+		}
 	}
 	
 	@Override
 	public void unload() {
-		for (Addon addon : getAddons())
+		for (Addon addon : getAll())
+			addon.onDisable();
+		
+		for (Addon addon : getAll())
 			unregister(addon);
 	}
 	
