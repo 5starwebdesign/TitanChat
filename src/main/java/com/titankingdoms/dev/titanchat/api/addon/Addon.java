@@ -17,8 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.api.addon;
 
-import com.titankingdoms.dev.titanchat.api.event.addon.AddonDisableEvent;
-import com.titankingdoms.dev.titanchat.api.event.addon.AddonEnableEvent;
 import com.titankingdoms.dev.titanchat.tools.loading.Loadable;
 
 public class Addon extends Loadable {
@@ -46,12 +44,10 @@ public class Addon extends Loadable {
 	
 	public void onDisable() {
 		setEnabled(false);
-		plugin.getServer().getPluginManager().callEvent(new AddonDisableEvent(this));
 	}
 	
 	public void onEnable() {
 		setEnabled(true);
-		plugin.getServer().getPluginManager().callEvent(new AddonEnableEvent(this));
 	}
 	
 	public void onReload() {}

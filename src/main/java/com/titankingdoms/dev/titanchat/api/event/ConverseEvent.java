@@ -19,52 +19,49 @@ package com.titankingdoms.dev.titanchat.api.event;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.titankingdoms.dev.titanchat.api.Point;
+import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
 
 public final class ConverseEvent extends Event implements Cancellable, Cloneable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
-	private final Point sender;
-	private final Point recipient;
-	private final Collection<Point> relay;
+	private final Conversation conversation;
 	
-	private String format;
-	private String message;
+	private final Set<Node> recipients;
 	
 	private boolean cancelled;
 	
-	public ConverseEvent(Point sender, Point recipient, Collection<Point> relay, String format, String message) {
-		Validate.notNull(sender, "Sender cannot be null");
-		Validate.notNull(recipient, "Recipient cannot be null");
-		Validate.notEmpty(format, "Format cannot be empty");
-		Validate.notEmpty(message, "Message cannot be empty");
+	private ConverseEvent(Conversation conversation, Collection<Node> recipients) {
+		Validate.notNull(conversation, "Conversation cannot be null");
+		Validate.notNull(recipients, "Recipients cannot be null");
 		
-		this.sender = sender;
-		this.recipient = recipient;
-		this.relay = (relay != null) ? relay : new HashSet<Point>();
-		this.format = format;
-		this.message = message;
-		this.cancelled = false;
+		this.conversation = conversation;
+		this.recipients = new HashSet<Node>(recipients);
 	}
 	
-	public ConverseEvent(Point sender, Point recipient, String format, String message) {
-		this(sender, recipient, recipient.getRecipients(sender), format, message);
+	public ConverseEvent(Conversation conversation) {
+		this(conversation, conversation.getRecipient().getTerminusNodes());
 	}
 	
 	@Override
 	public ConverseEvent clone() {
-		return new ConverseEvent(sender, recipient, new HashSet<Point>(relay), format, message);
+		return new ConverseEvent(conversation.clone(), recipients);
 	}
 	
 	public String getFormat() {
-		return format;
+		return conversation.getFormat();
+	}
+	
+	public String getMessage() {
+		return conversation.getMessage();
 	}
 	
 	public static HandlerList getHandlerList() {
@@ -76,20 +73,16 @@ public final class ConverseEvent extends Event implements Cancellable, Cloneable
 		return handlers;
 	}
 	
-	public String getMessage() {
-		return message;
+	public Node getRecipient() {
+		return conversation.getRecipient();
 	}
 	
-	public Point getRecipient() {
-		return recipient;
+	public Node getSender() {
+		return conversation.getSender();
 	}
 	
-	public Collection<Point> getRelayPoints() {
-		return relay;
-	}
-	
-	public Point getSender() {
-		return sender;
+	public Set<Node> getTerminusRecipients() {
+		return recipients;
 	}
 	
 	@Override
@@ -103,12 +96,10 @@ public final class ConverseEvent extends Event implements Cancellable, Cloneable
 	}
 	
 	public void setFormat(String format) {
-		Validate.notEmpty((format != null) ? format : "", "A format is needed");
-		this.format = format;
+		conversation.setFormat(format);
 	}
 	
 	public void setMessage(String message) {
-		Validate.notEmpty((message != null) ? message : "", "A message is needed");
-		this.message = message;
+		conversation.setMessage(message);
 	}
 }

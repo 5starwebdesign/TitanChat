@@ -15,31 +15,23 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.listener;
 
-import java.util.Collection;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-public interface Manager<T> {
+public final class TitanChatListener implements Listener {
 	
-	public T get(String name);
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {}
 	
-	public Collection<T> getAll();
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerJoin(PlayerJoinEvent event) {}
 	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void load();
-	
-	public Collection<String> match(String name);
-	
-	public void register(T item);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerQuit(PlayerQuitEvent event) {}
 }

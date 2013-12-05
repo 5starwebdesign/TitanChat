@@ -21,6 +21,8 @@ import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
+import org.apache.commons.lang.Validate;
+
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.tools.loading.Loader;
@@ -42,6 +44,7 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public Addon get(String name) {
+		Validate.notEmpty(name, "Name cannot be empty");
 		return (has(name)) ? addons.get(name.toLowerCase()) : null;
 	}
 	
@@ -86,11 +89,6 @@ public final class AddonManager implements Manager<Addon> {
 	}
 	
 	@Override
-	public void init() {
-		registerAll(Loader.load(Addon.class, getDirectory()).toArray(new Addon[0]));
-	}
-	
-	@Override
 	public void load() {
 		for (Addon addon : getAll())
 			addon.onEnable();
@@ -116,21 +114,15 @@ public final class AddonManager implements Manager<Addon> {
 	}
 	
 	@Override
-	public void registerAll(Addon... addons) {
-		if (addons == null)
-			return;
+	public void register(Addon addon) {
+		Validate.notNull(addon, "Addon cannot be null");
 		
-		for (Addon addon : addons) {
-			if (addon == null)
-				continue;
-			
-			if (has(addon.getName())) {
-				plugin.log(Level.WARNING, "Duplicate: " + addon);
-				continue;
-			}
-			
-			this.addons.put(addon.getName().toLowerCase(), addon);
+		if (has(addon.getName())) {
+			plugin.log(Level.WARNING, "Duplicate: " + addon);
+			return;
 		}
+		
+		this.addons.put(addon.getName().toLowerCase(), addon);
 	}
 	
 	@Override
@@ -149,7 +141,7 @@ public final class AddonManager implements Manager<Addon> {
 			if (has(addon))
 				continue;
 			
-			registerAll(addon);
+			register(addon);
 		}
 	}
 	
@@ -164,7 +156,9 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public void unregister(Addon addon) {
-		if (addon == null || !has(addon))
+		Validate.notNull(addon, "Addon cannot be null");
+		
+		if (!has(addon))
 			return;
 		
 		this.addons.remove(addon.getName().toLowerCase());

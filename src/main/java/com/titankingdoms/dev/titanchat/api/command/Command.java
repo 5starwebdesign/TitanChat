@@ -17,57 +17,48 @@
 
 package com.titankingdoms.dev.titanchat.api.command;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.Manager;
-import com.titankingdoms.dev.titanchat.tools.Messaging;
-import com.titankingdoms.dev.titanchat.tools.util.VaultUtils;
+import com.titankingdoms.dev.titanchat.utility.Messaging;
 
-public abstract class Command implements Manager<Command> {
+public abstract class Command {
 	
 	protected final TitanChat plugin;
 	
-	private final String name;
+	private final String label;
 	
-	private String[] aliases;
-	private String description;
-	private int maxArgs;
-	private int minArgs;
+	private String[] aliases = new String[0];
+	private String description = "";
+	private String syntax = "";
+	
+	private int maxArgs = 0;
+	private int minArgs = 0;
 	
 	private final Map<String, Command> commands;
 	
-	public Command(String name, String[] aliases, String description) {
-		Validate.notEmpty(name, "Name cannot be empty");
-		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric characters");
+	private boolean registered = false;
+	
+	public Command(String label) {
+		Validate.isTrue(StringUtils.isNotBlank(label), "Label cannot be blank");
+		Validate.isTrue(StringUtils.isAlphanumeric(label), "Label cannot be non-alphanumerical");
 		
 		this.plugin = TitanChat.getInstance();
-		this.name = (name != null) ? name : "";
-		this.aliases = (aliases != null) ? aliases : new String[0];
-		this.description = (description != null) ? description : "";
-		this.maxArgs = 0;
-		this.minArgs = 0;
+		this.label = label;
 		this.commands = new TreeMap<String, Command>();
 	}
 	
-	public Command(String name, String description, String... aliases) {
-		this(name, aliases, description);
-	}
-	
-	public Command(String name, String[] aliases) {
-		this(name, aliases, "");
-	}
-	
-	public Command(String name, String description) {
-		this(name, new String[0], description);
-	}
-	
-	public Command(String name) {
-		this(name, new String[0], "");
+	public String buildSyntax(CommandSender sender, String[] args) {
+		return syntax;
 	}
 	
 	@Override
@@ -75,53 +66,18 @@ public abstract class Command implements Manager<Command> {
 		return (object instanceof Command) ? toString().equals(object.toString()) : false;
 	}
 	
-	public abstract void execute(CommandSender sender, String[] args, CommandData data);
+	public abstract boolean execute(CommandSender sender, String[] args);
 	
-	public final void execute(CommandSender sender, String[] args) {
-		execute(sender, args, new CommandData());
-	}
-	
-	public void executeLayer(CommandSender sender, String[] args, CommandData data) {
-		if (args.length < 1)
-			return;
-		
-		if (!has(args[0])) {
-			Messaging.sendNotice(sender, "&4Invalid command");
-			return;
-		}
-		
-		Command next = get(args[0]);
-		String[] arguments = Arrays.copyOfRange(args, 1, args.length);
-		
-		if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
-			Messaging.sendNotice(sender, "&4Invalid argument length");
-			return;
-		}
-		
-		if (!next.isPermitted(sender, arguments, data)) {
-			Messaging.sendNotice(sender, "&4You do not have permission");
-			return;
-		}
-		
-		next.execute(sender, arguments, data);
-	}
-	
-	public final void executeLayer(CommandSender sender, String[] args) {
-		executeLayer(sender, args, new CommandData());
-	}
-	
-	@Override
 	public Command get(String name) {
-		return (has(name)) ? commands.get(name.toLowerCase()) : null;
+		return (has(name)) ? commands.get(name) : null;
 	}
 	
 	public String[] getAliases() {
-		return aliases;
+		return aliases.clone();
 	}
 	
-	@Override
-	public Collection<Command> getAll() {
-		return new HashSet<Command>(commands.values());
+	public List<Command> getAll() {
+		return new ArrayList<Command>(commands.values());
 	}
 	
 	public String getDescription() {
@@ -129,7 +85,7 @@ public abstract class Command implements Manager<Command> {
 	}
 	
 	public final String getLabel() {
-		return name;
+		return label;
 	}
 	
 	public int getMaxArguments() {
@@ -140,17 +96,14 @@ public abstract class Command implements Manager<Command> {
 		return minArgs;
 	}
 	
-	@Override
-	public String getName() {
-		return getLabel();
+	public String getSyntax() {
+		return syntax;
 	}
 	
-	@Override
 	public boolean has(String name) {
-		return (name != null) ? commands.containsKey(name.toLowerCase()) : false;
+		return (name != null && !name.isEmpty()) ? commands.containsKey(name.toLowerCase()) : false;
 	}
 	
-	@Override
 	public boolean has(Command command) {
 		return (command != null && has(command.getLabel())) ? get(command.getLabel()).equals(command) : false;
 	}
@@ -160,106 +113,107 @@ public abstract class Command implements Manager<Command> {
 		return toString().hashCode();
 	}
 	
-	public final boolean hasPermission(CommandSender sender, String node) {
-		return VaultUtils.hasPermission(sender, node);
-	}
-	
-	@Override
-	public void init() {}
-	
-	public boolean isPermitted(CommandSender sender, String[] args, CommandData data) {
+	protected final boolean invokeLayeredExecution(CommandSender sender, String[] args) {
+		if (args.length < 1)
+			return false;
+		
+		if (!has(args[0]))
+			return false;
+		
+		Command next = get(args[0]);
+		String[] arguments = Arrays.copyOfRange(args, 1, args.length);
+		
+		if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
+			Messaging.message(sender, "Invalid argument length");
+			return false;
+		}
+		
+		next.execute(sender, arguments);
 		return true;
 	}
 	
-	public final boolean isPermitted(CommandSender sender, String[] args) {
-		return isPermitted(sender, args, new CommandData());
+	protected final String invokeLayeredSyntaxBuilder(CommandSender sender, String[] args) {
+		String syntax = label + " ";
+		
+		if (args.length > 0 && has(args[0]))
+			syntax += args[0] + " " + get(args[0]).buildSyntax(sender, Arrays.copyOfRange(args, 1, args.length));
+		else
+			syntax += this.syntax;
+		
+		return syntax.toLowerCase();
 	}
 	
-	@Override
-	public void load() {}
+	protected final List<String> invokeLayeredTabCompletion(CommandSender sender, String[] args) {
+		switch (args.length) {
+		
+		case 0:
+			return new ArrayList<String>();
+		
+		case 1:
+			return match(args[0]);
+			
+		default:
+			if (!has(args[0]))
+				return new ArrayList<String>();
+			
+			return get(args[0]).tabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
+		}
+	}
 	
-	@Override
-	public List<String> match(String name) {
+	protected List<String> match(String name) {
 		if (name == null || name.isEmpty())
 			return new ArrayList<String>(commands.keySet());
 		
 		List<String> matches = new ArrayList<String>();
 		
-		for (String command : commands.keySet()) {
-			if (!command.startsWith(name.toLowerCase()))
+		for (String match : commands.keySet()) {
+			if (!match.startsWith(name))
 				continue;
 			
-			matches.add(command);
+			matches.add(match);
 		}
 		
 		Collections.sort(matches);
-		
 		return matches;
 	}
 	
-	@Override
-	public void registerAll(Command... commands) {
-		if (commands == null)
+	protected void register(Command command) {
+		Validate.notNull(command, "Command cannot be null");
+		
+		if (has(command) || command.registered)
 			return;
 		
-		for (Command command : commands) {
-			if (command == null)
+		this.commands.put(command.getLabel().toLowerCase(), command);
+		
+		for (String alias : command.getAliases()) {
+			if (has(alias))
 				continue;
 			
-			String name = command.getLabel();
-			
-			if (has(name) && get(name).getLabel().equals(name))
-				continue;
-			
-			this.commands.put(command.getLabel().toLowerCase(), command);
-			
-			for (String alias : command.getAliases()) {
-				if (has(alias))
-					continue;
-				
-				this.commands.put(alias.toLowerCase(), command);
-			}
+			this.commands.put(alias.toLowerCase(), command);
 		}
+		
+		command.registered = true;
 	}
-	
-	@Override
-	public void reload() {}
 	
 	protected void setAliases(String... aliases) {
 		this.aliases = (aliases != null) ? aliases : new String[0];
 	}
 	
 	protected void setArgumentRange(int minArgs, int maxArgs) {
-		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : minArgs;
 		this.minArgs = (minArgs >= 0) ? minArgs : 0;
+		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : this.minArgs;
 	}
 	
 	protected void setDescription(String description) {
 		this.description = (description != null) ? description : "";
 	}
 	
-	public List<String> tab(CommandSender sender, String[] args, CommandData data) {
+	protected void setSyntax(String syntax) {
+		this.syntax = (syntax != null) ? syntax : "";
+	}
+	
+	public List<String> tabComplete(CommandSender sender, String[] args) {
 		return new ArrayList<String>();
-	}
-	
-	public final List<String> tab(CommandSender sender, String[] args) {
-		return tab(sender, args, new CommandData());
-	}
-	
-	public List<String> tabLayer(CommandSender sender, String[] args, CommandData data) {
-		if (args.length < 2)
-			return (args.length > 0) ? match(args[0]) : new ArrayList<String>();
-		
-		if (has(args[0])) {
-			String[] arguments = Arrays.copyOfRange(args, 1, args.length);
-			return get(args[0]).tab(sender, arguments, new CommandData());
-		}
-		
-		return new ArrayList<String>();
-	}
-	
-	public final List<String> tabLayer(CommandSender sender, String[] args) {
-		return tabLayer(sender, args, new CommandData());
 	}
 	
 	@Override
@@ -271,60 +225,30 @@ public abstract class Command implements Manager<Command> {
 				"\"range\": {" +
 				"\"minArgs\": \"" + getMinArguments() + "\", " +
 				"\"maxArgs\": " + getMaxArguments() + "\"" +
-				"}" +
+				"}, " +
+				"\"syntax\": \"" + getSyntax() + "\"" +
 				"}";
 	}
 	
-	@Override
-	public void unload() {}
-	
-	@Override
-	public void unregister(Command command) {
-		if (command == null || !has(command))
+	protected void unregister(Command command) {
+		Validate.notNull(command, "Command cannot be null");
+		
+		if (!has(command) || !command.registered)
 			return;
 		
 		this.commands.remove(command.getLabel().toLowerCase());
 		
 		for (String alias : command.getAliases()) {
-			if (!has(alias) && !get(alias).equals(command))
+			if (has(alias) && !get(alias).equals(command))
 				continue;
 			
-			this.commands.remove(alias);
+			this.commands.remove(alias.toLowerCase());
 		}
+		
+		command.registered = false;
 	}
 	
-	public class CommandData {
-		
-		private final Map<String, String> data;
-		
-		public CommandData() {
-			this.data = new HashMap<String, String>();
-		}
-		
-		public String getData(String key, String def) {
-			return (hasData(key)) ? data.get(key) : def;
-		}
-		
-		public String getData(String key) {
-			return getData(key, "");
-		}
-		
-		public boolean hasData() {
-			return !data.isEmpty();
-		}
-		
-		public boolean hasData(String key) {
-			return (key != null) ? data.containsKey(key) : false;
-		}
-		
-		public void setData(String key, String value) {
-			if (key == null)
-				return;
-			
-			if (value == null || value.isEmpty())
-				data.remove(key);
-			else
-				data.put(key, value);
-		}
+	public boolean validatePermissions(CommandSender sender, String[] args) {
+		return true;
 	}
 }

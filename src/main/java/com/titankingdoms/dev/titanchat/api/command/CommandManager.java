@@ -17,42 +17,39 @@
 
 package com.titankingdoms.dev.titanchat.api.command;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.core.command.*;
-import com.titankingdoms.dev.titanchat.tools.Messaging;
+import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
+import com.titankingdoms.dev.titanchat.utility.Messaging;
 
-public final class CommandManager extends Command {
+public final class CommandManager implements Manager<Command> {
 	
-	private final TitanChat plugin;
+	private final Map<String, Command> commands;
 	
 	public CommandManager() {
-		super("TitanChat");
-		this.plugin = TitanChat.getInstance();
+		this.commands = new TreeMap<String, Command>();
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args, CommandData data) {
-		if (args.length < 1) {
-			Messaging.sendNotice("&6You are running v" + plugin.getDescription().getVersion());
-			Messaging.sendNotice("&6Type \"/titanchat help\" for the non-existant help");
-			return;
-		}
-		
-		executeLayer(sender, args, data);
+	public Command get(String label) {
+		return (has(label)) ? commands.get(label) : null;
 	}
 	
-	public Command getCommand(String name) {
-		return get(name);
-	}
-	
-	public Collection<Command> getCommands() {
-		return getAll();
+	@Override
+	public List<Command> getAll() {
+		return new ArrayList<Command>(commands.values());
 	}
 	
 	@Override
@@ -60,56 +57,130 @@ public final class CommandManager extends Command {
 		return "CommandManager";
 	}
 	
-	public boolean hasCommand(String name) {
-		return has(name);
+	@Override
+	public boolean has(String label) {
+		return (label != null && !label.isEmpty()) ? commands.containsKey(label.toLowerCase()) : false;
 	}
 	
-	public boolean hasCommand(Command command) {
-		return has(command);
+	@Override
+	public boolean has(Command command) {
+		return (command != null && has(command.getLabel())) ? get(command.getLabel()).equals(command) : false;
 	}
 	
 	@Override
 	public void load() {
-		registerAll(new ReloadCommand(),
-					new ClearCommand(),
-					new BlacklistCommand(), new WhitelistCommand()
-		);
+		register(new TitanChatCommand());
 	}
 	
 	@Override
-	public void registerAll(Command... commands) {
-		if (commands == null)
-			return;
+	public List<String> match(String name) {
+		if (name == null || name.isEmpty())
+			return new ArrayList<String>(commands.keySet());
 		
-		for (Command command : commands) {
-			if (command == null)
+		List<String> matches = new ArrayList<String>();
+		
+		for (String match : commands.keySet()) {
+			if (!match.startsWith(name))
 				continue;
 			
-			String name = command.getLabel();
+			matches.add(match);
+		}
+		
+		Collections.sort(matches);
+		return matches;
+	}
+	
+	public List<String> preview(CommandSender sender, String[] args) {
+		switch (args.length) {
+		
+		case 0:
+			return new ArrayList<String>();
+		
+		case 1:
+			return match(args[0]);
 			
-			if (has(name) && get(name).getLabel().equals(name)) {
-				plugin.log(Level.INFO, "Duplicate: " + command);
-				continue;
-			}
+		default:
+			if (!has(args[0]))
+				return new ArrayList<String>();
 			
-			super.registerAll(command);
+			return get(args[0]).tabComplete(sender, Arrays.copyOfRange(regroup(args), 1, args.length));
 		}
 	}
 	
 	@Override
-	public void reload() {
-		unload();
-		load();
+	public void register(Command command) {
+		Validate.notNull(command, "Command cannot be null");
+		Validate.isTrue(!has(command), "Command already registered");
+		
+		this.commands.put(command.getLabel().toLowerCase(), command);
+		
+		for (String alias : command.getAliases()) {
+			if (has(alias))
+				continue;
+			
+			this.commands.put(alias.toLowerCase(), command);
+		}
+	}
+	
+	public static String[] regroup(String[] args) {
+		if (args == null || args.length < 1)
+			return new String[0];
+		
+		List<String> arguments = new ArrayList<String>();
+		
+		Matcher match = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(StringUtils.join(args, ' '));
+		
+		while (match.find())
+			arguments.add(match.group().replace("\"", "").trim());
+		
+		return arguments.toArray(new String[0]);
 	}
 	
 	@Override
-	public List<String> tab(CommandSender sender, String[] args, CommandData data) {
-		return tabLayer(sender, args, data);
+	public void reload() {}
+	
+	public boolean run(CommandSender sender, String label, String[] args) {
+		Validate.notNull(sender, "Sender cannot be null");
+		Validate.notEmpty(label, "Command cannot be empty");
+		
+		if (!has(label)) {
+			Messaging.message(sender, "\u00A74Invalid command");
+			return false;
+		}
+		
+		Command command = get(label);
+		String[] arguments = regroup(args);
+		
+		if (arguments.length < command.getMinArguments() || arguments.length > command.getMaxArguments()) {
+			Messaging.message(sender, "\u00A74Invalid argument length");
+			Messaging.message(sender, "Syntax: " + command.buildSyntax(sender, args));
+			return true;
+		}
+		
+		if (!command.execute(sender, arguments))
+			Messaging.message(sender, "Syntax: " + command.buildSyntax(sender, args));
+		
+		return true;
 	}
 	
 	@Override
 	public void unload() {
 		for (Command command : getAll())
 			unregister(command);
+	}
+	
+	@Override
+	public void unregister(Command command) {
+		Validate.notNull(command, "Command cannot be null");
+		Validate.isTrue(has(command), "Command not registered");
+		
+		this.commands.remove(command.getLabel().toLowerCase());
+		
+		for (String alias : command.getAliases()) {
+			if (has(alias) && !get(alias).equals(command))
+				continue;
+			
+			this.commands.remove(alias.toLowerCase());
+		}
 	}
 }

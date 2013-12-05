@@ -15,31 +15,24 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.user;
 
-import java.util.Collection;
+import org.bukkit.command.BlockCommandSender;
 
-public interface Manager<T> {
+import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
+import com.titankingdoms.dev.titanchat.api.user.User;
+
+public final class Block extends User {
 	
-	public T get(String name);
+	public Block(BlockCommandSender sender) {
+		super(sender.getName());
+	}
 	
-	public Collection<T> getAll();
+	@Override
+	public boolean sendConversation(Conversation conversation) {
+		return false;
+	}
 	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void load();
-	
-	public Collection<String> match(String name);
-	
-	public void register(T item);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	@Override
+	public void sendRawLine(String line) {}
 }

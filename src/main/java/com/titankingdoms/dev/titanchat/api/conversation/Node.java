@@ -15,31 +15,20 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.api.conversation;
 
 import java.util.Collection;
 
-public interface Manager<T> {
-	
-	public T get(String name);
-	
-	public Collection<T> getAll();
+
+public interface Node {
 	
 	public String getName();
 	
-	public boolean has(String name);
+	public Collection<Node> getTerminusNodes();
 	
-	public boolean has(T item);
+	public String getType();
 	
-	public void load();
+	public boolean sendConversation(Conversation conversation);
 	
-	public Collection<String> match(String name);
-	
-	public void register(T item);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public void sendRawLine(String line);
 }

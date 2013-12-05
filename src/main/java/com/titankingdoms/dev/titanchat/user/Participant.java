@@ -15,31 +15,28 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.user;
 
-import java.util.Collection;
+import org.bukkit.entity.Player;
 
-public interface Manager<T> {
+import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
+import com.titankingdoms.dev.titanchat.api.user.User;
+
+public final class Participant extends User {
 	
-	public T get(String name);
+	public Participant(Player player) {
+		super(player.getName());
+	}
 	
-	public Collection<T> getAll();
+	public Player asPlayer() {
+		return plugin.getServer().getPlayerExact(getName());
+	}
 	
-	public String getName();
+	@Override
+	public boolean sendConversation(Conversation conversation) {
+		return false;
+	}
 	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void load();
-	
-	public Collection<String> match(String name);
-	
-	public void register(T item);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	@Override
+	public void sendRawLine(String line) {}
 }
