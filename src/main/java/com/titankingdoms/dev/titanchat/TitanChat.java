@@ -29,7 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
-import com.titankingdoms.dev.titanchat.tools.feed.UpdateFeedReader;
+import com.titankingdoms.dev.titanchat.tools.update.UpdateAPI;
 import com.titankingdoms.dev.titanchat.utility.VaultUtils;
 
 public final class TitanChat extends JavaPlugin {
@@ -77,17 +77,29 @@ public final class TitanChat extends JavaPlugin {
 			return true;
 		}
 		
-		UpdateFeedReader reader = new UpdateFeedReader("titanchat", getDescription());
+		UpdateAPI api = new UpdateAPI(35800, getDescription()) {
+			
+			@Override
+			public String processVersion(String version) {
+				return version.replace("#", ".").replaceAll("[^\\d\\.]", "");
+			}
+			
+		};
 		
-		reader.readFeed();
-		reader.checkAvailability();
+		api.queryAPI();
+		api.checkAvailability();
 		
-		if (!reader.hasUpdate())
+		if (!api.isAvailable())
 			return false;
 		
-		log(Level.INFO, "A new version of TitanChat is available! (" + reader.getNewName() + ")");
-		log(Level.INFO, "You are running " + reader.getCurrentName() + " currently");
-		log(Level.INFO, "Get files at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
+		log(Level.INFO, "A new version of TitanChat is available! (" + api.getNewTitle() + ")");
+		log(Level.INFO, "You are running " + api.getCurrentTitle() + " currently");
+		
+		if (api.hasDownloadLink())
+			log(Level.INFO, "Get files at " + api.getDownloadLink());
+		else
+			log(Level.INFO, "Get files at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
+		
 		return true;
 	}
 	

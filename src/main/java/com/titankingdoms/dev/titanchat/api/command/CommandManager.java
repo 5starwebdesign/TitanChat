@@ -32,6 +32,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class CommandManager implements Manager<Command> {
@@ -144,7 +145,7 @@ public final class CommandManager implements Manager<Command> {
 		Validate.notEmpty(label, "Command cannot be empty");
 		
 		if (!has(label)) {
-			Messaging.message(sender, "\u00A74Invalid command");
+			Messaging.message(sender, FormatUtils.RED + "Invalid command");
 			return false;
 		}
 		
@@ -152,7 +153,7 @@ public final class CommandManager implements Manager<Command> {
 		String[] arguments = regroup(args);
 		
 		if (arguments.length < command.getMinArguments() || arguments.length > command.getMaxArguments()) {
-			Messaging.message(sender, "\u00A74Invalid argument length");
+			Messaging.message(sender, FormatUtils.RED + "Invalid argument length");
 			Messaging.message(sender, "Syntax: " + command.buildSyntax(sender, args));
 			return true;
 		}

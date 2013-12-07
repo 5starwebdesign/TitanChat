@@ -29,6 +29,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public abstract class Command {
@@ -124,7 +125,7 @@ public abstract class Command {
 		String[] arguments = Arrays.copyOfRange(args, 1, args.length);
 		
 		if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
-			Messaging.message(sender, "Invalid argument length");
+			Messaging.message(sender, FormatUtils.RED + "Invalid argument length");
 			return false;
 		}
 		

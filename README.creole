@@ -62,6 +62,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 17.08.13 - Quotations in arguments are now recognised and arguments will be reassembled
 * 29.08.13 - Changed structure of packaging
 * 06.12.13 - Restructured
+* 08.12.13 - Now uses the CurseForge API for update checking, adding User storaging
 
 ----
 
