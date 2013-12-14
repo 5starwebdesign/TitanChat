@@ -29,5 +29,7 @@ public interface UserStorage {
 	
 	public void save();
 	
+	public void saveSampleStorage();
+	
 	public void saveSection(UserSection section);
 }

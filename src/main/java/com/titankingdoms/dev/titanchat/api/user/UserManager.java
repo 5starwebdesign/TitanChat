@@ -32,6 +32,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.conversation.Provider;
 import com.titankingdoms.dev.titanchat.api.user.meta.Metadata;
+import com.titankingdoms.dev.titanchat.api.user.storage.UserStorage;
 import com.titankingdoms.dev.titanchat.user.Block;
 import com.titankingdoms.dev.titanchat.user.Console;
 
@@ -45,6 +46,8 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	private final Map<String, User> users;
 	
 	private final Console console;
+	
+	private UserStorage storage;
 	
 	public UserManager() {
 		this.plugin = TitanChat.getInstance();
@@ -85,6 +88,13 @@ public final class UserManager implements Manager<User>, Provider<User> {
 			return new Block((BlockCommandSender) sender);
 		
 		return get(sender.getName());
+	}
+	
+	public UserStorage getUserStorage() {
+		if (storage == null)
+			throw new IllegalStateException("No storage method");
+		
+		return storage;
 	}
 	
 	@Override

@@ -19,10 +19,11 @@ package com.titankingdoms.dev.titanchat.api.conversation;
 
 import java.util.Collection;
 
-
 public interface Node {
 	
 	public String getName();
+	
+	public String getPrefix();
 	
 	public Collection<Node> getTerminusNodes();
 	

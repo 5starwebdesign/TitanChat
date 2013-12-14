@@ -24,7 +24,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.user.storage.NodeCache;
 import com.titankingdoms.dev.titanchat.api.user.storage.UserSection;
 import com.titankingdoms.dev.titanchat.api.user.storage.UserStorage;
 
@@ -63,26 +62,38 @@ public final class YMLUserStorage implements UserStorage {
 		
 		ConfigurationSection section = getYML().getConfigurationSection(name);
 		
-		if (section.contains("node")) {
-			ConfigurationSection nodeSection = section.getConfigurationSection("node");
+		if (section.contains("conversation")) {
+			ConfigurationSection conversation = section.getConfigurationSection("conversation");
 			
-			String currentName = nodeSection.getString("current.name", "");
-			String currentType = nodeSection.getString("current.type", "");
+			if (conversation.contains("current")) {
+				ConfigurationSection current = conversation.getConfigurationSection("current");
+				
+				if (current.contains("name") && current.contains("type")) {
+					String nName = current.getString("name");
+					String nType = current.getString("type");
+					
+					if (!nName.isEmpty() && !nType.isEmpty())
+						user.setCurrentNode(nName, nType);
+				}
+			}
 			
-			if (!currentName.isEmpty() && !currentType.isEmpty())
-				user.setCurrentNode(new NodeCache(currentName, currentType));
-			
-			if (nodeSection.contains("all")) {
-				for (String type : nodeSection.getConfigurationSection("all").getKeys(false)) {
-					for (String node : nodeSection.getStringList("all." + type))
-						user.addNode(new NodeCache(node, type));
+			if (conversation.contains("nodes")) {
+				ConfigurationSection nodes = conversation.getConfigurationSection("nodes");
+				
+				for (String nName : nodes.getKeys(false)) {
+					String nType = nodes.getString(nName);
+					
+					if (!nType.isEmpty())
+						user.addNode(nName, nType);
 				}
 			}
 		}
 		
 		if (section.contains("metadata")) {
-			for (String key : section.getConfigurationSection("metadata").getKeys(false))
-				user.setMetadata(key, section.getString("metadata." + key, ""));
+			ConfigurationSection metadata = section.getConfigurationSection("metadata");
+			
+			for (String key : metadata.getKeys(false))
+				user.setMetadata(key, metadata.getString(key));
 		}
 		
 		return user;
@@ -104,6 +115,9 @@ public final class YMLUserStorage implements UserStorage {
 	public void save() {
 		saveYML();
 	}
+	
+	@Override
+	public void saveSampleStorage() {}
 	
 	public void saveYML() {
 		if (ymlFile == null || yml == null)

@@ -17,7 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.api.conversation;
 
-
 public interface Provider<T extends Node>  {
 	
 	public T get(String name);

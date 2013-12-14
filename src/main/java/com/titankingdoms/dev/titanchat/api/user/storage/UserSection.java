@@ -17,71 +17,75 @@
 
 package com.titankingdoms.dev.titanchat.api.user.storage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.Validate;
 
-public class UserSection {
+public final class UserSection {
 	
 	private final String name;
 	
-	private NodeCache current;
+	private String node;
 	
-	private final List<NodeCache> nodes;
+	private final Set<String> nodes;
 	
 	private final Map<String, String> metadata;
 	
 	public UserSection(String name) {
-		Validate.notEmpty(name, "Name cannot be empty");
-		
 		this.name = name;
-		this.nodes = new ArrayList<NodeCache>();
+		this.node = "";
+		this.nodes = new HashSet<String>();
 		this.metadata = new HashMap<String, String>();
 	}
 	
-	public void addNode(NodeCache node) {
-		if (nodes.contains(node))
-			return;
+	public void addNode(String name, String type) {
+		Validate.notEmpty(name, "Name cannot be empty");
+		Validate.notEmpty(type, "Type cannot be empty");
 		
-		nodes.add(node);
+		nodes.add(name + "::" + type);
 	}
 	
-	public NodeCache getCurrentNode() {
-		return current;
+	public String getCurrentNode() {
+		return node;
 	}
 	
-	public final String getName() {
+	public String getName() {
 		return name;
-	}
-	
-	public List<NodeCache> getNodes() {
-		return new ArrayList<NodeCache>(nodes);
 	}
 	
 	public Map<String, String> getMetadata() {
 		return new HashMap<String, String>(metadata);
 	}
 	
-	public void removeNode(NodeCache node) {
-		if (!nodes.contains(node))
-			return;
-		
-		nodes.remove(node);
+	public Set<String> getNodes() {
+		return nodes;
 	}
 	
-	public void setCurrentNode(NodeCache current) {
-		this.current = current;
+	public void removeNode(String name, String type) {
+		Validate.notEmpty(name, "Name cannot be empty");
+		Validate.notEmpty(type, "Type cannot be empty");
+		
+		nodes.remove(name + "::" + type);
+	}
+	
+	public void setCurrentNode(String name, String type) {
+		if (name == null || name.isEmpty() || type == null || type.isEmpty())
+			this.node = "";
+		else
+			this.node = name + "::" + type;
 	}
 	
 	public void setMetadata(String key, String value) {
 		Validate.notEmpty(key, "Key cannot be empty");
 		
 		if (value != null)
-			metadata.put(key, value);
+			this.metadata.put(key, value);
 		else
-			metadata.remove(key);
+			this.metadata.remove(key);
+	}
+	
+	public void setMetadata(Map<String, String> metadata) {
+		this.metadata.clear();
+		this.metadata.putAll(metadata);
 	}
 }

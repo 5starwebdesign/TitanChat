@@ -60,6 +60,11 @@ public abstract class User implements Node {
 	}
 	
 	@Override
+	public String getPrefix() {
+		return "*";
+	}
+	
+	@Override
 	public Set<Node> getTerminusNodes() {
 		return Collections.unmodifiableSet(terminus);
 	}
