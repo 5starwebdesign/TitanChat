@@ -60,12 +60,12 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public boolean has(String label) {
-		return (label != null && !label.isEmpty()) ? commands.containsKey(label.toLowerCase()) : false;
+		return label != null && !label.isEmpty() && commands.containsKey(label.toLowerCase());
 	}
 	
 	@Override
 	public boolean has(Command command) {
-		return (command != null && has(command.getLabel())) ? get(command.getLabel()).equals(command) : false;
+		return command != null && has(command.getLabel()) && get(command.getLabel()).equals(command);
 	}
 	
 	@Override

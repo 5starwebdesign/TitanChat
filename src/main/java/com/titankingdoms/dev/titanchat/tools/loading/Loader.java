@@ -94,7 +94,7 @@ public final class Loader {
 		
 		@Override
 		public boolean accept(File file) {
-			return (file != null) ? file.getName().endsWith(extension) : false;
+			return file != null && file.getName().endsWith(extension);
 		}
 	}
 }

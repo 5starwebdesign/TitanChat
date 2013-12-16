@@ -64,7 +64,7 @@ public abstract class Command {
 	
 	@Override
 	public boolean equals(Object object) {
-		return (object instanceof Command) ? toString().equals(object.toString()) : false;
+		return object instanceof Command && toString().equals(object.toString());
 	}
 	
 	public abstract boolean execute(CommandSender sender, String[] args);
@@ -102,11 +102,11 @@ public abstract class Command {
 	}
 	
 	public boolean has(String name) {
-		return (name != null && !name.isEmpty()) ? commands.containsKey(name.toLowerCase()) : false;
+		return name != null && !name.isEmpty() && commands.containsKey(name.toLowerCase());
 	}
 	
 	public boolean has(Command command) {
-		return (command != null && has(command.getLabel())) ? get(command.getLabel()).equals(command) : false;
+		return command != null && has(command.getLabel()) && get(command.getLabel()).equals(command);
 	}
 	
 	@Override

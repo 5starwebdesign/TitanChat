@@ -17,16 +17,12 @@
 
 package com.titankingdoms.dev.titanchat.api.user;
 
-import java.io.File;
-import java.io.InputStream;
 import java.util.*;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
@@ -39,9 +35,6 @@ import com.titankingdoms.dev.titanchat.user.Console;
 public final class UserManager implements Manager<User>, Provider<User> {
 	
 	private final TitanChat plugin;
-	
-	private File configFile;
-	private FileConfiguration config;
 	
 	private final Map<String, User> users;
 	
@@ -63,10 +56,6 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	@Override
 	public Set<User> getAll() {
 		return new HashSet<User>(users.values());
-	}
-	
-	public FileConfiguration getConfig() {
-		return config;
 	}
 	
 	@Override
@@ -99,12 +88,12 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	
 	@Override
 	public boolean has(String name) {
-		return (name != null && !name.isEmpty()) ? users.containsKey(name.toLowerCase()) : false;
+		return name != null && !name.isEmpty() && users.containsKey(name.toLowerCase());
 	}
 	
 	@Override
 	public boolean has(User user) {
-		return (user != null && has(user.getName())) ? get(user.getName()).equals(user) : false;
+		return user != null && has(user.getName()) && get(user.getName()).equals(user);
 	}
 	
 	@Override
@@ -112,12 +101,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	
 	public Metadata loadMetadata(User user) {
 		Validate.notNull(user, "User cannot be null");
-		
-		Metadata metadata = new Metadata(user);
-		
-		
-		
-		return metadata;
+		return new Metadata(user);
 	}
 	
 	@Override
@@ -144,25 +128,6 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	
 	@Override
 	public void reload() {}
-	
-	public void reloadConfig() {
-		if (configFile == null)
-			configFile = new File(plugin.getDataFolder(), "users.yml");
-		
-		config = YamlConfiguration.loadConfiguration(configFile);
-		
-		InputStream defConfigStream = plugin.getResource("users.yml");
-		
-		if (defConfigStream != null)
-			config.setDefaults(YamlConfiguration.loadConfiguration(defConfigStream));
-	}
-	
-	public void saveConfig() {
-		if (config == null || configFile == null)
-			return;
-		
-		try { config.save(configFile); } catch (Exception e) {}
-	}
 	
 	public void saveMetadata(Metadata metadata) {
 		Validate.notNull(metadata, "Metadata cannot be null");

@@ -50,7 +50,7 @@ public final class Metadata {
 	}
 	
 	public boolean hasData(String key) {
-		return (key != null && !key.isEmpty()) ? data.containsKey(key) : false;
+		return key != null && !key.isEmpty() && data.containsKey(key);
 	}
 	
 	public void setData(String key, Meta meta) {

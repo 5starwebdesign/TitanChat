@@ -30,7 +30,7 @@ public class Addon extends Loadable {
 	
 	@Override
 	public boolean equals(Object object) {
-		return (object instanceof Addon) ? toString().equals(object.toString()) : false;
+		return object instanceof Addon && toString().equals(object.toString());
 	}
 	
 	@Override

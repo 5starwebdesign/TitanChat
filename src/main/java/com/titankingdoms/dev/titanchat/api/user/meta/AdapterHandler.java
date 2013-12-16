@@ -48,12 +48,12 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 	
 	@Override
 	public boolean has(String key) {
-		return (key != null && !key.isEmpty()) ? adapters.containsKey(key) : false;
+		return key != null && !key.isEmpty() && adapters.containsKey(key);
 	}
 	
 	@Override
 	public boolean has(MetaAdapter adapter) {
-		return (adapter != null && has(adapter.getKey())) ? get(adapter.getKey()).equals(adapter) : false;
+		return adapter != null && has(adapter.getKey()) && get(adapter.getKey()).equals(adapter);
 	}
 	
 	@Override

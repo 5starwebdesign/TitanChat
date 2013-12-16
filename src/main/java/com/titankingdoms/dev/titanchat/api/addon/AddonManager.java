@@ -72,12 +72,12 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public boolean has(String name) {
-		return (name != null && !name.isEmpty()) ? addons.containsKey(name.toLowerCase()) : false;
+		return name != null && !name.isEmpty() && addons.containsKey(name.toLowerCase());
 	}
 	
 	@Override
 	public boolean has(Addon addon) {
-		return (addon != null && has(addon.getName())) ? get(addon.getName()).equals(addon) : false;
+		return addon != null && has(addon.getName()) && get(addon.getName()).equals(addon);
 	}
 	
 	public boolean hasAddon(String name) {

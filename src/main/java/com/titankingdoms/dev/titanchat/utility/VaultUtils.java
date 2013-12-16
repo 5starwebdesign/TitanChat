@@ -160,10 +160,7 @@ public final class VaultUtils {
 	}
 	
 	public static boolean hasAccount(Player player) {
-		if (player == null || econ == null)
-			return false;
-		
-		return econ.hasAccount(player.getName(), player.getWorld().getName());
+		return player != null && econ != null && econ.hasAccount(player.getName(), player.getWorld().getName());
 	}
 	
 	public static boolean hasPermission(CommandSender sender, String node) {
