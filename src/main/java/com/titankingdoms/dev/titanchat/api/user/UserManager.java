@@ -120,7 +120,14 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	}
 	
 	@Override
-	public void register(User user) {}
+	public void register(User user) {
+		Validate.notNull(user, "User cannot be null");
+		
+		if (has(user.getName()))
+			return;
+		
+		this.users.put(user.getName().toLowerCase(), user);
+	}
 	
 	@Override
 	public void reload() {}
@@ -131,5 +138,12 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	public void unload() {}
 	
 	@Override
-	public void unregister(User user) {}
+	public void unregister(User user) {
+		Validate.notNull(user, "User cannot be null");
+		
+		if (!has(user.getName()))
+			return;
+		
+		this.users.remove(user.getName().toLowerCase());
+	}
 }

@@ -190,6 +190,9 @@ public final class TitanChat extends JavaPlugin {
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		return system.getManager(CommandManager.class).preview(sender, args);
+		if (!system.hasManager(CommandManager.class))
+			throw new UnsupportedOperationException("CommandManager not found");
+		
+		return getManager(CommandManager.class).preview(sender, args);
 	}
 }

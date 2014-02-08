@@ -116,11 +116,7 @@ public final class AddonManager implements Manager<Addon> {
 	@Override
 	public void register(Addon addon) {
 		Validate.notNull(addon, "Addon cannot be null");
-		
-		if (has(addon.getName())) {
-			plugin.log(Level.WARNING, "Duplicate: " + addon);
-			return;
-		}
+		Validate.isTrue(!has(addon.getName()), "Addon already registered");
 		
 		this.addons.put(addon.getName().toLowerCase(), addon);
 	}
@@ -157,9 +153,7 @@ public final class AddonManager implements Manager<Addon> {
 	@Override
 	public void unregister(Addon addon) {
 		Validate.notNull(addon, "Addon cannot be null");
-		
-		if (!has(addon))
-			return;
+		Validate.isTrue(has(addon.getName()), "Addon not registered");
 		
 		this.addons.remove(addon.getName().toLowerCase());
 	}

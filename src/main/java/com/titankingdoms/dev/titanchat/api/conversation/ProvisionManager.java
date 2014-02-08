@@ -2,7 +2,11 @@ package com.titankingdoms.dev.titanchat.api.conversation;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.api.Manager;
 
@@ -20,8 +24,8 @@ public final class ProvisionManager implements Manager<Provider<Node>> {
 	}
 	
 	@Override
-	public Collection<Provider<Node>> getAll() {
-		return null;
+	public Set<Provider<Node>> getAll() {
+		return new HashSet<Provider<Node>>(providers.values());
 	}
 	
 	public <T extends Node> Provider<T> getProvider(Class<Provider<T>> type, String name) {
@@ -52,7 +56,12 @@ public final class ProvisionManager implements Manager<Provider<Node>> {
 	}
 	
 	@Override
-	public void register(Provider<Node> provider) {}
+	public void register(Provider<Node> provider) {
+		Validate.notNull(provider, "Provider cannot be null");
+		Validate.isTrue(!has(provider.getName()), "Provider already registered");
+		
+		this.providers.put(provider.getName().toLowerCase(), provider);
+	}
 	
 	@Override
 	public void reload() {}
@@ -61,5 +70,10 @@ public final class ProvisionManager implements Manager<Provider<Node>> {
 	public void unload() {}
 	
 	@Override
-	public void unregister(Provider<Node> provider) {}
+	public void unregister(Provider<Node> provider) {
+		Validate.notNull(provider, "Provider cannot be null");
+		Validate.isTrue(has(provider.getName()), "Provider not registered");
+		
+		this.providers.remove(provider.getName().toLowerCase());
+	}
 }
