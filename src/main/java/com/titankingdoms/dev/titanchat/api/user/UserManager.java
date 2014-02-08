@@ -27,8 +27,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.conversation.Provider;
-import com.titankingdoms.dev.titanchat.api.user.meta.Metadata;
-import com.titankingdoms.dev.titanchat.api.user.storage.UserStorage;
+import com.titankingdoms.dev.titanchat.api.user.storage.UserInfoStorage;
 import com.titankingdoms.dev.titanchat.user.Block;
 import com.titankingdoms.dev.titanchat.user.Console;
 
@@ -40,7 +39,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	
 	private final Console console;
 	
-	private UserStorage storage;
+	private UserInfoStorage storage;
 	
 	public UserManager() {
 		this.plugin = TitanChat.getInstance();
@@ -79,7 +78,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 		return get(sender.getName());
 	}
 	
-	public UserStorage getUserStorage() {
+	public UserInfoStorage getStorage() {
 		if (storage == null)
 			throw new IllegalStateException("No storage method");
 		
@@ -99,10 +98,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	@Override
 	public void load() {}
 	
-	public Metadata loadMetadata(User user) {
-		Validate.notNull(user, "User cannot be null");
-		return new Metadata(user);
-	}
+	public void load(User user) {}
 	
 	@Override
 	public List<String> match(String name) {
@@ -129,9 +125,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	@Override
 	public void reload() {}
 	
-	public void saveMetadata(Metadata metadata) {
-		Validate.notNull(metadata, "Metadata cannot be null");
-	}
+	public void save(User user) {}
 	
 	@Override
 	public void unload() {}

@@ -17,16 +17,23 @@
 
 package com.titankingdoms.dev.titanchat.api.user;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
+import com.titankingdoms.dev.titanchat.api.user.meta.AdapterHandler;
+import com.titankingdoms.dev.titanchat.api.user.meta.MetaAdapter;
 import com.titankingdoms.dev.titanchat.api.user.meta.Metadata;
+import com.titankingdoms.dev.titanchat.api.user.storage.UserInfoStorage;
 
 public abstract class User implements Node {
 	
@@ -36,6 +43,9 @@ public abstract class User implements Node {
 	
 	private Metadata metadata;
 	
+	private volatile Node exploring;
+	
+	private final Map<String, Node> connected = new HashMap<String, Node>();
 	private final Set<Node> terminus = new HashSet<Node>();
 	
 	public User(String name) {
@@ -47,9 +57,65 @@ public abstract class User implements Node {
 		this.terminus.add(this);
 	}
 	
+	@Override
+	public void attach(Node node) {
+		Validate.notNull(node, "Node cannot be null");
+		
+		String tag = node.getName() + "::" + node.getType();
+		
+		if (connected.containsKey(node))
+			return;
+		
+		connected.put(tag, node);
+		
+		if (!node.isConnected(this))
+			node.attach(this);
+		
+		if (exploring == null || !exploring.equals(node))
+			exploring = node;
+	}
+	
+	@Override
+	public void detach(Node node) {
+		Validate.notNull(node, "Node cannot be null");
+		
+		String tag = node.getName() + "::" + node.getType();
+		
+		if (!connected.containsKey(node))
+			return;
+		
+		connected.remove(tag);
+		
+		if (node.isConnected(this))
+			node.detach(this);
+		
+		if (exploring != null && exploring.equals(node))
+			exploring = (!connected.isEmpty()) ? getConnected().toArray(new Node[0])[0] : null;
+	}
+	
+	public Collection<Node> getConnected() {
+		return Collections.unmodifiableCollection(connected.values());
+	}
+	
 	public final Metadata getMetadata() {
-		if (metadata == null)
-			metadata = plugin.getManager(UserManager.class).loadMetadata(this);
+		if (metadata == null) {
+			this.metadata = new Metadata(this);
+			
+			if (!plugin.getSystem().hasManager(UserManager.class))
+				throw new UnsupportedOperationException("UserManager not found");
+			
+			UserInfoStorage storage = plugin.getManager(UserManager.class).getStorage();
+			
+			for (Entry<String, String> metadata : storage.get(getName()).getMetadata().entrySet()) {
+				if (plugin.getSystem().hasManager(AdapterHandler.class)) {
+					MetaAdapter adapter = plugin.getManager(AdapterHandler.class).get(metadata.getKey());
+					this.metadata.setData(metadata.getKey(), adapter.fromString(metadata.getValue()));
+					continue;
+				}
+				
+				this.metadata.setData(metadata.getKey(), metadata.getValue());
+			}
+		}
 		
 		return metadata;
 	}
@@ -57,11 +123,6 @@ public abstract class User implements Node {
 	@Override
 	public final String getName() {
 		return name;
-	}
-	
-	@Override
-	public String getPrefix() {
-		return "*";
 	}
 	
 	@Override
@@ -74,7 +135,16 @@ public abstract class User implements Node {
 		return "User";
 	}
 	
-	public final void saveMetadata() {
-		plugin.getManager(UserManager.class).saveMetadata(getMetadata());
+	public Node getViewing() {
+		return exploring;
+	}
+	
+	@Override
+	public boolean isConnected(Node node) {
+		return node != null && connected.containsKey(node.getName() + "::" + node.getType());
+	}
+	
+	public boolean isViewing(Node node) {
+		return (node == null && exploring == null) || exploring.equals(node);
 	}
 }

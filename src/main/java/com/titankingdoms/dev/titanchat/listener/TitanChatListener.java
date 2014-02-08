@@ -24,14 +24,39 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.user.User;
+import com.titankingdoms.dev.titanchat.api.user.UserManager;
+import com.titankingdoms.dev.titanchat.user.Participant;
+
 public final class TitanChatListener implements Listener {
+	
+	private final TitanChat plugin;
+	private final UserManager manager;
+	
+	public TitanChatListener() {
+		this.plugin = TitanChat.getInstance();
+		this.manager = plugin.getManager(UserManager.class);
+	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerJoin(PlayerJoinEvent event) {}
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		if (manager == null)
+			return;
+		
+		User user = new Participant(event.getPlayer());
+		manager.register(user);
+	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerQuit(PlayerQuitEvent event) {}
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		if (manager == null)
+			return;
+		
+		User user = manager.get(event.getPlayer().getName());
+		manager.unregister(user);
+	}
 }

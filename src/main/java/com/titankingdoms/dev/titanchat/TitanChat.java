@@ -30,6 +30,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
+import com.titankingdoms.dev.titanchat.api.conversation.ProvisionManager;
+import com.titankingdoms.dev.titanchat.api.user.UserManager;
+import com.titankingdoms.dev.titanchat.api.user.meta.AdapterHandler;
+import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory.Version;
 import com.titankingdoms.dev.titanchat.utility.VaultUtils;
@@ -40,7 +44,7 @@ public final class TitanChat extends JavaPlugin {
 	
 	private final Logger log = Logger.getLogger("TitanLog");
 	
-	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
+	private final TitanChatSystem system = new TitanChatSystem();
 	
 	public static TitanChat getInstance() {
 		if (instance == null)
@@ -50,25 +54,14 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public <T extends Manager<?>> T getManager(Class<T> manager) {
-		Validate.notNull(manager, "Manager Class cannot be null");
-		
-		synchronized (managers) {
-			return (hasManager(manager)) ? manager.cast(managers.get(manager)) : null;
-		}
+		return system.getManager(manager);
 	}
 	
-	public List<Manager<?>> getManagers() {
-		synchronized (managers) {
-			return new ArrayList<Manager<?>>(managers.values());
-		}
-	}
-	
-	public <T extends Manager<?>> boolean hasManager(Class<T> manager) {
-		Validate.notNull(manager, "Manager Class cannot be null");
+	public TitanChatSystem getSystem() {
+		if (instance == null)
+			throw new IllegalStateException("TitanChat is not in operation");
 		
-		synchronized (managers) {
-			return managers.containsKey(manager);
-		}
+		return system;
 	}
 	
 	private boolean inquireUpdate() {
@@ -127,6 +120,9 @@ public final class TitanChat extends JavaPlugin {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if (!system.hasManager(CommandManager.class))
+			throw new UnsupportedOperationException("CommandManager not found");
+		
 		return getManager(CommandManager.class).run(sender, label, args);
 	}
 	
@@ -134,13 +130,11 @@ public final class TitanChat extends JavaPlugin {
 	public void onDisable() {
 		log(Level.INFO, "Now disabling...");
 		
+		log(Level.INFO, "Shutting down TitanChat System...");
+		system.shutdown();
+		
 		if (instance != null)
 			instance = null;
-		
-		log(Level.INFO, "Unloading managers...");
-		
-		for (Manager<?> manager : getManagers())
-			manager.unload();
 		
 		log(Level.INFO, "Now disabled");
 	}
@@ -160,10 +154,11 @@ public final class TitanChat extends JavaPlugin {
 		if (!VaultUtils.initialise(getServer()))
 			log(Level.INFO, "Failed to set up VaultUtils");
 		
-		log(Level.INFO, "Loading managers...");
+		log(Level.INFO, "Starting TitanChat System...");
+		system.start();
 		
-		for (Manager<?> manager : getManagers())
-			manager.load();
+		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
+		log(Level.INFO, "Registered listeners");
 		
 		log(Level.INFO, "Now enabled");
 	}
@@ -175,8 +170,11 @@ public final class TitanChat extends JavaPlugin {
 		instance = this;
 		
 		log(Level.INFO, "Registering managers...");
-		registerManager(new CommandManager());
-		registerManager(new AddonManager());
+		system.registerManager(new AdapterHandler());
+		system.registerManager(new AddonManager());
+		system.registerManager(new CommandManager());
+		system.registerManager(new ProvisionManager());
+		system.registerManager(new UserManager());
 		
 		log(Level.INFO, "Now loaded");
 	}
@@ -187,38 +185,11 @@ public final class TitanChat extends JavaPlugin {
 		if (instance == null)
 			instance = this;
 		
-		log(Level.INFO, "Reloading managers...");
-		
-		for (Manager<?> manager : getManagers())
-			manager.reload();
-		
 		log(Level.INFO, "Now reloaded");
 	}
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		return getManager(CommandManager.class).preview(sender, args);
-	}
-	
-	public void registerManager(Manager<?> manager) {
-		Validate.notNull(manager, "Manager cannot be null");
-		
-		if (hasManager(manager.getClass()))
-			return;
-		
-		synchronized (managers) {
-			managers.put(manager.getClass(), manager);
-		}
-	}
-	
-	public void unregisterManager(Manager<?> manager) {
-		Validate.notNull(manager, "Manager cannot be null");
-		
-		if (!hasManager(manager.getClass()))
-			return;
-		
-		synchronized (managers) {
-			managers.remove(manager.getClass());
-		}
+		return system.getManager(CommandManager.class).preview(sender, args);
 	}
 }

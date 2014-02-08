@@ -21,13 +21,17 @@ import java.util.Collection;
 
 public interface Node {
 	
-	public String getName();
+	public void attach(Node node);
 	
-	public String getPrefix();
+	public void detach(Node node);
+	
+	public String getName();
 	
 	public Collection<Node> getTerminusNodes();
 	
 	public String getType();
+	
+	public boolean isConnected(Node node);
 	
 	public boolean sendConversation(Conversation conversation);
 	

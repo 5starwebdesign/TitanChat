@@ -17,19 +17,19 @@
 
 package com.titankingdoms.dev.titanchat.api.user.storage;
 
-public interface UserStorage {
+public interface UserInfoStorage {
+	
+	public UserInfo get(String name);
 	
 	public String getName();
 	
 	public void load();
 	
-	public UserSection loadSection(String name);
-	
 	public void reload();
+	
+	public UserInfo revise(String name);
 	
 	public void save();
 	
-	public void saveSampleStorage();
-	
-	public void saveSection(UserSection section);
+	public void save(UserInfo info);
 }
