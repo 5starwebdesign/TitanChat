@@ -152,6 +152,11 @@ public final class CommandManager implements Manager<Command> {
 		Command command = get(label);
 		String[] arguments = regroup(args);
 		
+		if (arguments.length > 0 && arguments[0].equalsIgnoreCase("?")) {
+			Messaging.message(sender, command.getInfo(sender, arguments));
+			return true;
+		}
+		
 		if (arguments.length < command.getMinArguments() || arguments.length > command.getMaxArguments()) {
 			Messaging.message(sender, FormatUtils.RED + "Invalid argument length");
 			Messaging.message(sender, "Syntax: " + command.buildSyntax(sender, args));

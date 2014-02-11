@@ -85,6 +85,15 @@ public abstract class Command {
 		return description;
 	}
 	
+	public String getInfo(CommandSender sender, String[] args) {
+		return StringUtils.center(" " + getLabel() + " ", 55, '=') + "\n" +
+				"Description: " + getDescription() + "\n" +
+				"Aliases: " + StringUtils.join(getAliases(), ", ") + "\n" +
+				"Argument Range: " + getMinArguments() + " ~ " + getMaxArguments() + "\n" +
+				"Syntax: " + buildSyntax(sender, args) + "\n" +
+				StringUtils.repeat("=", 55);
+	}
+	
 	public final String getLabel() {
 		return label;
 	}
@@ -124,12 +133,20 @@ public abstract class Command {
 		Command next = get(args[0]);
 		String[] arguments = Arrays.copyOfRange(args, 1, args.length);
 		
+		if (arguments.length > 0 && arguments[0].equalsIgnoreCase("?")) {
+			Messaging.message(sender, next.getInfo(sender, arguments));
+			return true;
+		}
+		
 		if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
 			Messaging.message(sender, FormatUtils.RED + "Invalid argument length");
+			Messaging.message(sender, "Syntax: " + next.buildSyntax(sender, arguments));
 			return false;
 		}
 		
-		next.execute(sender, arguments);
+		if (!next.execute(sender, arguments))
+			Messaging.message(sender, "Syntax: " + next.buildSyntax(sender, arguments));
+		
 		return true;
 	}
 	

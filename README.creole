@@ -53,16 +53,14 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 * 24.07.13 - Added several base classes
 * 29.07.13 - Added user package
-* 30.07.13 - Added FormatUtils (Formerly com.titankingdoms.dev.titanchat.format in v4)
-* 04.08.13 - Added some utilities
-* 06.08.13 - Added XMLParser library and rewrote UpdateUtil
-* 08.08.13 - Changed toString() in base classes and updated equals() to use toString() for checking
-* 11.08.13 - Added MinecraftChat for management when Channels are disabled
+* 30.07.13 - Added FormatUtils
+* 04.08.13 - Added more utilities
+* 06.08.13 - Added XMLParser library
 * 14.08.13 - Changed the command system to be able to handle commands in layers
 * 17.08.13 - Quotations in arguments are now recognised and arguments will be reassembled
-* 29.08.13 - Changed structure of packaging
 * 06.12.13 - Restructured
-* 08.12.13 - Now uses the CurseForge API for update checking, adding User storaging
+* 08.12.13 - Now uses the CurseForge API for update checking
+* 12.02.13 - Major changes
 
 ----
 
