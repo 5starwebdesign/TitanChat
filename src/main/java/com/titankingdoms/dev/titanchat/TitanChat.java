@@ -64,53 +64,64 @@ public final class TitanChat extends JavaPlugin {
 		return system;
 	}
 	
-	private boolean inquireUpdate() {
-		log(Level.INFO, "Attempting to inquire for updates...");
-		
-		if (!getConfig().getBoolean("tools.update-inquiry", false)) {
-			log(Level.INFO, "Inquiry Disabled");
-			return true;
-		}
-		
-		ReleaseHistory history = new ReleaseHistory(35800, getDescription());
-		history.searchHistory();
-		
-		if (history.getVersions().size() < 1)
-			return false;
-		
-		Version runningVer = history.getRunningVersion();
-		Version latestVer = history.getLatestVersion();
-		
-		String[] runningVersion = runningVer.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
-		String[] latestVersion = latestVer.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
-		
-		for (int versioning = 0; versioning < 4; versioning++) {
-			try {
-				int running = NumberUtils.toInt(runningVersion[versioning], 0);
-				int latest = NumberUtils.toInt(latestVersion[versioning], 0);
+	private void enquireUpdate() {
+		getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
+			
+			public boolean call() {
+				log(Level.INFO, "Attempting to inquire for updates...");
 				
-				if (running == latest) {
-					if (versioning == 3)
-						return false;
-					
-					continue;
+				if (!getConfig().getBoolean("tools.update-enquiry", false)) {
+					log(Level.INFO, "Enquiry Disabled");
+					return true;
 				}
 				
-				if (latest < running)
+				ReleaseHistory history = new ReleaseHistory(35800, getDescription());
+				history.searchHistory();
+				
+				if (history.getVersions().size() < 1)
 					return false;
 				
-			} catch (Exception e) {}
-		}
-		
-		log(Level.INFO, "A new version of TitanChat is available! (" + latestVer.getTitle() + ")");
-		log(Level.INFO, "You are running " + runningVer.getTitle() + " currently");
-		
-		if (!latestVer.getDownloadLink().isEmpty())
-			log(Level.INFO, "Get files at " + latestVer.getDownloadLink());
-		else
-			log(Level.INFO, "Get files at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
-		
-		return true;
+				Version runningVer = history.getRunningVersion();
+				Version latestVer = history.getLatestVersion();
+				
+				String[] runningVersion = runningVer.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
+				String[] latestVersion = latestVer.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
+				
+				for (int versioning = 0; versioning < 4; versioning++) {
+					try {
+						int running = NumberUtils.toInt(runningVersion[versioning], 0);
+						int latest = NumberUtils.toInt(latestVersion[versioning], 0);
+						
+						if (running == latest) {
+							if (versioning == 3)
+								return false;
+							
+							continue;
+						}
+						
+						if (latest < running)
+							return false;
+						
+					} catch (Exception e) {}
+				}
+				
+				log(Level.INFO, "A new version of TitanChat is available! (" + latestVer.getTitle() + ")");
+				log(Level.INFO, "You are running " + runningVer.getTitle() + " currently");
+				
+				if (!latestVer.getDownloadLink().isEmpty())
+					log(Level.INFO, "Get files at " + latestVer.getDownloadLink());
+				else
+					log(Level.INFO, "Get files at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
+				
+				return true;
+			}
+			
+			@Override
+			public void run() {
+				if (!call())
+					log(Level.INFO, "No updates available");
+			}
+		});
 	}
 	
 	public void log(Level level, String message) {
@@ -146,8 +157,7 @@ public final class TitanChat extends JavaPlugin {
 		if (instance == null)
 			instance = this;
 		
-		if (!inquireUpdate())
-			log(Level.INFO, "No updates available");
+		enquireUpdate();
 		
 		log(Level.INFO, "Attempting to set up VaultUtils...");
 		

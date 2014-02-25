@@ -3,4 +3,4 @@ settings:
         storage: "yml"
 tools:
     metrics-statistics: true
-    update-inquiry: false
+    update-enquiry: false
