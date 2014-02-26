@@ -67,19 +67,22 @@ public final class TitanChat extends JavaPlugin {
 	private void enquireUpdate() {
 		getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
 			
-			public boolean call() {
-				log(Level.INFO, "Attempting to inquire for updates...");
+			@Override
+			public void run() {
+				log(Level.INFO, "Attempting to enquire for updates...");
 				
 				if (!getConfig().getBoolean("tools.update-enquiry", false)) {
 					log(Level.INFO, "Enquiry Disabled");
-					return true;
+					return;
 				}
 				
 				ReleaseHistory history = new ReleaseHistory(35800, getDescription());
 				history.searchHistory();
 				
-				if (history.getVersions().size() < 1)
-					return false;
+				if (history.getVersions().size() < 1) {
+					log(Level.INFO, "No releases found");
+					return;
+				}
 				
 				Version runningVer = history.getRunningVersion();
 				Version latestVer = history.getLatestVersion();
@@ -92,15 +95,14 @@ public final class TitanChat extends JavaPlugin {
 						int running = NumberUtils.toInt(runningVersion[versioning], 0);
 						int latest = NumberUtils.toInt(latestVersion[versioning], 0);
 						
-						if (running == latest) {
-							if (versioning == 3)
-								return false;
-							
-							continue;
-						}
+						if (latest > running)
+							break;
 						
-						if (latest < running)
-							return false;
+						if (latest == running && versioning != 3)
+							continue;
+						
+						log(Level.INFO, "No updates available");
+						return;
 						
 					} catch (Exception e) {}
 				}
@@ -112,14 +114,6 @@ public final class TitanChat extends JavaPlugin {
 					log(Level.INFO, "Get files at " + latestVer.getDownloadLink());
 				else
 					log(Level.INFO, "Get files at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
-				
-				return true;
-			}
-			
-			@Override
-			public void run() {
-				if (!call())
-					log(Level.INFO, "No updates available");
 			}
 		});
 	}
