@@ -42,11 +42,7 @@ public final class TitanChatSystem {
 	}
 	
 	public <T extends Manager<?>> boolean hasManager(Class<T> manager) {
-		Validate.notNull(manager, "Manager Class cannot be null");
-		
-		synchronized (managers) {
-			return managers.containsKey(manager);
-		}
+		return getManager(manager) != null;
 	}
 	
 	public void registerManager(Manager<?> manager) {
