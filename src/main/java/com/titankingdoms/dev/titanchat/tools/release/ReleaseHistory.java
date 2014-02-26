@@ -76,6 +76,7 @@ public class ReleaseHistory {
 			
 			URLConnection connection = url.openConnection();
 			connection.setConnectTimeout(10000);
+			connection.setReadTimeout(10000);
 			connection.addRequestProperty("User-Agent", name + "/v" + version + " (By " + authors[0] + ")");
 			
 			InputStreamReader reader = new InputStreamReader(connection.getInputStream());
