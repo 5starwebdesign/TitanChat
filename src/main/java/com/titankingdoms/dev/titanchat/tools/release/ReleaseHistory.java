@@ -75,8 +75,8 @@ public class ReleaseHistory {
 			URL url = new URL("https://api.curseforge.com/servermods/files?projectIds=");
 			
 			URLConnection connection = url.openConnection();
-			connection.setConnectTimeout(10000);
-			connection.setReadTimeout(10000);
+			connection.setConnectTimeout(15000);
+			connection.setReadTimeout(15000);
 			connection.addRequestProperty("User-Agent", name + "/v" + version + " (By " + authors[0] + ")");
 			
 			InputStreamReader reader = new InputStreamReader(connection.getInputStream());
