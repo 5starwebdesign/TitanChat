@@ -17,10 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.command;
 
-import java.util.List;
-
-import org.bukkit.command.CommandSender;
-
 import com.titankingdoms.dev.titanchat.api.command.Command;
 
 public final class TitanChatCommand extends Command {
@@ -30,21 +26,6 @@ public final class TitanChatCommand extends Command {
 		setAliases("tc", "tchat");
 		setArgumentRange(0, 10240);
 		setDescription("TitanChat Commands");
-		setSyntax("<command> [arguments]");
-	}
-	
-	@Override
-	public String buildSyntax(CommandSender sender, String[] args) {
-		return invokeLayeredSyntaxBuilder(sender, args);
-	}
-	
-	@Override
-	public boolean execute(CommandSender sender, String[] args) {
-		return invokeLayeredExecution(sender, args);
-	}
-	
-	@Override
-	public List<String> tabComplete(CommandSender sender, String[] args) {
-		return invokeLayeredTabCompletion(sender, args);
+		setSyntax("<command>");
 	}
 }

@@ -197,6 +197,6 @@ public final class TitanChat extends JavaPlugin {
 		if (!system.hasManager(CommandManager.class))
 			throw new UnsupportedOperationException("CommandManager not found");
 		
-		return getManager(CommandManager.class).preview(sender, args);
+		return getManager(CommandManager.class).preview(sender, label, args);
 	}
 }

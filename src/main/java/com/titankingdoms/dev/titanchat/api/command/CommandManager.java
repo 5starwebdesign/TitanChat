@@ -18,7 +18,6 @@
 package com.titankingdoms.dev.titanchat.api.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -91,20 +90,17 @@ public final class CommandManager implements Manager<Command> {
 		return matches;
 	}
 	
-	public List<String> preview(CommandSender sender, String[] args) {
+	public List<String> preview(CommandSender sender, String label, String[] args) {
 		switch (args.length) {
 		
 		case 0:
-			return new ArrayList<String>();
-		
-		case 1:
-			return match(args[0]);
+			return match(label);
 			
 		default:
-			if (!has(args[0]))
+			if (!has(label))
 				return new ArrayList<String>();
 			
-			return get(args[0]).tabComplete(sender, Arrays.copyOfRange(regroup(args), 1, args.length));
+			return get(label).invokeTabCompletion(sender, regroup(args));
 		}
 	}
 	
@@ -152,20 +148,18 @@ public final class CommandManager implements Manager<Command> {
 		Command command = get(label);
 		String[] arguments = regroup(args);
 		
-		if (arguments.length > 0 && arguments[0].equalsIgnoreCase("?")) {
-			Messaging.message(sender, command.getInfo(sender, arguments));
+		if (!command.validateAuthorisation(sender, arguments)) {
+			Messaging.message(sender, FormatUtils.RED + "You do not have permission");
 			return true;
 		}
 		
 		if (arguments.length < command.getMinArguments() || arguments.length > command.getMaxArguments()) {
 			Messaging.message(sender, FormatUtils.RED + "Invalid argument length");
-			Messaging.message(sender, "Syntax: " + command.buildSyntax(sender, args));
+			Messaging.message(sender, "Syntax: " + command.getCanonicalSyntax());
 			return true;
 		}
 		
-		if (!command.execute(sender, arguments))
-			Messaging.message(sender, "Syntax: " + command.buildSyntax(sender, args));
-		
+		command.invokeExecution(sender, arguments);
 		return true;
 	}
 	

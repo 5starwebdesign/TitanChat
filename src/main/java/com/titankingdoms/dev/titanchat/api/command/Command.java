@@ -40,26 +40,25 @@ public abstract class Command {
 	
 	private String[] aliases = new String[0];
 	private String description = "";
-	private String syntax = "";
 	
 	private int maxArgs = 0;
 	private int minArgs = 0;
 	
+	private String syntax;
+	
 	private final Map<String, Command> commands;
 	
 	private boolean registered = false;
+	private Command parent = null;
 	
 	public Command(String label) {
-		Validate.isTrue(StringUtils.isNotBlank(label), "Label cannot be blank");
+		Validate.notEmpty(label.trim(), "Label cannot be empty");
 		Validate.isTrue(StringUtils.isAlphanumeric(label), "Label cannot be non-alphanumerical");
 		
 		this.plugin = TitanChat.getInstance();
-		this.label = label;
+		this.label = label.trim();
+		this.syntax = this.label;
 		this.commands = new TreeMap<String, Command>();
-	}
-	
-	public String buildSyntax(CommandSender sender, String[] args) {
-		return syntax;
 	}
 	
 	@Override
@@ -67,7 +66,10 @@ public abstract class Command {
 		return object instanceof Command && toString().equals(object.toString());
 	}
 	
-	public abstract boolean execute(CommandSender sender, String[] args);
+	public void execute(CommandSender sender, String[] args) {
+		Messaging.message(sender, FormatUtils.RED + "Invalid command");
+		Messaging.message(sender, "Syntax: " + getCanonicalSyntax());
+	}
 	
 	public Command get(String name) {
 		return (has(name)) ? commands.get(name) : null;
@@ -81,17 +83,30 @@ public abstract class Command {
 		return new ArrayList<Command>(commands.values());
 	}
 	
-	public String getDescription() {
-		return description;
+	public final String getCanonicalSyntax() {
+		if (parent == null)
+			return "/" + getSyntax();
+		
+		Command cmd = this;
+		
+		StringBuilder absolute = new StringBuilder().append("/");
+		
+		while (cmd != null && absolute.length() <= 10240) {
+			String syntax = cmd.getSyntax();
+			
+			if (syntax.contains(" "))
+				absolute.insert(1, syntax.substring(0, syntax.lastIndexOf(' ')).trim() + " ");
+			else
+				absolute.insert(1, syntax.trim() + " ");
+			
+			cmd = cmd.parent;
+		}
+		
+		return absolute.toString().trim().toLowerCase();
 	}
 	
-	public String getInfo(CommandSender sender, String[] args) {
-		return StringUtils.center(" " + getLabel() + " ", 55, '=') + "\n" +
-				"Description: " + getDescription() + "\n" +
-				"Aliases: " + StringUtils.join(getAliases(), ", ") + "\n" +
-				"Argument Range: " + getMinArguments() + " ~ " + getMaxArguments() + "\n" +
-				"Syntax: " + buildSyntax(sender, args) + "\n" +
-				StringUtils.repeat("=", 55);
+	public String getDescription() {
+		return description;
 	}
 	
 	public final String getLabel() {
@@ -123,58 +138,43 @@ public abstract class Command {
 		return toString().hashCode();
 	}
 	
-	protected final boolean invokeLayeredExecution(CommandSender sender, String[] args) {
-		if (args.length < 1)
-			return false;
-		
-		if (!has(args[0]))
-			return false;
+	public final void invokeExecution(CommandSender sender, String[] args) {
+		if (args.length < 1 || !has(args[0])) {
+			execute(sender, args);
+			return;
+		}
 		
 		Command next = get(args[0]);
 		String[] arguments = Arrays.copyOfRange(args, 1, args.length);
 		
-		if (arguments.length > 0 && arguments[0].equalsIgnoreCase("?")) {
-			Messaging.message(sender, next.getInfo(sender, arguments));
-			return true;
+		if (!next.validateAuthorisation(sender, arguments)) {
+			Messaging.message(sender, FormatUtils.RED + "You do not have permission");
+			return;
 		}
 		
 		if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
 			Messaging.message(sender, FormatUtils.RED + "Invalid argument length");
-			Messaging.message(sender, "Syntax: " + next.buildSyntax(sender, arguments));
-			return false;
+			Messaging.message(sender, "Syntax: " + getCanonicalSyntax());
+			return;
 		}
 		
-		if (!next.execute(sender, arguments))
-			Messaging.message(sender, "Syntax: " + next.buildSyntax(sender, arguments));
-		
-		return true;
+		next.invokeExecution(sender, arguments);
 	}
 	
-	protected final String invokeLayeredSyntaxBuilder(CommandSender sender, String[] args) {
-		String syntax = label + " ";
-		
-		if (args.length > 0 && has(args[0]))
-			syntax += args[0] + " " + get(args[0]).buildSyntax(sender, Arrays.copyOfRange(args, 1, args.length));
-		else
-			syntax += this.syntax;
-		
-		return syntax.toLowerCase();
-	}
-	
-	protected final List<String> invokeLayeredTabCompletion(CommandSender sender, String[] args) {
+	public final List<String> invokeTabCompletion(CommandSender sender, String[] args) {
 		switch (args.length) {
 		
 		case 0:
-			return new ArrayList<String>();
+			return tabComplete(sender, args);
 		
 		case 1:
-			return match(args[0]);
+			return (!commands.isEmpty()) ? match(args[0]) : tabComplete(sender, args);
 			
 		default:
 			if (!has(args[0]))
-				return new ArrayList<String>();
+				return tabComplete(sender, args);
 			
-			return get(args[0]).tabComplete(sender, Arrays.copyOfRange(args, 1, args.length));
+			return get(args[0]).invokeTabCompletion(sender, Arrays.copyOfRange(args, 1, args.length));
 		}
 	}
 	
@@ -198,7 +198,7 @@ public abstract class Command {
 	protected void register(Command command) {
 		Validate.notNull(command, "Command cannot be null");
 		
-		if (has(command) || command.registered)
+		if (command.registered || has(command))
 			return;
 		
 		this.commands.put(command.getLabel().toLowerCase(), command);
@@ -211,6 +211,7 @@ public abstract class Command {
 		}
 		
 		command.registered = true;
+		command.parent = this;
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -227,10 +228,10 @@ public abstract class Command {
 	}
 	
 	protected void setSyntax(String syntax) {
-		this.syntax = (syntax != null) ? syntax : "";
+		this.syntax = (syntax != null) ? label + " " + syntax : label;
 	}
 	
-	public List<String> tabComplete(CommandSender sender, String[] args) {
+	protected List<String> tabComplete(CommandSender sender, String[] args) {
 		return new ArrayList<String>();
 	}
 	
@@ -251,7 +252,7 @@ public abstract class Command {
 	protected void unregister(Command command) {
 		Validate.notNull(command, "Command cannot be null");
 		
-		if (!has(command) || !command.registered)
+		if (!command.registered || !has(command))
 			return;
 		
 		this.commands.remove(command.getLabel().toLowerCase());
@@ -264,9 +265,10 @@ public abstract class Command {
 		}
 		
 		command.registered = false;
+		command.parent = null;
 	}
 	
-	public boolean validatePermissions(CommandSender sender, String[] args) {
+	public boolean validateAuthorisation(CommandSender sender, String[] args) {
 		return true;
 	}
 }

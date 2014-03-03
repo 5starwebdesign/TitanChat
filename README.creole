@@ -61,6 +61,8 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 06.12.13 - Restructured
 * 08.12.13 - Now uses the CurseForge API for update checking
 * 12.02.13 - Major changes
+* 25.02.13 - Update enquiries now async
+* 03.03.13 - Command system rework
 
 ----
 
