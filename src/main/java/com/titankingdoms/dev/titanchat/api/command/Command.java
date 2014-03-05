@@ -51,6 +51,8 @@ public abstract class Command {
 	private boolean registered = false;
 	private Command parent = null;
 	
+	private static final int SYNTAX_LENGTH = 1024;
+	
 	public Command(String label) {
 		Validate.notEmpty(label.trim(), "Label cannot be empty");
 		Validate.isTrue(StringUtils.isAlphanumeric(label), "Label cannot be non-alphanumerical");
@@ -91,7 +93,7 @@ public abstract class Command {
 		
 		StringBuilder absolute = new StringBuilder().append("/");
 		
-		while (cmd != null && absolute.length() <= 10240) {
+		while (cmd != null && absolute.length() <= SYNTAX_LENGTH) {
 			String syntax = cmd.getSyntax();
 			
 			if (syntax.contains(" "))
