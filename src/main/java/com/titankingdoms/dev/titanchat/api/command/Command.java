@@ -45,13 +45,12 @@ public abstract class Command {
 	private int minArgs = 0;
 	
 	private String syntax;
+	private String canonicalSyntax;
 	
 	private final Map<String, Command> commands;
 	
 	private boolean registered = false;
 	private Command parent = null;
-	
-	private static final int SYNTAX_LENGTH = 1024;
 	
 	public Command(String label) {
 		Validate.notEmpty(label.trim(), "Label cannot be empty");
@@ -61,6 +60,30 @@ public abstract class Command {
 		this.label = label.trim();
 		this.syntax = this.label;
 		this.commands = new TreeMap<String, Command>();
+	}
+	
+	private final String assembleCanonicalSyntax() {
+		if (parent == null)
+			return "/" + getSyntax();
+		
+		Command cmd = this;
+		
+		StringBuilder absolute = new StringBuilder().append("/");
+		
+		while (cmd != null && absolute.length() <= 1024) {
+			String syntax = cmd.getSyntax();
+			
+			if (syntax.contains(" "))
+				absolute.insert(1, syntax.substring(0, syntax.lastIndexOf(' ')).trim() + " ");
+			else
+				absolute.insert(1, syntax.trim() + " ");
+			
+			cmd = cmd.parent;
+		}
+		
+		this.canonicalSyntax = absolute.toString().trim().toLowerCase();
+		
+		return canonicalSyntax;
 	}
 	
 	@Override
@@ -86,25 +109,10 @@ public abstract class Command {
 	}
 	
 	public final String getCanonicalSyntax() {
-		if (parent == null)
-			return "/" + getSyntax();
+		if (canonicalSyntax.isEmpty())
+			assembleCanonicalSyntax();
 		
-		Command cmd = this;
-		
-		StringBuilder absolute = new StringBuilder().append("/");
-		
-		while (cmd != null && absolute.length() <= SYNTAX_LENGTH) {
-			String syntax = cmd.getSyntax();
-			
-			if (syntax.contains(" "))
-				absolute.insert(1, syntax.substring(0, syntax.lastIndexOf(' ')).trim() + " ");
-			else
-				absolute.insert(1, syntax.trim() + " ");
-			
-			cmd = cmd.parent;
-		}
-		
-		return absolute.toString().trim().toLowerCase();
+		return canonicalSyntax;
 	}
 	
 	public String getDescription() {
@@ -214,6 +222,7 @@ public abstract class Command {
 		
 		command.registered = true;
 		command.parent = this;
+		command.assembleCanonicalSyntax();
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -231,6 +240,8 @@ public abstract class Command {
 	
 	protected void setSyntax(String syntax) {
 		this.syntax = (syntax != null) ? label + " " + syntax : label;
+		
+		assembleCanonicalSyntax();
 	}
 	
 	protected List<String> tabComplete(CommandSender sender, String[] args) {
@@ -268,6 +279,7 @@ public abstract class Command {
 		
 		command.registered = false;
 		command.parent = null;
+		command.assembleCanonicalSyntax();
 	}
 	
 	public boolean validateAuthorisation(CommandSender sender, String[] args) {
