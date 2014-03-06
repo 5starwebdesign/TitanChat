@@ -60,6 +60,8 @@ public abstract class Command {
 		this.label = label.trim();
 		this.syntax = this.label;
 		this.commands = new TreeMap<String, Command>();
+		
+		register(new Help(this));
 	}
 	
 	private final String assembleCanonicalSyntax() {
