@@ -26,7 +26,7 @@ import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class Help extends Command {
 	
-	private final StringBuilder info = new StringBuilder();
+	private final String info;
 	
 	protected Help(Command command) {
 		super("?");
@@ -39,16 +39,20 @@ public final class Help extends Command {
 		String range = "[" + command.getMinArguments() + ", " + command.getMaxArguments() + "]";
 		String syntax = command.getCanonicalSyntax();
 		
-		this.info.append(StringUtils.center(" " + label + " ", 55, '=') + "\n");
-		this.info.append(StringUtils.join(FormatUtils.wrap("Description: " + description, 55), '\n') + "\n");
-		this.info.append(StringUtils.join(FormatUtils.wrap("Aliases: " + aliases, 55), '\n') + "\n");
-		this.info.append(StringUtils.join(FormatUtils.wrap("Argument Range: " + range, 55), '\n') + "\n");
-		this.info.append(StringUtils.join(FormatUtils.wrap("Syntax: " + syntax, 55), '\n') + "\n");
-		this.info.append("=======================================================");
+		StringBuilder info = new StringBuilder();
+		
+		info.append(StringUtils.center(" " + label + " ", 55, '=') + "\n");
+		info.append(StringUtils.join(FormatUtils.wrap("Description: " + description, 55), '\n') + "\n");
+		info.append(StringUtils.join(FormatUtils.wrap("Aliases: " + aliases, 55), '\n') + "\n");
+		info.append(StringUtils.join(FormatUtils.wrap("Argument Range: " + range, 55), '\n') + "\n");
+		info.append(StringUtils.join(FormatUtils.wrap("Syntax: " + syntax, 55), '\n') + "\n");
+		info.append("=======================================================");
+		
+		this.info = info.toString();
 	}
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		Messaging.message(sender, info.toString());
+		Messaging.message(sender, info);
 	}
 }
