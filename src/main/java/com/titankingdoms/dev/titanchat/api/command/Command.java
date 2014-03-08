@@ -65,12 +65,11 @@ public abstract class Command {
 	}
 	
 	private final String assembleCanonicalSyntax() {
-		if (parent == null)
-			return "/" + getSyntax();
-		
-		Command cmd = this;
+		Command cmd = parent;
 		
 		StringBuilder absolute = new StringBuilder().append("/");
+		
+		absolute.append(getSyntax());
 		
 		while (cmd != null && absolute.length() <= 1024) {
 			String syntax = cmd.getSyntax();
