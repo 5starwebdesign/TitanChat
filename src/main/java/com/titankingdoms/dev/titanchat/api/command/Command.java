@@ -65,24 +65,25 @@ public abstract class Command {
 	}
 	
 	private final String assembleCanonicalSyntax() {
-		Command cmd = parent;
-		
-		StringBuilder absolute = new StringBuilder().append("/");
-		
-		absolute.append(getSyntax());
-		
-		while (cmd != null && absolute.length() <= 1024) {
-			String syntax = cmd.getSyntax();
+		if (parent != null) {
+			Command cmd = this;
 			
-			if (syntax.contains(" "))
-				absolute.insert(1, syntax.substring(0, syntax.lastIndexOf(' ')).trim() + " ");
-			else
-				absolute.insert(1, syntax.trim() + " ");
+			StringBuilder absolute = new StringBuilder().append("/");
 			
-			cmd = cmd.parent;
-		}
-		
-		this.canonicalSyntax = absolute.toString().trim().toLowerCase();
+			while (cmd != null && absolute.length() <= 1024) {
+				String syntax = cmd.getSyntax();
+				
+				if (syntax.contains(" "))
+					absolute.insert(1, syntax.substring(0, syntax.lastIndexOf(' ')).trim() + " ");
+				else
+					absolute.insert(1, syntax.trim() + " ");
+				
+				cmd = cmd.parent;
+			}
+			
+			this.canonicalSyntax = absolute.toString().trim().toLowerCase();
+			
+		} else { this.canonicalSyntax = "/" + getSyntax(); }
 		
 		return canonicalSyntax;
 	}
