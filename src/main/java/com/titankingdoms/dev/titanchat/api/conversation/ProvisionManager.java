@@ -1,6 +1,7 @@
 package com.titankingdoms.dev.titanchat.api.conversation;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,6 +14,8 @@ import com.titankingdoms.dev.titanchat.api.Manager;
 public final class ProvisionManager implements Manager<Provider<Node>> {
 	
 	private final Map<String, Provider<Node>> providers;
+	
+	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
 	
 	public ProvisionManager() {
 		this.providers = new HashMap<String, Provider<Node>>();
@@ -28,13 +31,18 @@ public final class ProvisionManager implements Manager<Provider<Node>> {
 		return new HashSet<Provider<Node>>(providers.values());
 	}
 	
-	public <T extends Node> Provider<T> getProvider(Class<Provider<T>> type, String name) {
-		return (has(name)) ? type.cast(get(name)) : null;
+	@Override
+	public Set<String> getDependencies() {
+		return dependencies;
 	}
 	
 	@Override
 	public String getName() {
 		return "ProvisionManager";
+	}
+	
+	public <T extends Node> Provider<T> getProvider(Class<Provider<T>> type, String name) {
+		return (has(name)) ? type.cast(get(name)) : null;
 	}
 	
 	@Override

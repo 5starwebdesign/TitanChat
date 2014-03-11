@@ -15,33 +15,35 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.api.sequence;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
-public interface Manager<T> {
+public abstract class Sequence<T> implements Comparator<T> {
 	
-	public T get(String name);
+	public abstract int compare(T item, T against);
 	
-	public Collection<T> getAll();
+	public final boolean follow(T item, T against) {
+		return compare(item, against) < 0;
+	}
 	
-	public Collection<String> getDependencies();
+	public final boolean lead(T item, T against){
+		return compare(item, against) > 0;
+	}
 	
-	public String getName();
+	public final List<T> reverse(Collection<T> items) {
+		List<T> reversed = sort(items);
+		Collections.reverse(reversed);
+		return reversed;
+	}
 	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void load();
-	
-	public Collection<String> match(String name);
-	
-	public void register(T item);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public final List<T> sort(Collection<T> items) {
+		List<T> sorted = new LinkedList<T>(items);
+		Collections.sort(sorted, this);
+		return sorted;
+	}
 }

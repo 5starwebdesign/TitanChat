@@ -19,8 +19,10 @@ package com.titankingdoms.dev.titanchat.api.command;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +40,8 @@ public final class CommandManager implements Manager<Command> {
 	
 	private final Map<String, Command> commands;
 	
+	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
+	
 	public CommandManager() {
 		this.commands = new TreeMap<String, Command>();
 	}
@@ -50,6 +54,11 @@ public final class CommandManager implements Manager<Command> {
 	@Override
 	public List<Command> getAll() {
 		return new ArrayList<Command>(commands.values());
+	}
+	
+	@Override
+	public Set<String> getDependencies() {
+		return dependencies;
 	}
 	
 	@Override

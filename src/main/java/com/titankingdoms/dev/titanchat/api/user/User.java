@@ -30,9 +30,9 @@ import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.user.meta.AdapterHandler;
-import com.titankingdoms.dev.titanchat.api.user.meta.MetaAdapter;
-import com.titankingdoms.dev.titanchat.api.user.meta.Metadata;
+import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
+import com.titankingdoms.dev.titanchat.api.meta.MetaAdapter;
+import com.titankingdoms.dev.titanchat.api.meta.Metadata;
 import com.titankingdoms.dev.titanchat.api.user.storage.UserInfoStorage;
 
 public abstract class User implements Node {
@@ -99,7 +99,7 @@ public abstract class User implements Node {
 	
 	public final Metadata getMetadata() {
 		if (metadata == null) {
-			this.metadata = new Metadata(this);
+			this.metadata = new Metadata();
 			
 			if (!plugin.getSystem().hasManager(UserManager.class))
 				throw new UnsupportedOperationException("UserManager not found");

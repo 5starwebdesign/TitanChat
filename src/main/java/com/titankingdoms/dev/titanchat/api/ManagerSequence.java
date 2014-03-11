@@ -15,28 +15,20 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.user.meta;
+package com.titankingdoms.dev.titanchat.api;
 
-import org.apache.commons.lang.Validate;
+import com.titankingdoms.dev.titanchat.api.sequence.Sequence;
 
-import com.titankingdoms.dev.titanchat.api.user.meta.Metadata.Meta;
-
-public final class CommonAdapter implements MetaAdapter {
+public final class ManagerSequence extends Sequence<Manager<?>> {
 	
 	@Override
-	public Meta fromString(String value) {
-		Validate.notNull(value, "Value cannot be null");
-		return new Meta(value);
-	}
-	
-	@Override
-	public String getKey() {
-		return "*";
-	}
-	
-	@Override
-	public String toString(Meta meta) {
-		Validate.notNull(meta, "Meta cannot be null");
-		return meta.getValue();
+	public int compare(Manager<?> manager, Manager<?> against) {
+		if (against.getDependencies().contains(manager.getName()))
+			return 1;
+		
+		if (manager.getDependencies().contains(against.getName()))
+			return -1;
+		
+		return 0;
 	}
 }

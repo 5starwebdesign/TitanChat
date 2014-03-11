@@ -15,25 +15,18 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.user.meta;
+package com.titankingdoms.dev.titanchat.api.meta;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 
-import com.titankingdoms.dev.titanchat.api.user.User;
-
 public final class Metadata {
-	
-	private final User user;
 	
 	private final Map<String, Meta> data;
 	
-	public Metadata(User user) {
-		Validate.notNull(user, "User cannot be null");
-		
-		this.user = user;
+	public Metadata() {
 		this.data = new LinkedHashMap<String, Meta>();
 	}
 	
@@ -43,10 +36,6 @@ public final class Metadata {
 	
 	public Map<String, Meta> getData() {
 		return new LinkedHashMap<String, Meta>(data);
-	}
-	
-	public User getUser() {
-		return user;
 	}
 	
 	public boolean hasData(String key) {

@@ -28,10 +28,10 @@ import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
+import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
+import com.titankingdoms.dev.titanchat.api.meta.MetaAdapter;
+import com.titankingdoms.dev.titanchat.api.meta.Metadata.Meta;
 import com.titankingdoms.dev.titanchat.api.user.User;
-import com.titankingdoms.dev.titanchat.api.user.meta.AdapterHandler;
-import com.titankingdoms.dev.titanchat.api.user.meta.MetaAdapter;
-import com.titankingdoms.dev.titanchat.api.user.meta.Metadata.Meta;
 
 public class UserInfo {
 	

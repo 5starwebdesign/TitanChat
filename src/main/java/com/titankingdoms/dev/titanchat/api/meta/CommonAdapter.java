@@ -15,15 +15,28 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.user.meta;
+package com.titankingdoms.dev.titanchat.api.meta;
 
-import com.titankingdoms.dev.titanchat.api.user.meta.Metadata.Meta;
+import org.apache.commons.lang.Validate;
 
-public interface MetaAdapter {
+import com.titankingdoms.dev.titanchat.api.meta.Metadata.Meta;
+
+public final class CommonAdapter implements MetaAdapter {
 	
-	public Meta fromString(String value);
+	@Override
+	public Meta fromString(String value) {
+		Validate.notNull(value, "Value cannot be null");
+		return new Meta(value);
+	}
 	
-	public String getKey();
+	@Override
+	public String getKey() {
+		return "*";
+	}
 	
-	public String toString(Meta meta);
+	@Override
+	public String toString(Meta meta) {
+		Validate.notNull(meta, "Meta cannot be null");
+		return meta.getValue();
+	}
 }

@@ -15,33 +15,15 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.api.meta;
 
-import java.util.Collection;
+import com.titankingdoms.dev.titanchat.api.meta.Metadata.Meta;
 
-public interface Manager<T> {
+public interface MetaAdapter {
 	
-	public T get(String name);
+	public Meta fromString(String value);
 	
-	public Collection<T> getAll();
+	public String getKey();
 	
-	public Collection<String> getDependencies();
-	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void load();
-	
-	public Collection<String> match(String name);
-	
-	public void register(T item);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	public String toString(Meta meta);
 }

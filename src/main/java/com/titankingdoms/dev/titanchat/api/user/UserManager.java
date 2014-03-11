@@ -41,10 +41,17 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	
 	private UserInfoStorage storage;
 	
+	private final Set<String> dependencies;
+	
 	public UserManager() {
 		this.plugin = TitanChat.getInstance();
 		this.users = new HashMap<String, User>();
 		this.console = new Console(plugin.getServer().getConsoleSender());
+		
+		Set<String> dependencies = new HashSet<String>();
+		dependencies.add("ProvisionManager");
+		
+		this.dependencies = Collections.unmodifiableSet(dependencies);
 	}
 	
 	@Override
@@ -55,6 +62,11 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	@Override
 	public Set<User> getAll() {
 		return new HashSet<User>(users.values());
+	}
+	
+	@Override
+	public Set<String> getDependencies() {
+		return dependencies;
 	}
 	
 	@Override

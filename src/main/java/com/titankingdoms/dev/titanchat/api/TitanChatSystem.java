@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat;
+package com.titankingdoms.dev.titanchat.api;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
-
-import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class TitanChatSystem {
 	
@@ -54,9 +52,15 @@ public final class TitanChatSystem {
 		managers.put(manager.getClass(), manager);
 	}
 	
-	public void start() {}
+	public void start() {
+		for (Manager<?> manager : new ManagerSequence().sort(getManagers()))
+			manager.load();
+	}
 	
-	public void shutdown() {}
+	public void shutdown() {
+		for (Manager<?> manager : new ManagerSequence().reverse(getManagers()))
+			manager.unload();
+	}
 	
 	public void unregisterManager(Manager<?> manager) {
 		Validate.notNull(manager, "Manager cannot be null");

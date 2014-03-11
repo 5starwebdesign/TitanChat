@@ -33,6 +33,8 @@ public final class AddonManager implements Manager<Addon> {
 	
 	private final Map<String, Addon> addons;
 	
+	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
+	
 	public AddonManager() {
 		this.plugin = TitanChat.getInstance();
 		
@@ -59,6 +61,11 @@ public final class AddonManager implements Manager<Addon> {
 	@Override
 	public Collection<Addon> getAll() {
 		return new HashSet<Addon>(addons.values());
+	}
+	
+	@Override
+	public Set<String> getDependencies() {
+		return dependencies;
 	}
 	
 	public File getDirectory() {

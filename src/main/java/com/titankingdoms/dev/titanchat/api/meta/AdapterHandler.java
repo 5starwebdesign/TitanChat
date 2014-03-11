@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.user.meta;
+package com.titankingdoms.dev.titanchat.api.meta;
 
 import java.util.*;
 
@@ -26,6 +26,8 @@ import com.titankingdoms.dev.titanchat.api.Manager;
 public final class AdapterHandler implements Manager<MetaAdapter> {
 	
 	private final Map<String, MetaAdapter> adapters;
+	
+	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
 	
 	public AdapterHandler() {
 		this.adapters = new HashMap<String, MetaAdapter>();
@@ -39,6 +41,11 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 	@Override
 	public Set<MetaAdapter> getAll() {
 		return null;
+	}
+	
+	@Override
+	public Set<String> getDependencies() {
+		return dependencies;
 	}
 	
 	@Override
