@@ -18,6 +18,8 @@
 package com.titankingdoms.dev.titanchat.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +55,44 @@ public final class TitanChatSystem {
 	}
 	
 	public void start() {
-		for (Manager<?> manager : new ManagerSequence().sort(getManagers()))
+		List<Manager<?>> managers = getManagers();
+		
+		Collections.sort(managers, new Comparator<Manager<?>>() {
+			
+			@Override
+			public int compare(Manager<?> manager, Manager<?> against) {
+				if (against.getDependencies().contains(manager.getName()))
+					return 1;
+				
+				if (manager.getDependencies().contains(against.getName()))
+					return -1;
+				
+				return 0;
+			}
+		});
+		
+		for (Manager<?> manager : managers)
 			manager.load();
 	}
 	
 	public void shutdown() {
-		for (Manager<?> manager : new ManagerSequence().reverse(getManagers()))
+		List<Manager<?>> managers = getManagers();
+		
+		Collections.sort(managers, new Comparator<Manager<?>>() {
+			
+			@Override
+			public int compare(Manager<?> manager, Manager<?> against) {
+				if (manager.getDependencies().contains(against.getName()))
+					return 1;
+				
+				if (against.getDependencies().contains(manager.getName()))
+					return -1;
+				
+				return 0;
+			}
+		});
+		
+		for (Manager<?> manager : managers)
 			manager.unload();
 	}
 	
