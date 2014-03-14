@@ -30,6 +30,33 @@ public final class TitanChatSystem {
 	
 	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
 	
+	private List<Manager<?>> loadSequence;
+	private List<Manager<?>> unloadSequence;
+	
+	public void generateSequence() {
+		List<Manager<?>> managers = getManagers();
+		
+		Collections.sort(managers, new Comparator<Manager<?>>() {
+			
+			@Override
+			public int compare(Manager<?> manager, Manager<?> against) {
+				if (against.getDependencies().contains(manager.getName()))
+					return 1;
+				
+				if (manager.getDependencies().contains(against.getName()))
+					return -1;
+				
+				return 0;
+			}
+		});
+		
+		loadSequence = Collections.unmodifiableList(managers);
+		
+		Collections.reverse(managers);
+		
+		unloadSequence = Collections.unmodifiableList(managers);
+	}
+	
 	public <T extends Manager<?>> T getManager(Class<T> manager) {
 		Validate.notNull(manager, "Manager Class cannot be null");
 		return (hasManager(manager)) ? manager.cast(managers.get(manager)) : null;
@@ -55,44 +82,18 @@ public final class TitanChatSystem {
 	}
 	
 	public void start() {
-		List<Manager<?>> managers = getManagers();
+		if (loadSequence == null)
+			generateSequence();
 		
-		Collections.sort(managers, new Comparator<Manager<?>>() {
-			
-			@Override
-			public int compare(Manager<?> manager, Manager<?> against) {
-				if (against.getDependencies().contains(manager.getName()))
-					return 1;
-				
-				if (manager.getDependencies().contains(against.getName()))
-					return -1;
-				
-				return 0;
-			}
-		});
-		
-		for (Manager<?> manager : managers)
+		for (Manager<?> manager : loadSequence)
 			manager.load();
 	}
 	
 	public void shutdown() {
-		List<Manager<?>> managers = getManagers();
+		if (unloadSequence == null)
+			generateSequence();
 		
-		Collections.sort(managers, new Comparator<Manager<?>>() {
-			
-			@Override
-			public int compare(Manager<?> manager, Manager<?> against) {
-				if (manager.getDependencies().contains(against.getName()))
-					return 1;
-				
-				if (against.getDependencies().contains(manager.getName()))
-					return -1;
-				
-				return 0;
-			}
-		});
-		
-		for (Manager<?> manager : managers)
+		for (Manager<?> manager : unloadSequence)
 			manager.unload();
 	}
 	
