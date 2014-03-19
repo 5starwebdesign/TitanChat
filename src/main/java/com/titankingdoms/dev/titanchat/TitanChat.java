@@ -17,7 +17,7 @@
 
 package com.titankingdoms.dev.titanchat;
 
-import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +29,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.TitanChatSystem;
-import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.conversation.ProvisionManager;
 import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
@@ -176,7 +175,6 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Registering managers...");
 		system.registerManager(new AdapterHandler());
-		system.registerManager(new AddonManager());
 		system.registerManager(new CommandManager());
 		system.registerManager(new ProvisionManager());
 		system.registerManager(new UserManager());

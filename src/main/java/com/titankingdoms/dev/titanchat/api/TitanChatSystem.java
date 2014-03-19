@@ -26,7 +26,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 
+import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
+
 public final class TitanChatSystem {
+	
+	private final AddonManager addon = new AddonManager();
 	
 	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
 	
@@ -57,6 +61,10 @@ public final class TitanChatSystem {
 		unloadSequence = Collections.unmodifiableList(managers);
 	}
 	
+	public AddonManager getAddonManager() {
+		return addon;
+	}
+	
 	public <T extends Manager<?>> T getManager(Class<T> manager) {
 		Validate.notNull(manager, "Manager Class cannot be null");
 		return (hasManager(manager)) ? manager.cast(managers.get(manager)) : null;
@@ -82,6 +90,8 @@ public final class TitanChatSystem {
 	}
 	
 	public void start() {
+		addon.load();
+		
 		if (loadSequence == null)
 			generateSequence();
 		
@@ -95,6 +105,8 @@ public final class TitanChatSystem {
 		
 		for (Manager<?> manager : unloadSequence)
 			manager.unload();
+		
+		addon.unload();
 	}
 	
 	public void unregisterManager(Manager<?> manager) {
