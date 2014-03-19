@@ -56,7 +56,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	
 	@Override
 	public User get(String name) {
-		return (has(name)) ? users.get(name.toLowerCase()) : null;
+		return users.get(name.toLowerCase());
 	}
 	
 	@Override

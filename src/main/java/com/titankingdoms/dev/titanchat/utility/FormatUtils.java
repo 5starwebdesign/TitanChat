@@ -26,30 +26,6 @@ import org.bukkit.ChatColor;
 
 public final class FormatUtils {
 	
-	public static final ChatColor AZURE = ChatColor.BLUE;
-	public static final ChatColor BLACK = ChatColor.BLACK;
-	public static final ChatColor BLUE = ChatColor.DARK_BLUE;
-	public static final ChatColor CRIMSON = ChatColor.RED;
-	public static final ChatColor CYAN = ChatColor.AQUA;
-	public static final ChatColor FUCHSIA = ChatColor.LIGHT_PURPLE;
-	public static final ChatColor GOLD = ChatColor.GOLD;
-	public static final ChatColor GREEN = ChatColor.DARK_GREEN;
-	public static final ChatColor GREY = ChatColor.DARK_GRAY;
-	public static final ChatColor LIME = ChatColor.GREEN;
-	public static final ChatColor PURPLE = ChatColor.DARK_PURPLE;
-	public static final ChatColor RED = ChatColor.DARK_RED;
-	public static final ChatColor SILVER = ChatColor.GRAY;
-	public static final ChatColor TEAL = ChatColor.DARK_AQUA;
-	public static final ChatColor WHITE = ChatColor.WHITE;
-	public static final ChatColor YELLOW = ChatColor.YELLOW;
-	
-	public static final ChatColor BOLD = ChatColor.BOLD;
-	public static final ChatColor ITALIC = ChatColor.ITALIC;
-	public static final ChatColor OBFUSCATED = ChatColor.MAGIC;
-	public static final ChatColor RESET = ChatColor.RESET;
-	public static final ChatColor STRIKE = ChatColor.STRIKETHROUGH;
-	public static final ChatColor UNDERLINE = ChatColor.UNDERLINE;
-	
 	public static String censor(String text, Collection<String> reject, String censor) {
 		if (text == null)
 			return "";
@@ -69,14 +45,6 @@ public final class FormatUtils {
 			censoring.appendReplacement(censored, censoring.group().replaceAll(".", censor));
 		
 		return censoring.appendTail(censored).toString();
-	}
-	
-	public static String colourise(String text, char colourChar) {
-		return (text != null) ? ChatColor.translateAlternateColorCodes(colourChar, text) : text;
-	}
-	
-	public static String decolourise(String text, char colourChar) {
-		return ChatColor.stripColor(colourise(text, colourChar));
 	}
 	
 	public static String[] paginate(String text, int page, int width, int height) {
@@ -133,5 +101,40 @@ public final class FormatUtils {
 			lines.add(text);
 		
 		return lines.toArray(new String[0]);
+	}
+	
+	public static class Format {
+		
+		public static final ChatColor AZURE = ChatColor.BLUE;
+		public static final ChatColor BLACK = ChatColor.BLACK;
+		public static final ChatColor BLUE = ChatColor.DARK_BLUE;
+		public static final ChatColor CRIMSON = ChatColor.RED;
+		public static final ChatColor CYAN = ChatColor.AQUA;
+		public static final ChatColor FUCHSIA = ChatColor.LIGHT_PURPLE;
+		public static final ChatColor GOLD = ChatColor.GOLD;
+		public static final ChatColor GREEN = ChatColor.DARK_GREEN;
+		public static final ChatColor GREY = ChatColor.DARK_GRAY;
+		public static final ChatColor LIME = ChatColor.GREEN;
+		public static final ChatColor PURPLE = ChatColor.DARK_PURPLE;
+		public static final ChatColor RED = ChatColor.DARK_RED;
+		public static final ChatColor SILVER = ChatColor.GRAY;
+		public static final ChatColor TEAL = ChatColor.DARK_AQUA;
+		public static final ChatColor WHITE = ChatColor.WHITE;
+		public static final ChatColor YELLOW = ChatColor.YELLOW;
+		
+		public static final ChatColor BOLD = ChatColor.BOLD;
+		public static final ChatColor ITALIC = ChatColor.ITALIC;
+		public static final ChatColor OBFUSCATED = ChatColor.MAGIC;
+		public static final ChatColor RESET = ChatColor.RESET;
+		public static final ChatColor STRIKE = ChatColor.STRIKETHROUGH;
+		public static final ChatColor UNDERLINE = ChatColor.UNDERLINE;
+		
+		public static String format(String text, char colourChar) {
+			return (text != null) ? ChatColor.translateAlternateColorCodes(colourChar, text) : text;
+		}
+		
+		public static String parse(String text, char colourChar) {
+			return ChatColor.stripColor(format(text, colourChar));
+		}
 	}
 }

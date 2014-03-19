@@ -33,7 +33,7 @@ public final class TitanChatSystem {
 	private List<Manager<?>> loadSequence;
 	private List<Manager<?>> unloadSequence;
 	
-	public void generateSequence() {
+	private void generateSequence() {
 		List<Manager<?>> managers = getManagers();
 		
 		Collections.sort(managers, new Comparator<Manager<?>>() {

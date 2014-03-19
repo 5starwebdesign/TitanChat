@@ -23,7 +23,7 @@ public final class ProvisionManager implements Manager<Provider<Node>> {
 	
 	@Override
 	public Provider<Node> get(String name) {
-		return (has(name)) ? providers.get(name) : null;
+		return providers.get(name);
 	}
 	
 	@Override

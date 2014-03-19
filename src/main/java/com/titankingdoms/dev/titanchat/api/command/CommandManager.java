@@ -33,7 +33,7 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class CommandManager implements Manager<Command> {
@@ -48,7 +48,7 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public Command get(String label) {
-		return (has(label)) ? commands.get(label) : null;
+		return commands.get(label);
 	}
 	
 	@Override
@@ -150,7 +150,7 @@ public final class CommandManager implements Manager<Command> {
 		Validate.notEmpty(label, "Command cannot be empty");
 		
 		if (!has(label)) {
-			Messaging.message(sender, FormatUtils.RED + "Invalid command");
+			Messaging.message(sender, Format.RED + "Invalid command");
 			return false;
 		}
 		
@@ -158,12 +158,12 @@ public final class CommandManager implements Manager<Command> {
 		String[] arguments = regroup(args);
 		
 		if (!command.validateAuthorisation(sender, arguments)) {
-			Messaging.message(sender, FormatUtils.RED + "You do not have permission");
+			Messaging.message(sender, Format.RED + "You do not have permission");
 			return true;
 		}
 		
 		if (arguments.length < command.getMinArguments() || arguments.length > command.getMaxArguments()) {
-			Messaging.message(sender, FormatUtils.RED + "Invalid argument length");
+			Messaging.message(sender, Format.RED + "Invalid argument length");
 			Messaging.message(sender, "Syntax: " + command.getCanonicalSyntax());
 			return true;
 		}

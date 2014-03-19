@@ -29,7 +29,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public abstract class Command {
@@ -46,6 +46,8 @@ public abstract class Command {
 	
 	private String syntax;
 	private String canonicalSyntax;
+	
+	private boolean registration = true;
 	
 	private final Map<String, Command> commands;
 	
@@ -94,7 +96,10 @@ public abstract class Command {
 	}
 	
 	public void execute(CommandSender sender, String[] args) {
-		Messaging.message(sender, FormatUtils.RED + "Invalid command");
+		if (!registration)
+			return;
+		
+		Messaging.message(sender, Format.RED + "Invalid command");
 		Messaging.message(sender, "Syntax: " + getCanonicalSyntax());
 	}
 	
@@ -151,7 +156,7 @@ public abstract class Command {
 	}
 	
 	public final void invokeExecution(CommandSender sender, String[] args) {
-		if (args.length < 1 || !has(args[0])) {
+		if (!registration || args.length < 1 || !has(args[0])) {
 			execute(sender, args);
 			return;
 		}
@@ -160,12 +165,12 @@ public abstract class Command {
 		String[] arguments = Arrays.copyOfRange(args, 1, args.length);
 		
 		if (!next.validateAuthorisation(sender, arguments)) {
-			Messaging.message(sender, FormatUtils.RED + "You do not have permission");
+			Messaging.message(sender, Format.RED + "You do not have permission");
 			return;
 		}
 		
 		if (arguments.length < next.getMinArguments() || arguments.length > next.getMaxArguments()) {
-			Messaging.message(sender, FormatUtils.RED + "Invalid argument length");
+			Messaging.message(sender, Format.RED + "Invalid argument length");
 			Messaging.message(sender, "Syntax: " + getCanonicalSyntax());
 			return;
 		}
@@ -190,6 +195,10 @@ public abstract class Command {
 		}
 	}
 	
+	protected boolean isRegistered() {
+		return registered;
+	}
+	
 	protected List<String> match(String name) {
 		if (name == null || name.isEmpty())
 			return new ArrayList<String>(commands.keySet());
@@ -208,9 +217,12 @@ public abstract class Command {
 	}
 	
 	protected void register(Command command) {
+		if (!registration)
+			return;
+		
 		Validate.notNull(command, "Command cannot be null");
 		
-		if (command.registered || has(command))
+		if (command.isRegistered() || has(command))
 			return;
 		
 		this.commands.put(command.getLabel().toLowerCase(), command);
@@ -240,6 +252,10 @@ public abstract class Command {
 		this.description = (description != null) ? description : "";
 	}
 	
+	protected void setRegistrationSupport(boolean support) {
+		this.registration = support;
+	}
+	
 	protected void setSyntax(String syntax) {
 		this.syntax = (syntax != null) ? label + " " + syntax : label;
 		
@@ -265,9 +281,12 @@ public abstract class Command {
 	}
 	
 	protected void unregister(Command command) {
+		if (!registration)
+			return;
+		
 		Validate.notNull(command, "Command cannot be null");
 		
-		if (!command.registered || !has(command))
+		if (!command.isRegistered() || !has(command))
 			return;
 		
 		this.commands.remove(command.getLabel().toLowerCase());

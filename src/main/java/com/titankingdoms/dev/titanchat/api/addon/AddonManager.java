@@ -47,7 +47,7 @@ public final class AddonManager implements Manager<Addon> {
 	@Override
 	public Addon get(String name) {
 		Validate.notEmpty(name, "Name cannot be empty");
-		return (has(name)) ? addons.get(name.toLowerCase()) : null;
+		return addons.get(name.toLowerCase());
 	}
 	
 	public Addon getAddon(String name) {
