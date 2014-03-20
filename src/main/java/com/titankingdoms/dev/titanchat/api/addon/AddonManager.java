@@ -132,7 +132,7 @@ public final class AddonManager implements Manager<Addon> {
 		Validate.notNull(addon, "Addon cannot be null");
 		Validate.isTrue(!has(addon.getName()), "Addon already registered");
 		
-		this.addons.put(addon.getName().toLowerCase(), addon);
+		addons.put(addon.getName().toLowerCase(), addon);
 	}
 	
 	@Override
@@ -169,6 +169,6 @@ public final class AddonManager implements Manager<Addon> {
 		Validate.notNull(addon, "Addon cannot be null");
 		Validate.isTrue(has(addon.getName()), "Addon not registered");
 		
-		this.addons.remove(addon.getName().toLowerCase());
+		addons.remove(addon.getName().toLowerCase());
 	}
 }

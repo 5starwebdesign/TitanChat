@@ -17,9 +17,9 @@
 
 package com.titankingdoms.dev.titanchat.api.user.storage;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -45,40 +45,55 @@ public class UserInfo {
 	
 	protected final Map<String, String> metadata;
 	
-	public UserInfo(User user) {
-		this((user != null) ? user.getName() : "");
-		
-		this.viewing = user.getViewing().getName() + "::" + user.getViewing().getType();
-		
-		for (Node node : user.getConnected())
-			this.connected.add(node.getName() + "::" + node.getType());
-		
-		for (Entry<String, Meta> metadata : user.getMetadata().getData().entrySet()) {
-			if (plugin.getSystem().hasManager(AdapterHandler.class)) {
-				MetaAdapter adapter = plugin.getManager(AdapterHandler.class).get(metadata.getKey());
-				this.metadata.put(metadata.getKey(), adapter.toString(metadata.getValue()));
-				continue;
-			}
-			
-			this.metadata.put(metadata.getKey(), metadata.getValue().getValue());
-		}
-	}
-	
 	public UserInfo(String name) {
 		Validate.notEmpty(name, "Name cannot be empty");
 		
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
-		this.connected = new LinkedList<String>();
-		this.metadata = new HashMap<String, String>();
+		this.viewing = "";
+		this.connected = Collections.unmodifiableList(new ArrayList<String>());
+		this.metadata = Collections.unmodifiableMap(new HashMap<String, String>());
+	}
+	
+	public UserInfo(User user) {
+		Validate.notNull(user, "User cannot be null");
+		
+		this.plugin = TitanChat.getInstance();
+		this.name = user.getName();
+		
+		if (user.getViewing() != null)
+			this.viewing = user.getViewing().getName() + "::" + user.getViewing().getType();
+		else
+			this.viewing = "";
+		
+		List<String> connected = new ArrayList<String>();
+		
+		for (Node node : user.getConnected())
+			connected.add(node.getName() + "::" + node.getType());
+		
+		this.connected = Collections.unmodifiableList(connected);
+		
+		Map<String, String> metadata = new HashMap<String, String>();
+		
+		for (Entry<String, Meta> meta : user.getMetadata().getData().entrySet()) {
+			if (plugin.getSystem().hasManager(AdapterHandler.class)) {
+				MetaAdapter adapter = plugin.getManager(AdapterHandler.class).get(meta.getKey());
+				metadata.put(meta.getKey(), adapter.toString(meta.getValue()));
+				continue;
+			}
+			
+			metadata.put(meta.getKey(), meta.getValue().getValue());
+		}
+		
+		this.metadata = Collections.unmodifiableMap(metadata);
 	}
 	
 	public List<String> getConnected() {
-		return Collections.unmodifiableList(connected);
+		return connected;
 	}
 	
 	public Map<String, String> getMetadata() {
-		return Collections.unmodifiableMap(metadata);
+		return metadata;
 	}
 	
 	public final String getName() {

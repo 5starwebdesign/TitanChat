@@ -225,13 +225,13 @@ public abstract class Command {
 		if (command.isRegistered() || has(command))
 			return;
 		
-		this.commands.put(command.getLabel().toLowerCase(), command);
+		commands.put(command.getLabel().toLowerCase(), command);
 		
 		for (String alias : command.getAliases()) {
 			if (has(alias))
 				continue;
 			
-			this.commands.put(alias.toLowerCase(), command);
+			commands.put(alias.toLowerCase(), command);
 		}
 		
 		command.registered = true;
@@ -289,13 +289,13 @@ public abstract class Command {
 		if (!command.isRegistered() || !has(command))
 			return;
 		
-		this.commands.remove(command.getLabel().toLowerCase());
+		commands.remove(command.getLabel().toLowerCase());
 		
 		for (String alias : command.getAliases()) {
 			if (has(alias) && !get(alias).equals(command))
 				continue;
 			
-			this.commands.remove(alias.toLowerCase());
+			commands.remove(alias.toLowerCase());
 		}
 		
 		command.registered = false;

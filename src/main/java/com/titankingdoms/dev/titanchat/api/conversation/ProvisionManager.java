@@ -85,7 +85,7 @@ public final class ProvisionManager implements Manager<Provider<Node>> {
 		Validate.notNull(provider, "Provider cannot be null");
 		Validate.isTrue(!has(provider.getName()), "Provider already registered");
 		
-		this.providers.put(provider.getName().toLowerCase(), provider);
+		providers.put(provider.getName().toLowerCase(), provider);
 	}
 	
 	@Override
@@ -99,6 +99,6 @@ public final class ProvisionManager implements Manager<Provider<Node>> {
 		Validate.notNull(provider, "Provider cannot be null");
 		Validate.isTrue(has(provider.getName()), "Provider not registered");
 		
-		this.providers.remove(provider.getName().toLowerCase());
+		providers.remove(provider.getName().toLowerCase());
 	}
 }

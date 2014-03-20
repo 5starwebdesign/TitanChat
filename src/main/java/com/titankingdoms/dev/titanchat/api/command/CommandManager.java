@@ -82,14 +82,14 @@ public final class CommandManager implements Manager<Command> {
 	}
 	
 	@Override
-	public List<String> match(String name) {
-		if (name == null || name.isEmpty())
+	public List<String> match(String label) {
+		if (label == null || label.isEmpty())
 			return new ArrayList<String>(commands.keySet());
 		
 		List<String> matches = new ArrayList<String>();
 		
 		for (String match : commands.keySet()) {
-			if (!match.startsWith(name))
+			if (!match.startsWith(label))
 				continue;
 			
 			matches.add(match);
@@ -118,13 +118,13 @@ public final class CommandManager implements Manager<Command> {
 		Validate.notNull(command, "Command cannot be null");
 		Validate.isTrue(!has(command), "Command already registered");
 		
-		this.commands.put(command.getLabel().toLowerCase(), command);
+		commands.put(command.getLabel().toLowerCase(), command);
 		
 		for (String alias : command.getAliases()) {
 			if (has(alias))
 				continue;
 			
-			this.commands.put(alias.toLowerCase(), command);
+			commands.put(alias.toLowerCase(), command);
 		}
 	}
 	
@@ -183,13 +183,13 @@ public final class CommandManager implements Manager<Command> {
 		Validate.notNull(command, "Command cannot be null");
 		Validate.isTrue(has(command), "Command not registered");
 		
-		this.commands.remove(command.getLabel().toLowerCase());
+		commands.remove(command.getLabel().toLowerCase());
 		
 		for (String alias : command.getAliases()) {
 			if (has(alias) && !get(alias).equals(command))
 				continue;
 			
-			this.commands.remove(alias.toLowerCase());
+			commands.remove(alias.toLowerCase());
 		}
 	}
 }

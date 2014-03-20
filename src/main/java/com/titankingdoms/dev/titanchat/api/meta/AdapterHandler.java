@@ -96,7 +96,7 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 		Validate.notNull(adapter, "Adapter cannot be null");
 		Validate.isTrue(!has(adapter.getKey()), "Adapter already registered");
 		
-		this.adapters.put(adapter.getKey(), adapter);
+		adapters.put(adapter.getKey(), adapter);
 	}
 	
 	@Override
@@ -110,6 +110,6 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 		Validate.notNull(adapter, "Adapter cannot be null");
 		Validate.isTrue(has(adapter.getKey()), "Adapter not registered");
 		
-		this.adapters.remove(adapter.getKey());
+		adapters.remove(adapter.getKey());
 	}
 }

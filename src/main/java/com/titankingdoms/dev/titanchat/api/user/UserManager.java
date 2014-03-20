@@ -144,7 +144,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 		if (has(user.getName()))
 			return;
 		
-		this.users.put(user.getName().toLowerCase(), user);
+		users.put(user.getName().toLowerCase(), user);
 	}
 	
 	@Override
@@ -162,6 +162,6 @@ public final class UserManager implements Manager<User>, Provider<User> {
 		if (!has(user.getName()))
 			return;
 		
-		this.users.remove(user.getName().toLowerCase());
+		users.remove(user.getName().toLowerCase());
 	}
 }
