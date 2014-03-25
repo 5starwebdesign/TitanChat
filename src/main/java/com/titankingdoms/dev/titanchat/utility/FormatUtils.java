@@ -82,22 +82,29 @@ public final class FormatUtils {
 		
 		List<String> lines = new LinkedList<String>();
 		
-		while (text.length() >= length) {
+		while (text.length() >= length || text.contains("\n")) {
 			int end = text.lastIndexOf(' ', length);
 			
-			if (end < 0)
+			boolean hasSpace = end >= 0;
+			
+			if (!hasSpace)
 				end = length;
 			
 			int newLine = text.indexOf('\n');
 			
-			if (newLine > 0 && newLine < end)
+			boolean hasNewLine = newLine >= 0 && newLine < length;
+			
+			if (hasNewLine)
 				end = newLine;
 			
-			String line = text.substring(0, end + 1).trim();
+			String line = text.substring(0, end);
 			
 			lines.add(line);
 			
-			text = ChatColor.getLastColors(line) + text.substring(end).trim();
+			text = text.substring((hasSpace || hasNewLine) ? end + 1 : end);
+			
+			if (!text.isEmpty())
+				text = ChatColor.getLastColors(line) + text;
 		}
 		
 		if (text.length() > 0)
