@@ -43,7 +43,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	
 	private final Map<String, User> users;
 	
-	private final Console console;
+	private Console console;
 	
 	private UserInfoStorage storage;
 	
@@ -52,7 +52,6 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	public UserManager() {
 		this.plugin = TitanChat.getInstance();
 		this.users = new HashMap<String, User>();
-		this.console = new Console(plugin.getServer().getConsoleSender());
 		
 		Set<String> dependencies = new HashSet<String>();
 		dependencies.add("ProvisionManager");
@@ -68,6 +67,13 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	@Override
 	public Set<User> getAll() {
 		return new HashSet<User>(users.values());
+	}
+	
+	public Console getConsole() {
+		if (console == null)
+			this.console = new Console(plugin.getServer().getConsoleSender());
+		
+		return console;
 	}
 	
 	@Override
@@ -87,11 +93,11 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	public User getUser(CommandSender sender) {
 		Validate.notNull(sender, "Sender cannot be null");
 		
-		if (sender instanceof ConsoleCommandSender)
-			return console;
+		if (ConsoleCommandSender.class.isInstance(sender))
+			return getConsole();
 		
-		if (sender instanceof BlockCommandSender)
-			return new Block((BlockCommandSender) sender);
+		if (BlockCommandSender.class.isInstance(sender))
+			return new Block(BlockCommandSender.class.cast(sender));
 		
 		return get(sender.getName());
 	}

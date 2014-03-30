@@ -30,7 +30,7 @@ import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
 
 public final class TitanChatSystem {
 	
-	private final AddonManager addon = new AddonManager();
+	private AddonManager addon;
 	
 	private final Map<Class<?>, Manager<?>> managers = new LinkedHashMap<Class<?>, Manager<?>>();
 	
@@ -77,7 +77,7 @@ public final class TitanChatSystem {
 	}
 	
 	public <T extends Manager<?>> boolean hasManager(Class<T> manager) {
-		return getManager(manager) != null;
+		return managers.get(manager) != null;
 	}
 	
 	public void registerManager(Manager<?> manager) {
@@ -90,6 +90,8 @@ public final class TitanChatSystem {
 	}
 	
 	public void start() {
+		this.addon = new AddonManager();
+		
 		addon.load();
 		
 		if (loadSequence == null)
@@ -107,6 +109,8 @@ public final class TitanChatSystem {
 			manager.unload();
 		
 		addon.unload();
+		
+		this.addon = null;
 	}
 	
 	public void unregisterManager(Manager<?> manager) {

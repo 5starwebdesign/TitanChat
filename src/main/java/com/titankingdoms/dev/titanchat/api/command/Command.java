@@ -29,6 +29,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
@@ -62,8 +63,6 @@ public abstract class Command {
 		this.label = label.trim();
 		this.syntax = this.label;
 		this.commands = new TreeMap<String, Command>();
-		
-		register(new Help(this));
 	}
 	
 	private final String assembleCanonicalSyntax() {
@@ -116,7 +115,7 @@ public abstract class Command {
 	}
 	
 	public final String getCanonicalSyntax() {
-		if (canonicalSyntax.isEmpty())
+		if (canonicalSyntax == null || canonicalSyntax.isEmpty())
 			assembleCanonicalSyntax();
 		
 		return canonicalSyntax;
