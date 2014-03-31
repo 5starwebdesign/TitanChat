@@ -30,7 +30,7 @@ import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
 public final class HelpCommand extends Command {
 	
-	public HelpCommand(String label) {
+	public HelpCommand() {
 		super("?");
 		setAliases("help", "h");
 		setArgumentRange(0, 10240);

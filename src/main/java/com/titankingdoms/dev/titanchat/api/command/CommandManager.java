@@ -36,6 +36,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
+import com.titankingdoms.dev.titanchat.command.titanchat.HelpCommand;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
@@ -88,6 +89,8 @@ public final class CommandManager implements Manager<Command> {
 	@Override
 	public void load() {
 		register(new TitanChatCommand());
+		
+		get("TitanChat").register(new HelpCommand());
 	}
 	
 	@Override
