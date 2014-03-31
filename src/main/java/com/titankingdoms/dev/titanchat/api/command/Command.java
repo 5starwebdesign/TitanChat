@@ -52,7 +52,7 @@ public abstract class Command {
 	
 	private final Map<String, Command> commands;
 	
-	private HelpIndex help;
+	private HelpIndex section;
 	
 	private boolean registered = false;
 	private Command parent = null;
@@ -65,7 +65,9 @@ public abstract class Command {
 		this.label = label.trim();
 		this.syntax = this.label;
 		this.commands = new TreeMap<String, Command>();
-		this.help = new CommandSection(this);
+		this.section = new CommandSection(this);
+		
+		register(new Assistance(this));
 	}
 	
 	private final String assembleCanonicalSyntax() {
@@ -128,6 +130,10 @@ public abstract class Command {
 		return description;
 	}
 	
+	protected HelpIndex getHelpSection() {
+		return section;
+	}
+	
 	public final String getLabel() {
 		return label;
 	}
@@ -159,38 +165,6 @@ public abstract class Command {
 	
 	public final void invokeExecution(CommandSender sender, String[] args) {
 		if (!registration || args.length < 1 || !has(args[0])) {
-			if (args.length > 0 && args[0].equalsIgnoreCase("?")) {
-				int max = help.getPageCount();
-				
-				String title = "";
-				String content = "";
-				
-				if (max > 1) {
-					int page = 1;
-					
-					if (args.length > 1)
-						try { page = Integer.parseInt(args[1]); } catch (Exception e) {}
-					
-					if (page < 1)
-						page = 1;
-					
-					if (page > max)
-						page = max;
-					
-					title = help.getTitle() + " (" + page + "/" + max + ")";
-					content = help.getContent(page);
-					
-				} else {
-					title = help.getTitle();
-					content = help.getContent();
-				}
-				
-				sender.sendMessage(StringUtils.center(" " + title + " ", 55, '='));
-				sender.sendMessage(content);
-				sender.sendMessage("=======================================================");
-				return;
-			}
-			
 			execute(sender, args);
 			return;
 		}
@@ -271,7 +245,7 @@ public abstract class Command {
 		command.registered = true;
 		command.parent = this;
 		command.assembleCanonicalSyntax();
-		help.addSection(command.help);
+		section.addSection(command.section);
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -287,17 +261,17 @@ public abstract class Command {
 		this.description = (description != null) ? description : "";
 	}
 	
-	protected void setHelpSection(HelpIndex help) {
+	protected void setHelpSection(HelpIndex section) {
 		if (parent != null)
-			parent.help.removeSection(this.help);
+			parent.section.removeSection(this.section);
 		
-		this.help = (help != null) ? help : new CommandSection(this);
+		this.section = (section != null) ? section : new CommandSection(this);
 		
 		if (parent != null)
-			parent.help.addSection(this.help);
+			parent.section.addSection(this.section);
 		
 		for (Command command : getAll())
-			this.help.addSection(command.help);
+			this.section.addSection(command.section);
 	}
 	
 	protected void setRegistrationSupport(boolean support) {
@@ -349,7 +323,7 @@ public abstract class Command {
 		command.registered = false;
 		command.parent = null;
 		command.assembleCanonicalSyntax();
-		help.removeSection(command.help);
+		section.removeSection(command.section);
 	}
 	
 	public boolean validateAuthorisation(CommandSender sender, String[] args) {

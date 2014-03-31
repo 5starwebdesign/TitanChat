@@ -32,18 +32,23 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class CommandManager implements Manager<Command> {
 	
+	private final TitanChat plugin;
+	
 	private final Map<String, Command> commands;
 	
 	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
 	
 	public CommandManager() {
+		this.plugin = TitanChat.getInstance();
 		this.commands = new TreeMap<String, Command>();
 	}
 	
@@ -130,6 +135,8 @@ public final class CommandManager implements Manager<Command> {
 			
 			commands.put(alias.toLowerCase(), command);
 		}
+		
+		plugin.getManager(HelpProvider.class).register(command.getHelpSection());
 	}
 	
 	public static String[] regroup(String[] args) {
@@ -199,5 +206,7 @@ public final class CommandManager implements Manager<Command> {
 			
 			commands.remove(alias.toLowerCase());
 		}
+		
+		plugin.getManager(HelpProvider.class).unregister(command.getHelpSection());
 	}
 }
