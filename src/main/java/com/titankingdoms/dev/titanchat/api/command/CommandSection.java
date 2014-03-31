@@ -24,11 +24,15 @@ import com.titankingdoms.dev.titanchat.utility.FormatUtils;
 
 public final class CommandSection extends HelpIndex {
 	
-	private final String text;
+	private final Command command;
 	
 	public CommandSection(Command command) {
 		super((command != null) ? command.getLabel() : "");
-		
+		this.command = command;
+	}
+	
+	@Override
+	public String getContent() {
 		String description = command.getDescription();
 		String aliases = StringUtils.join(command.getAliases(), ", ");
 		String range = "[" + command.getMinArguments() + ", " + command.getMaxArguments() + "]";
@@ -41,17 +45,17 @@ public final class CommandSection extends HelpIndex {
 		text.append(StringUtils.join(FormatUtils.wrap("Argument Range: " + range, 55), '\n') + "\n");
 		text.append(StringUtils.join(FormatUtils.wrap("Syntax: " + syntax, 55), '\n') + "\n");
 		
-		this.text = text.toString();
-	}
-	
-	@Override
-	public String getContent() {
-		return text;
+		return text.toString();
 	}
 	
 	@Override
 	public String getContent(int page) {
-		return text;
+		return getContent();
+	}
+	
+	@Override
+	public String getDescription() {
+		return command.getDescription();
 	}
 	
 	@Override

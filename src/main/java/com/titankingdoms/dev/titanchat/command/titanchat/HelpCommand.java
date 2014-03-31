@@ -89,8 +89,7 @@ public final class HelpCommand extends Command {
 			content = section.getContent();
 		}
 		
-		Messaging.message(sender, StringUtils.center(" " + title + " ", 55, '='));
-		Messaging.message(sender, content);
-		Messaging.message(sender, "=======================================================");
+		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
+		Messaging.message(sender, Format.AZURE + content);
 	}
 }

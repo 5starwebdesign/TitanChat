@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
@@ -80,9 +79,6 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public boolean has(Command command) {
-		Messaging.message(Bukkit.getServer().getPlayer("NodinChan"), "Command is Null: " + (command != null));
-		Messaging.message(Bukkit.getServer().getPlayer("NodinChan"), "Command is There: " + (has(command.getLabel())));
-		
 		return command != null && has(command.getLabel()) && get(command.getLabel()).equals(command);
 	}
 	

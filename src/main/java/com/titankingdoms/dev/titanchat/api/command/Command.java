@@ -59,7 +59,6 @@ public abstract class Command {
 	
 	public Command(String label) {
 		Validate.notEmpty(label.trim(), "Label cannot be empty");
-		Validate.isTrue(StringUtils.isAlphanumeric(label), "Label cannot be non-alphanumerical");
 		
 		this.plugin = TitanChat.getInstance();
 		this.label = label.trim();
@@ -67,7 +66,8 @@ public abstract class Command {
 		this.commands = new TreeMap<String, Command>();
 		this.section = new CommandSection(this);
 		
-		register(new Assistance(this));
+		if (!Assistance.class.isInstance(this))
+			register(new Assistance(this));
 	}
 	
 	private final String assembleCanonicalSyntax() {
@@ -108,7 +108,7 @@ public abstract class Command {
 	}
 	
 	public Command get(String name) {
-		return (has(name)) ? commands.get(name) : null;
+		return (has(name)) ? commands.get(name.toLowerCase()) : null;
 	}
 	
 	public String[] getAliases() {

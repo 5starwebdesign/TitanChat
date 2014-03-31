@@ -30,6 +30,7 @@ public final class Assistance extends Command {
 	public Assistance(Command command) {
 		super((command != null) ? "?" : "");
 		this.command = command;
+		setRegistrationSupport(false);
 	}
 	
 	@Override
