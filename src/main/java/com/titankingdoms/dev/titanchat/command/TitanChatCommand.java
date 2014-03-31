@@ -33,6 +33,7 @@ public final class TitanChatCommand extends Command {
 		setArgumentRange(0, 10240);
 		setDescription("TitanChat Commands");
 		setSyntax("<command>");
+		unregister(get("?"));
 	}
 	
 	@Override

@@ -15,26 +15,60 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.command;
+package com.titankingdoms.dev.titanchat.command.titanchat;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
+import com.titankingdoms.dev.titanchat.api.command.Command;
 import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
+import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
+import com.titankingdoms.dev.titanchat.api.help.HelpSection;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
-public final class Assistance extends Command {
+public final class HelpCommand extends Command {
 	
-	private final Command command;
-	
-	public Assistance(Command command) {
-		super((command != null) ? "?" : "");
-		this.command = command;
+	public HelpCommand(String label) {
+		super("?");
+		setAliases("help", "h");
+		setArgumentRange(0, 10240);
+		setDescription("Assistance for TitanChat");
+		setSyntax("<section|index>...");
+		setRegistrationSupport(false);
 	}
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		HelpIndex section = command.getHelpSection();
+		HelpProvider provider = plugin.getManager(HelpProvider.class);
+		
+		if (provider == null) {
+			Messaging.message(sender, "Assistance cannot be provided at this time");
+			return;
+		}
+		
+		HelpSection section = provider;
+		
+		int page = 1;
+		
+		for (String arg : args) {
+			if (!NumberUtils.isNumber(arg)) {
+				if (!HelpIndex.class.isInstance(section))
+					break;
+				
+				section = HelpIndex.class.cast(section).getSection(arg);
+				continue;
+			}
+			
+			page = NumberUtils.toInt(arg, 0);
+			break;
+		}
+		
+		if (section == null) {
+			Messaging.message(sender, Format.RED + "Assistance cannot be provided for requested section");
+			return;
+		}
 		
 		int max = section.getPageCount();
 		
@@ -42,11 +76,6 @@ public final class Assistance extends Command {
 		String content = "";
 		
 		if (max > 1) {
-			int page = 1;
-			
-			if (args.length > 0)
-				try { page = Integer.parseInt(args[0]); } catch (Exception e) {}
-			
 			if (page < 1)
 				page = 1;
 			
