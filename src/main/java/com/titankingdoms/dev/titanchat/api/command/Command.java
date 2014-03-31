@@ -52,6 +52,8 @@ public abstract class Command {
 	
 	private final Map<String, Command> commands;
 	
+	private HelpIndex help;
+	
 	private boolean registered = false;
 	private Command parent = null;
 	
@@ -63,6 +65,7 @@ public abstract class Command {
 		this.label = label.trim();
 		this.syntax = this.label;
 		this.commands = new TreeMap<String, Command>();
+		this.help = new CommandSection(this);
 	}
 	
 	private final String assembleCanonicalSyntax() {
@@ -156,6 +159,38 @@ public abstract class Command {
 	
 	public final void invokeExecution(CommandSender sender, String[] args) {
 		if (!registration || args.length < 1 || !has(args[0])) {
+			if (args.length > 0 && args[0].equalsIgnoreCase("?")) {
+				int max = help.getPageCount();
+				
+				String title = "";
+				String content = "";
+				
+				if (max > 1) {
+					int page = 1;
+					
+					if (args.length > 1)
+						try { page = Integer.parseInt(args[1]); } catch (Exception e) {}
+					
+					if (page < 1)
+						page = 1;
+					
+					if (page > max)
+						page = max;
+					
+					title = help.getTitle() + " (" + page + "/" + max + ")";
+					content = help.getContent(page);
+					
+				} else {
+					title = help.getTitle();
+					content = help.getContent();
+				}
+				
+				sender.sendMessage(StringUtils.center(" " + title + " ", 55, '='));
+				sender.sendMessage(content);
+				sender.sendMessage("=======================================================");
+				return;
+			}
+			
 			execute(sender, args);
 			return;
 		}
@@ -236,6 +271,7 @@ public abstract class Command {
 		command.registered = true;
 		command.parent = this;
 		command.assembleCanonicalSyntax();
+		help.addSection(command.help);
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -249,6 +285,19 @@ public abstract class Command {
 	
 	protected void setDescription(String description) {
 		this.description = (description != null) ? description : "";
+	}
+	
+	protected void setHelpSection(HelpIndex help) {
+		if (parent != null)
+			parent.help.removeSection(this.help);
+		
+		this.help = (help != null) ? help : new CommandSection(this);
+		
+		if (parent != null)
+			parent.help.addSection(this.help);
+		
+		for (Command command : getAll())
+			this.help.addSection(command.help);
 	}
 	
 	protected void setRegistrationSupport(boolean support) {
@@ -300,6 +349,7 @@ public abstract class Command {
 		command.registered = false;
 		command.parent = null;
 		command.assembleCanonicalSyntax();
+		help.removeSection(command.help);
 	}
 	
 	public boolean validateAuthorisation(CommandSender sender, String[] args) {

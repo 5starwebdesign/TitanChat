@@ -37,7 +37,7 @@ public final class TitanChatCommand extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		if (args.length < 1) {
 			Messaging.message(sender, Format.GOLD + "You are running v" + plugin.getDescription().getVersion());
-			Messaging.message(sender, Format.GOLD + "Type \"/titanchat ?\" for the non-existant help");
+			Messaging.message(sender, Format.GOLD + "Type \"/titanchat ?\" for help");
 			return;
 		}
 		

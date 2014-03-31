@@ -34,14 +34,14 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 === Dependencies
 
-* CraftBukkit 1.6.2-R0.1
-* Vault (Required only for affixes of permissions plugins)
+* CraftBukkit 1.7.2-R0.3
+* Vault (Optional)
 
 ----
 
 === How to install
 
-# Download [[http://ci.whitejack.co/job/TitanChat/Recommended%20Build/|TitanChat]]
+# Download [Unavailable]
 # Place in plugins folder
 # Start up to load default configuration
 # Configure
@@ -63,6 +63,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 * 12.02.13 - Major changes
 * 25.02.13 - Update enquiries now async
 * 03.03.13 - Command system rework
+* 31.03.13 - Help for commands
 
 ----
 
@@ -75,13 +76,13 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 === Credits
 
 * Author: NodinChan
-* Contributor(s): SLiPCoR
+* Contributor(s): SLiPCoR, lol768
 * Tester(s): gwinans, gabizou, AlphaBlend
 
 ==== Thank you
 
 * Thanks to gwinans for the idea
 * Thanks to my friends online for their help
-* Thanks to all the users who are willing to bear with the bugs and are willing to give feedback
+* Thanks to all the users who support me through feedback
 
 ----
