@@ -25,25 +25,43 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.user.User;
 import com.titankingdoms.dev.titanchat.api.user.UserManager;
 import com.titankingdoms.dev.titanchat.user.Participant;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
 public final class TitanChatListener implements Listener {
 	
 	private final TitanChat plugin;
-	private final UserManager manager;
 	
 	public TitanChatListener() {
 		this.plugin = TitanChat.getInstance();
-		this.manager = plugin.getManager(UserManager.class);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {}
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+		UserManager manager = plugin.getManager(UserManager.class);
+		
+		if (manager == null)
+			return;
+		
+		User user = manager.getUser(event.getPlayer());
+		Node viewing = user.getViewing();
+		
+		if (viewing == null) {
+			user.sendRawLine(Format.RED + "Please join a Node to converse");
+			return;
+		}
+		
+		viewing.sendConversation(new Conversation(user, viewing, event.getFormat(), event.getMessage()));
+	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		UserManager manager = plugin.getManager(UserManager.class);
+		
 		if (manager == null)
 			return;
 		
@@ -53,6 +71,8 @@ public final class TitanChatListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerQuit(PlayerQuitEvent event) {
+		UserManager manager = plugin.getManager(UserManager.class);
+		
 		if (manager == null)
 			return;
 		
