@@ -86,10 +86,6 @@ public final class UserManager implements Manager<User>, Provider<User> {
 		return "UserManager";
 	}
 	
-	public User getUser(String name) {
-		return get(name);
-	}
-	
 	public User getUser(CommandSender sender) {
 		Validate.notNull(sender, "Sender cannot be null");
 		

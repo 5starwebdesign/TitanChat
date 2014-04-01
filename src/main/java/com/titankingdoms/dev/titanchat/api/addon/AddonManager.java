@@ -57,14 +57,6 @@ public final class AddonManager implements Manager<Addon> {
 		return addons.get(name.toLowerCase());
 	}
 	
-	public Addon getAddon(String name) {
-		return get(name);
-	}
-	
-	public Collection<Addon> getAddons() {
-		return getAll();
-	}
-	
 	@Override
 	public Collection<Addon> getAll() {
 		return new HashSet<Addon>(addons.values());
@@ -92,14 +84,6 @@ public final class AddonManager implements Manager<Addon> {
 	@Override
 	public boolean has(Addon addon) {
 		return addon != null && has(addon.getName()) && get(addon.getName()).equals(addon);
-	}
-	
-	public boolean hasAddon(String name) {
-		return has(name);
-	}
-	
-	public boolean hasAddon(Addon addon) {
-		return has(addon);
 	}
 	
 	@Override

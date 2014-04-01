@@ -28,13 +28,13 @@ import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.api.Manager;
 
-public final class ProvisionManager implements Manager<Provider<Node>> {
+public final class NodeProvisionManager implements Manager<Provider<Node>> {
 	
 	private final Map<String, Provider<Node>> providers;
 	
 	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
 	
-	public ProvisionManager() {
+	public NodeProvisionManager() {
 		this.providers = new HashMap<String, Provider<Node>>();
 	}
 	
