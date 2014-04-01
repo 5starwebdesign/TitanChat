@@ -30,6 +30,7 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.tools.loading.Loader;
@@ -40,7 +41,7 @@ public final class AddonManager implements Manager<Addon> {
 	
 	private final Map<String, Addon> addons;
 	
-	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
+	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public AddonManager() {
 		this.plugin = TitanChat.getInstance();

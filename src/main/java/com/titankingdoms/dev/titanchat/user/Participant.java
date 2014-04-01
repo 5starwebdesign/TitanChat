@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.user.User;
+import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class Participant extends User {
 	
@@ -38,5 +39,12 @@ public final class Participant extends User {
 	}
 	
 	@Override
-	public void sendRawLine(String line) {}
+	public void sendRawLine(String line) {
+		Player player = asPlayer();
+		
+		if (player == null)
+			return;
+		
+		Messaging.message(player, line);
+	}
 }

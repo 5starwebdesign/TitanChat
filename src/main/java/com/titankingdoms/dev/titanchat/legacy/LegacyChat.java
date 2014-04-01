@@ -17,19 +17,49 @@
 
 package com.titankingdoms.dev.titanchat.legacy;
 
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.Provider;
+import com.titankingdoms.dev.titanchat.api.user.User;
 
 public final class LegacyChat implements Provider<LegacyChat>, Node {
 	
-	@Override
-	public void attach(Node node) {}
+	private final Map<String, Node> connected = new HashMap<String, Node>();
 	
 	@Override
-	public void detach(Node node) {}
+	public void attach(Node node) {
+		Validate.notNull(node, "Node cannot be null");
+		Validate.isTrue(User.class.isInstance(node), "Node cannot be non-User");
+		
+		if (connected.containsValue(node))
+			return;
+		
+		connected.put(node.getName(), node);
+		
+		if (!node.isConnected(this))
+			node.attach(this);
+	}
+	
+	@Override
+	public void detach(Node node) {
+		Validate.notNull(node, "Node cannot be null");
+		Validate.isTrue(User.class.isInstance(node), "Node cannot be non-User");
+		
+		if (!connected.containsValue(node))
+			return;
+		
+		connected.remove(node.getName());
+		
+		if (node.isConnected(this))
+			node.detach(this);
+	}
 	
 	@Override
 	public LegacyChat get(String name) {
@@ -42,8 +72,8 @@ public final class LegacyChat implements Provider<LegacyChat>, Node {
 	}
 	
 	@Override
-	public Collection<Node> getTerminusNodes() {
-		return null;
+	public Set<Node> getTerminusNodes() {
+		return new HashSet<Node>(connected.values());
 	}
 	
 	@Override
@@ -63,7 +93,7 @@ public final class LegacyChat implements Provider<LegacyChat>, Node {
 	
 	@Override
 	public boolean isConnected(Node node) {
-		return false;
+		return User.class.isInstance(node) && connected.containsKey(node.getName() + "::" + node.getType());
 	}
 	
 	@Override
@@ -72,5 +102,8 @@ public final class LegacyChat implements Provider<LegacyChat>, Node {
 	}
 	
 	@Override
-	public void sendRawLine(String line) {}
+	public void sendRawLine(String line) {
+		for (Node node : getTerminusNodes())
+			node.sendRawLine(line);
+	}
 }

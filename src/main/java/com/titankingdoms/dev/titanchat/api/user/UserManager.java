@@ -30,6 +30,7 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
+import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.conversation.Provider;
@@ -52,11 +53,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	public UserManager() {
 		this.plugin = TitanChat.getInstance();
 		this.users = new HashMap<String, User>();
-		
-		Set<String> dependencies = new HashSet<String>();
-		dependencies.add("ProvisionManager");
-		
-		this.dependencies = Collections.unmodifiableSet(dependencies);
+		this.dependencies = ImmutableSet.<String>builder().add("NodeProvisionManager").build();
 	}
 	
 	@Override

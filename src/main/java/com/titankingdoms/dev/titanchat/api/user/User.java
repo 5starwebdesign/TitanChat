@@ -20,7 +20,6 @@ package com.titankingdoms.dev.titanchat.api.user;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -28,6 +27,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
@@ -46,7 +46,8 @@ public abstract class User implements Node {
 	private volatile Node exploring;
 	
 	private final Map<String, Node> connected = new HashMap<String, Node>();
-	private final Set<Node> terminus = new HashSet<Node>();
+	
+	private final Set<Node> terminus;
 	
 	public User(String name) {
 		Validate.notEmpty(name, "Name cannot be empty");
@@ -54,7 +55,7 @@ public abstract class User implements Node {
 		
 		this.plugin = TitanChat.getInstance();
 		this.name = name;
-		this.terminus.add(this);
+		this.terminus = ImmutableSet.<Node>builder().add(this).build();
 	}
 	
 	@Override
@@ -63,7 +64,7 @@ public abstract class User implements Node {
 		
 		String tag = node.getName() + "::" + node.getType();
 		
-		if (connected.containsKey(node))
+		if (connected.containsKey(tag))
 			return;
 		
 		connected.put(tag, node);
@@ -81,7 +82,7 @@ public abstract class User implements Node {
 		
 		String tag = node.getName() + "::" + node.getType();
 		
-		if (!connected.containsKey(node))
+		if (!connected.containsKey(tag))
 			return;
 		
 		connected.remove(tag);

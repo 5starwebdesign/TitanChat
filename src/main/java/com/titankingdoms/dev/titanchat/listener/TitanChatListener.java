@@ -55,7 +55,10 @@ public final class TitanChatListener implements Listener {
 			return;
 		}
 		
-		viewing.sendConversation(new Conversation(user, viewing, event.getFormat(), event.getMessage()));
+		Conversation conversation = new Conversation(user, viewing, event.getFormat(), event.getMessage());
+		
+		if (viewing.sendConversation(conversation))
+			conversation.post();
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

@@ -18,7 +18,6 @@
 package com.titankingdoms.dev.titanchat.api.conversation;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,13 +25,14 @@ import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class NodeProvisionManager implements Manager<Provider<Node>> {
 	
 	private final Map<String, Provider<Node>> providers;
 	
-	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
+	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public NodeProvisionManager() {
 		this.providers = new HashMap<String, Provider<Node>>();
@@ -55,7 +55,7 @@ public final class NodeProvisionManager implements Manager<Provider<Node>> {
 	
 	@Override
 	public String getName() {
-		return "ProvisionManager";
+		return "NodeProvisionManager";
 	}
 	
 	public <T extends Node> Provider<T> getProvider(Class<Provider<T>> type, String name) {

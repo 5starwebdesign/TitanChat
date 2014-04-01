@@ -21,6 +21,7 @@ import org.bukkit.command.ConsoleCommandSender;
 
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.user.User;
+import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class Console extends User {
 	
@@ -38,5 +39,12 @@ public final class Console extends User {
 	}
 	
 	@Override
-	public void sendRawLine(String line) {}
+	public void sendRawLine(String line) {
+		ConsoleCommandSender console = asConsoleSender();
+		
+		if (console == null)
+			return;
+		
+		Messaging.message(console, line);
+	}
 }

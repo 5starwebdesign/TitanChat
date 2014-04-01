@@ -20,19 +20,19 @@ package com.titankingdoms.dev.titanchat.api.help;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class HelpProvider extends HelpIndex implements Manager<HelpSection> {
 	
 	private final Map<String, HelpSection> sections;
 	
-	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
+	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public HelpProvider() {
 		super("General");

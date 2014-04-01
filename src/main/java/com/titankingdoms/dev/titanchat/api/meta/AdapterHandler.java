@@ -20,20 +20,20 @@ package com.titankingdoms.dev.titanchat.api.meta;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class AdapterHandler implements Manager<MetaAdapter> {
 	
 	private final Map<String, MetaAdapter> adapters;
 	
-	private final Set<String> dependencies = Collections.unmodifiableSet(new HashSet<String>());
+	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public AdapterHandler() {
 		this.adapters = new HashMap<String, MetaAdapter>();
