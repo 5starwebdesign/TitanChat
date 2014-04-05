@@ -18,27 +18,27 @@
 package com.titankingdoms.dev.titanchat.legacy;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.Provider;
-import com.titankingdoms.dev.titanchat.api.user.User;
 
-public final class LegacyChat implements Provider<LegacyChat>, Node {
+public final class LegacyChat implements Node, Provider<LegacyChat> {
 	
 	private final Map<String, Node> connected = new HashMap<String, Node>();
 	
 	@Override
 	public void attach(Node node) {
 		Validate.notNull(node, "Node cannot be null");
-		Validate.isTrue(User.class.isInstance(node), "Node cannot be non-User");
+		Validate.isTrue(node.getType().equals("User"), "Node cannot be non-User");
 		
-		if (connected.containsValue(node))
+		if (connected.containsKey(node.getName()))
 			return;
 		
 		connected.put(node.getName(), node);
@@ -50,9 +50,9 @@ public final class LegacyChat implements Provider<LegacyChat>, Node {
 	@Override
 	public void detach(Node node) {
 		Validate.notNull(node, "Node cannot be null");
-		Validate.isTrue(User.class.isInstance(node), "Node cannot be non-User");
+		Validate.isTrue(node.getType().equals("User"), "Node cannot be non-User");
 		
-		if (!connected.containsValue(node))
+		if (!connected.containsKey(node.getName()))
 			return;
 		
 		connected.remove(node.getName());
@@ -73,7 +73,12 @@ public final class LegacyChat implements Provider<LegacyChat>, Node {
 	
 	@Override
 	public Set<Node> getTerminusNodes() {
-		return new HashSet<Node>(connected.values());
+		Builder<Node> terminus = ImmutableSet.builder();
+		
+		for (Node node : connected.values())
+			terminus.addAll(node.getTerminusNodes());
+		
+		return terminus.build();
 	}
 	
 	@Override
@@ -93,7 +98,7 @@ public final class LegacyChat implements Provider<LegacyChat>, Node {
 	
 	@Override
 	public boolean isConnected(Node node) {
-		return User.class.isInstance(node) && connected.containsKey(node.getName() + "::" + node.getType());
+		return node.getType().equals("User") && connected.containsKey(node.getName());
 	}
 	
 	@Override
