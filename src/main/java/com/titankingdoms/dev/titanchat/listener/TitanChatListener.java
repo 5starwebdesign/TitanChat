@@ -25,7 +25,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
+import com.titankingdoms.dev.titanchat.api.conversation.Messenger;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.user.User;
 import com.titankingdoms.dev.titanchat.api.user.UserManager;
@@ -37,7 +37,7 @@ public final class TitanChatListener implements Listener {
 	private final TitanChat plugin;
 	
 	public TitanChatListener() {
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -47,6 +47,8 @@ public final class TitanChatListener implements Listener {
 		if (manager == null)
 			return;
 		
+		event.setCancelled(true);
+		
 		User user = manager.getUser(event.getPlayer());
 		Node viewing = user.getViewing();
 		
@@ -55,10 +57,7 @@ public final class TitanChatListener implements Listener {
 			return;
 		}
 		
-		Conversation conversation = new Conversation(user, viewing, event.getFormat(), event.getMessage());
-		
-		if (viewing.sendConversation(conversation))
-			conversation.post();
+		Messenger.post(viewing.onConversation(user, event.getMessage()));
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

@@ -43,7 +43,7 @@ public final class XMLUserInfoStorage implements UserInfoStorage {
 	private final Map<String, UserInfo> info;
 	
 	public XMLUserInfoStorage() {
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.info = new HashMap<String, UserInfo>();
 	}
 	

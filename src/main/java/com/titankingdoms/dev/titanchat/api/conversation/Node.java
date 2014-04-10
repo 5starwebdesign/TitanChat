@@ -25,6 +25,8 @@ public interface Node {
 	
 	public void detach(Node node);
 	
+	public Collection<Node> getConnected();
+	
 	public String getName();
 	
 	public Collection<Node> getTerminusNodes();
@@ -33,7 +35,9 @@ public interface Node {
 	
 	public boolean isConnected(Node node);
 	
-	public boolean sendConversation(Conversation conversation);
+	public boolean isConversable(Node sender, String message, String type);
+	
+	public Conversation onConversation(Node sender, String message);
 	
 	public void sendRawLine(String line);
 }

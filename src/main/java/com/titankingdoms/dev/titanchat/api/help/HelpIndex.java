@@ -40,7 +40,7 @@ public class HelpIndex implements HelpSection {
 	public HelpIndex(String title) {
 		Validate.notEmpty(title, "Title cannot be empty");
 		
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.title = title;
 		this.sections = new TreeMap<String, HelpSection>();
 	}

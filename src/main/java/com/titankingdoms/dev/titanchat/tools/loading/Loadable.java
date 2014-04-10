@@ -48,7 +48,7 @@ public class Loadable implements Comparable<Loadable>, Listener {
 		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(StringUtils.isAlphanumeric(name), "Name cannot contain non-alphanumeric chars");
 		
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.name = name;
 	}
 	

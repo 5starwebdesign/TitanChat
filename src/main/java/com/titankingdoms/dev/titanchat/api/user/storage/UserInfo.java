@@ -48,7 +48,7 @@ public class UserInfo {
 	public UserInfo(String name) {
 		Validate.notEmpty(name, "Name cannot be empty");
 		
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.name = name;
 		this.viewing = "";
 		this.connected = Collections.unmodifiableList(new ArrayList<String>());
@@ -58,7 +58,7 @@ public class UserInfo {
 	public UserInfo(User user) {
 		Validate.notNull(user, "User cannot be null");
 		
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.name = user.getName();
 		
 		if (user.getViewing() != null)

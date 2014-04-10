@@ -19,12 +19,9 @@ package com.titankingdoms.dev.titanchat.api.conversation;
 
 import org.apache.commons.lang.Validate;
 
-import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
 
-public class Conversation implements Cloneable {
-	
-	protected final TitanChat plugin;
+public final class Conversation implements Cloneable {
 	
 	private final Node sender;
 	private final Node recipient;
@@ -32,22 +29,26 @@ public class Conversation implements Cloneable {
 	private String format;
 	private String message;
 	
-	public Conversation(Node sender, Node recipient, String format, String message) {
+	private final String type;
+	
+	private Status status = Status.PENDING;
+	
+	public Conversation(Node sender, Node recipient, String format, String message, String type) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(recipient, "Recipient cannot be null");
 		Validate.notEmpty(format, "Format cannot be empty");
-		Validate.notEmpty(message, "Message cannot be empty");
+		Validate.notEmpty(type, "Type cannot be empty");
 		
-		this.plugin = TitanChat.getInstance();
 		this.sender = sender;
 		this.recipient = recipient;
 		this.format = format;
-		this.message = message;
+		this.message = (message != null) ? message : "";
+		this.type = type;
 	}
 	
 	@Override
 	public Conversation clone() {
-		return new Conversation(sender, recipient, format, message);
+		return new Conversation(sender, recipient, format, message, type);
 	}
 	
 	public String getFormat() {
@@ -66,37 +67,35 @@ public class Conversation implements Cloneable {
 		return sender;
 	}
 	
-	public void post() {
-		ConverseEvent event = new ConverseEvent(this);
-		
-		if (!event.getTerminusRecipients().contains(sender))
-			event.getTerminusRecipients().add(sender);
-		
-		plugin.getServer().getPluginManager().callEvent(event);
-		
-		if (event.isCancelled())
-			return;
-		
-		if (!event.getTerminusRecipients().contains(sender))
-			event.getTerminusRecipients().add(sender);
-		
-		int recipient = 0;
-		
-		for (Node node : event.getTerminusRecipients())
-			if (node.sendConversation(clone()))
-				recipient++;
-		
-		if (recipient < 2)
-			sender.sendRawLine("&7Nobody heard you...");
+	public Status getStatus() {
+		return status;
 	}
 	
-	public void setFormat(String format) {
-		Validate.notEmpty(format, "Format cannot be empty");
+	public String getType() {
+		return type;
+	}
+	
+	public boolean inStatus(Status status) {
+		return this.status.equals(status);
+	}
+	
+	public Conversation setFormat(String format) {
+		Validate.isTrue(format != null && format.contains("%message"), "Format cannot forgo %message");
 		this.format = format;
+		return this;
 	}
 	
-	public void setMessage(String message) {
-		Validate.notEmpty(message, "Message cannot be empty");
-		this.message = message;
+	public Conversation setMessage(String message) {
+		this.message = (message != null) ? message : "";
+		return this;
 	}
+	
+	public Conversation setStatus(Status status) {
+		Validate.notNull(status, "Status cannot be null");
+		Validate.isTrue(!status.equals(Status.PENDING), "Status cannot be set to Pending");
+		this.status = status;
+		return this;
+	}
+	
+	public enum Status { CANCELLED, PENDING, SENT }
 }

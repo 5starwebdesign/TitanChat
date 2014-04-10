@@ -60,7 +60,7 @@ public abstract class Command {
 	public Command(String label) {
 		Validate.notEmpty(label.trim(), "Label cannot be empty");
 		
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.label = label.trim();
 		this.syntax = this.label;
 		this.commands = new TreeMap<String, Command>();

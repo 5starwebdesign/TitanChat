@@ -48,7 +48,7 @@ public final class CommandManager implements Manager<Command> {
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public CommandManager() {
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.commands = new TreeMap<String, Command>();
 	}
 	

@@ -51,7 +51,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	private final Set<String> dependencies;
 	
 	public UserManager() {
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.users = new HashMap<String, User>();
 		this.dependencies = ImmutableSet.<String>builder().add("NodeProvisionManager").build();
 	}

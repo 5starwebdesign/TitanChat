@@ -17,7 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.api.event;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +28,7 @@ import org.bukkit.event.HandlerList;
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 
-public final class ConverseEvent extends Event implements Cancellable, Cloneable {
+public final class ConverseEvent extends Event implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
@@ -37,31 +36,21 @@ public final class ConverseEvent extends Event implements Cancellable, Cloneable
 	
 	private final Set<Node> recipients;
 	
-	private boolean cancelled;
-	
-	private ConverseEvent(Conversation conversation, Collection<Node> recipients) {
-		Validate.notNull(conversation, "Conversation cannot be null");
-		Validate.notNull(recipients, "Recipients cannot be null");
-		
-		this.conversation = conversation;
-		this.recipients = new HashSet<Node>(recipients);
-	}
+	private boolean cancelled = false;
 	
 	public ConverseEvent(Conversation conversation) {
-		this(conversation, conversation.getRecipient().getTerminusNodes());
+		Validate.notNull(conversation, "Conversation cannot be null");
+		
+		this.conversation = conversation;
+		this.recipients = new HashSet<Node>(conversation.getRecipient().getTerminusNodes());
 	}
 	
-	@Override
-	public ConverseEvent clone() {
-		return new ConverseEvent(conversation.clone(), recipients);
+	public String getConversationType() {
+		return conversation.getType();
 	}
 	
 	public String getFormat() {
 		return conversation.getFormat();
-	}
-	
-	public String getMessage() {
-		return conversation.getMessage();
 	}
 	
 	public static HandlerList getHandlerList() {
@@ -71,6 +60,10 @@ public final class ConverseEvent extends Event implements Cancellable, Cloneable
 	@Override
 	public HandlerList getHandlers() {
 		return handlers;
+	}
+	
+	public String getMessage() {
+		return conversation.getMessage();
 	}
 	
 	public Node getRecipient() {

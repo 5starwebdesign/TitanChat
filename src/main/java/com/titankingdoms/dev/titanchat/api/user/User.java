@@ -29,6 +29,7 @@ import org.apache.commons.lang.Validate;
 
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
 import com.titankingdoms.dev.titanchat.api.meta.MetaAdapter;
@@ -53,7 +54,7 @@ public abstract class User implements Node {
 		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(!Pattern.compile("\\W").matcher(name).find(), "Name cannot contain non-word characters");
 		
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		this.name = name;
 		this.terminus = ImmutableSet.<Node>builder().add(this).build();
 	}
@@ -143,6 +144,11 @@ public abstract class User implements Node {
 	@Override
 	public boolean isConnected(Node node) {
 		return node != null && connected.containsKey(node.getName() + "::" + node.getType());
+	}
+	
+	@Override
+	public Conversation onConversation(Node sender, String message) {
+		return new Conversation(sender, this, "%message", message, "Normal");
 	}
 	
 	public boolean isViewing(Node node) {

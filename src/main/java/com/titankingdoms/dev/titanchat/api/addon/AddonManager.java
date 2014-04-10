@@ -44,7 +44,7 @@ public final class AddonManager implements Manager<Addon> {
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public AddonManager() {
-		this.plugin = TitanChat.getInstance();
+		this.plugin = TitanChat.instance();
 		
 		if (getDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating addon directory...");

@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.user;
 
 import org.bukkit.command.ConsoleCommandSender;
 
-import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.user.User;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
@@ -34,8 +34,8 @@ public final class Console extends User {
 	}
 	
 	@Override
-	public boolean sendConversation(Conversation conversation) {
-		return false;
+	public boolean isConversable(Node sender, String message, String type) {
+		return true;
 	}
 	
 	@Override

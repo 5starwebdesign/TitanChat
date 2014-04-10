@@ -19,7 +19,7 @@ package com.titankingdoms.dev.titanchat.user;
 
 import org.bukkit.command.BlockCommandSender;
 
-import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.user.User;
 
 public final class Block extends User {
@@ -29,7 +29,7 @@ public final class Block extends User {
 	}
 	
 	@Override
-	public boolean sendConversation(Conversation conversation) {
+	public boolean isConversable(Node sender, String message, String type) {
 		return false;
 	}
 	

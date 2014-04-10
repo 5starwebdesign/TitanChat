@@ -47,7 +47,7 @@ public final class TitanChat extends JavaPlugin {
 	
 	private final TitanChatSystem system = new TitanChatSystem();
 	
-	public static TitanChat getInstance() {
+	public static TitanChat instance() {
 		if (instance == null)
 			throw new IllegalStateException("TitanChat is not in operation");
 		
@@ -55,7 +55,7 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public <T extends Manager<?>> T getManager(Class<T> manager) {
-		return system.getManager(manager);
+		return getSystem().getManager(manager);
 	}
 	
 	public TitanChatSystem getSystem() {

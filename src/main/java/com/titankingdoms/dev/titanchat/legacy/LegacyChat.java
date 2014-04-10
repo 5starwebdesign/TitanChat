@@ -67,6 +67,11 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	}
 	
 	@Override
+	public Set<Node> getConnected() {
+		return ImmutableSet.<Node>builder().addAll(connected.values()).build();
+	}
+	
+	@Override
 	public String getName() {
 		return "Legacy";
 	}
@@ -102,8 +107,13 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	}
 	
 	@Override
-	public boolean sendConversation(Conversation conversation) {
-		return false;
+	public boolean isConversable(Node sender, String message, String type) {
+		return true;
+	}
+	
+	@Override
+	public Conversation onConversation(Node sender, String message) {
+		return new Conversation(sender, this, "%message", message, "Normal");
 	}
 	
 	@Override
