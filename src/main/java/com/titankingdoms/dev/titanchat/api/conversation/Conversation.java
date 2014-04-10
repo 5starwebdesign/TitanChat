@@ -31,24 +31,30 @@ public final class Conversation implements Cloneable {
 	
 	private final String type;
 	
-	private Status status = Status.PENDING;
+	private Status status;
 	
-	public Conversation(Node sender, Node recipient, String format, String message, String type) {
+	private Conversation(Node sender, Node recipient, String format, String message, String type, Status status) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(recipient, "Recipient cannot be null");
 		Validate.notEmpty(format, "Format cannot be empty");
 		Validate.notEmpty(type, "Type cannot be empty");
+		Validate.notNull(status, "Status cannot be null");
 		
 		this.sender = sender;
 		this.recipient = recipient;
 		this.format = format;
 		this.message = (message != null) ? message : "";
 		this.type = type;
+		this.status = status;
+	}
+	
+	public Conversation(Node sender, Node recipient, String format, String message, String type) {
+		this(sender, recipient, format, message, type, Status.PENDING);
 	}
 	
 	@Override
 	public Conversation clone() {
-		return new Conversation(sender, recipient, format, message, type);
+		return new Conversation(sender, recipient, format, message, type, status);
 	}
 	
 	public String getFormat() {
