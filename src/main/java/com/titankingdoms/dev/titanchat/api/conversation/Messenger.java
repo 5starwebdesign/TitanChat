@@ -26,10 +26,10 @@ import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
 public final class Messenger {
 	
 	public static void post(Conversation conversation) {
-		if (!conversation.inStatus(Status.PENDING))
+		if (!conversation.isPending())
 			return;
 		
-		ConverseEvent event = new ConverseEvent(conversation);
+		ConverseEvent event = new ConverseEvent(conversation.setStatus(Status.PROCESSING));
 		
 		Set<Node> recipients = event.getTerminusRecipients();
 		

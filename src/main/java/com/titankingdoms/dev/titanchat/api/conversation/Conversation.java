@@ -36,7 +36,7 @@ public final class Conversation implements Cloneable {
 	private Conversation(Node sender, Node recipient, String format, String message, String type, Status status) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(recipient, "Recipient cannot be null");
-		Validate.notEmpty(format, "Format cannot be empty");
+		Validate.isTrue(format != null && format.contains("%message"), "Format cannot forgo %message");
 		Validate.notEmpty(type, "Type cannot be empty");
 		Validate.notNull(status, "Status cannot be null");
 		
@@ -81,8 +81,8 @@ public final class Conversation implements Cloneable {
 		return type;
 	}
 	
-	public boolean inStatus(Status status) {
-		return this.status.equals(status);
+	public boolean isPending() {
+		return status.equals(Status.PENDING);
 	}
 	
 	public Conversation setFormat(String format) {
@@ -103,5 +103,5 @@ public final class Conversation implements Cloneable {
 		return this;
 	}
 	
-	public enum Status { CANCELLED, PENDING, SENT }
+	public enum Status { CANCELLED, PENDING, PROCESSING, SENT }
 }
