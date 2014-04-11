@@ -230,7 +230,10 @@ public abstract class Command {
 		String content = (page < 0) ? section.getContent() : section.getContent(page);
 		
 		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
-		Messaging.message(sender, FormatUtils.wrap(Format.AZURE + content, 50));
+		
+		for (String line : FormatUtils.wrap(Format.AZURE + content, 50))
+			Messaging.message(sender, line);
+		
 		return true;
 	}
 	
