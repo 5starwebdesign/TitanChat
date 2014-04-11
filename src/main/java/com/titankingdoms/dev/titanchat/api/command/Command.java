@@ -31,6 +31,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public abstract class Command {
@@ -65,9 +66,6 @@ public abstract class Command {
 		this.syntax = this.label;
 		this.commands = new TreeMap<String, Command>();
 		this.section = new CommandSection(this);
-		
-		if (!Assistance.class.isInstance(this))
-			register(new Assistance(this));
 	}
 	
 	private final String assembleCanonicalSyntax() {
@@ -164,6 +162,9 @@ public abstract class Command {
 	}
 	
 	public final void invokeExecution(CommandSender sender, String[] args) {
+		if (isAssisted(sender, args))
+			return;
+		
 		if (!registration || args.length < 1 || !has(args[0])) {
 			execute(sender, args);
 			return;
@@ -201,6 +202,36 @@ public abstract class Command {
 			
 			return get(args[0]).invokeTabCompletion(sender, Arrays.copyOfRange(args, 1, args.length));
 		}
+	}
+	
+	private final boolean isAssisted(CommandSender sender, String[] args) {
+		if (args.length < 1 || !args[0].equals("?"))
+			return false;
+		
+		int max = section.getPageCount();
+		
+		String title = section.getTitle();
+		
+		int page = -1;
+		
+		if (max > 1) {
+			if (args.length > 1)
+				try { page = Integer.parseInt(args[0]); } catch (Exception e) {}
+			
+			if (page < 1)
+				page = 1;
+			
+			if (page > max)
+				page = max;
+			
+			title += " (" + page + "/" + max + ")";
+		}
+		
+		String content = (page < 0) ? section.getContent() : section.getContent(page);
+		
+		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 55, '='));
+		Messaging.message(sender, FormatUtils.wrap(Format.AZURE + content, 55));
+		return true;
 	}
 	
 	protected boolean isRegistered() {
@@ -328,5 +359,47 @@ public abstract class Command {
 	
 	public boolean validateAuthorisation(CommandSender sender, String[] args) {
 		return true;
+	}
+	
+	public final class CommandSection extends HelpIndex {
+		
+		private final Command command;
+		
+		private CommandSection(Command command) {
+			super((command != null) ? command.getLabel() : "");
+			this.command = command;
+		}
+		
+		@Override
+		public String getContent() {
+			String description = command.getDescription();
+			String aliases = StringUtils.join(command.getAliases(), ", ");
+			String range = "[" + command.getMinArguments() + ", " + command.getMaxArguments() + "]";
+			String syntax = command.getCanonicalSyntax();
+			
+			StringBuilder text = new StringBuilder();
+			
+			text.append("Description: " + description + "\n");
+			text.append("Aliases: " + aliases + "\n");
+			text.append("Argument Range: " + range + "\n");
+			text.append("Syntax: " + syntax + "\n");
+			
+			return text.toString();
+		}
+		
+		@Override
+		public String getContent(int page) {
+			return getContent();
+		}
+		
+		@Override
+		public String getDescription() {
+			return command.getDescription();
+		}
+		
+		@Override
+		public int getPageCount() {
+			return 1;
+		}
 	}
 }
