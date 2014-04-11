@@ -32,8 +32,8 @@ import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 public final class HelpCommand extends Command {
 	
 	public HelpCommand() {
-		super("?");
-		setAliases("help", "h");
+		super("Help");
+		setAliases("h");
 		setArgumentRange(0, 10240);
 		setDescription("Assistance for TitanChat");
 		setSyntax("<section|index>...");
