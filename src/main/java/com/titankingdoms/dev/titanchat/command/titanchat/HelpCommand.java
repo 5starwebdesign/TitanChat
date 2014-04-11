@@ -25,6 +25,7 @@ import com.titankingdoms.dev.titanchat.api.command.Command;
 import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
 import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
 import com.titankingdoms.dev.titanchat.api.help.HelpSection;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
@@ -50,7 +51,7 @@ public final class HelpCommand extends Command {
 		
 		HelpSection section = provider;
 		
-		int page = 1;
+		int page = -1;
 		
 		for (String arg : args) {
 			if (!NumberUtils.isNumber(arg)) {
@@ -73,7 +74,6 @@ public final class HelpCommand extends Command {
 		int max = section.getPageCount();
 		
 		String title = section.getTitle();
-		String content = "";
 		
 		if (max > 1) {
 			if (page < 1)
@@ -83,12 +83,11 @@ public final class HelpCommand extends Command {
 				page = max;
 			
 			title += " (" + page + "/" + max + ")";
-			content = section.getContent(page);
-			
-		} else {
-			content = section.getContent();
 		}
 		
-		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '=') + "\n" + content);
+		String content = (page < 0) ? section.getContent() : section.getContent(page);
+		
+		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
+		Messaging.message(sender, FormatUtils.wrap(Format.AZURE + content, 50));
 	}
 }
