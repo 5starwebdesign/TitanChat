@@ -28,24 +28,24 @@ import org.apache.commons.lang.Validate;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.api.Manager;
 
-public final class NodeProvisionManager implements Manager<Provider<Node>> {
+public final class ProvisionManager implements Manager<Provider<? extends Node>> {
 	
-	private final Map<String, Provider<Node>> providers;
+	private final Map<String, Provider<? extends Node>> providers;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
-	public NodeProvisionManager() {
-		this.providers = new HashMap<String, Provider<Node>>();
+	public ProvisionManager() {
+		this.providers = new HashMap<String, Provider<? extends Node>>();
 	}
 	
 	@Override
-	public Provider<Node> get(String name) {
+	public Provider<? extends Node> get(String name) {
 		return providers.get(name);
 	}
 	
 	@Override
-	public Set<Provider<Node>> getAll() {
-		return new HashSet<Provider<Node>>(providers.values());
+	public Set<Provider<? extends Node>> getAll() {
+		return new HashSet<Provider<? extends Node>>(providers.values());
 	}
 	
 	@Override
@@ -55,7 +55,7 @@ public final class NodeProvisionManager implements Manager<Provider<Node>> {
 	
 	@Override
 	public String getName() {
-		return "NodeProvisionManager";
+		return "ProvisionManager";
 	}
 	
 	public <T extends Node> Provider<T> getProvider(Class<Provider<T>> type, String name) {
@@ -68,7 +68,7 @@ public final class NodeProvisionManager implements Manager<Provider<Node>> {
 	}
 	
 	@Override
-	public boolean has(Provider<Node> provider) {
+	public boolean has(Provider<? extends Node> provider) {
 		return provider != null && has(provider.getName()) && get(provider.getName()).equals(provider);
 	}
 	
@@ -81,7 +81,7 @@ public final class NodeProvisionManager implements Manager<Provider<Node>> {
 	}
 	
 	@Override
-	public void register(Provider<Node> provider) {
+	public void register(Provider<? extends Node> provider) {
 		Validate.notNull(provider, "Provider cannot be null");
 		Validate.isTrue(!has(provider.getName()), "Provider already registered");
 		
@@ -95,7 +95,7 @@ public final class NodeProvisionManager implements Manager<Provider<Node>> {
 	public void unload() {}
 	
 	@Override
-	public void unregister(Provider<Node> provider) {
+	public void unregister(Provider<? extends Node> provider) {
 		Validate.notNull(provider, "Provider cannot be null");
 		Validate.isTrue(has(provider.getName()), "Provider not registered");
 		

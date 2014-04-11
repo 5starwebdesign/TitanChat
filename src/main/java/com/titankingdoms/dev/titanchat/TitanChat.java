@@ -30,7 +30,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.TitanChatSystem;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
-import com.titankingdoms.dev.titanchat.api.conversation.NodeProvisionManager;
+import com.titankingdoms.dev.titanchat.api.conversation.ProvisionManager;
 import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
 import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
 import com.titankingdoms.dev.titanchat.api.user.UserManager;
@@ -178,7 +178,7 @@ public final class TitanChat extends JavaPlugin {
 		system.registerManager(new AdapterHandler());
 		system.registerManager(new CommandManager());
 		system.registerManager(new HelpProvider());
-		system.registerManager(new NodeProvisionManager());
+		system.registerManager(new ProvisionManager());
 		system.registerManager(new UserManager());
 		
 		log(Level.INFO, "Now loaded");

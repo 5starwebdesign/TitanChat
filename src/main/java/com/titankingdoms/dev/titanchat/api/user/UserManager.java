@@ -53,7 +53,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	public UserManager() {
 		this.plugin = TitanChat.instance();
 		this.users = new HashMap<String, User>();
-		this.dependencies = ImmutableSet.<String>builder().add("NodeProvisionManager").build();
+		this.dependencies = ImmutableSet.<String>builder().add("ProvisionManager").build();
 	}
 	
 	@Override
