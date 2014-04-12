@@ -51,7 +51,7 @@ public final class HelpCommand extends Command {
 		
 		HelpSection section = provider;
 		
-		int page = -1;
+		int page = 1;
 		
 		for (String arg : args) {
 			if (!NumberUtils.isNumber(arg)) {
@@ -85,11 +85,9 @@ public final class HelpCommand extends Command {
 			title += " (" + page + "/" + max + ")";
 		}
 		
-		String content = (page < 0) ? section.getContent() : section.getContent(page);
-		
 		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
 		
-		for (String line : FormatUtils.wrap(Format.AZURE + content, 50))
+		for (String line : FormatUtils.wrap(Format.AZURE + section.getContent(page), 50))
 			Messaging.message(sender, line);
 	}
 }

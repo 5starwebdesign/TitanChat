@@ -21,8 +21,6 @@ public interface HelpSection {
 	
 	public String getDescription();
 	
-	public String getContent();
-	
 	public String getContent(int page);
 	
 	public int getPageCount();

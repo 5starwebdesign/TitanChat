@@ -75,32 +75,6 @@ public class HelpIndex implements HelpSection {
 	}
 	
 	@Override
-	public String getContent() {
-		StringBuilder content = new StringBuilder();
-		
-		for (HelpSection section : sections.values()) {
-			if (content.length() > 0)
-				content.append('\n');
-			
-			String title = section.getTitle();
-			String description = section.getDescription();
-			
-			content.append(title);
-			
-			if (!description.isEmpty()) {
-				content.append(" - ");
-				
-				if (description.length() > 52 - title.length())
-					content.append(description.substring(0, 49 - title.length()) + "...");
-				else
-					content.append(description);
-			}
-		}
-		
-		return content.toString();
-	}
-	
-	@Override
 	public String getContent(int page) {
 		StringBuilder content = new StringBuilder();
 		

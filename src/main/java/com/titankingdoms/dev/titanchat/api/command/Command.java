@@ -119,7 +119,7 @@ public abstract class Command {
 	
 	public final String getCanonicalSyntax() {
 		if (canonicalSyntax == null || canonicalSyntax.isEmpty())
-			assembleCanonicalSyntax();
+			return assembleCanonicalSyntax();
 		
 		return canonicalSyntax;
 	}
@@ -212,7 +212,7 @@ public abstract class Command {
 		
 		String title = section.getTitle();
 		
-		int page = -1;
+		int page = 1;
 		
 		if (max > 1) {
 			if (args.length > 1)
@@ -227,11 +227,9 @@ public abstract class Command {
 			title += " (" + page + "/" + max + ")";
 		}
 		
-		String content = (page < 0) ? section.getContent() : section.getContent(page);
-		
 		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
 		
-		for (String line : FormatUtils.wrap(Format.AZURE + content, 50))
+		for (String line : FormatUtils.wrap(Format.AZURE + section.getContent(page), 50))
 			Messaging.message(sender, line);
 		
 		return true;
@@ -374,7 +372,7 @@ public abstract class Command {
 		}
 		
 		@Override
-		public String getContent() {
+		public String getContent(int page) {
 			String description = command.getDescription();
 			String aliases = StringUtils.join(command.getAliases(), ", ");
 			String range = "[" + command.getMinArguments() + ", " + command.getMaxArguments() + "]";
@@ -388,11 +386,6 @@ public abstract class Command {
 			text.append("Syntax: " + syntax + "\n");
 			
 			return text.toString();
-		}
-		
-		@Override
-		public String getContent(int page) {
-			return getContent();
 		}
 		
 		@Override
