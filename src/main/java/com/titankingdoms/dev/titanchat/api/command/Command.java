@@ -118,7 +118,7 @@ public abstract class Command {
 		return new ArrayList<Command>(commands.values());
 	}
 	
-	public HelpIndex getAssistance() {
+	public final HelpIndex getAssistance() {
 		return assistance;
 	}
 	
@@ -267,15 +267,20 @@ public abstract class Command {
 		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : this.minArgs;
 	}
 	
-	public void setAssistance(HelpIndex assistance) {
-		HelpIndex parentAssist = null;
-		
-		if (isRegistered())
-			parentAssist = (parent != null) ? parent.assistance : plugin.getManager(CommandManager.class).list;
-		
-		if (parentAssist != null) {
-			parentAssist.removeSection(this.assistance);
-			parentAssist.addSection(assistance);
+	public final void setAssistance(HelpIndex assistance) {
+		if (isRegistered()) {
+			if (parent != null) {
+				HelpIndex parent = this.parent.assistance;
+				
+				parent.removeSection(this.assistance);
+				parent.addSection(assistance);
+				
+			} else {
+				CommandIndex index = plugin.getManager(CommandManager.class).getCommandIndex();
+				
+				index.removeAssistance(this.assistance);
+				index.addAssitance(assistance);
+			}
 			
 			for (HelpSection child : this.assistance.getSections())
 				this.assistance.removeSection(child);

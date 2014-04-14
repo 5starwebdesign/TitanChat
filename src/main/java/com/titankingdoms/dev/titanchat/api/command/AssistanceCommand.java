@@ -100,5 +100,8 @@ public final class AssistanceCommand extends Command {
 		public int getPageCount() {
 			return 1;
 		}
+		
+		@Override
+		public void setDescription(String description) {}
 	}
 }

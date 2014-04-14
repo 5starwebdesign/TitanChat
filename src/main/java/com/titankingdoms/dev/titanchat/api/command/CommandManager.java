@@ -33,7 +33,6 @@ import org.bukkit.command.CommandSender;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
-import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
 import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
 import com.titankingdoms.dev.titanchat.command.titanchat.HelpCommand;
@@ -46,14 +45,14 @@ public final class CommandManager implements Manager<Command> {
 	
 	private final Map<String, Command> commands;
 	
-	protected final HelpIndex list;
+	private final CommandIndex index;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public CommandManager() {
 		this.plugin = TitanChat.instance();
 		this.commands = new TreeMap<String, Command>();
-		this.list = new HelpIndex("Commands");
+		this.index = new CommandIndex();
 	}
 	
 	@Override
@@ -64,6 +63,10 @@ public final class CommandManager implements Manager<Command> {
 	@Override
 	public List<Command> getAll() {
 		return new ArrayList<Command>(commands.values());
+	}
+	
+	public CommandIndex getCommandIndex() {
+		return index;
 	}
 	
 	@Override
@@ -88,7 +91,7 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public void load() {
-		plugin.getManager(HelpProvider.class).register(list);
+		plugin.getManager(HelpProvider.class).register(index);
 		
 		register(new TitanChatCommand());
 		
@@ -141,7 +144,7 @@ public final class CommandManager implements Manager<Command> {
 			commands.put(alias.toLowerCase(), command);
 		}
 		
-		list.addSection(command.getAssistance());
+		index.addAssitance(command.getAssistance());
 	}
 	
 	public static String[] regroup(String[] args) {
@@ -197,7 +200,7 @@ public final class CommandManager implements Manager<Command> {
 			unregister(command);
 		}
 		
-		plugin.getManager(HelpProvider.class).unregister(list);
+		plugin.getManager(HelpProvider.class).unregister(index);
 	}
 	
 	@Override
@@ -214,6 +217,6 @@ public final class CommandManager implements Manager<Command> {
 			commands.remove(alias.toLowerCase());
 		}
 		
-		list.removeSection(command.getAssistance());
+		index.removeAssistance(command.getAssistance());
 	}
 }
