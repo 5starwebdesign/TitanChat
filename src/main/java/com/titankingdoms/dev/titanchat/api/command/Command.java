@@ -45,7 +45,7 @@ public abstract class Command {
 	private int maxArgs = 0;
 	private int minArgs = 0;
 	
-	private String canonicalSyntax;
+	private String canonSyntax;
 	private String syntax;
 	
 	private final Map<String, Command> commands;
@@ -77,19 +77,16 @@ public abstract class Command {
 				else
 					absolute.insert(1, syntax.trim() + " ");
 				
-				if (getClass().isInstance(command))
-					command = command.parent;
-				else
-					command = null;
+				command = command.parent;
 			}
 			
-			this.syntax = absolute.toString().trim().toLowerCase();
+			this.canonSyntax = absolute.toString().trim().toLowerCase();
 			
 		} else {
-			this.syntax = "/" + getSyntax();
+			this.canonSyntax = "/" + getSyntax();
 		}
 		
-		return syntax;
+		return canonSyntax;
 	}
 	
 	@Override
@@ -117,11 +114,11 @@ public abstract class Command {
 		return new ArrayList<Command>(commands.values());
 	}
 	
-	public String getCanonicalSyntax() {
-		if (canonicalSyntax == null || canonicalSyntax.isEmpty())
+	public final String getCanonicalSyntax() {
+		if (canonSyntax == null || canonSyntax.isEmpty())
 			return assembleCanonicalSyntax();
 		
-		return canonicalSyntax;
+		return canonSyntax;
 	}
 	
 	public String getDescription() {
@@ -271,6 +268,8 @@ public abstract class Command {
 	
 	protected void setSyntax(String syntax) {
 		this.syntax = (syntax != null) ? label + " " + syntax : label;
+		
+		assembleCanonicalSyntax();
 	}
 	
 	protected List<String> tabComplete(CommandSender sender, String[] args) {
