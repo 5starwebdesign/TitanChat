@@ -29,7 +29,8 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.command.CommandManager;
+import com.titankingdoms.dev.titanchat.api.command.AssistanceCommand.Assistance;
+import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
@@ -51,6 +52,8 @@ public abstract class Command {
 	private final Map<String, Command> commands;
 	
 	private boolean registration = true;
+	
+	private HelpIndex assistance;
 	
 	private Command parent;
 	
@@ -112,6 +115,10 @@ public abstract class Command {
 	
 	public List<Command> getAll() {
 		return new ArrayList<Command>(commands.values());
+	}
+	
+	public HelpIndex getAssitance() {
+		return assistance;
 	}
 	
 	public final String getCanonicalSyntax() {
@@ -256,6 +263,10 @@ public abstract class Command {
 	protected void setArgumentRange(int minArgs, int maxArgs) {
 		this.minArgs = (minArgs >= 0) ? minArgs : 0;
 		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : this.minArgs;
+	}
+	
+	public void setAssistance(HelpIndex assistance) {
+		this.assistance = (assistance != null) ? assistance : new Assistance(this);
 	}
 	
 	protected void setDescription(String description) {
