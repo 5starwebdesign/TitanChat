@@ -31,7 +31,10 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.google.common.collect.ImmutableSet;
+import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
+import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
 import com.titankingdoms.dev.titanchat.command.titanchat.HelpCommand;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
@@ -39,12 +42,18 @@ import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class CommandManager implements Manager<Command> {
 	
+	private final TitanChat plugin;
+	
 	private final Map<String, Command> commands;
+	
+	protected final HelpIndex list;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public CommandManager() {
+		this.plugin = TitanChat.instance();
 		this.commands = new TreeMap<String, Command>();
+		this.list = new HelpIndex("Commands");
 	}
 	
 	@Override
@@ -79,6 +88,8 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public void load() {
+		plugin.getManager(HelpProvider.class).register(list);
+		
 		register(new TitanChatCommand());
 		
 		get("TitanChat").register(new HelpCommand());
@@ -129,6 +140,8 @@ public final class CommandManager implements Manager<Command> {
 			
 			commands.put(alias.toLowerCase(), command);
 		}
+		
+		list.addSection(command.getAssistance());
 	}
 	
 	public static String[] regroup(String[] args) {
@@ -183,6 +196,8 @@ public final class CommandManager implements Manager<Command> {
 			
 			unregister(command);
 		}
+		
+		plugin.getManager(HelpProvider.class).unregister(list);
 	}
 	
 	@Override
@@ -198,5 +213,7 @@ public final class CommandManager implements Manager<Command> {
 			
 			commands.remove(alias.toLowerCase());
 		}
+		
+		list.removeSection(command.getAssistance());
 	}
 }

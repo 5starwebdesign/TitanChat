@@ -31,6 +31,7 @@ import org.bukkit.command.CommandSender;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.command.AssistanceCommand.Assistance;
 import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
+import com.titankingdoms.dev.titanchat.api.help.HelpSection;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
@@ -117,7 +118,7 @@ public abstract class Command {
 		return new ArrayList<Command>(commands.values());
 	}
 	
-	public HelpIndex getAssitance() {
+	public HelpIndex getAssistance() {
 		return assistance;
 	}
 	
@@ -254,6 +255,7 @@ public abstract class Command {
 		
 		command.parent = this;
 		command.assembleCanonicalSyntax();
+		assistance.addSection(command.assistance);
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -266,6 +268,22 @@ public abstract class Command {
 	}
 	
 	public void setAssistance(HelpIndex assistance) {
+		HelpIndex parentAssist = null;
+		
+		if (isRegistered())
+			parentAssist = (parent != null) ? parent.assistance : plugin.getManager(CommandManager.class).list;
+		
+		if (parentAssist != null) {
+			parentAssist.removeSection(this.assistance);
+			parentAssist.addSection(assistance);
+			
+			for (HelpSection child : this.assistance.getSections())
+				this.assistance.removeSection(child);
+			
+			for (Command command : getAll())
+				assistance.addSection(command.assistance);
+		}
+		
 		this.assistance = (assistance != null) ? assistance : new Assistance(this);
 	}
 	
@@ -321,5 +339,6 @@ public abstract class Command {
 		
 		command.parent = null;
 		command.assembleCanonicalSyntax();
+		assistance.removeSection(command.assistance);
 	}
 }

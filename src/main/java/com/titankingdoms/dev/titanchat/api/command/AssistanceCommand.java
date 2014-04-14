@@ -38,7 +38,7 @@ public final class AssistanceCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		HelpIndex assistance = command.getAssitance();
+		HelpIndex assistance = command.getAssistance();
 		
 		int max = assistance.getPageCount();
 		
