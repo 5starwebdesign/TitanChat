@@ -20,8 +20,6 @@ package com.titankingdoms.dev.titanchat.command;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
-import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
@@ -44,17 +42,5 @@ public final class TitanChatCommand extends Command {
 		}
 		
 		super.execute(sender, args);
-	}
-	
-	@Override
-	protected boolean isRegistered() {
-		return true;
-	}
-	
-	@Override
-	protected void setHelpSection(HelpIndex section) {
-		plugin.getManager(HelpProvider.class).unregister(getHelpSection());
-		super.setHelpSection(section);
-		plugin.getManager(HelpProvider.class).register(getHelpSection());
 	}
 }

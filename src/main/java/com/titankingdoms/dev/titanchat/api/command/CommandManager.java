@@ -31,9 +31,7 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.google.common.collect.ImmutableSet;
-import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
-import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
 import com.titankingdoms.dev.titanchat.command.titanchat.HelpCommand;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
@@ -41,14 +39,11 @@ import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class CommandManager implements Manager<Command> {
 	
-	private final TitanChat plugin;
-	
 	private final Map<String, Command> commands;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public CommandManager() {
-		this.plugin = TitanChat.instance();
 		this.commands = new TreeMap<String, Command>();
 	}
 	
@@ -134,8 +129,6 @@ public final class CommandManager implements Manager<Command> {
 			
 			commands.put(alias.toLowerCase(), command);
 		}
-		
-		plugin.getManager(HelpProvider.class).register(command.getHelpSection());
 	}
 	
 	public static String[] regroup(String[] args) {
@@ -167,7 +160,7 @@ public final class CommandManager implements Manager<Command> {
 		Command command = get(label);
 		String[] arguments = regroup(args);
 		
-		if (!command.validateAuthorisation(sender, arguments)) {
+		if (!command.isPermitted(sender, arguments)) {
 			Messaging.message(sender, Format.RED + "You do not have permission");
 			return true;
 		}
@@ -205,7 +198,5 @@ public final class CommandManager implements Manager<Command> {
 			
 			commands.remove(alias.toLowerCase());
 		}
-		
-		plugin.getManager(HelpProvider.class).unregister(command.getHelpSection());
 	}
 }

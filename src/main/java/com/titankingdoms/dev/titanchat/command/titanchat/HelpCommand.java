@@ -37,7 +37,6 @@ public final class HelpCommand extends Command {
 		setArgumentRange(0, 10240);
 		setDescription("Assistance for TitanChat");
 		setSyntax("<section|index>...");
-		setRegistrationSupport(false);
 	}
 	
 	@Override
