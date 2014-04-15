@@ -15,22 +15,23 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.command;
+package com.titankingdoms.dev.titanchat.api.command.assistance;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
-import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
+import com.titankingdoms.dev.titanchat.api.command.Command;
+import com.titankingdoms.dev.titanchat.api.guide.Index;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
-public final class AssistanceCommand extends Command {
+public final class AssistCommand extends Command {
 	
 	private final Command command;
 	
-	public AssistanceCommand(Command command) {
+	public AssistCommand(Command command) {
 		super((command != null) ? "?" : "");
 		setSupportRegistration(false);
 		this.command = command;
@@ -38,7 +39,7 @@ public final class AssistanceCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		HelpIndex assistance = command.getAssistance();
+		Index assistance = command.getAssistance();
 		
 		int max = assistance.getPageCount();
 		
@@ -63,45 +64,5 @@ public final class AssistanceCommand extends Command {
 		
 		for (String content : FormatUtils.wrap(Format.AZURE + assistance.getContent(page), 50))
 			Messaging.message(sender, content);
-	}
-	
-	public static final class Assistance extends HelpIndex {
-		
-		private final Command command;
-
-		public Assistance(Command command) {
-			super((command != null) ? command.getLabel() : "");
-			this.command = command;
-		}
-		
-		@Override
-		public String getContent(int page) {
-			String description = command.getDescription();
-			String aliases = StringUtils.join(command.getAliases(), ", ");
-			String range = "[" + command.getMinArguments() + ", " + command.getMaxArguments() + "]";
-			String syntax = command.getCanonicalSyntax();
-			
-			StringBuilder content = new StringBuilder();
-			
-			content.append("Description: ").append(description).append("\n");
-			content.append("Aliases: ").append(aliases).append("\n");
-			content.append("Argument Range: ").append(range).append("\n");
-			content.append("Syntax: ").append(syntax);
-			
-			return content.toString();
-		}
-		
-		@Override
-		public String getDescription() {
-			return command.getDescription();
-		}
-		
-		@Override
-		public int getPageCount() {
-			return 1;
-		}
-		
-		@Override
-		public void setDescription(String description) {}
 	}
 }

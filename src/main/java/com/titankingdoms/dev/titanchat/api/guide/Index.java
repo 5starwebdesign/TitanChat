@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.help;
+package com.titankingdoms.dev.titanchat.api.guide;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -27,7 +27,7 @@ import org.apache.commons.lang.Validate;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
 
-public class HelpIndex implements HelpSection {
+public class Index implements Chapter {
 	
 	protected final TitanChat plugin;
 	
@@ -35,29 +35,29 @@ public class HelpIndex implements HelpSection {
 	
 	private String description = "";
 	
-	private final Map<String, HelpSection> sections;
+	private final Map<String, Chapter> chapters;
 	
-	public HelpIndex(String title) {
+	public Index(String title) {
 		Validate.notEmpty(title, "Title cannot be empty");
 		
 		this.plugin = TitanChat.instance();
 		this.title = title;
-		this.sections = new TreeMap<String, HelpSection>();
+		this.chapters = new TreeMap<String, Chapter>();
 	}
 	
-	public void addSection(HelpSection section) {
-		Validate.notNull(section, "Addon cannot be null");
-		Validate.isTrue(!contains(section), "Addon already registered");
+	public void addChapter(Chapter chapter) {
+		Validate.notNull(chapter, "Chapter cannot be null");
+		Validate.isTrue(!contains(chapter), "Chapter already registered");
 		
-		sections.put(section.getTitle().toLowerCase(), section);
+		chapters.put(chapter.getTitle().toLowerCase(), chapter);
 	}
 	
 	public boolean contains(String title) {
-		return title != null && !title.isEmpty() && sections.containsKey(title.toLowerCase());
+		return title != null && !title.isEmpty() && chapters.containsKey(title.toLowerCase());
 	}
 	
-	public boolean contains(HelpSection section) {
-		return section != null && contains(section.getTitle()) && getSection(section.getTitle()).equals(section);
+	public boolean contains(Chapter chapter) {
+		return chapter != null && contains(chapter.getTitle()) && getChapter(chapter.getTitle()).equals(chapter);
 	}
 	
 	@Override
@@ -65,35 +65,35 @@ public class HelpIndex implements HelpSection {
 		return description;
 	}
 	
-	public HelpSection getSection(String title) {
+	public Chapter getChapter(String title) {
 		Validate.notEmpty(title, "Title cannot be empty");
-		return sections.get(title.toLowerCase());
+		return chapters.get(title.toLowerCase());
 	}
 	
-	public List<HelpSection> getSections() {
-		return new LinkedList<HelpSection>(sections.values());
+	public List<Chapter> getChapters() {
+		return new LinkedList<Chapter>(chapters.values());
 	}
 	
 	@Override
 	public String getContent(int page) {
 		StringBuilder content = new StringBuilder();
 		
-		List<HelpSection> sections = new ArrayList<HelpSection>(this.sections.values());
+		List<Chapter> chapters = new ArrayList<Chapter>(this.chapters.values());
 		
 		int start = (page - 1) * 6;
 		int end = start + 6;
 		
-		if (end > sections.size())
-			end = sections.size();
+		if (end > chapters.size())
+			end = chapters.size();
 		
 		for (int count = start; count < end; count++) {
 			if (content.length() > 0)
 				content.append('\n');
 			
-			HelpSection section = sections.get(count);
+			Chapter chapter = chapters.get(count);
 			
-			String title = section.getTitle();
-			String description = section.getDescription();
+			String title = chapter.getTitle();
+			String description = chapter.getDescription();
 			
 			content.append(title);
 			
@@ -111,9 +111,9 @@ public class HelpIndex implements HelpSection {
 	}
 	
 	public int getPageCount() {
-		int count = sections.size() / 6;
+		int count = chapters.size() / 6;
 		
-		if ((sections.size() % 6) != 0)
+		if ((chapters.size() % 6) != 0)
 			count++;
 		
 		return count;
@@ -124,11 +124,11 @@ public class HelpIndex implements HelpSection {
 		return title;
 	}
 	
-	public void removeSection(HelpSection section) {
-		Validate.notNull(section, "Addon cannot be null");
-		Validate.isTrue(contains(section), "Addon not registered");
+	public void removeChapter(Chapter chapter) {
+		Validate.notNull(chapter, "Chapter cannot be null");
+		Validate.isTrue(contains(chapter), "Chapter not registered");
 		
-		sections.remove(section.getTitle().toLowerCase());
+		chapters.remove(chapter.getTitle().toLowerCase());
 	}
 	
 	protected void setDescription(String description) {

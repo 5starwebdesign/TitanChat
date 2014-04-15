@@ -29,9 +29,10 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.command.AssistanceCommand.Assistance;
-import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
-import com.titankingdoms.dev.titanchat.api.help.HelpSection;
+import com.titankingdoms.dev.titanchat.api.command.assistance.AssistCommand;
+import com.titankingdoms.dev.titanchat.api.command.assistance.CommandAssistance;
+import com.titankingdoms.dev.titanchat.api.guide.Chapter;
+import com.titankingdoms.dev.titanchat.api.guide.Index;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
@@ -50,11 +51,11 @@ public abstract class Command {
 	private String canonSyntax;
 	private String syntax;
 	
+	private Index assistance;
+	
 	private final Map<String, Command> commands;
 	
 	private boolean registration = true;
-	
-	private HelpIndex assistance;
 	
 	private Command parent;
 	
@@ -81,13 +82,13 @@ public abstract class Command {
 				else
 					absolute.insert(1, syntax.trim() + " ");
 				
-				command = command.parent;
+				command = command.getParent();
 			}
 			
 			this.canonSyntax = absolute.toString().trim().toLowerCase();
 			
 		} else {
-			this.canonSyntax = "/" + getSyntax();
+			this.canonSyntax = "/" + getSyntax().toLowerCase();
 		}
 		
 		return canonSyntax;
@@ -106,7 +107,7 @@ public abstract class Command {
 		Messaging.message(sender, "Syntax: " + getCanonicalSyntax());
 	}
 	
-	public Command get(String name) {
+	private final Command get(String name) {
 		return (has(name)) ? commands.get(name.toLowerCase()) : null;
 	}
 	
@@ -114,11 +115,11 @@ public abstract class Command {
 		return aliases.clone();
 	}
 	
-	public List<Command> getAll() {
+	private final List<Command> getAll() {
 		return new ArrayList<Command>(commands.values());
 	}
 	
-	public final HelpIndex getAssistance() {
+	public final Index getAssistance() {
 		return assistance;
 	}
 	
@@ -145,15 +146,19 @@ public abstract class Command {
 		return minArgs;
 	}
 	
+	private final Command getParent() {
+		return parent;
+	}
+	
 	public String getSyntax() {
 		return syntax;
 	}
 	
-	public boolean has(String name) {
+	private final boolean has(String name) {
 		return name != null && !name.isEmpty() && commands.containsKey(name.toLowerCase());
 	}
 	
-	public boolean has(Command command) {
+	private final boolean has(Command command) {
 		return command != null && has(command.getLabel()) && get(command.getLabel()).equals(command);
 	}
 	
@@ -197,7 +202,23 @@ public abstract class Command {
 			return tabComplete(sender, args);
 		
 		case 1:
-			return (!commands.isEmpty()) ? match(args[0]) : tabComplete(sender, args);
+			if (commands.isEmpty())
+				return tabComplete(sender, args);
+			
+			if (args[0] == null || args[0].isEmpty())
+				return new ArrayList<String>(commands.keySet());
+			
+			List<String> matches = new ArrayList<String>();
+			
+			for (String match : commands.keySet()) {
+				if (!match.startsWith(args[0]))
+					continue;
+				
+				matches.add(match);
+			}
+			
+			Collections.sort(matches);
+			return matches;
 			
 		default:
 			if (!has(args[0]))
@@ -215,27 +236,10 @@ public abstract class Command {
 		if (!plugin.getSystem().hasManager(CommandManager.class))
 			return false;
 		
-		return parent != null || plugin.getSystem().getManager(CommandManager.class).has(this);
+		return parent != null || plugin.getManager(CommandManager.class).has(this);
 	}
 	
-	protected List<String> match(String name) {
-		if (name == null || name.isEmpty())
-			return new ArrayList<String>(commands.keySet());
-		
-		List<String> matches = new ArrayList<String>();
-		
-		for (String match : commands.keySet()) {
-			if (!match.startsWith(name))
-				continue;
-			
-			matches.add(match);
-		}
-		
-		Collections.sort(matches);
-		return matches;
-	}
-	
-	public void register(Command command) {
+	public final void register(Command command) {
 		if (!registration)
 			return;
 		
@@ -253,9 +257,14 @@ public abstract class Command {
 			commands.put(alias.toLowerCase(), command);
 		}
 		
-		command.parent = this;
+		command.setParent(this);
 		command.assembleCanonicalSyntax();
-		assistance.addSection(command.assistance);
+		
+		assistance.addChapter(command.assistance);
+	}
+	
+	protected void registerGenericAssistance() {
+		register(new AssistCommand(this));
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -267,33 +276,37 @@ public abstract class Command {
 		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : this.minArgs;
 	}
 	
-	public final void setAssistance(HelpIndex assistance) {
+	public final void setAssistance(Index assistance) {
 		if (isRegistered()) {
 			if (parent != null) {
-				HelpIndex parent = this.parent.assistance;
+				Index parent = this.parent.assistance;
 				
-				parent.removeSection(this.assistance);
-				parent.addSection(assistance);
+				parent.removeChapter(this.assistance);
+				parent.addChapter(assistance);
 				
 			} else {
-				CommandIndex index = plugin.getManager(CommandManager.class).getCommandIndex();
+				CommandManager manager = plugin.getManager(CommandManager.class);
 				
-				index.removeAssistance(this.assistance);
-				index.addAssitance(assistance);
+				manager.removeAssistance(this.assistance);
+				manager.addAssistance(assistance);
 			}
 			
-			for (HelpSection child : this.assistance.getSections())
-				this.assistance.removeSection(child);
+			for (Chapter child : this.assistance.getChapters())
+				this.assistance.removeChapter(child);
 			
 			for (Command command : getAll())
-				assistance.addSection(command.assistance);
+				assistance.addChapter(command.assistance);
 		}
 		
-		this.assistance = (assistance != null) ? assistance : new Assistance(this);
+		this.assistance = (assistance != null) ? assistance : new CommandAssistance(this);
 	}
 	
 	protected void setDescription(String description) {
 		this.description = (description != null) ? description : "";
+	}
+	
+	private void setParent(Command parent) {
+		this.parent = parent;
 	}
 	
 	protected void setSupportRegistration(boolean registration) {
@@ -324,7 +337,7 @@ public abstract class Command {
 				"}";
 	}
 	
-	public void unregister(Command command) {
+	public final void unregister(Command command) {
 		if (!registration)
 			return;
 		
@@ -342,8 +355,13 @@ public abstract class Command {
 			commands.remove(alias.toLowerCase());
 		}
 		
-		command.parent = null;
+		command.setParent(null);
 		command.assembleCanonicalSyntax();
-		assistance.removeSection(command.assistance);
+		
+		assistance.removeChapter(command.assistance);
+	}
+	
+	protected void unregisterGenericAssistance() {
+		unregister(new AssistCommand(this));
 	}
 }

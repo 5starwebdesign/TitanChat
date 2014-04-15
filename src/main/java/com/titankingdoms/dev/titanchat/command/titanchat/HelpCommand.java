@@ -22,9 +22,9 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.api.help.HelpIndex;
-import com.titankingdoms.dev.titanchat.api.help.HelpProvider;
-import com.titankingdoms.dev.titanchat.api.help.HelpSection;
+import com.titankingdoms.dev.titanchat.api.guide.Chapter;
+import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
+import com.titankingdoms.dev.titanchat.api.guide.Index;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
@@ -32,32 +32,33 @@ import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 public final class HelpCommand extends Command {
 	
 	public HelpCommand() {
-		super("Help");
-		setAliases("h");
+		super("?");
+		setAliases("help", "h");
 		setArgumentRange(0, 10240);
 		setDescription("Assistance for TitanChat");
-		setSyntax("<section|index>...");
+		setSyntax("<chapter|index>...");
+		registerGenericAssistance();
 	}
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		HelpProvider provider = plugin.getManager(HelpProvider.class);
+		Enchiridion provider = plugin.getManager(Enchiridion.class);
 		
 		if (provider == null) {
 			Messaging.message(sender, "Assistance cannot be provided at this time");
 			return;
 		}
 		
-		HelpSection section = provider;
+		Chapter section = provider;
 		
 		int page = 1;
 		
 		for (String arg : args) {
 			if (!NumberUtils.isNumber(arg)) {
-				if (!HelpIndex.class.isInstance(section))
+				if (!Index.class.isInstance(section))
 					break;
 				
-				section = HelpIndex.class.cast(section).getSection(arg);
+				section = Index.class.cast(section).getChapter(arg);
 				continue;
 			}
 			

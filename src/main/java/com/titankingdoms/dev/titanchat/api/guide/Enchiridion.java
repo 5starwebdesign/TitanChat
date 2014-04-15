@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.help;
+package com.titankingdoms.dev.titanchat.api.guide;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,25 +28,25 @@ import java.util.TreeMap;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.api.Manager;
 
-public final class HelpProvider extends HelpIndex implements Manager<HelpSection> {
+public final class Enchiridion extends Index implements Manager<Chapter> {
 	
-	private final Map<String, HelpSection> sections;
+	private final Map<String, Chapter> chapters;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
-	public HelpProvider() {
+	public Enchiridion() {
 		super("General");
-		this.sections = new TreeMap<String, HelpSection>();
+		this.chapters = new TreeMap<String, Chapter>();
 	}
 	
 	@Override
-	public HelpSection get(String title) {
-		return getSection(title);
+	public Chapter get(String title) {
+		return getChapter(title);
 	}
 	
 	@Override
-	public Collection<HelpSection> getAll() {
-		return getSections();
+	public Collection<Chapter> getAll() {
+		return getChapters();
 	}
 	
 	@Override
@@ -56,12 +56,12 @@ public final class HelpProvider extends HelpIndex implements Manager<HelpSection
 	
 	@Override
 	public String getDescription() {
-		return "The General Help Index";
+		return "The General Index";
 	}
 	
 	@Override
 	public String getName() {
-		return "HelpCentre";
+		return "Enchiridion";
 	}
 	
 	@Override
@@ -70,8 +70,8 @@ public final class HelpProvider extends HelpIndex implements Manager<HelpSection
 	}
 	
 	@Override
-	public boolean has(HelpSection section) {
-		return contains(section);
+	public boolean has(Chapter chapter) {
+		return contains(chapter);
 	}
 	
 	@Override
@@ -80,11 +80,11 @@ public final class HelpProvider extends HelpIndex implements Manager<HelpSection
 	@Override
 	public Collection<String> match(String title) {
 		if (title == null || title.isEmpty())
-			return new ArrayList<String>(sections.keySet());
+			return new ArrayList<String>(chapters.keySet());
 		
 		List<String> matches = new ArrayList<String>();
 		
-		for (String match : sections.keySet()) {
+		for (String match : chapters.keySet()) {
 			if (!match.startsWith(title))
 				continue;
 			
@@ -96,8 +96,8 @@ public final class HelpProvider extends HelpIndex implements Manager<HelpSection
 	}
 	
 	@Override
-	public void register(HelpSection section) {
-		addSection(section);
+	public void register(Chapter chapter) {
+		addChapter(chapter);
 	}
 	
 	@Override
@@ -110,7 +110,7 @@ public final class HelpProvider extends HelpIndex implements Manager<HelpSection
 	public void unload() {}
 	
 	@Override
-	public void unregister(HelpSection section) {
-		removeSection(section);
+	public void unregister(Chapter chapter) {
+		removeChapter(chapter);
 	}
 }

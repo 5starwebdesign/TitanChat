@@ -15,9 +15,9 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.help;
+package com.titankingdoms.dev.titanchat.api.guide;
 
-public interface HelpSection {
+public interface Chapter {
 	
 	public String getDescription();
 	
