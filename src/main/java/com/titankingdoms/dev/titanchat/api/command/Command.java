@@ -29,10 +29,9 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.command.assistance.AssistCommand;
-import com.titankingdoms.dev.titanchat.api.command.assistance.CommandAssistance;
+import com.titankingdoms.dev.titanchat.api.command.guide.Assistance;
+import com.titankingdoms.dev.titanchat.api.command.guide.GenericAssistance;
 import com.titankingdoms.dev.titanchat.api.guide.Chapter;
-import com.titankingdoms.dev.titanchat.api.guide.Index;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
@@ -51,9 +50,9 @@ public abstract class Command {
 	private String canonSyntax;
 	private String syntax;
 	
-	private Index assistance;
-	
 	private final Map<String, Command> commands;
+	
+	private Assistance assistance;
 	
 	private boolean registration = true;
 	
@@ -119,7 +118,7 @@ public abstract class Command {
 		return new ArrayList<Command>(commands.values());
 	}
 	
-	public final Index getAssistance() {
+	public final Assistance getAssistance() {
 		return assistance;
 	}
 	
@@ -260,11 +259,7 @@ public abstract class Command {
 		command.setParent(this);
 		command.assembleCanonicalSyntax();
 		
-		assistance.addChapter(command.assistance);
-	}
-	
-	protected void registerGenericAssistance() {
-		register(new AssistCommand(this));
+		assistance.addChapter(command.getAssistance());
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -276,29 +271,24 @@ public abstract class Command {
 		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : this.minArgs;
 	}
 	
-	public final void setAssistance(Index assistance) {
-		if (isRegistered()) {
-			if (parent != null) {
-				Index parent = this.parent.assistance;
-				
-				parent.removeChapter(this.assistance);
-				parent.addChapter(assistance);
-				
-			} else {
-				CommandManager manager = plugin.getManager(CommandManager.class);
-				
-				manager.removeAssistance(this.assistance);
-				manager.addAssistance(assistance);
-			}
+	public final void setAssistance(Assistance assistance) {
+		if (isRegistered() && parent != null) {
+			Assistance index = this.parent.getAssistance();
 			
-			for (Chapter child : this.assistance.getChapters())
-				this.assistance.removeChapter(child);
-			
-			for (Command command : getAll())
-				assistance.addChapter(command.assistance);
+			index.removeChapter(this.assistance);
+			index.addChapter(assistance);
 		}
 		
-		this.assistance = (assistance != null) ? assistance : new CommandAssistance(this);
+		for (Chapter child : this.assistance.getChapters())
+			this.assistance.removeChapter(child);
+		
+		for (Command command : getAll())
+			assistance.addChapter(command.getAssistance());
+		
+		this.assistance = (assistance != null) ? assistance : new GenericAssistance(this);
+		
+		if (isRegistered() && parent == null)
+			plugin.getManager(CommandManager.class).getIndex().index();
 	}
 	
 	protected void setDescription(String description) {
@@ -358,10 +348,6 @@ public abstract class Command {
 		command.setParent(null);
 		command.assembleCanonicalSyntax();
 		
-		assistance.removeChapter(command.assistance);
-	}
-	
-	protected void unregisterGenericAssistance() {
-		unregister(new AssistCommand(this));
+		assistance.removeChapter(command.getAssistance());
 	}
 }

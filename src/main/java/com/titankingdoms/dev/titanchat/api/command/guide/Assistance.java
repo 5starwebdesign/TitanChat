@@ -15,49 +15,28 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.command.assistance;
-
-import org.apache.commons.lang.StringUtils;
+package com.titankingdoms.dev.titanchat.api.command.guide;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
 import com.titankingdoms.dev.titanchat.api.guide.Index;
 
-public final class CommandAssistance extends Index {
+public abstract class Assistance extends Index {
 	
-	private final Command command;
+	protected final Command command;
 	
-	public CommandAssistance(Command command) {
+	public Assistance(Command command) {
 		super((command != null) ? command.getLabel() : "");
 		this.command = command;
 	}
 	
 	@Override
-	public String getContent(int page) {
-		String description = command.getDescription();
-		String aliases = StringUtils.join(command.getAliases(), ", ");
-		String range = "[" + command.getMinArguments() + ", " + command.getMaxArguments() + "]";
-		String syntax = command.getCanonicalSyntax();
-		
-		StringBuilder content = new StringBuilder();
-		
-		content.append("Description: ").append(description).append("\n");
-		content.append("Aliases: ").append(aliases).append("\n");
-		content.append("Argument Range: ").append(range).append("\n");
-		content.append("Syntax: ").append(syntax);
-		
-		return content.toString();
-	}
+	public abstract String getContent(int page);
 	
 	@Override
-	public String getDescription() {
+	public final String getDescription() {
 		return command.getDescription();
 	}
 	
 	@Override
-	public int getPageCount() {
-		return 1;
-	}
-	
-	@Override
-	public void setDescription(String description) {}
+	public final void setDescription(String description) {}
 }

@@ -33,34 +33,28 @@ import org.bukkit.command.CommandSender;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
-import com.titankingdoms.dev.titanchat.api.guide.Chapter;
+import com.titankingdoms.dev.titanchat.api.command.guide.CommandIndex;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
-import com.titankingdoms.dev.titanchat.api.guide.Index;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
 import com.titankingdoms.dev.titanchat.command.titanchat.HelpCommand;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
-public final class CommandManager extends Index implements Manager<Command> {
+public final class CommandManager implements Manager<Command> {
 	
 	private final TitanChat plugin;
 	
 	private final Map<String, Command> commands;
 	
+	private final CommandIndex index;
+	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public CommandManager() {
-		super("Commands");
 		this.plugin = TitanChat.instance();
+		this.index = new CommandIndex();
 		this.commands = new TreeMap<String, Command>();
 	}
-	
-	protected void addAssistance(Index assistance) {
-		super.addChapter(assistance);
-	}
-	
-	@Override
-	public void addChapter(Chapter chapter) {}
 	
 	@Override
 	public Command get(String label) {
@@ -75,6 +69,10 @@ public final class CommandManager extends Index implements Manager<Command> {
 	@Override
 	public Set<String> getDependencies() {
 		return dependencies;
+	}
+	
+	public CommandIndex getIndex() {
+		return index;
 	}
 	
 	@Override
@@ -94,7 +92,7 @@ public final class CommandManager extends Index implements Manager<Command> {
 	
 	@Override
 	public void load() {
-		plugin.getManager(Enchiridion.class).register(this);
+		plugin.getManager(Enchiridion.class).register(index);
 		
 		register(new TitanChatCommand());
 		
@@ -147,7 +145,7 @@ public final class CommandManager extends Index implements Manager<Command> {
 			commands.put(alias.toLowerCase(), command);
 		}
 		
-		addAssistance(command.getAssistance());
+		index.index();
 	}
 	
 	public static String[] regroup(String[] args) {
@@ -166,13 +164,6 @@ public final class CommandManager extends Index implements Manager<Command> {
 	
 	@Override
 	public void reload() {}
-	
-	protected void removeAssistance(Index assistance) {
-		super.removeChapter(assistance);
-	}
-	
-	@Override
-	public void removeChapter(Chapter chapter) {}
 	
 	public boolean run(CommandSender sender, String label, String[] args) {
 		Validate.notNull(sender, "Sender cannot be null");
@@ -210,7 +201,7 @@ public final class CommandManager extends Index implements Manager<Command> {
 			unregister(command);
 		}
 		
-		plugin.getManager(Enchiridion.class).unregister(this);
+		plugin.getManager(Enchiridion.class).unregister(index);
 	}
 	
 	@Override
@@ -227,6 +218,6 @@ public final class CommandManager extends Index implements Manager<Command> {
 			commands.remove(alias.toLowerCase());
 		}
 		
-		removeAssistance(command.getAssistance());
+		index.index();
 	}
 }

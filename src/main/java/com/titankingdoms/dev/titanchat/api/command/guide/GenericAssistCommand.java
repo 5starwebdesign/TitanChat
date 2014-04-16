@@ -15,23 +15,22 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.command.assistance;
+package com.titankingdoms.dev.titanchat.api.command.guide;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.api.guide.Index;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
-public final class AssistCommand extends Command {
+public final class GenericAssistCommand extends Command {
 	
 	private final Command command;
 	
-	public AssistCommand(Command command) {
+	public GenericAssistCommand(Command command) {
 		super((command != null) ? "?" : "");
 		setSupportRegistration(false);
 		this.command = command;
@@ -39,7 +38,7 @@ public final class AssistCommand extends Command {
 	
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		Index assistance = command.getAssistance();
+		Assistance assistance = command.getAssistance();
 		
 		int max = assistance.getPageCount();
 		
