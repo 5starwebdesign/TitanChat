@@ -50,11 +50,11 @@ public abstract class Command {
 	private String canonSyntax;
 	private String syntax;
 	
-	private final Map<String, Command> commands;
-	
 	private Assistance assistance;
 	
 	private boolean registration = true;
+	
+	private final Map<String, Command> commands;
 	
 	private Command parent;
 	
@@ -73,7 +73,7 @@ public abstract class Command {
 			
 			StringBuilder absolute = new StringBuilder().append("/");
 			
-			while (command != null && absolute.length() <= 1024) {
+			while (command != null) {
 				String syntax = command.getSyntax();
 				
 				if (syntax.contains(" "))
@@ -95,7 +95,7 @@ public abstract class Command {
 	
 	@Override
 	public boolean equals(Object object) {
-		return object instanceof Command && toString().equals(object.toString());
+		return getClass().isInstance(object) && toString().equals(object.toString());
 	}
 	
 	protected void execute(CommandSender sender, String[] args) {

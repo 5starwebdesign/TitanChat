@@ -23,7 +23,7 @@ import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.guide.Chapter;
 import com.titankingdoms.dev.titanchat.api.guide.Index;
 
-public class CommandIndex extends Index {
+public final class CommandIndex extends Index {
 	
 	private final CommandManager manager;
 	

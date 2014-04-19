@@ -324,7 +324,7 @@ public class XMLElement {
 		
 		@Override
 		public boolean equals(Object object) {
-			return (object instanceof XMLAttribute) ? toString().equals(object.toString()) : false;
+			return getClass().isInstance(object) && toString().equals(object.toString()); 
 		}
 		
 		public String getName() {

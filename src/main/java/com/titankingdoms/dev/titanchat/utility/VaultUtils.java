@@ -170,7 +170,7 @@ public final class VaultUtils {
 		if (perm == null)
 			return sender.hasPermission(node);
 		
-		if (sender instanceof Player)
+		if (Player.class.isInstance(sender))
 			return hasPermission((Player) sender, node);
 		
 		return perm.has(sender, node);
