@@ -36,12 +36,13 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	@Override
 	public void attach(Node node) {
 		Validate.notNull(node, "Node cannot be null");
-		Validate.isTrue(node.getType().equals("User"), "Node cannot be non-User");
 		
-		if (connected.containsKey(node.getName()))
+		String tag = node.getName() + "::" + node.getType();
+		
+		if (connected.containsKey(tag))
 			return;
 		
-		connected.put(node.getName(), node);
+		connected.put(tag, node);
 		
 		if (!node.isConnected(this))
 			node.attach(this);
@@ -50,12 +51,13 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	@Override
 	public void detach(Node node) {
 		Validate.notNull(node, "Node cannot be null");
-		Validate.isTrue(node.getType().equals("User"), "Node cannot be non-User");
 		
-		if (!connected.containsKey(node.getName()))
+		String tag = node.getName() + "::" + node.getType();
+		
+		if (!connected.containsKey(tag))
 			return;
 		
-		connected.remove(node.getName());
+		connected.remove(tag);
 		
 		if (node.isConnected(this))
 			node.detach(this);
