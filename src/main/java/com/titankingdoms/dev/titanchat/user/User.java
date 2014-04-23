@@ -15,30 +15,31 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.user;
+package com.titankingdoms.dev.titanchat.user;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
-import java.util.regex.Pattern;
+import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
-import com.titankingdoms.dev.titanchat.api.meta.MetaAdapter;
 import com.titankingdoms.dev.titanchat.api.meta.Metadata;
-import com.titankingdoms.dev.titanchat.api.user.storage.UserInfoStorage;
 
-public abstract class User implements Node {
+public final class User implements Node {
 	
-	protected final TitanChat plugin;
+	private final TitanChat plugin;
+	
+	private static final String TYPE = "User";
+	
+	private final UUID id;
 	
 	private final String name;
 	
@@ -48,20 +49,20 @@ public abstract class User implements Node {
 	
 	private final Map<String, Node> connected = new HashMap<String, Node>();
 	
-	private final Set<Node> terminus;
+	private final Set<Node> terminus = ImmutableSet.<Node>builder().add(this).build();
 	
-	public User(String name) {
-		Validate.notEmpty(name, "Name cannot be empty");
-		Validate.isTrue(!Pattern.compile("\\W").matcher(name).find(), "Name cannot contain non-word characters");
+	public User(OfflinePlayer player) {
+		Validate.notNull(player, "Player cannot be null");
 		
 		this.plugin = TitanChat.instance();
-		this.name = name;
-		this.terminus = ImmutableSet.<Node>builder().add(this).build();
+		this.id = player.getUniqueId();
+		this.name = (player.hasPlayedBefore()) ? player.getName() : "Unknown";
 	}
 	
 	@Override
 	public void attach(Node node) {
 		Validate.notNull(node, "Node cannot be null");
+		Validate.isTrue(isOnline(), "User cannot attach while offline");
 		
 		String tag = node.getName() + "::" + node.getType();
 		
@@ -80,6 +81,7 @@ public abstract class User implements Node {
 	@Override
 	public void detach(Node node) {
 		Validate.notNull(node, "Node cannot be null");
+		Validate.isTrue(isOnline(), "User cannot detach while offline");
 		
 		String tag = node.getName() + "::" + node.getType();
 		
@@ -95,50 +97,47 @@ public abstract class User implements Node {
 			exploring = (!connected.isEmpty()) ? getConnected().toArray(new Node[0])[0] : null;
 	}
 	
+	@Override
 	public Collection<Node> getConnected() {
-		return Collections.unmodifiableCollection(connected.values());
+		return ImmutableSet.<Node>builder().addAll(connected.values()).build();
 	}
 	
-	public final Metadata getMetadata() {
-		if (metadata == null) {
+	public Metadata getMetadata() {
+		if (metadata == null)
 			this.metadata = new Metadata();
-			
-			if (!plugin.getSystem().hasManager(UserManager.class))
-				throw new UnsupportedOperationException("UserManager not found");
-			
-			UserInfoStorage storage = plugin.getManager(UserManager.class).getStorage();
-			
-			for (Entry<String, String> metadata : storage.get(getName()).getMetadata().entrySet()) {
-				if (plugin.getSystem().hasManager(AdapterHandler.class)) {
-					MetaAdapter adapter = plugin.getManager(AdapterHandler.class).get(metadata.getKey());
-					this.metadata.setData(metadata.getKey(), adapter.fromString(metadata.getValue()));
-					continue;
-				}
-				
-				this.metadata.setData(metadata.getKey(), metadata.getValue());
-			}
-		}
 		
 		return metadata;
 	}
 	
 	@Override
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 	
-	@Override
-	public Set<Node> getTerminusNodes() {
-		return Collections.unmodifiableSet(terminus);
+	public OfflinePlayer getOfflinePlayer() {
+		return plugin.getServer().getOfflinePlayer(id);
+	}
+	
+	public Player getPlayer() {
+		return plugin.getServer().getPlayer(id);
 	}
 	
 	@Override
-	public final String getType() {
-		return "User";
+	public Collection<Node> getTerminusNodes() {
+		return terminus;
+	}
+	
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 	
 	public Node getViewing() {
 		return exploring;
+	}
+	
+	public UUID getUniqueId() {
+		return id;
 	}
 	
 	@Override
@@ -147,11 +146,28 @@ public abstract class User implements Node {
 	}
 	
 	@Override
-	public Conversation onConversation(Node sender, String message) {
-		return new Conversation(sender, this, "%message", message, "Normal");
+	public boolean isConversable(Node sender, String message, String type) {
+		return false;
+	}
+	
+	public boolean isOnline() {
+		return getOfflinePlayer().isOnline();
 	}
 	
 	public boolean isViewing(Node node) {
 		return (node == null && exploring == null) || exploring.equals(node);
+	}
+	
+	@Override
+	public Conversation onConversation(Node sender, String message) {
+		return null;
+	}
+	
+	@Override
+	public void sendLine(String line) {
+		if (!isOnline())
+			return;
+		
+		getPlayer().sendMessage(line);
 	}
 }

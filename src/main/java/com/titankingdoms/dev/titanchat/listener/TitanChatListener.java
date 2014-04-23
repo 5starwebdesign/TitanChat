@@ -27,9 +27,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Messenger;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.user.User;
-import com.titankingdoms.dev.titanchat.api.user.UserManager;
-import com.titankingdoms.dev.titanchat.user.Participant;
+import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.user.UserManager;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
 public final class TitanChatListener implements Listener {
@@ -49,11 +48,11 @@ public final class TitanChatListener implements Listener {
 		
 		event.setCancelled(true);
 		
-		User user = manager.getUser(event.getPlayer());
+		User user = manager.get(event.getPlayer().getUniqueId());
 		Node viewing = user.getViewing();
 		
 		if (viewing == null) {
-			user.sendRawLine(Format.RED + "Please join a Node to converse");
+			user.sendLine(Format.RED + "Please join a Node to converse");
 			return;
 		}
 		
@@ -67,7 +66,7 @@ public final class TitanChatListener implements Listener {
 		if (manager == null)
 			return;
 		
-		User user = new Participant(event.getPlayer());
+		User user = new User(event.getPlayer());
 		manager.register(user);
 	}
 	

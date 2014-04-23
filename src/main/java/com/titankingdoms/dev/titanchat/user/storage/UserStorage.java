@@ -15,24 +15,13 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.user;
+package com.titankingdoms.dev.titanchat.user.storage;
 
-import org.bukkit.command.BlockCommandSender;
-
-import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.user.User;
-
-public final class Block extends User {
+public interface UserStorage {
 	
-	public Block(BlockCommandSender sender) {
-		super(sender.getName());
-	}
+	public String getName();
 	
-	@Override
-	public boolean isConversable(Node sender, String message, String type) {
-		return false;
-	}
+	public void loadData(UserData data);
 	
-	@Override
-	public void sendRawLine(String line) {}
+	public void saveData(UserData data);
 }

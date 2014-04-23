@@ -39,5 +39,5 @@ public interface Node {
 	
 	public Conversation onConversation(Node sender, String message);
 	
-	public void sendRawLine(String line);
+	public void sendLine(String line);
 }

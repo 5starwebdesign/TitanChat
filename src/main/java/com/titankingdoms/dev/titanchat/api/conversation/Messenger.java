@@ -47,7 +47,7 @@ public final class Messenger {
 			if (!recipient.isConversable(event.getSender(), event.getMessage(), event.getConversationType()))
 				continue;
 			
-			recipient.sendRawLine(line);
+			recipient.sendLine(line);
 		}
 		
 		conversation.setStatus(Status.SENT);

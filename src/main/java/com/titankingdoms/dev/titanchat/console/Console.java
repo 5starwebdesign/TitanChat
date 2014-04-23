@@ -15,23 +15,38 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.legacy;
+package com.titankingdoms.dev.titanchat.console;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.command.ConsoleCommandSender;
 
-import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ImmutableSet;
+import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.Provider;
 
-public final class LegacyChat implements Node, Provider<LegacyChat> {
+public final class Console implements Node, Provider<Console> {
+	
+	protected final TitanChat plugin;
+	
+	private static final String NAME = "CONSOLE";
+	private static final String TYPE = "Console";
+	
+	private volatile Node exploring;
 	
 	private final Map<String, Node> connected = new HashMap<String, Node>();
+	
+	private final Set<Node> terminus = ImmutableSet.<Node>builder().add(this).build();
+	
+	public Console() {
+		this.plugin = TitanChat.instance();
+	}
 	
 	@Override
 	public void attach(Node node) {
@@ -46,6 +61,9 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 		
 		if (!node.isConnected(this))
 			node.attach(this);
+		
+		if (exploring == null || !exploring.equals(node))
+			exploring = node;
 	}
 	
 	@Override
@@ -61,36 +79,38 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 		
 		if (node.isConnected(this))
 			node.detach(this);
+		
+		if (exploring != null && exploring.equals(node))
+			exploring = (!connected.isEmpty()) ? getConnected().toArray(new Node[0])[0] : null;
 	}
 	
 	@Override
-	public LegacyChat get(String name) {
+	public Console get(String name) {
 		return this;
 	}
 	
 	@Override
-	public Set<Node> getConnected() {
-		return ImmutableSet.<Node>builder().addAll(connected.values()).build();
+	public Collection<Node> getConnected() {
+		return null;
+	}
+	
+	public ConsoleCommandSender getConsoleSender() {
+		return plugin.getServer().getConsoleSender();
 	}
 	
 	@Override
 	public String getName() {
-		return "Legacy";
+		return NAME;
 	}
 	
 	@Override
-	public Set<Node> getTerminusNodes() {
-		Builder<Node> terminus = ImmutableSet.builder();
-		
-		for (Node node : connected.values())
-			terminus.addAll(node.getTerminusNodes());
-		
-		return terminus.build();
+	public Collection<Node> getTerminusNodes() {
+		return terminus;
 	}
 	
 	@Override
 	public String getType() {
-		return "Minecraft";
+		return TYPE;
 	}
 	
 	@Override
@@ -99,8 +119,8 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	}
 	
 	@Override
-	public boolean has(LegacyChat chat) {
-		return chat != null && equals(chat);
+	public boolean has(Console console) {
+		return console != null && equals(console);
 	}
 	
 	@Override
@@ -110,17 +130,16 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	
 	@Override
 	public boolean isConversable(Node sender, String message, String type) {
-		return true;
+		return false;
 	}
 	
 	@Override
 	public Conversation onConversation(Node sender, String message) {
-		return new Conversation(sender, this, "%message", message, "Normal");
+		return null;
 	}
 	
 	@Override
 	public void sendLine(String line) {
-		for (Node node : getTerminusNodes())
-			node.sendLine(line);
+		getConsoleSender().sendMessage(line);
 	}
 }

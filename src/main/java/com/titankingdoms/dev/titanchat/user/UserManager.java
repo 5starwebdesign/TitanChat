@@ -15,120 +15,99 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.user;
+package com.titankingdoms.dev.titanchat.user;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.command.BlockCommandSender;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.conversation.Provider;
-import com.titankingdoms.dev.titanchat.api.user.storage.UserInfoStorage;
-import com.titankingdoms.dev.titanchat.user.Block;
-import com.titankingdoms.dev.titanchat.user.Console;
+import com.titankingdoms.dev.titanchat.user.storage.UserStorage;
 
 public final class UserManager implements Manager<User>, Provider<User> {
 	
 	private final TitanChat plugin;
 	
-	private final Map<String, User> users;
+	private static final String NAME = "UserManager";
 	
-	private Console console;
+	private final Map<UUID, User> users;
 	
-	private UserInfoStorage storage;
+	private UserStorage storage;
 	
-	private final Set<String> dependencies;
+	private final Set<String> dependencies = ImmutableSet.<String>builder().add("ProvisionManager").build();
 	
 	public UserManager() {
 		this.plugin = TitanChat.instance();
-		this.users = new HashMap<String, User>();
-		this.dependencies = ImmutableSet.<String>builder().add("ProvisionManager").build();
+		this.users = new HashMap<UUID, User>();
+	}
+	
+	public User get(UUID id) {
+		return (has(id)) ? users.get(id) : new User(plugin.getServer().getOfflinePlayer(id));
 	}
 	
 	@Override
-	public User get(String name) {
-		return users.get(name.toLowerCase());
+	public User get(String id) {
+		try { return get(UUID.fromString(id)); } catch (Exception e) { return null; }
 	}
 	
 	@Override
-	public Set<User> getAll() {
-		return new HashSet<User>(users.values());
-	}
-	
-	public Console getConsole() {
-		if (console == null)
-			this.console = new Console(plugin.getServer().getConsoleSender());
-		
-		return console;
+	public Collection<User> getAll() {
+		return ImmutableSet.<User>builder().addAll(users.values()).build();
 	}
 	
 	@Override
-	public Set<String> getDependencies() {
+	public Collection<String> getDependencies() {
 		return dependencies;
 	}
 	
 	@Override
 	public String getName() {
-		return "UserManager";
+		return NAME;
 	}
 	
-	public User getUser(CommandSender sender) {
-		Validate.notNull(sender, "Sender cannot be null");
-		
-		if (ConsoleCommandSender.class.isInstance(sender))
-			return getConsole();
-		
-		if (BlockCommandSender.class.isInstance(sender))
-			return new Block(BlockCommandSender.class.cast(sender));
-		
-		return get(sender.getName());
-	}
-	
-	public UserInfoStorage getStorage() {
+	public UserStorage getStorage() {
 		if (storage == null)
 			throw new IllegalStateException("No storage method");
 		
 		return storage;
 	}
 	
+	public boolean has(UUID id) {
+		return id != null && users.containsKey(id);
+	}
+	
 	@Override
-	public boolean has(String name) {
-		return name != null && !name.isEmpty() && users.containsKey(name.toLowerCase());
+	public boolean has(String id) {
+		try { return has(UUID.fromString(id)); } catch (Exception e) { return false; }
 	}
 	
 	@Override
 	public boolean has(User user) {
-		return user != null && has(user.getName()) && get(user.getName()).equals(user);
+		return user != null && has(user.getUniqueId()) && get(user.getUniqueId()).equals(user);
 	}
 	
 	@Override
 	public void load() {}
 	
-	public void load(User user) {}
-	
 	@Override
-	public List<String> match(String name) {
-		if (name == null || name.isEmpty())
-			return new ArrayList<String>(users.keySet());
-		
+	public Collection<String> match(String name) {
 		List<String> matches = new ArrayList<String>();
 		
-		for (String user : users.keySet()) {
-			if (!user.startsWith(name.toLowerCase()))
+		for (User user : users.values()) {
+			if ((name == null || name.isEmpty()) && !user.getName().startsWith(name))
 				continue;
 			
-			matches.add(user);
+			matches.add(user.getName());
 		}
 		
 		Collections.sort(matches);
@@ -140,16 +119,18 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	public void register(User user) {
 		Validate.notNull(user, "User cannot be null");
 		
-		if (has(user.getName()))
+		if (has(user.getUniqueId()))
 			return;
 		
-		users.put(user.getName().toLowerCase(), user);
+		users.put(user.getUniqueId(), user);
 	}
 	
 	@Override
 	public void reload() {}
 	
-	public void save(User user) {}
+	public void setStorage(UserStorage storage) {
+		this.storage = storage;
+	}
 	
 	@Override
 	public void unload() {}
@@ -158,9 +139,9 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	public void unregister(User user) {
 		Validate.notNull(user, "User cannot be null");
 		
-		if (!has(user.getName()))
+		if (!has(user.getUniqueId()))
 			return;
 		
-		users.remove(user.getName().toLowerCase());
+		users.remove(user.getUniqueId());
 	}
 }
