@@ -31,6 +31,8 @@ import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class AdapterHandler implements Manager<MetaAdapter> {
 	
+	private static final String NAME = "AdapterHandler";
+	
 	private final Map<String, MetaAdapter> adapters;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
@@ -56,7 +58,7 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 	
 	@Override
 	public String getName() {
-		return "MetaHandler";
+		return NAME;
 	}
 	
 	@Override

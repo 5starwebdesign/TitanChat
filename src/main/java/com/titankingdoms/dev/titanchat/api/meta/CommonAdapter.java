@@ -23,6 +23,8 @@ import com.titankingdoms.dev.titanchat.api.meta.Metadata.Meta;
 
 public final class CommonAdapter implements MetaAdapter {
 	
+	private static final String KEY = "*";
+	
 	@Override
 	public Meta fromString(String value) {
 		Validate.notNull(value, "Value cannot be null");
@@ -31,7 +33,7 @@ public final class CommonAdapter implements MetaAdapter {
 	
 	@Override
 	public String getKey() {
-		return "*";
+		return KEY;
 	}
 	
 	@Override

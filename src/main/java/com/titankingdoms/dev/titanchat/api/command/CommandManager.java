@@ -44,6 +44,8 @@ public final class CommandManager implements Manager<Command> {
 	
 	private final TitanChat plugin;
 	
+	private static final String NAME = "CommandManager";
+	
 	private final Map<String, Command> commands;
 	
 	private final CommandIndex index;
@@ -77,7 +79,7 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public String getName() {
-		return "CommandManager";
+		return NAME;
 	}
 	
 	@Override

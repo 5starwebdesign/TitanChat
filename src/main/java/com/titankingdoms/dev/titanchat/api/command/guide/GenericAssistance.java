@@ -36,10 +36,10 @@ public final class GenericAssistance extends Assistance {
 		
 		StringBuilder content = new StringBuilder();
 		
-		content.append("Description: ").append(description).append("\n");
-		content.append("Aliases: ").append(aliases).append("\n");
-		content.append("Argument Range: ").append(range).append("\n");
-		content.append("Syntax: ").append(syntax);
+		content.append("Description:").append(' ').append(description).append('\n');
+		content.append("Aliases:").append(' ').append(aliases).append('\n');
+		content.append("Argument Range:").append(' ').append(range).append('\n');
+		content.append("Syntax:").append(' ').append(syntax);
 		
 		return content.toString();
 	}

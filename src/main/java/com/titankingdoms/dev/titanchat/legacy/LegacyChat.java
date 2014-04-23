@@ -31,6 +31,9 @@ import com.titankingdoms.dev.titanchat.api.conversation.Provider;
 
 public final class LegacyChat implements Node, Provider<LegacyChat> {
 	
+	private static final String NAME = "Legacy";
+	private static final String TYPE = "Minecraft";
+	
 	private final Map<String, Node> connected = new HashMap<String, Node>();
 	
 	@Override
@@ -75,7 +78,7 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	
 	@Override
 	public String getName() {
-		return "Legacy";
+		return NAME;
 	}
 	
 	@Override
@@ -90,7 +93,7 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	
 	@Override
 	public String getType() {
-		return "Minecraft";
+		return TYPE;
 	}
 	
 	@Override

@@ -30,6 +30,8 @@ import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class ProvisionManager implements Manager<Provider<? extends Node>> {
 	
+	private static final String NAME = "ProvisionManager";
+	
 	private final Map<String, Provider<? extends Node>> providers;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
@@ -55,7 +57,7 @@ public final class ProvisionManager implements Manager<Provider<? extends Node>>
 	
 	@Override
 	public String getName() {
-		return "ProvisionManager";
+		return NAME;
 	}
 	
 	public <T extends Node> Provider<T> getProvider(Class<Provider<T>> type, String name) {

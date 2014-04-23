@@ -35,11 +35,16 @@ import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory.Version.Rele
 
 public class ReleaseHistory {
 	
+	private static final String HOST = "https://api.curseforge.com/";
+	private static final String QUERY = "servermods/files?projectIds=";
+	
 	private final long id;
 	
 	private final String name;
 	private final String version;
 	private final String[] authors;
+	
+	private final String agent;
 	
 	private final List<Version> versions;
 	
@@ -49,6 +54,8 @@ public class ReleaseHistory {
 		this.name = pdf.getName();
 		this.version = pdf.getVersion();
 		this.authors = pdf.getAuthors().toArray(new String[0]);
+		
+		this.agent = name + "/v" + version + " (By " + authors[0] + ")";
 		
 		this.versions = new LinkedList<Version>();
 	}
@@ -89,12 +96,12 @@ public class ReleaseHistory {
 	
 	public void searchHistory() {
 		try {
-			URL url = new URL("https://api.curseforge.com/servermods/files?projectIds=");
+			URL url = new URL(HOST + QUERY);
 			
 			URLConnection connection = url.openConnection();
 			connection.setConnectTimeout(15000);
 			connection.setReadTimeout(15000);
-			connection.addRequestProperty("User-Agent", name + "/v" + version + " (By " + authors[0] + ")");
+			connection.addRequestProperty("User-Agent", agent);
 			
 			InputStreamReader reader = new InputStreamReader(connection.getInputStream());
 			JSONArray json = (JSONArray) JSONValue.parse(reader);

@@ -39,6 +39,8 @@ public final class AddonManager implements Manager<Addon> {
 	
 	private final TitanChat plugin;
 	
+	private static final String NAME = "AddonManager";
+	
 	private final Map<String, Addon> addons;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
@@ -74,7 +76,7 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public String getName() {
-		return "AddonManager";
+		return NAME;
 	}
 	
 	@Override

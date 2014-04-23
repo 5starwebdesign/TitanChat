@@ -30,6 +30,9 @@ import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class Enchiridion extends Index implements Manager<Chapter> {
 	
+	private static final String DESC = "The General Index";
+	private static final String NAME = "Enchiridion";
+	
 	private final Map<String, Chapter> chapters;
 	
 	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
@@ -56,12 +59,12 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	
 	@Override
 	public String getDescription() {
-		return "The General Index";
+		return DESC;
 	}
 	
 	@Override
 	public String getName() {
-		return "Enchiridion";
+		return NAME;
 	}
 	
 	@Override
