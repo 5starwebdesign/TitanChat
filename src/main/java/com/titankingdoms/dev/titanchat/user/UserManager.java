@@ -33,6 +33,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.conversation.Provider;
 import com.titankingdoms.dev.titanchat.user.storage.UserStorage;
+import com.titankingdoms.dev.titanchat.user.storage.yml.YMLUserStorage;
 
 public final class UserManager implements Manager<User>, Provider<User> {
 	
@@ -49,6 +50,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	public UserManager() {
 		this.plugin = TitanChat.instance();
 		this.users = new HashMap<UUID, User>();
+		this.storage = new YMLUserStorage();
 	}
 	
 	public User get(UUID id) {

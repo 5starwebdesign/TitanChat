@@ -1,6 +1,3 @@
-settings:
-    user:
-        storage: "yml"
 tools:
     metrics-statistics: true
     update-enquiry: false
