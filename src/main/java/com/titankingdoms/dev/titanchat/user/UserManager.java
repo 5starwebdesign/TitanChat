@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -31,21 +31,22 @@ import org.apache.commons.lang.Validate;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
-import com.titankingdoms.dev.titanchat.api.conversation.Provider;
+import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 import com.titankingdoms.dev.titanchat.user.storage.UserStorage;
 import com.titankingdoms.dev.titanchat.user.storage.yml.YMLUserStorage;
 
-public final class UserManager implements Manager<User>, Provider<User> {
+public final class UserManager implements Manager<User>, NodeManager<User> {
 	
 	private final TitanChat plugin;
 	
 	private static final String NAME = "UserManager";
+	private static final String TYPE = "User";
+	
+	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().add("Network").build();
 	
 	private final Map<UUID, User> users;
 	
 	private UserStorage storage;
-	
-	private final Set<String> dependencies = ImmutableSet.<String>builder().add("ProvisionManager").build();
 	
 	public UserManager() {
 		this.plugin = TitanChat.instance();
@@ -69,7 +70,7 @@ public final class UserManager implements Manager<User>, Provider<User> {
 	
 	@Override
 	public Collection<String> getDependencies() {
-		return dependencies;
+		return DEPENDENCIES;
 	}
 	
 	@Override
@@ -82,6 +83,11 @@ public final class UserManager implements Manager<User>, Provider<User> {
 			throw new IllegalStateException("No storage method");
 		
 		return storage;
+	}
+	
+	@Override
+	public String getType() {
+		return TYPE;
 	}
 	
 	public boolean has(UUID id) {

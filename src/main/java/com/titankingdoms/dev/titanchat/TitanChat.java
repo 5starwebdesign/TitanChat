@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -30,9 +30,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.TitanChatSystem;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
-import com.titankingdoms.dev.titanchat.api.conversation.ProvisionManager;
+import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
-import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
+import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
 import com.titankingdoms.dev.titanchat.user.UserManager;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory;
@@ -46,13 +46,6 @@ public final class TitanChat extends JavaPlugin {
 	private final Logger log = Logger.getLogger("TitanLog");
 	
 	private final TitanChatSystem system = new TitanChatSystem();
-	
-	public static TitanChat instance() {
-		if (instance == null)
-			throw new IllegalStateException("TitanChat is not in operation");
-		
-		return instance;
-	}
 	
 	public <T extends Manager<?>> T getManager(Class<T> manager) {
 		return getSystem().getManager(manager);
@@ -119,6 +112,13 @@ public final class TitanChat extends JavaPlugin {
 		});
 	}
 	
+	public static TitanChat instance() {
+		if (instance == null)
+			throw new IllegalStateException("TitanChat is not in operation");
+		
+		return instance;
+	}
+	
 	public void log(Level level, String message) {
 		Validate.notEmpty(message, "Message cannot be empty");
 		log.log((level != null) ? level : Level.INFO, message);
@@ -178,7 +178,7 @@ public final class TitanChat extends JavaPlugin {
 		system.registerManager(new AdapterHandler());
 		system.registerManager(new CommandManager());
 		system.registerManager(new Enchiridion());
-		system.registerManager(new ProvisionManager());
+		system.registerManager(new Network());
 		system.registerManager(new UserManager());
 		
 		log(Level.INFO, "Now loaded");

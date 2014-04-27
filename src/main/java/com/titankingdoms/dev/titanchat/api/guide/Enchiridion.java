@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -33,9 +33,9 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	private static final String DESC = "The General Index";
 	private static final String NAME = "Enchiridion";
 	
-	private final Map<String, Chapter> chapters;
+	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().build();
 	
-	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
+	private final Map<String, Chapter> chapters;
 	
 	public Enchiridion() {
 		super("General");
@@ -54,7 +54,7 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	
 	@Override
 	public Collection<String> getDependencies() {
-		return dependencies;
+		return DEPENDENCIES;
 	}
 	
 	@Override

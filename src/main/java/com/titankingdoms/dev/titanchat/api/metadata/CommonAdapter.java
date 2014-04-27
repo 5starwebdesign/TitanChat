@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -15,15 +15,30 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.meta;
+package com.titankingdoms.dev.titanchat.api.metadata;
 
-import com.titankingdoms.dev.titanchat.api.meta.Metadata.Meta;
+import org.apache.commons.lang.Validate;
 
-public interface MetaAdapter {
+import com.titankingdoms.dev.titanchat.api.metadata.Metadata.Meta;
+
+public final class CommonAdapter implements MetaAdapter {
 	
-	public Meta fromString(String value);
+	private static final String KEY = "*";
 	
-	public String getKey();
+	@Override
+	public Meta fromString(String value) {
+		Validate.notNull(value, "Value cannot be null");
+		return new Meta(value);
+	}
 	
-	public String toString(Meta meta);
+	@Override
+	public String getKey() {
+		return KEY;
+	}
+	
+	@Override
+	public String toString(Meta meta) {
+		Validate.notNull(meta, "Meta cannot be null");
+		return meta.getValue();
+	}
 }

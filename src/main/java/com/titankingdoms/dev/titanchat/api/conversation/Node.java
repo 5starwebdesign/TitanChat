@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -21,23 +21,13 @@ import java.util.Collection;
 
 public interface Node {
 	
-	public void attach(Node node);
-	
-	public void detach(Node node);
-	
-	public Collection<Node> getConnected();
+	public Connection getConnection();
 	
 	public String getName();
 	
 	public Collection<Node> getTerminusNodes();
 	
 	public String getType();
-	
-	public boolean isConnected(Node node);
-	
-	public boolean isConversable(Node sender, String message, String type);
-	
-	public Conversation onConversation(Node sender, String message);
 	
 	public void sendLine(String line);
 }

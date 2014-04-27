@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -18,80 +18,49 @@
 package com.titankingdoms.dev.titanchat.console;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.command.ConsoleCommandSender;
 
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.conversation.Provider;
+import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 
-public final class Console implements Node, Provider<Console> {
+public final class Console implements Node, NodeManager<Console> {
 	
 	protected final TitanChat plugin;
 	
-	private static final String NAME = "CONSOLE";
+	private static final Console instance = new Console();
+	
+	private static final String NAME = "Console";
 	private static final String TYPE = "Console";
+	
+	private final ConsoleConnection connection;
 	
 	private volatile Node exploring;
 	
-	private final Map<String, Node> connected = new HashMap<String, Node>();
+	private static final Set<Console> console = ImmutableSet.<Console>builder().add(instance).build();
+	private static final Set<Node> terminus = ImmutableSet.<Node>builder().add(instance).build();
 	
-	private final Set<Node> terminus = ImmutableSet.<Node>builder().add(this).build();
-	
-	public Console() {
+	private Console() {
 		this.plugin = TitanChat.instance();
-	}
-	
-	@Override
-	public void attach(Node node) {
-		Validate.notNull(node, "Node cannot be null");
-		
-		String tag = node.getName() + "::" + node.getType();
-		
-		if (connected.containsKey(tag))
-			return;
-		
-		connected.put(tag, node);
-		
-		if (!node.isConnected(this))
-			node.attach(this);
-		
-		if (exploring == null || !exploring.equals(node))
-			exploring = node;
-	}
-	
-	@Override
-	public void detach(Node node) {
-		Validate.notNull(node, "Node cannot be null");
-		
-		String tag = node.getName() + "::" + node.getType();
-		
-		if (!connected.containsKey(tag))
-			return;
-		
-		connected.remove(tag);
-		
-		if (node.isConnected(this))
-			node.detach(this);
-		
-		if (exploring != null && exploring.equals(node))
-			exploring = (!connected.isEmpty()) ? getConnected().toArray(new Node[0])[0] : null;
+		this.connection = new ConsoleConnection(this);
 	}
 	
 	@Override
 	public Console get(String name) {
-		return this;
+		return instance;
 	}
 	
 	@Override
-	public Collection<Node> getConnected() {
-		return null;
+	public Collection<Console> getAll() {
+		return console;
+	}
+	
+	@Override
+	public ConsoleConnection getConnection() {
+		return connection;
 	}
 	
 	public ConsoleCommandSender getConsoleSender() {
@@ -113,33 +82,39 @@ public final class Console implements Node, Provider<Console> {
 		return TYPE;
 	}
 	
+	public Node getViewing() {
+		return exploring;
+	}
+	
 	@Override
 	public boolean has(String name) {
 		return name != null && !name.isEmpty();
 	}
 	
-	@Override
-	public boolean has(Console console) {
-		return console != null && equals(console);
+	public static Console instance() {
+		return instance;
+	}
+	
+	public boolean isViewing(Node node) {
+		return (node == null && exploring == null) || exploring.equals(node);
 	}
 	
 	@Override
-	public boolean isConnected(Node node) {
-		return node != null && connected.containsKey(node.getType() + "::" + node.getName());
-	}
-	
-	@Override
-	public boolean isConversable(Node sender, String message, String type) {
-		return false;
-	}
-	
-	@Override
-	public Conversation onConversation(Node sender, String message) {
-		return null;
+	public void register(Console console) {
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
 	public void sendLine(String line) {
 		getConsoleSender().sendMessage(line);
+	}
+	
+	public void setViewing(Node viewing) {
+		this.exploring = viewing;
+	}
+	
+	@Override
+	public void unregister(Console console) {
+		throw new UnsupportedOperationException();
 	}
 }

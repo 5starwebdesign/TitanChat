@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -15,15 +15,15 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.conversation;
+package com.titankingdoms.dev.titanchat.api.metadata;
 
-public interface Provider<T extends Node> {
+import com.titankingdoms.dev.titanchat.api.metadata.Metadata.Meta;
+
+public interface MetaAdapter {
 	
-	public T get(String name);
+	public Meta fromString(String value);
 	
-	public String getName();
+	public String getKey();
 	
-	public boolean has(String name);
-	
-	public boolean has(T item);
+	public String toString(Meta meta);
 }

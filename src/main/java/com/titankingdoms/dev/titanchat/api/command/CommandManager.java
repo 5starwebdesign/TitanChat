@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -46,11 +46,11 @@ public final class CommandManager implements Manager<Command> {
 	
 	private static final String NAME = "CommandManager";
 	
+	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().build();
+	
 	private final Map<String, Command> commands;
 	
 	private final CommandIndex index;
-	
-	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
 	
 	public CommandManager() {
 		this.plugin = TitanChat.instance();
@@ -70,7 +70,7 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public Set<String> getDependencies() {
-		return dependencies;
+		return DEPENDENCIES;
 	}
 	
 	public CommandIndex getIndex() {

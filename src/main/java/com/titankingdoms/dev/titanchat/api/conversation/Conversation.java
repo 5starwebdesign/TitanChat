@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,42 +19,26 @@ package com.titankingdoms.dev.titanchat.api.conversation;
 
 import org.apache.commons.lang.Validate;
 
-import com.titankingdoms.dev.titanchat.api.conversation.Node;
-
-public final class Conversation implements Cloneable {
+public final class Conversation {
 	
 	private final Node sender;
 	private final Node recipient;
 	
+	private final String type;
+	
 	private String format;
 	private String message;
 	
-	private final String type;
-	
-	private Status status;
-	
-	private Conversation(Node sender, Node recipient, String format, String message, String type, Status status) {
+	public Conversation(Node sender, Node recipient, String type) {
 		Validate.notNull(sender, "Sender cannot be null");
 		Validate.notNull(recipient, "Recipient cannot be null");
-		Validate.isTrue(format != null && format.contains("%message"), "Format cannot forgo %message");
 		Validate.notEmpty(type, "Type cannot be empty");
-		Validate.notNull(status, "Status cannot be null");
 		
 		this.sender = sender;
 		this.recipient = recipient;
-		this.format = format;
-		this.message = (message != null) ? message : "";
 		this.type = type;
-		this.status = status;
-	}
-	
-	public Conversation(Node sender, Node recipient, String format, String message, String type) {
-		this(sender, recipient, format, message, type, Status.PENDING);
-	}
-	
-	@Override
-	public Conversation clone() {
-		return new Conversation(sender, recipient, format, message, type, status);
+		this.format = "%message";
+		this.message = "";
 	}
 	
 	public String getFormat() {
@@ -73,20 +57,13 @@ public final class Conversation implements Cloneable {
 		return sender;
 	}
 	
-	public Status getStatus() {
-		return status;
-	}
-	
 	public String getType() {
 		return type;
 	}
 	
-	public boolean isPending() {
-		return status.equals(Status.PENDING);
-	}
-	
 	public Conversation setFormat(String format) {
-		Validate.isTrue(format != null && format.contains("%message"), "Format cannot forgo %message");
+		Validate.isTrue(format != null && format.contains("%message"), "");
+		
 		this.format = format;
 		return this;
 	}
@@ -95,13 +72,4 @@ public final class Conversation implements Cloneable {
 		this.message = (message != null) ? message : "";
 		return this;
 	}
-	
-	public Conversation setStatus(Status status) {
-		Validate.notNull(status, "Status cannot be null");
-		Validate.isTrue(!status.equals(Status.PENDING), "Status cannot be set to Pending");
-		this.status = status;
-		return this;
-	}
-	
-	public enum Status { CANCELLED, PENDING, PROCESSING, SENT }
 }

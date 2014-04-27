@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.meta;
+package com.titankingdoms.dev.titanchat.api.metadata;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,9 +33,9 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 	
 	private static final String NAME = "AdapterHandler";
 	
-	private final Map<String, MetaAdapter> adapters;
+	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().build();
 	
-	private final Set<String> dependencies = ImmutableSet.<String>builder().build();
+	private final Map<String, MetaAdapter> adapters;
 	
 	public AdapterHandler() {
 		this.adapters = new HashMap<String, MetaAdapter>();
@@ -53,7 +53,7 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 	
 	@Override
 	public Set<String> getDependencies() {
-		return dependencies;
+		return DEPENDENCIES;
 	}
 	
 	@Override

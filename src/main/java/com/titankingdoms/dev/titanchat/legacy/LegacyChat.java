@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -17,54 +17,23 @@
 
 package com.titankingdoms.dev.titanchat.legacy;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Set;
-
-import org.apache.commons.lang.Validate;
 
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ImmutableSet;
-import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
+import com.titankingdoms.dev.titanchat.api.conversation.Connection;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.conversation.Provider;
+import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 
-public final class LegacyChat implements Node, Provider<LegacyChat> {
+public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	
 	private static final String NAME = "Legacy";
 	private static final String TYPE = "Minecraft";
 	
-	private final Map<String, Node> connected = new HashMap<String, Node>();
+	private final Connection connection = new Connection(this);
 	
-	@Override
-	public void attach(Node node) {
-		Validate.notNull(node, "Node cannot be null");
-		
-		String tag = node.getName() + "::" + node.getType();
-		
-		if (connected.containsKey(tag))
-			return;
-		
-		connected.put(tag, node);
-		
-		if (!node.isConnected(this))
-			node.attach(this);
-	}
-	
-	@Override
-	public void detach(Node node) {
-		Validate.notNull(node, "Node cannot be null");
-		
-		String tag = node.getName() + "::" + node.getType();
-		
-		if (!connected.containsKey(tag))
-			return;
-		
-		connected.remove(tag);
-		
-		if (node.isConnected(this))
-			node.detach(this);
-	}
+	private final Set<LegacyChat> chat = ImmutableSet.<LegacyChat>builder().add(this).build();
 	
 	@Override
 	public LegacyChat get(String name) {
@@ -72,8 +41,13 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	}
 	
 	@Override
-	public Set<Node> getConnected() {
-		return ImmutableSet.<Node>builder().addAll(connected.values()).build();
+	public Collection<LegacyChat> getAll() {
+		return chat;
+	}
+	
+	@Override
+	public Connection getConnection() {
+		return connection;
 	}
 	
 	@Override
@@ -85,7 +59,7 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	public Set<Node> getTerminusNodes() {
 		Builder<Node> terminus = ImmutableSet.builder();
 		
-		for (Node node : connected.values())
+		for (Node node : connection.getConnections())
 			terminus.addAll(node.getTerminusNodes());
 		
 		return terminus.build();
@@ -102,28 +76,18 @@ public final class LegacyChat implements Node, Provider<LegacyChat> {
 	}
 	
 	@Override
-	public boolean has(LegacyChat chat) {
-		return chat != null && equals(chat);
-	}
-	
-	@Override
-	public boolean isConnected(Node node) {
-		return node != null && connected.containsKey(node.getType() + "::" + node.getName());
-	}
-	
-	@Override
-	public boolean isConversable(Node sender, String message, String type) {
-		return true;
-	}
-	
-	@Override
-	public Conversation onConversation(Node sender, String message) {
-		return new Conversation(sender, this, "%message", message, "Normal");
+	public void register(LegacyChat chat) {
+		throw new UnsupportedOperationException();
 	}
 	
 	@Override
 	public void sendLine(String line) {
 		for (Node node : getTerminusNodes())
 			node.sendLine(line);
+	}
+	
+	@Override
+	public void unregister(LegacyChat chat) {
+		throw new UnsupportedOperationException();
 	}
 }

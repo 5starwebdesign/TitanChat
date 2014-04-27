@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.meta.AdapterHandler;
-import com.titankingdoms.dev.titanchat.api.meta.Metadata.Meta;
+import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
+import com.titankingdoms.dev.titanchat.api.metadata.Metadata.Meta;
 import com.titankingdoms.dev.titanchat.user.User;
 
 public final class UserData {
@@ -56,7 +56,7 @@ public final class UserData {
 		if (!user.isViewing(null))
 			this.viewing = user.getViewing().getName() + "::" + user.getViewing().getType();
 		
-		for (Node node : user.getConnected())
+		for (Node node : user.getConnection().getConnections())
 			this.connected.add(node.getName() + "::" + node.getType());
 		
 		for (Entry<String, Meta> meta : user.getMetadata().getData().entrySet()) {

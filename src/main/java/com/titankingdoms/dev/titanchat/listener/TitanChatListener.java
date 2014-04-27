@@ -1,5 +1,5 @@
 /*
- *     Copyright (C) 2013  Nodin Chan
+ *     Copyright (C) 2014  Nodin Chan
  *     
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -25,7 +25,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.conversation.Messenger;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.user.User;
 import com.titankingdoms.dev.titanchat.user.UserManager;
@@ -55,8 +54,6 @@ public final class TitanChatListener implements Listener {
 			user.sendLine(Format.RED + "Please join a Node to converse");
 			return;
 		}
-		
-		Messenger.post(viewing.onConversation(user, event.getMessage()));
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

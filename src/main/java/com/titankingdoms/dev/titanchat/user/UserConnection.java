@@ -15,28 +15,41 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.command.guide;
+package com.titankingdoms.dev.titanchat.user;
 
-import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.api.guide.Index;
+import com.titankingdoms.dev.titanchat.api.conversation.Connection;
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
 
-public abstract class Assistance extends Index {
+public final class UserConnection extends Connection {
 	
-	protected final Command command;
+	private final User user;
 	
-	public Assistance(Command command) {
-		super((command != null) ? command.getLabel() : "");
-		this.command = command;
+	public UserConnection(User user) {
+		super(user);
+		this.user = user;
 	}
 	
 	@Override
-	public abstract String getContent(int page);
-	
-	@Override
-	public final String getDescription() {
-		return command.getDescription();
+	public boolean connect(Node node) {
+		if (!super.connect(node))
+			return false;
+		
+		if (user.isViewing(node))
+			return true;
+		
+		user.setViewing(node);
+		return true;
 	}
 	
 	@Override
-	public final void setDescription(String description) {}
+	public boolean disconnect(Node node) {
+		if (!super.disconnect(node))
+			return false;
+		
+		if (!user.isViewing(node))
+			return true;
+		
+		user.setViewing((getConnections().size() > 0) ? getConnections().iterator().next() : null);
+		return true;
+	}
 }
