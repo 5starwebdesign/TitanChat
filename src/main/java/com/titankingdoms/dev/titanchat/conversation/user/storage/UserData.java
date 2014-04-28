@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.user.storage;
+package com.titankingdoms.dev.titanchat.conversation.user.storage;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
 import com.titankingdoms.dev.titanchat.api.metadata.Metadata.Meta;
-import com.titankingdoms.dev.titanchat.user.User;
+import com.titankingdoms.dev.titanchat.conversation.user.User;
 
 public final class UserData {
 	

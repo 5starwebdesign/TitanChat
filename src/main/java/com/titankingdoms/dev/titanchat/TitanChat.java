@@ -33,7 +33,7 @@ import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
 import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
-import com.titankingdoms.dev.titanchat.user.UserManager;
+import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory.Version;

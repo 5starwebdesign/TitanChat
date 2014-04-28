@@ -102,8 +102,8 @@ public abstract class Command {
 		if (!registration)
 			return;
 		
-		Messaging.message(sender, Format.RED + "Invalid command");
-		Messaging.message(sender, "Syntax: " + getCanonicalSyntax());
+		message(sender, Format.RED + "Invalid command");
+		message(sender, "Syntax: " + getCanonicalSyntax());
 	}
 	
 	private final Command get(String name) {
@@ -180,13 +180,12 @@ public abstract class Command {
 		Command command = get(label);
 		
 		if (!command.isPermitted(sender, args)) {
-			Messaging.message(sender, Format.RED + "You do not have permission");
+			message(sender, Format.RED + "You do not have permission");
 			return true;
 		}
 		
 		if (args.length < command.getMinArguments() || args.length > command.getMaxArguments()) {
-			Messaging.message(sender, Format.RED + "Invalid argument length");
-			Messaging.message(sender, "Syntax: " + getCanonicalSyntax());
+			message(sender, Format.RED + "Invalid argument length", "Syntax: " + getCanonicalSyntax());
 			return true;
 		}
 		
@@ -236,6 +235,10 @@ public abstract class Command {
 			return false;
 		
 		return parent != null || plugin.getManager(CommandManager.class).has(this);
+	}
+	
+	public final void message(CommandSender recipient, String... lines) {
+		Messaging.message(recipient, lines);
 	}
 	
 	public final void register(Command command) {

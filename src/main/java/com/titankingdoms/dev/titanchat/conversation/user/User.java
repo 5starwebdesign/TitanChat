@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.user;
+package com.titankingdoms.dev.titanchat.conversation.user;
 
 import java.util.Collection;
 import java.util.Set;

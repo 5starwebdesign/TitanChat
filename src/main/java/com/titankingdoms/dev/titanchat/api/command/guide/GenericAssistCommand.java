@@ -23,7 +23,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils;
-import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
 public final class GenericAssistCommand extends Command {
@@ -59,9 +58,9 @@ public final class GenericAssistCommand extends Command {
 			title += " (" + page + "/" + max + ")";
 		}
 		
-		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
+		message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
 		
 		for (String content : FormatUtils.wrap(Format.AZURE + assistance.getContent(page), 50))
-			Messaging.message(sender, content);
+			message(sender, content);
 	}
 }

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.user.storage.yml;
+package com.titankingdoms.dev.titanchat.conversation.user.storage.yml;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,8 +28,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.user.storage.UserData;
-import com.titankingdoms.dev.titanchat.user.storage.UserStorage;
+import com.titankingdoms.dev.titanchat.conversation.user.storage.UserData;
+import com.titankingdoms.dev.titanchat.conversation.user.storage.UserStorage;
 
 public final class YMLUserStorage implements UserStorage {
 	

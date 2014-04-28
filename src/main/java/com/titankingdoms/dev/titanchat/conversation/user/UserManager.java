@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.user;
+package com.titankingdoms.dev.titanchat.conversation.user;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,13 +27,18 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
-import com.titankingdoms.dev.titanchat.user.storage.UserStorage;
-import com.titankingdoms.dev.titanchat.user.storage.yml.YMLUserStorage;
+import com.titankingdoms.dev.titanchat.conversation.console.Console;
+import com.titankingdoms.dev.titanchat.conversation.user.storage.UserStorage;
+import com.titankingdoms.dev.titanchat.conversation.user.storage.yml.YMLUserStorage;
 
 public final class UserManager implements Manager<User>, NodeManager<User> {
 	
@@ -55,12 +60,31 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	}
 	
 	public User get(UUID id) {
-		return (has(id)) ? users.get(id) : new User(plugin.getServer().getOfflinePlayer(id));
+		if (!has(id)) {
+			User user = new User(plugin.getServer().getOfflinePlayer(id));
+			
+			if (!user.isOnline())
+				return user;
+			
+			register(user);
+		}
+		
+		return users.get(id);
 	}
 	
 	@Override
 	public User get(String id) {
 		try { return get(UUID.fromString(id)); } catch (Exception e) { return null; }
+	}
+	
+	public Node get(CommandSender sender) {
+		if (Player.class.isInstance(sender))
+			return get(Player.class.cast(sender).getUniqueId());
+		
+		if (ConsoleCommandSender.class.isInstance(sender))
+			return Console.instance();
+		
+		return null;
 	}
 	
 	@Override

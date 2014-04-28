@@ -45,8 +45,10 @@ public class Connection {
 		if (!isConnected(node))
 			connections.put(node.getName() + "::" + node.getType(), node);
 		
-		if (node.getConnection().isConnected(this.node) || node.getConnection().connect(this.node))
-			return true;
+		if (node.getConnection() != null) {
+			if (node.getConnection().isConnected(this.node) || node.getConnection().connect(this.node))
+				return true;
+		}
 		
 		connections.remove(node.getName() + "::" + node.getType());
 		return false;
@@ -59,8 +61,10 @@ public class Connection {
 		if (isConnected(node))
 			connections.remove(node.getName() + "::" + node.getType());
 		
-		if (!node.getConnection().isConnected(this.node) || node.getConnection().disconnect(this.node))
-			return true;
+		if (node.getConnection() != null) {
+			if (!node.getConnection().isConnected(this.node) || node.getConnection().disconnect(this.node))
+				return true;
+		}
 		
 		connections.put(node.getName() + "::" + node.getType(), node);
 		return false;

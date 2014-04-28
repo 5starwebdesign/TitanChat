@@ -27,7 +27,6 @@ import com.titankingdoms.dev.titanchat.api.guide.Chapter;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
 import com.titankingdoms.dev.titanchat.api.guide.Index;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils;
-import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
 public final class HelpCommand extends Command {
@@ -42,24 +41,24 @@ public final class HelpCommand extends Command {
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
-		Enchiridion provider = plugin.getManager(Enchiridion.class);
+	protected void execute(CommandSender sender, String[] args) {
+		Enchiridion enchiridion = plugin.getManager(Enchiridion.class);
 		
-		if (provider == null) {
-			Messaging.message(sender, "Assistance cannot be provided at this time");
+		if (enchiridion == null) {
+			message(sender, Format.RED + "Enchiridion not found");
 			return;
 		}
 		
-		Chapter section = provider;
+		Chapter chapter = enchiridion;
 		
 		int page = 1;
 		
 		for (String arg : args) {
 			if (!NumberUtils.isNumber(arg)) {
-				if (!Index.class.isInstance(section))
+				if (!Index.class.isInstance(chapter))
 					break;
 				
-				section = Index.class.cast(section).getChapter(arg);
+				chapter = Index.class.cast(chapter).getChapter(arg);
 				continue;
 			}
 			
@@ -67,14 +66,14 @@ public final class HelpCommand extends Command {
 			break;
 		}
 		
-		if (section == null) {
-			Messaging.message(sender, Format.RED + "Assistance cannot be provided for requested section");
+		if (chapter == null) {
+			message(sender, Format.RED + "Assistance cannot be provided for requested chapter");
 			return;
 		}
 		
-		int max = section.getPageCount();
+		int max = chapter.getPageCount();
 		
-		String title = section.getTitle();
+		String title = chapter.getTitle();
 		
 		if (max > 1) {
 			if (page < 1)
@@ -86,9 +85,9 @@ public final class HelpCommand extends Command {
 			title += " (" + page + "/" + max + ")";
 		}
 		
-		Messaging.message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
+		message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
 		
-		for (String line : FormatUtils.wrap(Format.AZURE + section.getContent(page), 50))
-			Messaging.message(sender, line);
+		for (String line : FormatUtils.wrap(Format.AZURE + chapter.getContent(page), 50))
+			message(sender, line);
 	}
 }

@@ -15,57 +15,40 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.console;
+package com.titankingdoms.dev.titanchat.conversation.legacy;
 
 import java.util.Collection;
 import java.util.Set;
 
-import org.bukkit.command.ConsoleCommandSender;
-
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ImmutableSet;
-import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.conversation.Connection;
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 
-public final class Console implements Node, NodeManager<Console> {
+public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	
-	protected final TitanChat plugin;
+	private static final String NAME = "Legacy";
+	private static final String TYPE = "Minecraft";
 	
-	private static final Console instance = new Console();
+	private final Connection connection = new Connection(this);
 	
-	private static final String NAME = "Console";
-	private static final String TYPE = "Console";
+	private final Set<LegacyChat> chat = ImmutableSet.<LegacyChat>builder().add(this).build();
 	
-	private final ConsoleConnection connection;
-	
-	private volatile Node exploring;
-	
-	private static final Set<Console> console = ImmutableSet.<Console>builder().add(instance).build();
-	private static final Set<Node> terminus = ImmutableSet.<Node>builder().add(instance).build();
-	
-	private Console() {
-		this.plugin = TitanChat.instance();
-		this.connection = new ConsoleConnection(this);
+	@Override
+	public LegacyChat get(String name) {
+		return this;
 	}
 	
 	@Override
-	public Console get(String name) {
-		return instance;
+	public Collection<LegacyChat> getAll() {
+		return chat;
 	}
 	
 	@Override
-	public Collection<Console> getAll() {
-		return console;
-	}
-	
-	@Override
-	public ConsoleConnection getConnection() {
+	public Connection getConnection() {
 		return connection;
-	}
-	
-	public ConsoleCommandSender getConsoleSender() {
-		return plugin.getServer().getConsoleSender();
 	}
 	
 	@Override
@@ -74,8 +57,13 @@ public final class Console implements Node, NodeManager<Console> {
 	}
 	
 	@Override
-	public Collection<Node> getTerminusNodes() {
-		return terminus;
+	public Set<Node> getTerminusNodes() {
+		Builder<Node> terminus = ImmutableSet.builder();
+		
+		for (Node node : connection.getConnections())
+			terminus.addAll(node.getTerminusNodes());
+		
+		return terminus.build();
 	}
 	
 	@Override
@@ -83,26 +71,14 @@ public final class Console implements Node, NodeManager<Console> {
 		return TYPE;
 	}
 	
-	public Node getViewing() {
-		return exploring;
-	}
-	
 	@Override
 	public boolean has(String name) {
 		return name != null && !name.isEmpty();
 	}
 	
-	public static Console instance() {
-		return instance;
-	}
-	
 	@Override
 	public boolean isConversable(Node sender, Node intermediate, String message) {
 		return false;
-	}
-	
-	public boolean isViewing(Node node) {
-		return (node == null && exploring == null) || exploring.equals(node);
 	}
 	
 	@Override
@@ -111,21 +87,18 @@ public final class Console implements Node, NodeManager<Console> {
 	}
 	
 	@Override
-	public void register(Console console) {
+	public void register(LegacyChat chat) {
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
 	public void sendLine(String line) {
-		getConsoleSender().sendMessage(line);
-	}
-	
-	public void setViewing(Node viewing) {
-		this.exploring = viewing;
+		for (Node node : getTerminusNodes())
+			node.sendLine(line);
 	}
 	
 	@Override
-	public void unregister(Console console) {
+	public void unregister(LegacyChat chat) {
 		throw new UnsupportedOperationException();
 	}
 }

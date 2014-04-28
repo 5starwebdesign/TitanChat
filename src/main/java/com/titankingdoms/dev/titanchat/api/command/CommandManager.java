@@ -36,7 +36,7 @@ import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.command.guide.CommandIndex;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
-import com.titankingdoms.dev.titanchat.command.titanchat.HelpCommand;
+import com.titankingdoms.dev.titanchat.command.titanchat.*;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
@@ -96,9 +96,13 @@ public final class CommandManager implements Manager<Command> {
 	public void load() {
 		plugin.getManager(Enchiridion.class).register(index);
 		
-		register(new TitanChatCommand());
+		Command tcCommand = new TitanChatCommand();
 		
-		get("TitanChat").register(new HelpCommand());
+		tcCommand.register(new ConnectCommand());
+		tcCommand.register(new DisconnectCommand());
+		tcCommand.register(new HelpCommand());
+		
+		register(tcCommand);
 	}
 	
 	@Override

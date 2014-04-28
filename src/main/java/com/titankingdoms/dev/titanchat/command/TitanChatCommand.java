@@ -21,7 +21,6 @@ import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
-import com.titankingdoms.dev.titanchat.utility.Messaging;
 
 public final class TitanChatCommand extends Command {
 	
@@ -30,14 +29,14 @@ public final class TitanChatCommand extends Command {
 		setAliases("tc", "tchat");
 		setArgumentRange(0, 10240);
 		setDescription("TitanChat Commands");
-		setSyntax("<command>");
+		setSyntax("[command]");
 	}
 	
 	@Override
-	public void execute(CommandSender sender, String[] args) {
+	protected void execute(CommandSender sender, String[] args) {
 		if (args.length < 1) {
-			Messaging.message(sender, Format.GOLD + "You are running v" + plugin.getDescription().getVersion());
-			Messaging.message(sender, Format.GOLD + "Type \"/titanchat ?\" for help");
+			message(sender, Format.GOLD + "You are running v" + plugin.getDescription().getVersion());
+			message(sender, Format.GOLD + "Type \"/titanchat ?\" for help");
 			return;
 		}
 		

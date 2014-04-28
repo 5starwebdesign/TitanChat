@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.console;
+package com.titankingdoms.dev.titanchat.conversation.console;
 
 import com.titankingdoms.dev.titanchat.api.conversation.Connection;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;

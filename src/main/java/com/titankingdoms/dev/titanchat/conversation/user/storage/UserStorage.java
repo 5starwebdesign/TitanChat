@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.user.storage;
+package com.titankingdoms.dev.titanchat.conversation.user.storage;
 
 public interface UserStorage {
 	
