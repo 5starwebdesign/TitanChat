@@ -25,17 +25,16 @@ import com.titankingdoms.dev.titanchat.api.guide.Index;
 
 public final class CommandIndex extends Index {
 	
-	private final CommandManager manager;
-	
 	public CommandIndex() {
 		super("Commands");
-		this.manager = TitanChat.instance().getManager(CommandManager.class);
 	}
 	
 	@Override
 	public void addChapter(Chapter chapter) {}
 	
 	public void index() {
+		CommandManager manager = TitanChat.instance().getManager(CommandManager.class);
+		
 		for (Chapter chapter : getChapters()) {
 			if (manager.has(chapter.getTitle()))
 				continue;
@@ -44,10 +43,9 @@ public final class CommandIndex extends Index {
 		}
 		
 		for (Command command : manager.getAll()) {
-			if (contains(command.getAssistance()))
-				continue;
+			if (contains(command.getLabel()))
+				super.removeChapter(getChapter(command.getLabel()));
 			
-			super.removeChapter(getChapter(command.getLabel()));
 			super.addChapter(command.getAssistance());
 		}
 	}

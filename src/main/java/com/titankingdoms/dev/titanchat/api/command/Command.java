@@ -64,6 +64,7 @@ public abstract class Command {
 		this.plugin = TitanChat.instance();
 		this.label = label.trim();
 		this.syntax = this.label;
+		this.assistance = new GenericAssistance(this);
 		this.commands = new TreeMap<String, Command>();
 	}
 	
@@ -76,7 +77,7 @@ public abstract class Command {
 			while (command != null) {
 				String syntax = command.getSyntax();
 				
-				if (syntax.contains(" "))
+				if (syntax.indexOf(' ', syntax.indexOf(' ')) > -1)
 					absolute.insert(1, syntax.substring(0, syntax.lastIndexOf(' ')).trim() + " ");
 				else
 					absolute.insert(1, syntax.trim() + " ");
