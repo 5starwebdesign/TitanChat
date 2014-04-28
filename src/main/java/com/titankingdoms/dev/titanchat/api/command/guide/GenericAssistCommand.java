@@ -31,6 +31,8 @@ public final class GenericAssistCommand extends Command {
 	
 	public GenericAssistCommand(Command command) {
 		super((command != null) ? "?" : "");
+		setArgumentRange(0, 2);
+		setSyntax("[index|list] [index]");
 		setSupportRegistration(false);
 		this.command = command;
 	}
@@ -39,28 +41,64 @@ public final class GenericAssistCommand extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		Assistance assistance = command.getAssistance();
 		
-		int max = assistance.getPageCount();
-		
 		String title = assistance.getTitle();
+		String content = "";
 		
+		int max = 1;
 		int page = 1;
 		
-		if (max > 1) {
-			if (args.length > 0)
-				page = NumberUtils.toInt(args[0], 1);
+		switch (args.length) {
+		
+		case 0:
+			content = assistance.getContent(page);
+			break;
 			
-			if (page < 1)
-				page = 1;
+		case 1:
+			if (!args[0].equalsIgnoreCase("list")) {
+				max = assistance.getPageCount();
+				
+				if (max > 1)
+					page = NumberUtils.toInt(args[0], 1);
+				
+				content = assistance.getContent(page);
+				
+			} else {
+				content = assistance.getCommands(page);
+			}
+			break;
 			
-			if (page > max)
-				page = max;
-			
-			title += " (" + page + "/" + max + ")";
+		default:
+			if (!args[0].equalsIgnoreCase("list")) {
+				max = assistance.getPageCount();
+				
+				if (max > 1)
+					page = NumberUtils.toInt(args[0], 1);
+				
+				content = assistance.getContent(page);
+				
+			} else {
+				max = assistance.getCommandPageCount();
+				
+				if (max > 1)
+					page = NumberUtils.toInt(args[1], 1);
+				
+				content = assistance.getCommands(page);
+			}
+			break;
 		}
+		
+		if (page < 1)
+			page = 1;
+		
+		if (page > max)
+			page = max;
+		
+		if (max > 1)
+			title += " (" + page + "/" + max + ")";
 		
 		message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
 		
-		for (String content : FormatUtils.wrap(Format.AZURE + assistance.getContent(page), 50))
-			message(sender, content);
+		for (String line : FormatUtils.wrap(Format.AZURE + content, 50))
+			message(sender, line);
 	}
 }
