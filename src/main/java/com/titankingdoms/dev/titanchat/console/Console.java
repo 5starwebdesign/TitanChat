@@ -100,6 +100,11 @@ public final class Console implements Node, NodeManager<Console> {
 	}
 	
 	@Override
+	public boolean onConversation(Node sender, String message, boolean post) {
+		return false;
+	}
+	
+	@Override
 	public void register(Console console) {
 		throw new UnsupportedOperationException();
 	}

@@ -76,6 +76,11 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	}
 	
 	@Override
+	public boolean onConversation(Node sender, String message, boolean post) {
+		return false;
+	}
+	
+	@Override
 	public void register(LegacyChat chat) {
 		throw new UnsupportedOperationException();
 	}

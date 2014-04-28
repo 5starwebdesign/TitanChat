@@ -17,9 +17,17 @@
 
 package com.titankingdoms.dev.titanchat.api.conversation;
 
+import java.util.Set;
+
 import org.apache.commons.lang.Validate;
 
+import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent.Status;
+
 public final class Conversation {
+	
+	private final TitanChat plugin;
 	
 	private final Node sender;
 	private final Node recipient;
@@ -34,6 +42,7 @@ public final class Conversation {
 		Validate.notNull(recipient, "Recipient cannot be null");
 		Validate.notEmpty(type, "Type cannot be empty");
 		
+		this.plugin = TitanChat.instance();
 		this.sender = sender;
 		this.recipient = recipient;
 		this.type = type;
@@ -61,8 +70,41 @@ public final class Conversation {
 		return type;
 	}
 	
+	public Status post() {
+		if (!recipient.onConversation(sender, message, false))
+			return Status.CANCELLED;
+		
+		ConverseEvent event = new ConverseEvent(this);
+		
+		Set<Node> recipients = event.getRecipients();
+		
+		if (!recipients.contains(sender))
+			recipients.add(sender);
+		
+		plugin.getServer().getPluginManager().callEvent(event);
+		
+		if (!event.inStatus(Status.PENDING))
+			return event.getStatus();
+		
+		if (!recipients.contains(sender))
+			recipients.add(sender);
+		
+		String line = format.replace("%message", message);
+		
+		for (Node node : recipients) {
+			if (!node.onConversation(sender, message, false))
+				continue;
+			
+			node.sendLine(line);
+		}
+		
+		event.setStatus(Status.SENT);
+		
+		return Status.SENT;
+	}
+	
 	public Conversation setFormat(String format) {
-		Validate.isTrue(format != null && format.contains("%message"), "");
+		Validate.isTrue(format != null && format.contains("%message"), "Format cannot forgo '%meesage'");
 		
 		this.format = format;
 		return this;

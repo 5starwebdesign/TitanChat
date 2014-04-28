@@ -108,6 +108,11 @@ public final class User implements Node {
 	}
 	
 	@Override
+	public boolean onConversation(Node sender, String message, boolean post) {
+		return false;
+	}
+	
+	@Override
 	public void sendLine(String line) {
 		if (!isOnline())
 			return;

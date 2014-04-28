@@ -21,14 +21,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 
-public final class ConverseEvent extends Event implements Cancellable {
+public final class ConverseEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
@@ -36,7 +35,7 @@ public final class ConverseEvent extends Event implements Cancellable {
 	
 	private final Set<Node> recipients;
 	
-	private boolean cancelled = false;
+	private Status status = Status.PENDING;
 	
 	public ConverseEvent(Conversation conversation) {
 		Validate.notNull(conversation, "Conversation cannot be null");
@@ -62,30 +61,28 @@ public final class ConverseEvent extends Event implements Cancellable {
 		return handlers;
 	}
 	
+	public Node getIntermediate() {
+		return conversation.getRecipient();
+	}
+	
 	public String getMessage() {
 		return conversation.getMessage();
 	}
 	
-	public Node getRecipient() {
-		return conversation.getRecipient();
+	public Set<Node> getRecipients() {
+		return recipients;
 	}
 	
 	public Node getSender() {
 		return conversation.getSender();
 	}
 	
-	public Set<Node> getTerminusRecipients() {
-		return recipients;
+	public Status getStatus() {
+		return status;
 	}
 	
-	@Override
-	public boolean isCancelled() {
-		return cancelled;
-	}
-	
-	@Override
-	public void setCancelled(boolean cancelled) {
-		this.cancelled = cancelled;
+	public boolean inStatus(Status status) {
+		return this.status.equals(status);
 	}
 	
 	public void setFormat(String format) {
@@ -95,4 +92,10 @@ public final class ConverseEvent extends Event implements Cancellable {
 	public void setMessage(String message) {
 		conversation.setMessage(message);
 	}
+	
+	public void setStatus(Status status) {
+		this.status = (status != null) ? status : Status.PENDING;
+	}
+	
+	public enum Status { CANCELLED, PENDING, SENT }
 }

@@ -54,6 +54,8 @@ public final class TitanChatListener implements Listener {
 			user.sendLine(Format.RED + "Please join a Node to converse");
 			return;
 		}
+		
+		viewing.onConversation(user, event.getMessage(), true);
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

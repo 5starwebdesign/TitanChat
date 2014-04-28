@@ -44,10 +44,10 @@ public final class Loader {
 			
 			try {
 				jar = new JarFile(file);
-				JarEntry entry = jar.getJarEntry("main.yml");
+				JarEntry entry = jar.getJarEntry("loadable.yml");
 				
 				if (entry == null)
-					throw new Exception("The YAML file main.yml was not found");
+					throw new Exception("The YAML file loadable.yml was not found");
 				
 				InputStream entryStream = jar.getInputStream(entry);
 				

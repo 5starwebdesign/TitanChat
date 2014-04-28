@@ -29,5 +29,7 @@ public interface Node {
 	
 	public String getType();
 	
+	public boolean onConversation(Node sender, String message, boolean post);
+	
 	public void sendLine(String line);
 }
