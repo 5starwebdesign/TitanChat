@@ -29,7 +29,9 @@ public interface Node {
 	
 	public String getType();
 	
-	public boolean onConversation(Node sender, String message, boolean post);
+	public boolean isConversable(Node sender, Node intermidate, String message);
+	
+	public Conversation onConversation(Node sender, String message);
 	
 	public void sendLine(String line);
 }

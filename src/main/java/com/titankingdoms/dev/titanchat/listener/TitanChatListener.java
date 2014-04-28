@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.user.User;
 import com.titankingdoms.dev.titanchat.user.UserManager;
@@ -55,7 +56,7 @@ public final class TitanChatListener implements Listener {
 			return;
 		}
 		
-		viewing.onConversation(user, event.getMessage(), true);
+		Network.post(viewing.onConversation(user, event.getMessage()));
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

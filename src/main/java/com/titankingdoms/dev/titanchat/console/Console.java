@@ -24,6 +24,7 @@ import org.bukkit.command.ConsoleCommandSender;
 
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 
@@ -95,13 +96,18 @@ public final class Console implements Node, NodeManager<Console> {
 		return instance;
 	}
 	
+	@Override
+	public boolean isConversable(Node sender, Node intermediate, String message) {
+		return false;
+	}
+	
 	public boolean isViewing(Node node) {
 		return (node == null && exploring == null) || exploring.equals(node);
 	}
 	
 	@Override
-	public boolean onConversation(Node sender, String message, boolean post) {
-		return false;
+	public Conversation onConversation(Node sender, String message) {
+		return null;
 	}
 	
 	@Override

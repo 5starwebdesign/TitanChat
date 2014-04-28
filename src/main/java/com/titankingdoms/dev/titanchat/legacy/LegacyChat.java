@@ -23,6 +23,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.api.conversation.Connection;
+import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 
@@ -76,8 +77,13 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	}
 	
 	@Override
-	public boolean onConversation(Node sender, String message, boolean post) {
+	public boolean isConversable(Node sender, Node intermediate, String message) {
 		return false;
+	}
+	
+	@Override
+	public Conversation onConversation(Node sender, String message) {
+		return null;
 	}
 	
 	@Override

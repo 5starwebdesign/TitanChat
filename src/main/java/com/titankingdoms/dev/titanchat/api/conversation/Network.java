@@ -28,7 +28,10 @@ import java.util.Set;
 import org.apache.commons.lang.Validate;
 
 import com.google.common.collect.ImmutableSet;
+import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
+import com.titankingdoms.dev.titanchat.api.event.ConverseEvent.Status;
 
 public final class Network implements Manager<NodeManager<? extends Node>> {
 	
@@ -100,6 +103,42 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 		Collections.sort(matches);
 		
 		return matches;
+	}
+	
+	public static Status post(Conversation conversation) {
+		if (conversation == null)
+			return Status.CANCELLED;
+		
+		ConverseEvent event = new ConverseEvent(conversation);
+		
+		Set<Node> recipients = event.getRecipients();
+		
+		if (!recipients.contains(conversation.getSender()))
+			recipients.add(conversation.getSender());
+		
+		TitanChat.instance().getServer().getPluginManager().callEvent(event);
+		
+		if (event.inStatus(Status.PENDING)) {
+			if (!recipients.contains(conversation.getSender()))
+				recipients.add(conversation.getSender());
+			
+			String line = conversation.getFormat().replace("%message", conversation.getMessage());
+			
+			for (Node node : recipients) {
+				if (!node.isConversable(event.getSender(), event.getIntermediate(), event.getMessage()))
+					continue;
+				
+				node.sendLine(line);
+			}
+			
+			event.setStatus(Status.SENT);
+		}
+		
+		return event.getStatus();
+	}
+	
+	public static Status post(Node sender, Node recipient, String type, String format, String message) {
+		return post(new Conversation(sender, recipient, type).setFormat(format).setMessage(message));
 	}
 	
 	@Override

@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
+import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.metadata.Metadata;
 
@@ -99,6 +100,11 @@ public final class User implements Node {
 		return id;
 	}
 	
+	@Override
+	public boolean isConversable(Node sender, Node intermediate, String message) {
+		return false;
+	}
+	
 	public boolean isOnline() {
 		return getOfflinePlayer().isOnline();
 	}
@@ -108,8 +114,8 @@ public final class User implements Node {
 	}
 	
 	@Override
-	public boolean onConversation(Node sender, String message, boolean post) {
-		return false;
+	public Conversation onConversation(Node sender, String message) {
+		return null;
 	}
 	
 	@Override
