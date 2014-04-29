@@ -41,50 +41,29 @@ public final class GenericAssistCommand extends Command {
 	public void execute(CommandSender sender, String[] args) {
 		Assistance assistance = command.getAssistance();
 		
-		String title = assistance.getTitle();
-		String content = "";
+		boolean list = args.length > 0 && args[0].equalsIgnoreCase("list");
 		
-		int max = 1;
+		String title = assistance.getTitle();
+		
+		int max = (list) ? assistance.getListCount() : assistance.getPageCount();
 		int page = 1;
 		
-		switch (args.length) {
-		
-		case 0:
-			content = assistance.getContent(page);
-			break;
+		if (max > 1) {
+			switch (args.length) {
 			
-		case 1:
-			if (!args[0].equalsIgnoreCase("list")) {
-				max = assistance.getPageCount();
+			case 0:
+				break;
 				
-				if (max > 1)
-					page = NumberUtils.toInt(args[0], 1);
+			case 1:
+				page = (!list) ? NumberUtils.toInt(args[0], 1) : 1;
+				break;
 				
-				content = assistance.getContent(page);
-				
-			} else {
-				content = assistance.getCommands(page);
+			default:
+				page = NumberUtils.toInt((!list) ? args[0] : args[1], 1);
+				break;
 			}
-			break;
 			
-		default:
-			if (!args[0].equalsIgnoreCase("list")) {
-				max = assistance.getPageCount();
-				
-				if (max > 1)
-					page = NumberUtils.toInt(args[0], 1);
-				
-				content = assistance.getContent(page);
-				
-			} else {
-				max = assistance.getCommandPageCount();
-				
-				if (max > 1)
-					page = NumberUtils.toInt(args[1], 1);
-				
-				content = assistance.getCommands(page);
-			}
-			break;
+			title += " (" + page + "/" + max + ")";
 		}
 		
 		if (page < 1)
@@ -93,8 +72,7 @@ public final class GenericAssistCommand extends Command {
 		if (page > max)
 			page = max;
 		
-		if (max > 1)
-			title += " (" + page + "/" + max + ")";
+		String content = (list) ? assistance.getCommands(page) : assistance.getContent(page);
 		
 		message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
 		

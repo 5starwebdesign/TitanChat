@@ -29,10 +29,6 @@ public abstract class Assistance extends Index {
 		this.command = command;
 	}
 	
-	public final int getCommandPageCount() {
-		return super.getPageCount();
-	}
-	
 	public final String getCommands(int page) {
 		return super.getContent(page);
 	}
@@ -43,6 +39,10 @@ public abstract class Assistance extends Index {
 	@Override
 	public final String getDescription() {
 		return command.getDescription();
+	}
+	
+	public final int getListCount() {
+		return super.getPageCount();
 	}
 	
 	@Override
