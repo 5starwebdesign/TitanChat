@@ -71,7 +71,7 @@ public class Connection {
 	}
 	
 	public final Set<Node> getConnections() {
-		return ImmutableSet.<Node>builder().addAll(connections.values()).build();
+		return ImmutableSet.copyOf(connections.values());
 	}
 	
 	public final Node getNode() {

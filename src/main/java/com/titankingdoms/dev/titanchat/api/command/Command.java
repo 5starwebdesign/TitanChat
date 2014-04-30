@@ -117,7 +117,7 @@ public abstract class Command {
 	}
 	
 	private final List<Command> getAll() {
-		return ImmutableList.<Command>builder().addAll(commands.values()).build();
+		return ImmutableList.copyOf(commands.values());
 	}
 	
 	public final Assistance getAssistance() {
@@ -235,7 +235,7 @@ public abstract class Command {
 		if (!plugin.getSystem().isLoaded(CommandManager.class))
 			return false;
 		
-		return parent != null || plugin.getManager(CommandManager.class).has(this);
+		return parent != null || plugin.getSystem().getManager(CommandManager.class).has(this);
 	}
 	
 	public final void message(CommandSender recipient, String... lines) {
@@ -292,7 +292,7 @@ public abstract class Command {
 		this.assistance = (assistance != null) ? assistance : new GenericAssistance(this);
 		
 		if (isRegistered() && parent == null)
-			plugin.getManager(CommandManager.class).getIndex().index();
+			plugin.getSystem().getManager(CommandManager.class).getIndex().index();
 	}
 	
 	protected void setDescription(String description) {

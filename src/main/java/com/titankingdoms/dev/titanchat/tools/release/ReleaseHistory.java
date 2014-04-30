@@ -20,9 +20,9 @@ package com.titankingdoms.dev.titanchat.tools.release;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +31,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import com.google.common.collect.ImmutableList;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory.Version.ReleaseType;
 
 public class ReleaseHistory {
@@ -57,7 +58,7 @@ public class ReleaseHistory {
 		
 		this.agent = name + "/v" + version + " (By " + authors[0] + ")";
 		
-		this.versions = new LinkedList<Version>();
+		this.versions = new ArrayList<>();
 	}
 	
 	public String[] getAuthors() {
@@ -91,10 +92,12 @@ public class ReleaseHistory {
 	}
 	
 	public List<Version> getVersions() {
-		return new LinkedList<Version>(versions);
+		return ImmutableList.copyOf(versions);
 	}
 	
 	public void searchHistory() {
+		versions.clear();
+		
 		try {
 			URL url = new URL(HOST + QUERY);
 			
@@ -120,7 +123,9 @@ public class ReleaseHistory {
 				versions.add(new Version(title, link, type));
 			}
 			
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			versions.clear();
+		}
 	}
 	
 	public static final class Version {

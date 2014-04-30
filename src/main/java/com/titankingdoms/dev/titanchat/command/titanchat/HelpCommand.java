@@ -42,7 +42,7 @@ public final class HelpCommand extends Command {
 	
 	@Override
 	protected void execute(CommandSender sender, String[] args) {
-		Enchiridion enchiridion = plugin.getManager(Enchiridion.class);
+		Enchiridion enchiridion = plugin.getSystem().getManager(Enchiridion.class);
 		
 		if (enchiridion == null) {
 			message(sender, Format.RED + "Enchiridion not found");

@@ -21,16 +21,15 @@ import com.titankingdoms.dev.titanchat.tools.loading.Loadable;
 
 public class Addon extends Loadable {
 	
-	private boolean enabled;
+	private boolean enabled = false;
 	
 	public Addon(String name) {
 		super(name);
-		this.enabled = false;
 	}
 	
 	@Override
 	public boolean equals(Object object) {
-		return getClass().isInstance(object) && toString().equals(object.toString());
+		return object == this || (getClass().isInstance(object) && toString().equals(object.toString()));
 	}
 	
 	@Override

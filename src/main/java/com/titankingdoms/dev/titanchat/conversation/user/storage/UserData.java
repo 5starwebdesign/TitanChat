@@ -61,21 +61,25 @@ public final class UserData {
 		
 		for (Entry<String, Meta> meta : user.getMetadata().getData().entrySet()) {
 			String key = meta.getKey();
-			Meta value = meta.getValue();
+			Meta metaValue = meta.getValue();
+			
+			String value;
 			
 			if (plugin.getSystem().isLoaded(AdapterHandler.class))
-				this.metadata.put(key, plugin.getManager(AdapterHandler.class).get(key).toString(value));
+				value = plugin.getSystem().getManager(AdapterHandler.class).get(key).toString(metaValue);
 			else
-				this.metadata.put(key, value.getValue());
+				value = metaValue.getValue();
+			
+			this.metadata.put(key, value);
 		}
 	}
 	
 	public Set<String> getConnected() {
-		return ImmutableSet.<String>builder().addAll(connected).build();
+		return ImmutableSet.copyOf(connected);
 	}
 	
 	public Map<String, String> getMetadata() {
-		return ImmutableMap.<String, String>builder().putAll(metadata).build();
+		return ImmutableMap.copyOf(metadata);
 	}
 	
 	public UUID getUniqueId() {
@@ -91,7 +95,7 @@ public final class UserData {
 	}
 	
 	public void setMetadata(Map<String, String> metadata) {
-		this.metadata = (metadata != null) ? new HashMap<String, String>(metadata) : new HashMap<String, String>();
+		this.metadata = (metadata != null) ? new HashMap<>(metadata) : new HashMap<String, String>();
 	}
 	
 	public void setViewing(String viewing) {

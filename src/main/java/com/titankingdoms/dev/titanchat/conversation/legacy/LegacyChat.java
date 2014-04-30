@@ -34,7 +34,7 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	
 	private final Connection connection = new Connection(this);
 	
-	private final Set<LegacyChat> chat = ImmutableSet.<LegacyChat>builder().add(this).build();
+	private final Set<LegacyChat> chat = ImmutableSet.of(this);
 	
 	@Override
 	public LegacyChat get(String name) {

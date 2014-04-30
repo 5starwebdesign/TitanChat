@@ -52,7 +52,7 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 	
 	@Override
 	public Set<MetaAdapter> getAll() {
-		return null;
+		return ImmutableSet.copyOf(adapters.values());
 	}
 	
 	@Override

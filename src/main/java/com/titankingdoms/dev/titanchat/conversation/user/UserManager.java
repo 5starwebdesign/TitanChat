@@ -65,6 +65,9 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	}
 	
 	public User get(UUID id) {
+		if (id == null)
+			return null;
+		
 		if (!has(id)) {
 			User user = new User(plugin.getServer().getOfflinePlayer(id));
 			
@@ -94,7 +97,7 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	
 	@Override
 	public Set<User> getAll() {
-		return ImmutableSet.<User>builder().addAll(users.values()).build();
+		return ImmutableSet.copyOf(users.values());
 	}
 	
 	@Override
@@ -153,9 +156,7 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	@Override
 	public void register(User user) {
 		Validate.notNull(user, "User cannot be null");
-		
-		if (has(user.getUniqueId()))
-			return;
+		Validate.isTrue(!has(user.getUniqueId()), "User already registered");
 		
 		users.put(user.getUniqueId(), user);
 	}
@@ -173,9 +174,7 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	@Override
 	public void unregister(User user) {
 		Validate.notNull(user, "User cannot be null");
-		
-		if (!has(user.getUniqueId()))
-			return;
+		Validate.isTrue(has(user.getUniqueId()), "User not registered");
 		
 		users.remove(user.getUniqueId());
 	}

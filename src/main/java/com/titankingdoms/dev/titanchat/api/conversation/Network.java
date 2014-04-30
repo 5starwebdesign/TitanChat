@@ -17,7 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.api.conversation;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,12 +50,12 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 	
 	@Override
 	public NodeManager<? extends Node> get(String type) {
-		return managers.get(type.toLowerCase());
+		return (type == null || type.isEmpty()) ? null : managers.get(type.toLowerCase());
 	}
 	
 	@Override
-	public Collection<NodeManager<? extends Node>> getAll() {
-		return ImmutableSet.<NodeManager<? extends Node>>builder().addAll(managers.values()).build();
+	public Set<NodeManager<? extends Node>> getAll() {
+		return ImmutableSet.copyOf(managers.values());
 	}
 	
 	public Node getNode(String type, String name) {

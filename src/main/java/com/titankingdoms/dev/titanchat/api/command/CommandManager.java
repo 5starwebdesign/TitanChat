@@ -36,8 +36,6 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.command.guide.CommandIndex;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
-import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
-import com.titankingdoms.dev.titanchat.command.titanchat.*;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
@@ -53,6 +51,8 @@ public final class CommandManager implements Manager<Command> {
 	
 	private final CommandIndex index;
 	
+	private boolean loaded = false;
+	
 	public CommandManager() {
 		this.plugin = TitanChat.instance();
 		this.index = new CommandIndex();
@@ -65,12 +65,12 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public Command get(String label) {
-		return commands.get(label.toLowerCase());
+		return (label == null || label.isEmpty()) ? null : commands.get(label.toLowerCase());
 	}
 	
 	@Override
 	public List<Command> getAll() {
-		return ImmutableList.<Command>builder().addAll(commands.values()).build();
+		return ImmutableList.copyOf(commands.values());
 	}
 	
 	@Override
@@ -99,15 +99,12 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public void load() {
-		plugin.getManager(Enchiridion.class).register(index);
+		if (loaded)
+			return;
 		
-		Command tcCommand = new TitanChatCommand();
+		plugin.getSystem().getManager(Enchiridion.class).register(index);
 		
-		tcCommand.register(new ConnectCommand());
-		tcCommand.register(new DisconnectCommand());
-		tcCommand.register(new HelpCommand());
-		
-		register(tcCommand);
+		this.loaded = true;
 	}
 	
 	@Override
@@ -173,7 +170,10 @@ public final class CommandManager implements Manager<Command> {
 	}
 	
 	@Override
-	public void reload() {}
+	public void reload() {
+		if (!loaded)
+			this.loaded = true;
+	}
 	
 	public boolean run(CommandSender sender, String label, String[] args) {
 		Validate.notNull(sender, "Sender cannot be null");
@@ -204,14 +204,15 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public void unload() {
-		for (Command command : getAll()) {
-			if (!has(command))
-				continue;
-			
-			unregister(command);
-		}
+		if (!loaded)
+			return;
 		
-		plugin.getManager(Enchiridion.class).unregister(index);
+		for (Command command : getAll())
+			unregister(command);
+		
+		plugin.getSystem().getManager(Enchiridion.class).unregister(index);
+		
+		this.loaded = false;
 	}
 	
 	@Override

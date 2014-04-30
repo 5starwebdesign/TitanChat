@@ -18,12 +18,10 @@
 package com.titankingdoms.dev.titanchat.api.addon;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
@@ -45,13 +43,15 @@ public final class AddonManager implements Manager<Addon> {
 	
 	private final Map<String, Addon> addons;
 	
+	private boolean loaded = false;
+	
 	public AddonManager() {
 		this.plugin = TitanChat.instance();
 		
 		if (getDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating addon directory...");
 		
-		this.addons = new TreeMap<>();
+		this.addons = new HashMap<>();
 	}
 	
 	static {
@@ -60,13 +60,12 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public Addon get(String name) {
-		Validate.notEmpty(name, "Name cannot be empty");
-		return addons.get(name.toLowerCase());
+		return (name == null || name.isEmpty()) ? null : addons.get(name.toLowerCase());
 	}
 	
 	@Override
-	public Collection<Addon> getAll() {
-		return new HashSet<>(addons.values());
+	public Set<Addon> getAll() {
+		return ImmutableSet.copyOf(addons.values());
 	}
 	
 	@Override
@@ -95,8 +94,16 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public void load() {
+		if (loaded)
+			return;
+		
+		for (Addon addon : Loader.load(Addon.class, getDirectory()))
+			register(addon);
+		
 		for (Addon addon : getAll())
 			addon.onEnable();
+		
+		this.loaded = true;
 	}
 	
 	@Override
@@ -126,31 +133,34 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public void reload() {
+		if (!loaded)
+			this.loaded = true;
+		
 		for (Addon addon : getAll()) {
-			if (addon.getFile().exists()) {
+			if (addon.getFile().exists())
 				addon.onReload();
-				continue;
-			}
+			else
+				addon.onDisable();
 			
 			unregister(addon);
-			addon.onDisable();
 		}
 		
-		for (Addon addon : Loader.load(Addon.class, getDirectory())) {
-			if (has(addon))
-				continue;
-			
+		for (Addon addon : Loader.load(Addon.class, getDirectory()))
 			register(addon);
-		}
 	}
 	
 	@Override
 	public void unload() {
+		if (!loaded)
+			return;
+		
 		for (Addon addon : getAll())
 			addon.onDisable();
 		
 		for (Addon addon : getAll())
 			unregister(addon);
+		
+		this.loaded = false;
 	}
 	
 	@Override

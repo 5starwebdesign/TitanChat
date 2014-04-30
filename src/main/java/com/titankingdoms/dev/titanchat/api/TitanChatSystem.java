@@ -17,8 +17,8 @@
 
 package com.titankingdoms.dev.titanchat.api;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +33,7 @@ public final class TitanChatSystem {
 	
 	private AddonManager addon;
 	
-	private final List<Manager<?>> managers = new ArrayList<>();
-	
-	private final Map<Class<? extends Manager<?>>, Manager<?>> seek = new HashMap<>();
+	private final Map<Class<? extends Manager<?>>, Manager<?>> managers = new LinkedHashMap<>();
 	private final Map<Class<?>, Manager<?>> registered = new HashMap<>();
 	
 	public AddonManager getAddonManager() {
@@ -46,11 +44,11 @@ public final class TitanChatSystem {
 	}
 	
 	public <T extends Manager<?>> T getManager(Class<T> clazz) {
-		return clazz.cast(seek.get(clazz));
+		return clazz.cast(managers.get(clazz));
 	}
 	
 	public List<Manager<?>> getManagers() {
-		return ImmutableList.copyOf(managers);
+		return ImmutableList.copyOf(managers.values());
 	}
 	
 	public List<Manager<?>> getRegisteredManagers() {
@@ -60,7 +58,7 @@ public final class TitanChatSystem {
 	}
 	
 	public <T extends Manager<?>> boolean isLoaded(Class<T> clazz) {
-		return clazz != null && seek.containsKey(clazz);
+		return clazz != null && managers.containsKey(clazz);
 	}
 	
 	public <T extends Manager<?>> boolean isRegistered(Class<T> clazz) {
@@ -86,17 +84,18 @@ public final class TitanChatSystem {
 		}
 		
 		manager.load();
-		managers.add(manager);
-		seek.put(clazz, manager);
+		managers.put(clazz, manager);
 		
 		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(manager, "Load"));
 	}
 	
 	public void loadManagers() {
-		Manager<?>[] managers = registered.values().toArray(new Manager<?>[0]);
-		
-		for (int manager = 0; manager < managers.length; manager++)
-			loadManager(managers[manager].getClass());
+		synchronized (registered) {
+			Manager<?>[] managers = registered.values().toArray(new Manager<?>[0]);
+			
+			for (int manager = 0; manager < managers.length; manager++)
+				loadManager(managers[manager].getClass());
+		}
 	}
 	
 	public void registerManager(Manager<?> manager) {
@@ -136,7 +135,7 @@ public final class TitanChatSystem {
 	}
 	
 	public void reloadManagers() {
-		for (Manager<?> manager : managers)
+		for (Manager<?> manager : managers.values())
 			reloadManager(manager.getClass());
 	}
 	
@@ -167,8 +166,7 @@ public final class TitanChatSystem {
 		Manager<?> manager = getManager(clazz);
 		
 		manager.unload();
-		managers.remove(manager);
-		seek.remove(clazz);
+		managers.remove(clazz);
 		
 		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(manager, "Unload"));
 	}

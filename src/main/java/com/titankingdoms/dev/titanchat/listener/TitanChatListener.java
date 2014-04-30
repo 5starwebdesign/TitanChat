@@ -41,10 +41,10 @@ public final class TitanChatListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-		UserManager manager = plugin.getManager(UserManager.class);
-		
-		if (manager == null)
+		if (!plugin.getSystem().isLoaded(UserManager.class))
 			return;
+		
+		UserManager manager = plugin.getSystem().getManager(UserManager.class);
 		
 		event.setCancelled(true);
 		
@@ -61,10 +61,10 @@ public final class TitanChatListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		UserManager manager = plugin.getManager(UserManager.class);
-		
-		if (manager == null)
+		if (!plugin.getSystem().isLoaded(UserManager.class))
 			return;
+		
+		UserManager manager = plugin.getSystem().getManager(UserManager.class);
 		
 		User user = new User(event.getPlayer());
 		manager.register(user);
@@ -72,10 +72,10 @@ public final class TitanChatListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		UserManager manager = plugin.getManager(UserManager.class);
-		
-		if (manager == null)
+		if (!plugin.getSystem().isLoaded(UserManager.class))
 			return;
+		
+		UserManager manager = plugin.getSystem().getManager(UserManager.class);
 		
 		User user = manager.get(event.getPlayer().getName());
 		manager.unregister(user);

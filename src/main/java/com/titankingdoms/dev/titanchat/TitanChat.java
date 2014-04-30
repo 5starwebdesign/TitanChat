@@ -27,12 +27,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.TitanChatSystem;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
 import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
+import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
+import com.titankingdoms.dev.titanchat.command.titanchat.*;
 import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory;
@@ -46,10 +47,6 @@ public final class TitanChat extends JavaPlugin {
 	private final Logger log = Logger.getLogger("TitanLog");
 	
 	private final TitanChatSystem system = new TitanChatSystem();
-	
-	public <T extends Manager<?>> T getManager(Class<T> manager) {
-		return getSystem().getManager(manager);
-	}
 	
 	public TitanChatSystem getSystem() {
 		if (instance == null)
@@ -129,7 +126,7 @@ public final class TitanChat extends JavaPlugin {
 		if (!system.isLoaded(CommandManager.class))
 			throw new IllegalStateException("CommandManager not found");
 		
-		return getManager(CommandManager.class).run(sender, label, args);
+		return system.getManager(CommandManager.class).run(sender, label, args);
 	}
 	
 	@Override
@@ -161,6 +158,9 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Starting TitanChat System...");
 		system.start();
+		
+		if (!registerCommands())
+			log(Level.WARNING, "Failed to register commands");
 		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
 		log(Level.INFO, "Registered listeners");
@@ -200,6 +200,25 @@ public final class TitanChat extends JavaPlugin {
 		if (!system.isLoaded(CommandManager.class))
 			throw new IllegalStateException("CommandManager not found");
 		
-		return getManager(CommandManager.class).preview(sender, label, args);
+		return system.getManager(CommandManager.class).preview(sender, label, args);
+	}
+	
+	private boolean registerCommands() {
+		if (!system.isLoaded(CommandManager.class))
+			return false;
+		
+		CommandManager cmdManager = system.getManager(CommandManager.class);
+		
+		TitanChatCommand tcCommand = new TitanChatCommand();
+		
+		tcCommand.register(new HelpCommand());
+		
+		cmdManager.register(tcCommand);
+		
+		return true;
+	}
+	
+	public static TitanChatSystem system() {
+		return instance.getSystem();
 	}
 }

@@ -30,7 +30,7 @@ import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 
 public final class Console implements Node, NodeManager<Console> {
 	
-	protected final TitanChat plugin;
+	private final TitanChat plugin;
 	
 	private static final Console instance = new Console();
 	
@@ -73,7 +73,7 @@ public final class Console implements Node, NodeManager<Console> {
 	}
 	
 	@Override
-	public Collection<Node> getTerminusNodes() {
+	public Set<Node> getTerminusNodes() {
 		return terminus;
 	}
 	

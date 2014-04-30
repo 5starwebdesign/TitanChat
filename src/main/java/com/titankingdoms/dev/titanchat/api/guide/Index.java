@@ -17,7 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.api.guide;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -66,19 +65,18 @@ public class Index implements Chapter {
 	}
 	
 	public Chapter getChapter(String title) {
-		Validate.notEmpty(title, "Title cannot be empty");
-		return chapters.get(title.toLowerCase());
+		return (title == null || title.isEmpty()) ? null : chapters.get(title.toLowerCase());
 	}
 	
 	public List<Chapter> getChapters() {
-		return ImmutableList.<Chapter>builder().addAll(chapters.values()).build();
+		return ImmutableList.copyOf(chapters.values());
 	}
 	
 	@Override
 	public String getContent(int page) {
 		StringBuilder content = new StringBuilder();
 		
-		List<Chapter> chapters = new ArrayList<>(this.chapters.values());
+		List<Chapter> chapters = getChapters();
 		
 		int start = (page - 1) * 6;
 		int end = start + 6;

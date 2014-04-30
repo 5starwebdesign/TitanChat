@@ -37,7 +37,7 @@ public final class Metadata {
 	}
 	
 	public Map<String, Meta> getData() {
-		return ImmutableMap.<String, Meta>builder().putAll(data).build();
+		return ImmutableMap.copyOf(data);
 	}
 	
 	public boolean hasData(String key) {
