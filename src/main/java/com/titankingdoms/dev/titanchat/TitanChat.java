@@ -17,6 +17,7 @@
 
 package com.titankingdoms.dev.titanchat;
 
+import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,46 +64,45 @@ public final class TitanChat extends JavaPlugin {
 				log(Level.INFO, "Attempting to enquire for updates...");
 				
 				if (!getConfig().getBoolean("tools.update-enquiry", false)) {
-					log(Level.INFO, "Enquiry Disabled");
+					log(Level.INFO, "Enquiry disabled");
 					return;
 				}
 				
 				ReleaseHistory history = new ReleaseHistory(35800, getDescription());
 				history.searchHistory();
 				
-				if (history.getVersions().size() < 1) {
+				if (!history.hasVersions()) {
 					log(Level.INFO, "No releases found");
 					return;
 				}
 				
-				Version runningVer = history.getRunningVersion();
-				Version latestVer = history.getLatestVersion();
+				Version rVersion = history.getRunningVersion();
+				Version lVersion = history.getLatestVersion();
 				
-				String[] runningVersion = runningVer.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
-				String[] latestVersion = latestVer.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
+				String[] rVersioning = rVersion.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
+				String[] lVersioning = lVersion.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
 				
-				for (int versioning = 0; versioning < 4; versioning++) {
-					try {
-						int running = NumberUtils.toInt(runningVersion[versioning], 0);
-						int latest = NumberUtils.toInt(latestVersion[versioning], 0);
-						
-						if (latest > running)
-							break;
-						
-						if (latest == running && versioning != 3)
-							continue;
-						
-						log(Level.INFO, "No updates available");
-						return;
-						
-					} catch (Exception e) {}
+				int comparison = Math.min(rVersioning.length, lVersioning.length);
+				
+				for (int index = 0; index < comparison; index++) {
+					int running = NumberUtils.toInt(rVersioning[index], 0);
+					int latest = NumberUtils.toInt(lVersioning[index], 0);
+					
+					if (latest > running)
+						break;
+					
+					if (latest == running && index < comparison - 1)
+						continue;
+					
+					log(Level.INFO, "No updates available");
+					return;
 				}
 				
-				log(Level.INFO, "A new version of TitanChat is available! (" + latestVer.getTitle() + ")");
-				log(Level.INFO, "You are running " + runningVer.getTitle() + " currently");
+				log(Level.INFO, "A new version of TitanChat is available! (" + lVersion.getTitle() + ")");
+				log(Level.INFO, "You are running " + rVersion.getTitle() + " currently");
 				
-				if (!latestVer.getDownloadLink().isEmpty())
-					log(Level.INFO, "Get files at " + latestVer.getDownloadLink());
+				if (!lVersion.getDownloadLink().isEmpty())
+					log(Level.INFO, "Get files at " + lVersion.getDownloadLink());
 				else
 					log(Level.INFO, "Get files at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
 			}
@@ -133,7 +133,7 @@ public final class TitanChat extends JavaPlugin {
 	public void onDisable() {
 		log(Level.INFO, "Now disabling...");
 		
-		log(Level.INFO, "Shutting down TitanChat System...");
+		log(Level.INFO, "Stopping TitanChat System...");
 		system.stop();
 		
 		if (instance != null)
@@ -173,6 +173,11 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "Now loading...");
 		
 		instance = this;
+		
+		if (!new File(getDataFolder(), "config.yml").exists())
+			log(Level.INFO, "Generating default configuration...");
+			
+		saveResource("config.yml", false);
 		
 		log(Level.INFO, "Registering managers...");
 		system.registerManager(new AdapterHandler());

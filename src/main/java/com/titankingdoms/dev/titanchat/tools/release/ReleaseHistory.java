@@ -95,6 +95,10 @@ public class ReleaseHistory {
 		return ImmutableList.copyOf(versions);
 	}
 	
+	public boolean hasVersions() {
+		return versions.size() > 0;
+	}
+	
 	public void searchHistory() {
 		versions.clear();
 		

@@ -17,7 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.api.guide;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,7 +51,7 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	}
 	
 	@Override
-	public Collection<Chapter> getAll() {
+	public List<Chapter> getAll() {
 		return getChapters();
 	}
 	

@@ -59,16 +59,16 @@ public final class UserData {
 		for (Node node : user.getConnection().getConnections())
 			this.connected.add(node.getName() + "::" + node.getType());
 		
-		for (Entry<String, Meta> meta : user.getMetadata().getData().entrySet()) {
-			String key = meta.getKey();
-			Meta metaValue = meta.getValue();
+		for (Entry<String, Meta> entry : user.getMetadata().getData().entrySet()) {
+			Meta meta = entry.getValue();
 			
+			String key = entry.getKey();
 			String value;
 			
 			if (plugin.getSystem().isLoaded(AdapterHandler.class))
-				value = plugin.getSystem().getManager(AdapterHandler.class).get(key).toString(metaValue);
+				value = plugin.getSystem().getManager(AdapterHandler.class).get(key).toString(meta);
 			else
-				value = metaValue.getValue();
+				value = meta.getValue();
 			
 			this.metadata.put(key, value);
 		}
