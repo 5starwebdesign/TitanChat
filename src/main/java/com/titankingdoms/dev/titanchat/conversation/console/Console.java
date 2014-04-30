@@ -40,8 +40,8 @@ public final class Console implements Node, NodeManager<Console> {
 	
 	private volatile Node exploring;
 	
-	private static final Set<Console> console = ImmutableSet.<Console>builder().add(instance).build();
-	private static final Set<Node> terminus = ImmutableSet.<Node>builder().add(instance).build();
+	private static final Set<Console> console = ImmutableSet.of(instance);
+	private static final Set<Node> terminus = ImmutableSet.<Node>of(instance);
 	
 	private Console() {
 		this.plugin = TitanChat.instance();

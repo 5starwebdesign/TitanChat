@@ -23,7 +23,6 @@ import java.util.List;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicesManager;
 
 import net.milkbowl.vault.chat.Chat;
@@ -195,21 +194,9 @@ public final class VaultUtils {
 		
 		ServicesManager services = server.getServicesManager();
 		
-		RegisteredServiceProvider<Chat> chatProvider = services.getRegistration(Chat.class);
-		
-		if (chatProvider != null)
-			chat = chatProvider.getProvider();
-		
-		RegisteredServiceProvider<Economy> econProvider = services.getRegistration(Economy.class);
-		
-		if (econProvider != null)
-			econ = econProvider.getProvider();
-		
-		RegisteredServiceProvider<Permission> permProvider = services.getRegistration(Permission.class);
-		
-		if (permProvider != null)
-			perm = permProvider.getProvider();
-		
+		chat = services.load(Chat.class);
+		econ = services.load(Economy.class);
+		perm = services.load(Permission.class);
 		return true;
 	}
 	

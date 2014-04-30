@@ -80,7 +80,7 @@ public final class FormatUtils {
 		if (text.length() == length)
 			return new String[] { text };
 		
-		List<String> lines = new LinkedList<String>();
+		List<String> lines = new LinkedList<>();
 		
 		while (text.length() >= length || text.contains("\n")) {
 			int end = text.lastIndexOf(' ', length);

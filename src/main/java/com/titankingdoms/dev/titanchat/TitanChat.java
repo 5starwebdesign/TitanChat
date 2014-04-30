@@ -126,8 +126,8 @@ public final class TitanChat extends JavaPlugin {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (!system.hasManager(CommandManager.class))
-			throw new UnsupportedOperationException("CommandManager not found");
+		if (!system.isLoaded(CommandManager.class))
+			throw new IllegalStateException("CommandManager not found");
 		
 		return getManager(CommandManager.class).run(sender, label, args);
 	}
@@ -137,7 +137,7 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "Now disabling...");
 		
 		log(Level.INFO, "Shutting down TitanChat System...");
-		system.shutdown();
+		system.stop();
 		
 		if (instance != null)
 			instance = null;
@@ -190,13 +190,15 @@ public final class TitanChat extends JavaPlugin {
 		if (instance == null)
 			instance = this;
 		
+		system.reload();
+		
 		log(Level.INFO, "Now reloaded");
 	}
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		if (!system.hasManager(CommandManager.class))
-			throw new UnsupportedOperationException("CommandManager not found");
+		if (!system.isLoaded(CommandManager.class))
+			throw new IllegalStateException("CommandManager not found");
 		
 		return getManager(CommandManager.class).preview(sender, label, args);
 	}

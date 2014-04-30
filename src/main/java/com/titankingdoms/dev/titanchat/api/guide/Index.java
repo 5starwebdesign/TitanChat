@@ -18,13 +18,13 @@
 package com.titankingdoms.dev.titanchat.api.guide;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableList;
 import com.titankingdoms.dev.titanchat.TitanChat;
 
 public class Index implements Chapter {
@@ -42,7 +42,7 @@ public class Index implements Chapter {
 		
 		this.plugin = TitanChat.instance();
 		this.title = title;
-		this.chapters = new TreeMap<String, Chapter>();
+		this.chapters = new TreeMap<>();
 	}
 	
 	public void addChapter(Chapter chapter) {
@@ -71,14 +71,14 @@ public class Index implements Chapter {
 	}
 	
 	public List<Chapter> getChapters() {
-		return new LinkedList<Chapter>(chapters.values());
+		return ImmutableList.<Chapter>builder().addAll(chapters.values()).build();
 	}
 	
 	@Override
 	public String getContent(int page) {
 		StringBuilder content = new StringBuilder();
 		
-		List<Chapter> chapters = new ArrayList<Chapter>(this.chapters.values());
+		List<Chapter> chapters = new ArrayList<>(this.chapters.values());
 		
 		int start = (page - 1) * 6;
 		int end = start + 6;

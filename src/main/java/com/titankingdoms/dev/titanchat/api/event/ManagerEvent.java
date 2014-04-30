@@ -31,11 +31,11 @@ public class ManagerEvent extends Event {
 	
 	private final String type;
 	
-	public ManagerEvent(Manager<?> manager, String type) {
-		Validate.notNull(manager, "Manager cannot be null");
+	public ManagerEvent(Manager<?> manager2, String type) {
+		Validate.notNull(manager2, "Manager cannot be null");
 		Validate.notEmpty(type, "Type cannot be empty");
 		
-		this.manager = manager;
+		this.manager = manager2;
 		this.type = type;
 	}
 	

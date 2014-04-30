@@ -18,9 +18,7 @@
 package com.titankingdoms.dev.titanchat.api.addon;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +28,8 @@ import java.util.logging.Level;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
@@ -41,7 +41,7 @@ public final class AddonManager implements Manager<Addon> {
 	
 	private static final String NAME = "AddonManager";
 	
-	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().build();
+	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
 	
 	private final Map<String, Addon> addons;
 	
@@ -51,7 +51,11 @@ public final class AddonManager implements Manager<Addon> {
 		if (getDirectory().mkdirs())
 			plugin.log(Level.INFO, "Creating addon directory...");
 		
-		this.addons = new TreeMap<String, Addon>();
+		this.addons = new TreeMap<>();
+	}
+	
+	static {
+		DEPENDENCIES = ImmutableSet.of();
 	}
 	
 	@Override
@@ -62,11 +66,11 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public Collection<Addon> getAll() {
-		return new HashSet<Addon>(addons.values());
+		return new HashSet<>(addons.values());
 	}
 	
 	@Override
-	public Set<String> getDependencies() {
+	public Set<Class<? extends Manager<?>>> getDependencies() {
 		return DEPENDENCIES;
 	}
 	
@@ -98,9 +102,9 @@ public final class AddonManager implements Manager<Addon> {
 	@Override
 	public List<String> match(String name) {
 		if (name == null || name.isEmpty())
-			return new ArrayList<String>(addons.keySet());
+			return ImmutableList.copyOf(addons.keySet());
 		
-		List<String> matches = new ArrayList<String>();
+		Builder<String> matches = ImmutableList.builder();
 		
 		for (String addon : addons.keySet()) {
 			if (!addon.startsWith(name.toLowerCase()))
@@ -109,9 +113,7 @@ public final class AddonManager implements Manager<Addon> {
 			matches.add(addon);
 		}
 		
-		Collections.sort(matches);
-		
-		return matches;
+		return matches.build();
 	}
 	
 	@Override

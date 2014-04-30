@@ -17,8 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.api.metadata;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,19 +24,25 @@ import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class AdapterHandler implements Manager<MetaAdapter> {
 	
 	private static final String NAME = "AdapterHandler";
 	
-	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().build();
+	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
 	
 	private final Map<String, MetaAdapter> adapters;
 	
 	public AdapterHandler() {
-		this.adapters = new HashMap<String, MetaAdapter>();
+		this.adapters = new HashMap<>();
+	}
+	
+	static {
+		DEPENDENCIES = ImmutableSet.of();
 	}
 	
 	@Override
@@ -52,7 +56,7 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 	}
 	
 	@Override
-	public Set<String> getDependencies() {
+	public Set<Class<? extends Manager<?>>> getDependencies() {
 		return DEPENDENCIES;
 	}
 	
@@ -77,9 +81,9 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 	@Override
 	public List<String> match(String key) {
 		if (key == null || key.isEmpty())
-			return new ArrayList<String>(adapters.keySet());
+			return ImmutableList.copyOf(adapters.keySet());
 		
-		List<String> matches = new ArrayList<String>();
+		Builder<String> matches = ImmutableList.builder();
 		
 		for (String adapter : adapters.keySet()) {
 			if (!adapter.startsWith(key.toLowerCase()))
@@ -88,9 +92,7 @@ public final class AdapterHandler implements Manager<MetaAdapter> {
 			matches.add(adapter);
 		}
 		
-		Collections.sort(matches);
-		
-		return matches;
+		return matches.build();
 	}
 	
 	@Override

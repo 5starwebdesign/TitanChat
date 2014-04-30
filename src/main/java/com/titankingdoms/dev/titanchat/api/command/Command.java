@@ -19,7 +19,6 @@ package com.titankingdoms.dev.titanchat.api.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,6 +27,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.command.guide.Assistance;
 import com.titankingdoms.dev.titanchat.api.command.guide.GenericAssistance;
@@ -65,7 +66,7 @@ public abstract class Command {
 		this.label = label.trim();
 		this.syntax = this.label;
 		this.assistance = new GenericAssistance(this);
-		this.commands = new TreeMap<String, Command>();
+		this.commands = new TreeMap<>();
 	}
 	
 	private final String assembleCanonicalSyntax() {
@@ -116,7 +117,7 @@ public abstract class Command {
 	}
 	
 	private final List<Command> getAll() {
-		return new ArrayList<Command>(commands.values());
+		return ImmutableList.<Command>builder().addAll(commands.values()).build();
 	}
 	
 	public final Assistance getAssistance() {
@@ -205,9 +206,9 @@ public abstract class Command {
 				return tabComplete(sender, args);
 			
 			if (args[0] == null || args[0].isEmpty())
-				return new ArrayList<String>(commands.keySet());
+				return ImmutableList.copyOf(commands.keySet());
 			
-			List<String> matches = new ArrayList<String>();
+			Builder<String> matches = ImmutableList.builder();
 			
 			for (String match : commands.keySet()) {
 				if (!match.startsWith(args[0]))
@@ -216,8 +217,7 @@ public abstract class Command {
 				matches.add(match);
 			}
 			
-			Collections.sort(matches);
-			return matches;
+			return matches.build();
 			
 		default:
 			if (!has(args[0]))
@@ -232,7 +232,7 @@ public abstract class Command {
 	}
 	
 	protected final boolean isRegistered() {
-		if (!plugin.getSystem().hasManager(CommandManager.class))
+		if (!plugin.getSystem().isLoaded(CommandManager.class))
 			return false;
 		
 		return parent != null || plugin.getManager(CommandManager.class).has(this);
@@ -314,7 +314,7 @@ public abstract class Command {
 	}
 	
 	protected List<String> tabComplete(CommandSender sender, String[] args) {
-		return new ArrayList<String>();
+		return new ArrayList<>();
 	}
 	
 	@Override

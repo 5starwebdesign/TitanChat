@@ -37,7 +37,7 @@ public final class Loader {
 	private static final Logger log = Logger.getLogger("LoadingLog");
 	
 	public static <T extends Loadable> List<T> load(Class<T> clazz, File directory) {
-		List<T> loadables = new ArrayList<T>();
+		List<T> loadables = new ArrayList<>();
 		
 		for (File file : directory.listFiles(new ExtensionFilter(".jar"))) {
 			JarFile jar = null;

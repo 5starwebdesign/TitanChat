@@ -155,7 +155,7 @@ public class ReleaseHistory {
 			UNKNOWN("Unknown");
 			
 			private final String name;
-			private static final Map<String, ReleaseType> NAME_MAP = new HashMap<String, ReleaseType>();
+			private static final Map<String, ReleaseType> NAME_MAP = new HashMap<>();
 			
 			private ReleaseType(String name) {
 				this.name = name;

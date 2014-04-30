@@ -17,9 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.conversation.user;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +28,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
+import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
 import com.titankingdoms.dev.titanchat.conversation.console.Console;
 import com.titankingdoms.dev.titanchat.conversation.user.storage.UserStorage;
 import com.titankingdoms.dev.titanchat.conversation.user.storage.yml.YMLUserStorage;
@@ -47,7 +48,7 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	private static final String NAME = "UserManager";
 	private static final String TYPE = "User";
 	
-	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().add("Network").build();
+	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
 	
 	private final Map<UUID, User> users;
 	
@@ -55,8 +56,12 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	
 	public UserManager() {
 		this.plugin = TitanChat.instance();
-		this.users = new HashMap<UUID, User>();
+		this.users = new HashMap<>();
 		this.storage = new YMLUserStorage();
+	}
+	
+	static {
+		DEPENDENCIES = ImmutableSet.<Class<? extends Manager<?>>>of(AdapterHandler.class, Network.class);
 	}
 	
 	public User get(UUID id) {
@@ -88,12 +93,12 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	}
 	
 	@Override
-	public Collection<User> getAll() {
+	public Set<User> getAll() {
 		return ImmutableSet.<User>builder().addAll(users.values()).build();
 	}
 	
 	@Override
-	public Collection<String> getDependencies() {
+	public Set<Class<? extends Manager<?>>> getDependencies() {
 		return DEPENDENCIES;
 	}
 	
@@ -132,19 +137,17 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	public void load() {}
 	
 	@Override
-	public Collection<String> match(String name) {
-		List<String> matches = new ArrayList<String>();
+	public List<String> match(String name) {
+		Builder<String> matches = ImmutableList.builder();
 		
 		for (User user : users.values()) {
-			if ((name == null || name.isEmpty()) && !user.getName().startsWith(name))
+			if (name != null && !user.getName().startsWith(name))
 				continue;
 			
 			matches.add(user.getName());
 		}
 		
-		Collections.sort(matches);
-		
-		return matches;
+		return matches.build();
 	}
 	
 	@Override

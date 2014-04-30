@@ -18,7 +18,6 @@
 package com.titankingdoms.dev.titanchat.api.command;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +29,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.command.guide.CommandIndex;
@@ -46,7 +47,7 @@ public final class CommandManager implements Manager<Command> {
 	
 	private static final String NAME = "CommandManager";
 	
-	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().build();
+	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
 	
 	private final Map<String, Command> commands;
 	
@@ -55,7 +56,11 @@ public final class CommandManager implements Manager<Command> {
 	public CommandManager() {
 		this.plugin = TitanChat.instance();
 		this.index = new CommandIndex();
-		this.commands = new TreeMap<String, Command>();
+		this.commands = new TreeMap<>();
+	}
+	
+	static {
+		DEPENDENCIES = ImmutableSet.of();
 	}
 	
 	@Override
@@ -65,11 +70,11 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public List<Command> getAll() {
-		return new ArrayList<Command>(commands.values());
+		return ImmutableList.<Command>builder().addAll(commands.values()).build();
 	}
 	
 	@Override
-	public Set<String> getDependencies() {
+	public Set<Class<? extends Manager<?>>> getDependencies() {
 		return DEPENDENCIES;
 	}
 	
@@ -108,9 +113,9 @@ public final class CommandManager implements Manager<Command> {
 	@Override
 	public List<String> match(String label) {
 		if (label == null || label.isEmpty())
-			return new ArrayList<String>(commands.keySet());
+			return ImmutableList.copyOf(commands.keySet());
 		
-		List<String> matches = new ArrayList<String>();
+		Builder<String> matches = ImmutableList.builder();
 		
 		for (String match : commands.keySet()) {
 			if (!match.startsWith(label))
@@ -119,8 +124,7 @@ public final class CommandManager implements Manager<Command> {
 			matches.add(match);
 		}
 		
-		Collections.sort(matches);
-		return matches;
+		return matches.build();
 	}
 	
 	public List<String> preview(CommandSender sender, String label, String[] args) {
@@ -131,7 +135,7 @@ public final class CommandManager implements Manager<Command> {
 			
 		default:
 			if (!has(label))
-				return new ArrayList<String>();
+				return new ArrayList<>();
 			
 			return get(label).invokeTabCompletion(sender, regroup(args));
 		}
@@ -158,7 +162,7 @@ public final class CommandManager implements Manager<Command> {
 		if (args == null || args.length < 1)
 			return new String[0];
 		
-		List<String> arguments = new ArrayList<String>();
+		List<String> arguments = new ArrayList<>();
 		
 		Matcher match = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(StringUtils.join(args, ' '));
 		

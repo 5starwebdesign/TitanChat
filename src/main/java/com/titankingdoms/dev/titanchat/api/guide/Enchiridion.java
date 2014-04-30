@@ -17,15 +17,15 @@
 
 package com.titankingdoms.dev.titanchat.api.guide;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.api.Manager;
 
 public final class Enchiridion extends Index implements Manager<Chapter> {
@@ -33,13 +33,17 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	private static final String DESC = "The General Index";
 	private static final String NAME = "Enchiridion";
 	
-	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().build();
+	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
 	
 	private final Map<String, Chapter> chapters;
 	
 	public Enchiridion() {
 		super("General");
-		this.chapters = new TreeMap<String, Chapter>();
+		this.chapters = new TreeMap<>();
+	}
+	
+	static {
+		DEPENDENCIES = ImmutableSet.of();
 	}
 	
 	@Override
@@ -53,7 +57,7 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	}
 	
 	@Override
-	public Collection<String> getDependencies() {
+	public Set<Class<? extends Manager<?>>> getDependencies() {
 		return DEPENDENCIES;
 	}
 	
@@ -81,11 +85,11 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	public void load() {}
 	
 	@Override
-	public Collection<String> match(String title) {
+	public List<String> match(String title) {
 		if (title == null || title.isEmpty())
-			return new ArrayList<String>(chapters.keySet());
+			return ImmutableList.copyOf(chapters.keySet());
 		
-		List<String> matches = new ArrayList<String>();
+		Builder<String> matches = ImmutableList.builder();
 		
 		for (String match : chapters.keySet()) {
 			if (!match.startsWith(title))
@@ -94,8 +98,7 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 			matches.add(match);
 		}
 		
-		Collections.sort(matches);
-		return matches;
+		return matches.build();
 	}
 	
 	@Override

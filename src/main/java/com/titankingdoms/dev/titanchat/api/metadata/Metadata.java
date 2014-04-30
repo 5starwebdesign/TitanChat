@@ -17,17 +17,19 @@
 
 package com.titankingdoms.dev.titanchat.api.metadata;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.Validate;
+
+import com.google.common.collect.ImmutableMap;
 
 public final class Metadata {
 	
 	private final Map<String, Meta> data;
 	
 	public Metadata() {
-		this.data = new LinkedHashMap<String, Meta>();
+		this.data = new TreeMap<>();
 	}
 	
 	public Meta getData(String key) {
@@ -35,7 +37,7 @@ public final class Metadata {
 	}
 	
 	public Map<String, Meta> getData() {
-		return new LinkedHashMap<String, Meta>(data);
+		return ImmutableMap.<String, Meta>builder().putAll(data).build();
 	}
 	
 	public boolean hasData(String key) {

@@ -43,9 +43,9 @@ public final class UserData {
 	
 	private String viewing = "";
 	
-	private Set<String> connected = new HashSet<String>();
+	private Set<String> connected = new HashSet<>();
 	
-	private Map<String, String> metadata = new HashMap<String, String>();
+	private Map<String, String> metadata = new HashMap<>();
 	
 	public UserData(User user) {
 		Validate.notNull(user, "User cannot be null");
@@ -63,7 +63,7 @@ public final class UserData {
 			String key = meta.getKey();
 			Meta value = meta.getValue();
 			
-			if (plugin.getSystem().hasManager(AdapterHandler.class))
+			if (plugin.getSystem().isLoaded(AdapterHandler.class))
 				this.metadata.put(key, plugin.getManager(AdapterHandler.class).get(key).toString(value));
 			else
 				this.metadata.put(key, value.getValue());
@@ -117,7 +117,7 @@ public final class UserData {
 	}
 	
 	private Set<String> toValid(Collection<String> nodes) {
-		Set<String> valid = new HashSet<String>();
+		Set<String> valid = new HashSet<>();
 		
 		if (nodes != null) {
 			for (String node : nodes) {

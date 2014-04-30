@@ -35,7 +35,7 @@ public class Connection {
 		Validate.notNull(node, "Node cannot be null");
 		
 		this.node = node;
-		this.connections = new HashMap<String, Node>();
+		this.connections = new HashMap<>();
 	}
 	
 	public boolean connect(Node node) {

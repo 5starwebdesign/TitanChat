@@ -47,7 +47,7 @@ public final class User implements Node {
 	
 	private volatile Node exploring;
 	
-	private final Set<Node> terminus = ImmutableSet.<Node>builder().add(this).build();
+	private final Set<Node> terminus = ImmutableSet.<Node>of(this);
 	
 	public User(OfflinePlayer player) {
 		Validate.notNull(player, "Player cannot be null");

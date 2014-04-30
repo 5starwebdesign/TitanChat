@@ -25,7 +25,7 @@ public interface Manager<T> {
 	
 	public Collection<T> getAll();
 	
-	public Collection<String> getDependencies();
+	public Collection<Class<? extends Manager<?>>> getDependencies();
 	
 	public String getName();
 	

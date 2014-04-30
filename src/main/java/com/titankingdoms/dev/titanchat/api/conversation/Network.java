@@ -17,9 +17,7 @@
 
 package com.titankingdoms.dev.titanchat.api.conversation;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +25,9 @@ import java.util.Set;
 
 import org.apache.commons.lang.Validate;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
@@ -37,12 +37,16 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 	
 	private static final String NAME = "Network";
 	
-	private static final Set<String> DEPENDENCIES = ImmutableSet.<String>builder().build();
+	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
 	
 	private final Map<String, NodeManager<? extends Node>> managers;
 	
 	public Network() {
-		this.managers = new HashMap<String, NodeManager<? extends Node>>();
+		this.managers = new HashMap<>();
+	}
+	
+	static {
+		DEPENDENCIES = ImmutableSet.of();
 	}
 	
 	@Override
@@ -60,7 +64,7 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 	}
 	
 	@Override
-	public Collection<String> getDependencies() {
+	public Set<Class<? extends Manager<?>>> getDependencies() {
 		return DEPENDENCIES;
 	}
 	
@@ -87,11 +91,11 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 	public void load() {}
 	
 	@Override
-	public Collection<String> match(String type) {
+	public List<String> match(String type) {
 		if (type == null || type.isEmpty())
-			return new ArrayList<String>(managers.keySet());
+			return ImmutableList.copyOf(managers.keySet());
 		
-		List<String> matches = new ArrayList<String>();
+		Builder<String> matches = ImmutableList.builder();
 		
 		for (String manager : managers.keySet()) {
 			if (!manager.startsWith(type.toLowerCase()))
@@ -100,9 +104,7 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 			matches.add(manager);
 		}
 		
-		Collections.sort(matches);
-		
-		return matches;
+		return matches.build();
 	}
 	
 	public static Status post(Conversation conversation) {
