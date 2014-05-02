@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.event.ConverseEvent;
-import com.titankingdoms.dev.titanchat.api.event.ConverseEvent.Status;
 
 public final class Network implements Manager<NodeManager<? extends Node>> {
 	
@@ -106,39 +105,34 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 		return matches.build();
 	}
 	
-	public static Status post(Conversation conversation) {
+	public static boolean post(Conversation conversation) {
 		if (conversation == null)
-			return Status.CANCELLED;
+			return false;
+		
+		Node sender = conversation.getSender();
+		String type = conversation.getType();
+		
+		if (!conversation.getRecipient().isConversable(sender, conversation.getMessage(), type))
+			return false;
 		
 		ConverseEvent event = new ConverseEvent(conversation);
-		
-		Set<Node> recipients = event.getRecipients();
-		
-		if (!recipients.contains(conversation.getSender()))
-			recipients.add(conversation.getSender());
-		
 		TitanChat.instance().getServer().getPluginManager().callEvent(event);
 		
-		if (event.inStatus(Status.PENDING)) {
-			if (!recipients.contains(conversation.getSender()))
-				recipients.add(conversation.getSender());
+		Set<Node> recipients = ImmutableSet.<Node>builder().add(sender).addAll(event.getRecipients()).build();
+		
+		String line = event.getFormat().replace("%message", event.getMessage());
+		
+		for (Node recipient : recipients) {
+			if (!recipient.isConversable(sender, event.getMessage(), type))
+				continue;
 			
-			String line = conversation.getFormat().replace("%message", conversation.getMessage());
-			
-			for (Node node : recipients) {
-				if (!node.isConversable(event.getSender(), event.getIntermediate(), event.getMessage()))
-					continue;
-				
-				node.sendLine(line);
-			}
-			
-			event.setStatus(Status.SENT);
+			recipient.sendLine(line);
 		}
 		
-		return event.getStatus();
+		return true;
 	}
 	
-	public static Status post(Node sender, Node recipient, String type, String format, String message) {
+	public static boolean post(Node sender, Node recipient, String type, String format, String message) {
 		return post(new Conversation(sender, recipient, type).setFormat(format).setMessage(message));
 	}
 	

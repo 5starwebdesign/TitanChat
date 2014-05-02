@@ -56,7 +56,7 @@ public final class TitanChatListener implements Listener {
 			return;
 		}
 		
-		Network.post(viewing.onConversation(user, event.getMessage()));
+		Network.post(viewing.getConversation(user, event.getMessage()));
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

@@ -23,15 +23,15 @@ public interface Node {
 	
 	public Connection getConnection();
 	
+	public Conversation getConversation(Node sender, String message);
+	
 	public String getName();
 	
 	public Collection<Node> getTerminusNodes();
 	
 	public String getType();
 	
-	public boolean isConversable(Node sender, Node intermidate, String message);
-	
-	public Conversation onConversation(Node sender, String message);
+	public boolean isConversable(Node sender, String message, String type);
 	
 	public void sendLine(String line);
 }

@@ -68,6 +68,11 @@ public final class Console implements Node, NodeManager<Console> {
 	}
 	
 	@Override
+	public Conversation getConversation(Node sender, String message) {
+		return null;
+	}
+	
+	@Override
 	public String getName() {
 		return ID;
 	}
@@ -96,17 +101,12 @@ public final class Console implements Node, NodeManager<Console> {
 	}
 	
 	@Override
-	public boolean isConversable(Node sender, Node intermediate, String message) {
+	public boolean isConversable(Node sender, String message, String type) {
 		return false;
 	}
 	
 	public boolean isViewing(Node node) {
 		return (node == null && exploring == null) || exploring.equals(node);
-	}
-	
-	@Override
-	public Conversation onConversation(Node sender, String message) {
-		return null;
 	}
 	
 	@Override

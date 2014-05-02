@@ -62,6 +62,11 @@ public final class User implements Node {
 		return connection;
 	}
 	
+	@Override
+	public Conversation getConversation(Node sender, String message) {
+		return null;
+	}
+	
 	public Metadata getMetadata() {
 		if (metadata == null)
 			this.metadata = new Metadata();
@@ -101,7 +106,7 @@ public final class User implements Node {
 	}
 	
 	@Override
-	public boolean isConversable(Node sender, Node intermediate, String message) {
+	public boolean isConversable(Node sender, String message, String type) {
 		return false;
 	}
 	
@@ -111,11 +116,6 @@ public final class User implements Node {
 	
 	public boolean isViewing(Node node) {
 		return (node == null && exploring == null) || exploring.equals(node);
-	}
-	
-	@Override
-	public Conversation onConversation(Node sender, String message) {
-		return null;
 	}
 	
 	@Override

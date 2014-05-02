@@ -52,6 +52,11 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	}
 	
 	@Override
+	public Conversation getConversation(Node sender, String message) {
+		return null;
+	}
+	
+	@Override
 	public String getName() {
 		return NAME;
 	}
@@ -77,13 +82,8 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	}
 	
 	@Override
-	public boolean isConversable(Node sender, Node intermediate, String message) {
+	public boolean isConversable(Node sender, String message, String type) {
 		return false;
-	}
-	
-	@Override
-	public Conversation onConversation(Node sender, String message) {
-		return null;
 	}
 	
 	@Override

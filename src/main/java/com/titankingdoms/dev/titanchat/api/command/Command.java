@@ -33,7 +33,6 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.command.guide.Assistance;
 import com.titankingdoms.dev.titanchat.api.command.guide.GenericAssistance;
 import com.titankingdoms.dev.titanchat.api.guide.Chapter;
-import com.titankingdoms.dev.titanchat.utility.Messaging;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 
 public abstract class Command {
@@ -239,7 +238,10 @@ public abstract class Command {
 	}
 	
 	public final void message(CommandSender recipient, String... lines) {
-		Messaging.message(recipient, lines);
+		Validate.notNull(recipient, "Recipient cannot be null");
+		Validate.notNull(lines, "Lines cannot be null");
+		
+		recipient.sendMessage(StringUtils.join(lines, '\n'));
 	}
 	
 	public final void register(Command command) {

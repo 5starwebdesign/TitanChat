@@ -24,9 +24,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -34,10 +31,8 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.conversation.Network;
-import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
-import com.titankingdoms.dev.titanchat.conversation.console.Console;
 import com.titankingdoms.dev.titanchat.conversation.user.storage.UserStorage;
 import com.titankingdoms.dev.titanchat.conversation.user.storage.yml.YMLUserStorage;
 
@@ -83,16 +78,6 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	@Override
 	public User get(String id) {
 		try { return get(UUID.fromString(id)); } catch (Exception e) { return null; }
-	}
-	
-	public Node get(CommandSender sender) {
-		if (Player.class.isInstance(sender))
-			return get(Player.class.cast(sender).getUniqueId());
-		
-		if (ConsoleCommandSender.class.isInstance(sender))
-			return Console.instance();
-		
-		return null;
 	}
 	
 	@Override

@@ -21,13 +21,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 
-public final class ConverseEvent extends Event {
+public final class ConverseEvent extends Event implements Cancellable {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
@@ -35,7 +36,7 @@ public final class ConverseEvent extends Event {
 	
 	private final Set<Node> recipients;
 	
-	private Status status = Status.PENDING;
+	private boolean cancelled = false;
 	
 	public ConverseEvent(Conversation conversation) {
 		Validate.notNull(conversation, "Conversation cannot be null");
@@ -77,12 +78,14 @@ public final class ConverseEvent extends Event {
 		return conversation.getSender();
 	}
 	
-	public Status getStatus() {
-		return status;
+	@Override
+	public boolean isCancelled() {
+		return cancelled;
 	}
 	
-	public boolean inStatus(Status status) {
-		return this.status.equals(status);
+	@Override
+	public void setCancelled(boolean cancelled) {
+		this.cancelled = cancelled;
 	}
 	
 	public void setFormat(String format) {
@@ -92,10 +95,4 @@ public final class ConverseEvent extends Event {
 	public void setMessage(String message) {
 		conversation.setMessage(message);
 	}
-	
-	public void setStatus(Status status) {
-		this.status = (status != null) ? status : Status.PENDING;
-	}
-	
-	public enum Status { CANCELLED, PENDING, SENT }
 }
