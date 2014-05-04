@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.metadata.Metadata;
+import com.titankingdoms.dev.titanchat.tools.metadata.Metadata;
 
 public final class User implements Node {
 	
@@ -64,7 +64,7 @@ public final class User implements Node {
 	
 	@Override
 	public Conversation getConversation(Node sender, String message) {
-		return null;
+		return new Conversation(sender, this, "PrivMsg").setMessage(message);
 	}
 	
 	public Metadata getMetadata() {
@@ -107,7 +107,7 @@ public final class User implements Node {
 	
 	@Override
 	public boolean isConversable(Node sender, String message, String type) {
-		return false;
+		return true;
 	}
 	
 	public boolean isOnline() {

@@ -29,7 +29,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
 import com.titankingdoms.dev.titanchat.api.event.ManagerEvent;
 
-public final class TitanChatSystem {
+public final class ModularSystem {
 	
 	private AddonManager addon;
 	
@@ -91,10 +91,10 @@ public final class TitanChatSystem {
 	
 	public void loadManagers() {
 		synchronized (registered) {
-			Manager<?>[] managers = registered.values().toArray(new Manager<?>[0]);
+			Manager<?>[] registered = this.registered.values().toArray(new Manager<?>[0]);
 			
-			for (int manager = 0; manager < managers.length; manager++)
-				loadManager(managers[manager].getClass());
+			for (int manager = 0; manager < registered.length; manager++)
+				loadManager(registered[manager].getClass());
 		}
 	}
 	
@@ -172,10 +172,10 @@ public final class TitanChatSystem {
 	}
 	
 	public void unloadManagers() {
-		int size = managers.size();
+		Manager<?>[] managers = this.managers.values().toArray(new Manager<?>[0]);
 		
-		for (int manager = size - 1; manager >= 0; manager--)
-			unloadManager(managers.get(manager).getClass());
+		for (int manager = managers.length - 1; manager >= 0; manager--)
+			unloadManager(managers[manager].getClass());
 	}
 	
 	public void unregisterManager(Manager<?> manager) {

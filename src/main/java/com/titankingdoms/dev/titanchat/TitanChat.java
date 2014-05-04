@@ -28,11 +28,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.titankingdoms.dev.titanchat.api.TitanChatSystem;
+import com.titankingdoms.dev.titanchat.api.ModularSystem;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
-import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
 import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
 import com.titankingdoms.dev.titanchat.command.titanchat.*;
 import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
@@ -47,9 +46,9 @@ public final class TitanChat extends JavaPlugin {
 	
 	private final Logger log = Logger.getLogger("TitanLog");
 	
-	private final TitanChatSystem system = new TitanChatSystem();
+	private final ModularSystem system = new ModularSystem();
 	
-	public TitanChatSystem getSystem() {
+	public ModularSystem getSystem() {
 		if (instance == null)
 			throw new IllegalStateException("TitanChat is not in operation");
 		
@@ -180,7 +179,6 @@ public final class TitanChat extends JavaPlugin {
 		saveResource("config.yml", false);
 		
 		log(Level.INFO, "Registering managers...");
-		system.registerManager(new AdapterHandler());
 		system.registerManager(new CommandManager());
 		system.registerManager(new Enchiridion());
 		system.registerManager(new Network());
@@ -223,7 +221,7 @@ public final class TitanChat extends JavaPlugin {
 		return true;
 	}
 	
-	public static TitanChatSystem system() {
+	public static ModularSystem system() {
 		return instance.getSystem();
 	}
 }

@@ -15,15 +15,24 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.metadata;
+package com.titankingdoms.dev.titanchat.tools.metadata;
 
-import com.titankingdoms.dev.titanchat.api.metadata.Metadata.Meta;
-
-public interface MetaAdapter {
+public final class DefaultConverter implements DataConverter {
 	
-	public Meta fromString(String value);
+	private static final String KEY = "*";
 	
-	public String getKey();
+	@Override
+	public Data fromString(String value) {
+		return new Data(value);
+	}
 	
-	public String toString(Meta meta);
+	@Override
+	public String getKey() {
+		return KEY;
+	}
+	
+	@Override
+	public String toString(Data data) {
+		return data.value();
+	}
 }

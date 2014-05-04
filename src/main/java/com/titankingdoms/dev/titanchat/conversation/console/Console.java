@@ -69,7 +69,7 @@ public final class Console implements Node, NodeManager<Console> {
 	
 	@Override
 	public Conversation getConversation(Node sender, String message) {
-		return null;
+		return new Conversation(sender, this, "PrivMsg").setMessage(message);
 	}
 	
 	@Override
@@ -102,7 +102,7 @@ public final class Console implements Node, NodeManager<Console> {
 	
 	@Override
 	public boolean isConversable(Node sender, String message, String type) {
-		return false;
+		return true;
 	}
 	
 	public boolean isViewing(Node node) {

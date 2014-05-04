@@ -32,9 +32,9 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Manager;
 import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
-import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
 import com.titankingdoms.dev.titanchat.conversation.user.storage.UserStorage;
 import com.titankingdoms.dev.titanchat.conversation.user.storage.yml.YMLUserStorage;
+import com.titankingdoms.dev.titanchat.tools.metadata.DataConversionHandler;
 
 public final class UserManager implements Manager<User>, NodeManager<User> {
 	
@@ -47,16 +47,19 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	
 	private final Map<UUID, User> users;
 	
+	private final DataConversionHandler dataHandler;
+	
 	private UserStorage storage;
 	
 	public UserManager() {
 		this.plugin = TitanChat.instance();
 		this.users = new HashMap<>();
+		this.dataHandler = new DataConversionHandler();
 		this.storage = new YMLUserStorage();
 	}
 	
 	static {
-		DEPENDENCIES = ImmutableSet.<Class<? extends Manager<?>>>of(AdapterHandler.class, Network.class);
+		DEPENDENCIES = ImmutableSet.<Class<? extends Manager<?>>>of(Network.class);
 	}
 	
 	public User get(UUID id) {
@@ -83,6 +86,10 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	@Override
 	public Set<User> getAll() {
 		return ImmutableSet.copyOf(users.values());
+	}
+	
+	public DataConversionHandler getDataHandler() {
+		return dataHandler;
 	}
 	
 	@Override

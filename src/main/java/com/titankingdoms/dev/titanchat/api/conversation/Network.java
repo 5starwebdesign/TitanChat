@@ -39,6 +39,8 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 	
 	private final Map<String, NodeManager<? extends Node>> managers;
 	
+	private boolean loaded = false;
+	
 	public Network() {
 		this.managers = new HashMap<>();
 	}
@@ -86,7 +88,12 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 	}
 	
 	@Override
-	public void load() {}
+	public void load() {
+		if (loaded)
+			return;
+		
+		this.loaded = true;
+	}
 	
 	@Override
 	public List<String> match(String type) {
@@ -145,10 +152,18 @@ public final class Network implements Manager<NodeManager<? extends Node>> {
 	}
 	
 	@Override
-	public void reload() {}
+	public void reload() {
+		if (!loaded)
+			this.loaded = true;
+	}
 	
 	@Override
-	public void unload() {}
+	public void unload() {
+		if (!loaded)
+			return;
+		
+		this.loaded = false;
+	}
 	
 	@Override
 	public void unregister(NodeManager<? extends Node> manager) {

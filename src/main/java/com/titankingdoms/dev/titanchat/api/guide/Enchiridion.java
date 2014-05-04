@@ -36,6 +36,8 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	
 	private final Map<String, Chapter> chapters;
 	
+	private boolean loaded = false;
+	
 	public Enchiridion() {
 		super("General");
 		this.chapters = new TreeMap<>();
@@ -81,7 +83,12 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	}
 	
 	@Override
-	public void load() {}
+	public void load() {
+		if (loaded)
+			return;
+		
+		this.loaded = true;
+	}
 	
 	@Override
 	public List<String> match(String title) {
@@ -106,13 +113,21 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	}
 	
 	@Override
-	public void reload() {}
+	public void reload() {
+		if (!loaded)
+			this.loaded = true;
+	}
 	
 	@Override
 	protected void setDescription(String description) {}
 	
 	@Override
-	public void unload() {}
+	public void unload() {
+		if (!loaded)
+			return;
+		
+		this.loaded = false;
+	}
 	
 	@Override
 	public void unregister(Chapter chapter) {

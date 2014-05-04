@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.metadata;
+package com.titankingdoms.dev.titanchat.tools.metadata;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,47 +26,54 @@ import com.google.common.collect.ImmutableMap;
 
 public final class Metadata {
 	
-	private final Map<String, Meta> data;
+	private final Map<String, Data> metadata;
 	
 	public Metadata() {
-		this.data = new TreeMap<>();
+		this.metadata = new TreeMap<>();
 	}
 	
-	public Meta getData(String key) {
-		return (hasData(key)) ? data.get(key) : null;
+	public Data get(String key) {
+		return (has(key)) ? metadata.get(key) : null;
 	}
 	
-	public Map<String, Meta> getData() {
-		return ImmutableMap.copyOf(data);
+	public boolean has(String key) {
+		return key != null && !key.isEmpty() && metadata.containsKey(key);
 	}
 	
-	public boolean hasData(String key) {
-		return key != null && !key.isEmpty() && data.containsKey(key);
+	public Map<String, Data> map() {
+		return ImmutableMap.copyOf(metadata);
 	}
 	
-	public void setData(String key, Meta meta) {
+	public Metadata remove(String key) {
+		Validate.notEmpty(key, "Key cannot be empty");
+		metadata.remove(key);
+		return this;
+	}
+	
+	public Metadata set(String key, String value) {
 		Validate.notEmpty(key, "Key cannot be empty");
 		
-		if (meta != null)
-			data.put(key, meta);
-		else
-			data.remove(key);
+		if (value == null)
+			return remove(key);
+		
+		if (!metadata.containsKey(key))
+			metadata.put(key, new Data());
+		
+		metadata.get(key).set(value);
+		return this;
 	}
 	
-	public void setData(String key, String value) {
-		setData(key, (value != null) ? new Meta(value) : null);
+	public Metadata set(String key, Data data) {
+		Validate.notEmpty(key, "Key cannot be empty");
+		
+		if (data == null)
+			return remove(key);
+		
+		metadata.put(key, data);
+		return this;
 	}
 	
-	public static class Meta {
-		
-		private final String value;
-		
-		public Meta(String value) {
-			this.value = (value != null) ? value : "";
-		}
-		
-		public final String getValue() {
-			return value;
-		}
+	public String value(String key) {
+		return (has(key)) ? metadata.get(key).value() : null;
 	}
 }

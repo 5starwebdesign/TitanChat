@@ -31,9 +31,9 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
-import com.titankingdoms.dev.titanchat.api.metadata.AdapterHandler;
-import com.titankingdoms.dev.titanchat.api.metadata.Metadata.Meta;
 import com.titankingdoms.dev.titanchat.conversation.user.User;
+import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
+import com.titankingdoms.dev.titanchat.tools.metadata.Data;
 
 public final class UserData {
 	
@@ -59,16 +59,16 @@ public final class UserData {
 		for (Node node : user.getConnection().getConnections())
 			this.connected.add(node.getName() + "::" + node.getType());
 		
-		for (Entry<String, Meta> entry : user.getMetadata().getData().entrySet()) {
-			Meta meta = entry.getValue();
+		for (Entry<String, Data> metadata : user.getMetadata().map().entrySet()) {
+			Data data = metadata.getValue();
 			
-			String key = entry.getKey();
+			String key = metadata.getKey();
 			String value;
 			
-			if (plugin.getSystem().isLoaded(AdapterHandler.class))
-				value = plugin.getSystem().getManager(AdapterHandler.class).get(key).toString(meta);
+			if (plugin.getSystem().isLoaded(UserManager.class))
+				value = plugin.getSystem().getManager(UserManager.class).getDataHandler().get(key).toString(data);
 			else
-				value = meta.getValue();
+				value = data.value();
 			
 			this.metadata.put(key, value);
 		}

@@ -53,7 +53,7 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	
 	@Override
 	public Conversation getConversation(Node sender, String message) {
-		return null;
+		return new Conversation(sender, this, "Normal").setMessage(message);
 	}
 	
 	@Override
@@ -83,7 +83,7 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	
 	@Override
 	public boolean isConversable(Node sender, String message, String type) {
-		return false;
+		return true;
 	}
 	
 	@Override
