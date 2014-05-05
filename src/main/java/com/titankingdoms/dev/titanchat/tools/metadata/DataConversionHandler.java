@@ -24,7 +24,7 @@ import org.apache.commons.lang.Validate;
 
 public final class DataConversionHandler {
 	
-	private static final DataConverter COMMON = new DefaultConverter();
+	private static final DataConverter COMMON = new CommonConverter();
 	
 	private final Map<String, DataConverter> converters;
 	

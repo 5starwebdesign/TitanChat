@@ -29,21 +29,19 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.Manager;
-import com.titankingdoms.dev.titanchat.api.conversation.Network;
+import com.titankingdoms.dev.titanchat.api.AbstractModule;
 import com.titankingdoms.dev.titanchat.api.conversation.NodeManager;
 import com.titankingdoms.dev.titanchat.conversation.user.storage.UserStorage;
 import com.titankingdoms.dev.titanchat.conversation.user.storage.yml.YMLUserStorage;
 import com.titankingdoms.dev.titanchat.tools.metadata.DataConversionHandler;
 
-public final class UserManager implements Manager<User>, NodeManager<User> {
+public final class UserManager extends AbstractModule implements NodeManager<User> {
 	
 	private final TitanChat plugin;
 	
-	private static final String NAME = "UserManager";
 	private static final String TYPE = "User";
 	
-	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
+	private static final String[] DEPENDENCIES = new String[] { "Network" };
 	
 	private final Map<UUID, User> users;
 	
@@ -52,14 +50,11 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	private UserStorage storage;
 	
 	public UserManager() {
+		super("UserManager");
 		this.plugin = TitanChat.instance();
 		this.users = new HashMap<>();
 		this.dataHandler = new DataConversionHandler();
 		this.storage = new YMLUserStorage();
-	}
-	
-	static {
-		DEPENDENCIES = ImmutableSet.<Class<? extends Manager<?>>>of(Network.class);
 	}
 	
 	public User get(UUID id) {
@@ -93,13 +88,8 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	}
 	
 	@Override
-	public Set<Class<? extends Manager<?>>> getDependencies() {
+	public String[] getDependencies() {
 		return DEPENDENCIES;
-	}
-	
-	@Override
-	public String getName() {
-		return NAME;
 	}
 	
 	public UserStorage getStorage() {
@@ -123,7 +113,6 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 		try { return has(UUID.fromString(id)); } catch (Exception e) { return false; }
 	}
 	
-	@Override
 	public boolean has(User user) {
 		return user != null && has(user.getUniqueId()) && get(user.getUniqueId()).equals(user);
 	}
@@ -131,7 +120,6 @@ public final class UserManager implements Manager<User>, NodeManager<User> {
 	@Override
 	public void load() {}
 	
-	@Override
 	public List<String> match(String name) {
 		Builder<String> matches = ImmutableList.builder();
 		

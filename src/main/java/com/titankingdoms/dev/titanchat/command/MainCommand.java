@@ -15,24 +15,31 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.tools.metadata;
+package com.titankingdoms.dev.titanchat.command;
 
-public final class DefaultConverter implements DataConverter {
+import org.bukkit.command.CommandSender;
+
+import com.titankingdoms.dev.titanchat.api.command.Command;
+import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
+
+public final class MainCommand extends Command {
 	
-	private static final String KEY = "*";
-	
-	@Override
-	public Data fromString(String value) {
-		return new Data(value);
+	public MainCommand() {
+		super("TitanChat");
+		setAliases("tc", "tchat");
+		setArgumentRange(0, 10240);
+		setDescription("TitanChat Commands");
+		setSyntax("[command]");
 	}
 	
 	@Override
-	public String getKey() {
-		return KEY;
-	}
-	
-	@Override
-	public String toString(Data data) {
-		return data.value();
+	protected void execute(CommandSender sender, String[] args) {
+		if (args.length < 1) {
+			message(sender, Format.GOLD + "You are running v" + plugin.getDescription().getVersion());
+			message(sender, Format.GOLD + "Type \"/titanchat ?\" for help");
+			return;
+		}
+		
+		super.execute(sender, args);
 	}
 }

@@ -36,13 +36,14 @@ public final class ConverseEvent extends Event implements Cancellable {
 	
 	private final Set<Node> recipients;
 	
-	private boolean cancelled = false;
+	private boolean cancelled;
 	
 	public ConverseEvent(Conversation conversation) {
 		Validate.notNull(conversation, "Conversation cannot be null");
 		
 		this.conversation = conversation;
 		this.recipients = new HashSet<Node>(conversation.getRecipient().getTerminusNodes());
+		this.cancelled = false;
 	}
 	
 	public String getConversationType() {

@@ -44,7 +44,7 @@ public final class TitanChatListener implements Listener {
 		if (!plugin.getSystem().isLoaded(UserManager.class))
 			return;
 		
-		UserManager manager = plugin.getSystem().getManager(UserManager.class);
+		UserManager manager = plugin.getSystem().getModule(UserManager.class);
 		
 		event.setCancelled(true);
 		
@@ -64,7 +64,7 @@ public final class TitanChatListener implements Listener {
 		if (!plugin.getSystem().isLoaded(UserManager.class))
 			return;
 		
-		UserManager manager = plugin.getSystem().getManager(UserManager.class);
+		UserManager manager = plugin.getSystem().getModule(UserManager.class);
 		
 		User user = new User(event.getPlayer());
 		manager.register(user);
@@ -75,7 +75,7 @@ public final class TitanChatListener implements Listener {
 		if (!plugin.getSystem().isLoaded(UserManager.class))
 			return;
 		
-		UserManager manager = plugin.getSystem().getManager(UserManager.class);
+		UserManager manager = plugin.getSystem().getModule(UserManager.class);
 		
 		User user = manager.get(event.getPlayer().getName());
 		manager.unregister(user);

@@ -15,31 +15,46 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.command;
+package com.titankingdoms.dev.titanchat.api;
 
-import org.bukkit.command.CommandSender;
-
-import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
-
-public final class TitanChatCommand extends Command {
+public abstract class AbstractModule implements Module {
 	
-	public TitanChatCommand() {
-		super("TitanChat");
-		setAliases("tc", "tchat");
-		setArgumentRange(0, 10240);
-		setDescription("TitanChat Commands");
-		setSyntax("[command]");
+	private static final String[] DEPENDENCIES = new String[0];
+	
+	private final String name;
+	
+	private boolean loaded;
+	
+	public AbstractModule(String name) {
+		this.name = name;
+		this.loaded = false;
 	}
 	
 	@Override
-	protected void execute(CommandSender sender, String[] args) {
-		if (args.length < 1) {
-			message(sender, Format.GOLD + "You are running v" + plugin.getDescription().getVersion());
-			message(sender, Format.GOLD + "Type \"/titanchat ?\" for help");
+	public String[] getDependencies() {
+		return DEPENDENCIES;
+	}
+	
+	@Override
+	public final String getName() {
+		return name;
+	}
+	
+	@Override
+	public final boolean isLoaded() {
+		return loaded;
+	}
+	
+	@Override
+	public final void setLoaded(boolean loaded) {
+		if (this.loaded == loaded)
 			return;
-		}
 		
-		super.execute(sender, args);
+		this.loaded = loaded;
+		
+		if (loaded)
+			load();
+		else
+			unload();
 	}
 }

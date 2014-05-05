@@ -36,7 +36,7 @@ public final class CommandIndex extends Index {
 		if (!TitanChat.system().isLoaded(CommandManager.class))
 			return;
 		
-		CommandManager manager = TitanChat.system().getManager(CommandManager.class);
+		CommandManager manager = TitanChat.system().getModule(CommandManager.class);
 		
 		for (Chapter chapter : getChapters()) {
 			if (manager.has(chapter.getTitle()))

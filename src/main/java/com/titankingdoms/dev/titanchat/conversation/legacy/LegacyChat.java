@@ -32,9 +32,14 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	private static final String NAME = "Legacy";
 	private static final String TYPE = "Minecraft";
 	
-	private final Connection connection = new Connection(this);
+	private final Connection connection;
 	
-	private final Set<LegacyChat> chat = ImmutableSet.of(this);
+	private final Set<LegacyChat> chat;
+	
+	public LegacyChat() {
+		this.connection = new Connection(this);
+		this.chat = ImmutableSet.of(this);
+	}
 	
 	@Override
 	public LegacyChat get(String name) {

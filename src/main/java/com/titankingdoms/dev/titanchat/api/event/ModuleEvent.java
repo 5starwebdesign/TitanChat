@@ -17,25 +17,21 @@
 
 package com.titankingdoms.dev.titanchat.api.event;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.Module;
 
-public class ManagerEvent extends Event {
+public class ModuleEvent extends Event {
 	
 	private static final HandlerList handlers = new HandlerList();
 	
-	private final Manager<?> manager;
+	private final Module module;
 	
 	private final String type;
 	
-	public ManagerEvent(Manager<?> manager2, String type) {
-		Validate.notNull(manager2, "Manager cannot be null");
-		Validate.notEmpty(type, "Type cannot be empty");
-		
-		this.manager = manager2;
+	public ModuleEvent(Module module, String type) {
+		this.module = module;
 		this.type = type;
 	}
 	
@@ -48,11 +44,11 @@ public class ManagerEvent extends Event {
 		return handlers;
 	}
 	
-	public Manager<?> getManager() {
-		return manager;
+	public final Module getModule() {
+		return module;
 	}
 	
-	public String getType() {
+	public final String getType() {
 		return type;
 	}
 }

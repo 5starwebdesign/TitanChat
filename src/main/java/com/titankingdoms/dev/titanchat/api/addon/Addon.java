@@ -21,10 +21,11 @@ import com.titankingdoms.dev.titanchat.tools.loading.Loadable;
 
 public class Addon extends Loadable {
 	
-	private boolean enabled = false;
+	private boolean enabled;
 	
 	public Addon(String name) {
 		super(name);
+		this.enabled = false;
 	}
 	
 	@Override

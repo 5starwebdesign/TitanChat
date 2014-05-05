@@ -20,7 +20,6 @@ package com.titankingdoms.dev.titanchat.api.command;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,51 +29,41 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.AbstractModule;
 import com.titankingdoms.dev.titanchat.api.command.guide.CommandIndex;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
 import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
 import com.titankingdoms.dev.titanchat.utility.Messaging;
 
-public final class CommandManager implements Manager<Command> {
+public final class CommandManager extends AbstractModule {
 	
 	private final TitanChat plugin;
 	
-	private static final String NAME = "CommandManager";
-	
-	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
+	private static final String[] DEPENDENCIES = new String[] { "Enchiridion" };
 	
 	private final Map<String, Command> commands;
 	
 	private final CommandIndex index;
 	
-	private boolean loaded = false;
-	
 	public CommandManager() {
+		super("CommandManager");
 		this.plugin = TitanChat.instance();
-		this.index = new CommandIndex();
 		this.commands = new TreeMap<>();
+		this.index = new CommandIndex();
 	}
 	
-	static {
-		DEPENDENCIES = ImmutableSet.of();
-	}
-	
-	@Override
 	public Command get(String label) {
 		return (label == null || label.isEmpty()) ? null : commands.get(label.toLowerCase());
 	}
 	
-	@Override
 	public List<Command> getAll() {
 		return ImmutableList.copyOf(commands.values());
 	}
 	
 	@Override
-	public Set<Class<? extends Manager<?>>> getDependencies() {
+	public String[] getDependencies() {
 		return DEPENDENCIES;
 	}
 	
@@ -82,32 +71,19 @@ public final class CommandManager implements Manager<Command> {
 		return index;
 	}
 	
-	@Override
-	public String getName() {
-		return NAME;
-	}
-	
-	@Override
 	public boolean has(String label) {
 		return label != null && !label.isEmpty() && commands.containsKey(label.toLowerCase());
 	}
 	
-	@Override
 	public boolean has(Command command) {
 		return command != null && has(command.getLabel()) && get(command.getLabel()).equals(command);
 	}
 	
 	@Override
 	public void load() {
-		if (loaded)
-			return;
-		
-		plugin.getSystem().getManager(Enchiridion.class).register(index);
-		
-		this.loaded = true;
+		plugin.getSystem().getModule(Enchiridion.class).addChapter(index);
 	}
 	
-	@Override
 	public List<String> match(String label) {
 		if (label == null || label.isEmpty())
 			return ImmutableList.copyOf(commands.keySet());
@@ -138,7 +114,6 @@ public final class CommandManager implements Manager<Command> {
 		}
 	}
 	
-	@Override
 	public void register(Command command) {
 		Validate.notNull(command, "Command cannot be null");
 		Validate.isTrue(!has(command), "Command already registered");
@@ -170,10 +145,7 @@ public final class CommandManager implements Manager<Command> {
 	}
 	
 	@Override
-	public void reload() {
-		if (!loaded)
-			this.loaded = true;
-	}
+	public void reload() {}
 	
 	public boolean run(CommandSender sender, String label, String[] args) {
 		Validate.notNull(sender, "Sender cannot be null");
@@ -204,18 +176,12 @@ public final class CommandManager implements Manager<Command> {
 	
 	@Override
 	public void unload() {
-		if (!loaded)
-			return;
-		
 		for (Command command : getAll())
 			unregister(command);
 		
-		plugin.getSystem().getManager(Enchiridion.class).unregister(index);
-		
-		this.loaded = false;
+		plugin.getSystem().getModule(Enchiridion.class).removeChapter(index);
 	}
 	
-	@Override
 	public void unregister(Command command) {
 		Validate.notNull(command, "Command cannot be null");
 		Validate.isTrue(has(command), "Command not registered");

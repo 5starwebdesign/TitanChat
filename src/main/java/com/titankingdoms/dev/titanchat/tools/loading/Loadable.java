@@ -42,7 +42,7 @@ public class Loadable implements Comparable<Loadable>, Listener {
 	private File configFile;
 	private FileConfiguration config;
 	
-	private boolean initialised = false;
+	private boolean initialised;
 	
 	public Loadable(String name) {
 		Validate.notEmpty(name, "Name cannot be empty");
@@ -50,6 +50,7 @@ public class Loadable implements Comparable<Loadable>, Listener {
 		
 		this.plugin = TitanChat.instance();
 		this.name = name;
+		this.initialised = false;
 	}
 	
 	protected final void init(ClassLoader loader, File file, File dataFolder) {

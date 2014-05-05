@@ -41,20 +41,20 @@ public abstract class Command {
 	
 	private final String label;
 	
-	private String[] aliases = new String[0];
-	private String description = "";
+	private String[] aliases;
+	private String description;
 	
-	private int maxArgs = 0;
-	private int minArgs = 0;
+	private int maxArgs;
+	private int minArgs;
 	
 	private String canonSyntax;
 	private String syntax;
 	
-	private Assistance assistance;
-	
 	private boolean registration = true;
 	
 	private final Map<String, Command> commands;
+	
+	private Assistance assistance;
 	
 	private Command parent;
 	
@@ -63,9 +63,14 @@ public abstract class Command {
 		
 		this.plugin = TitanChat.instance();
 		this.label = label.trim();
+		this.aliases = new String[0];
+		this.description = "";
+		this.maxArgs = 0;
+		this.minArgs = 0;
 		this.syntax = this.label;
-		this.assistance = new GenericAssistance(this);
+		this.registration = true;
 		this.commands = new TreeMap<>();
+		this.assistance = new GenericAssistance(this);
 	}
 	
 	private final String assembleCanonicalSyntax() {
@@ -234,7 +239,7 @@ public abstract class Command {
 		if (!plugin.getSystem().isLoaded(CommandManager.class))
 			return false;
 		
-		return parent != null || plugin.getSystem().getManager(CommandManager.class).has(this);
+		return parent != null || plugin.getSystem().getModule(CommandManager.class).has(this);
 	}
 	
 	public final void message(CommandSender recipient, String... lines) {
@@ -294,7 +299,7 @@ public abstract class Command {
 		this.assistance = (assistance != null) ? assistance : new GenericAssistance(this);
 		
 		if (isRegistered() && parent == null)
-			plugin.getSystem().getManager(CommandManager.class).getIndex().index();
+			plugin.getSystem().getModule(CommandManager.class).getIndex().index();
 	}
 	
 	protected void setDescription(String description) {

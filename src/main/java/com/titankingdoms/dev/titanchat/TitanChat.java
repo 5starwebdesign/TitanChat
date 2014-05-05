@@ -32,8 +32,8 @@ import com.titankingdoms.dev.titanchat.api.ModularSystem;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
-import com.titankingdoms.dev.titanchat.command.TitanChatCommand;
-import com.titankingdoms.dev.titanchat.command.titanchat.*;
+import com.titankingdoms.dev.titanchat.command.MainCommand;
+import com.titankingdoms.dev.titanchat.command.main.*;
 import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory;
@@ -125,7 +125,7 @@ public final class TitanChat extends JavaPlugin {
 		if (!system.isLoaded(CommandManager.class))
 			throw new IllegalStateException("CommandManager not found");
 		
-		return system.getManager(CommandManager.class).run(sender, label, args);
+		return system.getModule(CommandManager.class).run(sender, label, args);
 	}
 	
 	@Override
@@ -179,10 +179,10 @@ public final class TitanChat extends JavaPlugin {
 		saveResource("config.yml", false);
 		
 		log(Level.INFO, "Registering managers...");
-		system.registerManager(new CommandManager());
-		system.registerManager(new Enchiridion());
-		system.registerManager(new Network());
-		system.registerManager(new UserManager());
+		system.registerModule(new CommandManager());
+		system.registerModule(new Enchiridion());
+		system.registerModule(new Network());
+		system.registerModule(new UserManager());
 		
 		log(Level.INFO, "Now loaded");
 	}
@@ -203,16 +203,16 @@ public final class TitanChat extends JavaPlugin {
 		if (!system.isLoaded(CommandManager.class))
 			throw new IllegalStateException("CommandManager not found");
 		
-		return system.getManager(CommandManager.class).preview(sender, label, args);
+		return system.getModule(CommandManager.class).preview(sender, label, args);
 	}
 	
 	private boolean registerCommands() {
 		if (!system.isLoaded(CommandManager.class))
 			return false;
 		
-		CommandManager cmdManager = system.getManager(CommandManager.class);
+		CommandManager cmdManager = system.getModule(CommandManager.class);
 		
-		TitanChatCommand tcCommand = new TitanChatCommand();
+		MainCommand tcCommand = new MainCommand();
 		
 		tcCommand.register(new HelpCommand());
 		

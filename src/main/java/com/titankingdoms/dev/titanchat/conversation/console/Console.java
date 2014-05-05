@@ -32,16 +32,16 @@ public final class Console implements Node, NodeManager<Console> {
 	
 	private final TitanChat plugin;
 	
+	private static final String ID = "Console";
+	
 	private static final Console instance = new Console();
 	
-	private static final String ID = "Console";
+	private static final Set<Console> console = ImmutableSet.of(instance);
+	private static final Set<Node> terminus = ImmutableSet.<Node>of(instance);
 	
 	private final ConsoleConnection connection;
 	
 	private volatile Node exploring;
-	
-	private static final Set<Console> console = ImmutableSet.of(instance);
-	private static final Set<Node> terminus = ImmutableSet.<Node>of(instance);
 	
 	private Console() {
 		this.plugin = TitanChat.instance();

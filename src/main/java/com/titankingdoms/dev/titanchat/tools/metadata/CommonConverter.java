@@ -15,33 +15,24 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api;
+package com.titankingdoms.dev.titanchat.tools.metadata;
 
-import java.util.Collection;
-
-public interface Manager<T> {
+public final class CommonConverter implements DataConverter {
 	
-	public T get(String name);
+	private static final String KEY = "*";
 	
-	public Collection<T> getAll();
+	@Override
+	public Data fromString(String value) {
+		return new Data(value);
+	}
 	
-	public Collection<Class<? extends Manager<?>>> getDependencies();
+	@Override
+	public String getKey() {
+		return KEY;
+	}
 	
-	public String getName();
-	
-	public boolean has(String name);
-	
-	public boolean has(T item);
-	
-	public void load();
-	
-	public Collection<String> match(String name);
-	
-	public void register(T item);
-	
-	public void reload();
-	
-	public void unload();
-	
-	public void unregister(T item);
+	@Override
+	public String toString(Data data) {
+		return data.value();
+	}
 }

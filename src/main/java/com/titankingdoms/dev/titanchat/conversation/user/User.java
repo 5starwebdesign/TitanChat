@@ -43,11 +43,11 @@ public final class User implements Node {
 	
 	private Metadata metadata;
 	
-	private final UserConnection connection = new UserConnection(this);
+	private final UserConnection connection;
 	
 	private volatile Node exploring;
 	
-	private final Set<Node> terminus = ImmutableSet.<Node>of(this);
+	private final Set<Node> terminus;
 	
 	public User(OfflinePlayer player) {
 		Validate.notNull(player, "Player cannot be null");
@@ -55,6 +55,8 @@ public final class User implements Node {
 		this.plugin = TitanChat.instance();
 		this.id = player.getUniqueId();
 		this.name = (player.hasPlayedBefore()) ? player.getName() : "Unknown";
+		this.connection = new UserConnection(this);
+		this.terminus = ImmutableSet.<Node>of(this);
 	}
 	
 	@Override

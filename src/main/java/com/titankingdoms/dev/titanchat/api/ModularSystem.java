@@ -19,22 +19,30 @@ package com.titankingdoms.dev.titanchat.api;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.Validate;
 
-import com.google.common.collect.ImmutableList;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.addon.AddonManager;
-import com.titankingdoms.dev.titanchat.api.event.ManagerEvent;
+import com.titankingdoms.dev.titanchat.api.event.ModuleEvent;
 
 public final class ModularSystem {
 	
+	private final Map<Class<? extends Module>, String> labels;
+	private final Map<String, Module> modules;
+	private final Map<String, Module> registered;
+	
 	private AddonManager addon;
 	
-	private final Map<Class<? extends Manager<?>>, Manager<?>> managers = new LinkedHashMap<>();
-	private final Map<Class<?>, Manager<?>> registered = new HashMap<>();
+	private boolean running;
+	
+	public ModularSystem() {
+		this.labels = new HashMap<>();
+		this.modules = new LinkedHashMap<>();
+		this.registered = new HashMap<>();
+		this.running = false;
+	}
 	
 	public AddonManager getAddonManager() {
 		if (addon == null)
@@ -43,149 +51,168 @@ public final class ModularSystem {
 		return addon;
 	}
 	
-	public <T extends Manager<?>> T getManager(Class<T> clazz) {
-		return clazz.cast(managers.get(clazz));
+	public Module getModule(String name) {
+		return modules.get(name);
 	}
 	
-	public List<Manager<?>> getManagers() {
-		return ImmutableList.copyOf(managers.values());
+	public <T extends Module> T getModule(Class<T> clazz) {
+		return clazz.cast(getModule(labels.get(clazz)));
 	}
 	
-	public List<Manager<?>> getRegisteredManagers() {
-		synchronized (registered) {
-			return ImmutableList.copyOf(registered.values());
-		}
+	public boolean isLoaded(String name) {
+		return name != null && !name.isEmpty() && modules.containsKey(name);
 	}
 	
-	public <T extends Manager<?>> boolean isLoaded(Class<T> clazz) {
-		return clazz != null && managers.containsKey(clazz);
+	public boolean isLoaded(Module module) {
+		return module != null && modules.containsValue(module);
 	}
 	
-	public <T extends Manager<?>> boolean isRegistered(Class<T> clazz) {
-		synchronized (registered) {
-			return clazz != null && registered.containsKey(clazz);
-		}
+	public boolean isLoaded(Class<? extends Module> clazz) {
+		return isLoaded(labels.get(clazz));
 	}
 	
-	public <T extends Manager<?>> void loadManager(Class<T> clazz) {
-		if (!isRegistered(clazz) || isLoaded(clazz))
+	public boolean isRegistered(String name) {
+		return name != null && !name.isEmpty() && registered.containsKey(name);
+	}
+	
+	public boolean isRegistered(Module module) {
+		return module != null && registered.containsValue(module);
+	}
+	
+	public boolean isRunning() {
+		return running;
+	}
+	
+	public void loadModule(Module module) {
+		Validate.notNull(module, "Module cannot be null");
+		
+		if (!isRegistered(module) || module.isLoaded())
 			return;
 		
-		Manager<?> manager = getManager(clazz);
-		
-		for (Class<? extends Manager<?>> dependency : manager.getDependencies()) {
-			if (dependency == null)
+		for (String dependency : module.getDependencies()) {
+			if (dependency == null || dependency.isEmpty() || isLoaded(dependency))
 				continue;
 			
 			if (!isRegistered(dependency))
 				return;
 			
-			loadManager(dependency);
+			loadModule(registered.get(dependency));
 		}
 		
-		manager.load();
-		managers.put(clazz, manager);
+		module.setLoaded(true);
 		
-		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(manager, "Load"));
+		labels.put(module.getClass(), module.getName());
+		modules.put(module.getName(), module);
+		
+		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Load"));
 	}
 	
-	public void loadManagers() {
-		synchronized (registered) {
-			Manager<?>[] registered = this.registered.values().toArray(new Manager<?>[0]);
-			
-			for (int manager = 0; manager < registered.length; manager++)
-				loadManager(registered[manager].getClass());
-		}
+	public void loadModules() {
+		for (Module module : registered.values())
+			loadModule(module);
 	}
 	
-	public void registerManager(Manager<?> manager) {
-		Validate.notNull(manager, "Manager cannot be null");
+	public void registerModule(Module module) {
+		Validate.notNull(module, "Module cannot be null");
+		Validate.isTrue(!isRegistered(module.getName()), "Module already registered");
 		
-		if (isRegistered(manager.getClass()))
-			return;
-		
-		registered.put(manager.getClass(), manager);
-		
-		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(manager, "Register"));
+		registered.put(module.getName(), module);
 	}
 	
 	public void reload() {
+		if (!running)
+			this.running = true;
+		
 		if (addon == null)
-			this.addon = new AddonManager();
+			addon = new AddonManager();
+		
+		if (!addon.isLoaded())
+			addon.setLoaded(true);
 		
 		addon.reload();
 		
-		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(addon, "Reload"));
+		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(addon, "Reload"));
 		
-		reloadManagers();
+		reloadModules();
 	}
 	
-	public <T extends Manager<?>> void reloadManager(Class<T> clazz) {
-		if (!isRegistered(clazz))
+	public void reloadModule(Module module) {
+		Validate.notNull(module, "Module cannot be null");
+		
+		if (!isRegistered(module))
 			return;
 		
-		if (!isLoaded(clazz))
-			loadManager(clazz);
+		if (!module.isLoaded())
+			loadModule(module);
 		
-		Manager<?> manager = getManager(clazz);
+		module.reload();
 		
-		manager.reload();
-		
-		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(manager, "Reload"));
+		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Reload"));
 	}
 	
-	public void reloadManagers() {
-		for (Manager<?> manager : managers.values())
-			reloadManager(manager.getClass());
+	public void reloadModules() {
+		for (Module module : modules.values())
+			reloadModule(module);
 	}
 	
 	public void start() {
+		if (running)
+			return;
+		
 		this.addon = new AddonManager();
 		
-		addon.load();
+		addon.setLoaded(true);
 		
-		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(addon, "Load"));
+		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(addon, "Load"));
 		
-		loadManagers();
+		loadModules();
+		
+		this.running = true;
 	}
 	
 	public void stop() {
-		unloadManagers();
+		if (!running)
+			return;
 		
-		addon.unload();
+		unloadModules();
 		
-		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(addon, "Unload"));
+		addon.setLoaded(false);
+		
+		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(addon, "Unload"));
 		
 		this.addon = null;
+		
+		this.running = false;
 	}
 	
-	public <T extends Manager<?>> void unloadManager(Class<T> clazz) {
-		if (!isRegistered(clazz) || !isLoaded(clazz))
+	public void unloadModule(Module module) {
+		Validate.notNull(module, "Module cannot be null");
+		
+		if (!isRegistered(module) || !module.isLoaded())
 			return;
 		
-		Manager<?> manager = getManager(clazz);
+		module.setLoaded(false);
 		
-		manager.unload();
-		managers.remove(clazz);
+		labels.remove(module.getClass());
+		modules.remove(module.getName());
 		
-		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(manager, "Unload"));
+		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Unload"));
 	}
 	
-	public void unloadManagers() {
-		Manager<?>[] managers = this.managers.values().toArray(new Manager<?>[0]);
+	public void unloadModules() {
+		Module[] loaded = modules.values().toArray(new Module[0]);
 		
-		for (int manager = managers.length - 1; manager >= 0; manager--)
-			unloadManager(managers[manager].getClass());
+		for (int index = loaded.length - 1; index >= 0; index--)
+			unloadModule(loaded[index]);
 	}
 	
-	public void unregisterManager(Manager<?> manager) {
-		Validate.notNull(manager, "Manager cannot be null");
+	public void unregisterModule(String name) {
+		Validate.notEmpty(name, "Name cannot be empty");
+		Validate.isTrue(isRegistered(name), "Module not registered");
 		
-		if (!isRegistered(manager.getClass()))
-			return;
+		if (isLoaded(name))
+			unloadModule(getModule(name));
 		
-		registered.remove(manager.getClass());
-		
-		TitanChat.instance().getServer().getPluginManager().callEvent(new ManagerEvent(manager, "Unregister"));
+		registered.remove(name);
 	}
 }

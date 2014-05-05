@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.command.titanchat;
+package com.titankingdoms.dev.titanchat.command.main;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -42,12 +42,12 @@ public final class HelpCommand extends Command {
 	
 	@Override
 	protected void execute(CommandSender sender, String[] args) {
-		Enchiridion enchiridion = plugin.getSystem().getManager(Enchiridion.class);
-		
-		if (enchiridion == null) {
+		if (!plugin.getSystem().isLoaded(Enchiridion.class)) {
 			message(sender, Format.RED + "Enchiridion not found");
 			return;
 		}
+		
+		Enchiridion enchiridion = plugin.getSystem().getModule(Enchiridion.class);
 		
 		Chapter chapter = enchiridion;
 		

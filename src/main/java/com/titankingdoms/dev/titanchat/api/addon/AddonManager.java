@@ -30,22 +30,17 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
-import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.AbstractModule;
 import com.titankingdoms.dev.titanchat.tools.loading.Loader;
 
-public final class AddonManager implements Manager<Addon> {
+public final class AddonManager extends AbstractModule {
 	
 	private final TitanChat plugin;
 	
-	private static final String NAME = "AddonManager";
-	
-	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
-	
 	private final Map<String, Addon> addons;
 	
-	private boolean loaded = false;
-	
 	public AddonManager() {
+		super("AddonManager");
 		this.plugin = TitanChat.instance();
 		
 		if (getDirectory().mkdirs())
@@ -54,59 +49,35 @@ public final class AddonManager implements Manager<Addon> {
 		this.addons = new HashMap<>();
 	}
 	
-	static {
-		DEPENDENCIES = ImmutableSet.of();
-	}
-	
-	@Override
 	public Addon get(String name) {
 		return (name == null || name.isEmpty()) ? null : addons.get(name.toLowerCase());
 	}
 	
-	@Override
 	public Set<Addon> getAll() {
 		return ImmutableSet.copyOf(addons.values());
-	}
-	
-	@Override
-	public Set<Class<? extends Manager<?>>> getDependencies() {
-		return DEPENDENCIES;
 	}
 	
 	public File getDirectory() {
 		return new File(plugin.getDataFolder(), "addons");
 	}
 	
-	@Override
-	public String getName() {
-		return NAME;
-	}
-	
-	@Override
 	public boolean has(String name) {
 		return name != null && !name.isEmpty() && addons.containsKey(name.toLowerCase());
 	}
 	
-	@Override
 	public boolean has(Addon addon) {
 		return addon != null && has(addon.getName()) && get(addon.getName()).equals(addon);
 	}
 	
 	@Override
 	public void load() {
-		if (loaded)
-			return;
-		
 		for (Addon addon : Loader.load(Addon.class, getDirectory()))
 			register(addon);
 		
 		for (Addon addon : getAll())
 			addon.onEnable();
-		
-		this.loaded = true;
 	}
 	
-	@Override
 	public List<String> match(String name) {
 		if (name == null || name.isEmpty())
 			return ImmutableList.copyOf(addons.keySet());
@@ -123,7 +94,6 @@ public final class AddonManager implements Manager<Addon> {
 		return matches.build();
 	}
 	
-	@Override
 	public void register(Addon addon) {
 		Validate.notNull(addon, "Addon cannot be null");
 		Validate.isTrue(!has(addon.getName()), "Addon already registered");
@@ -133,9 +103,6 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public void reload() {
-		if (!loaded)
-			this.loaded = true;
-		
 		for (Addon addon : getAll()) {
 			if (addon.getFile().exists())
 				addon.onReload();
@@ -151,19 +118,13 @@ public final class AddonManager implements Manager<Addon> {
 	
 	@Override
 	public void unload() {
-		if (!loaded)
-			return;
-		
 		for (Addon addon : getAll())
 			addon.onDisable();
 		
 		for (Addon addon : getAll())
 			unregister(addon);
-		
-		this.loaded = false;
 	}
 	
-	@Override
 	public void unregister(Addon addon) {
 		Validate.notNull(addon, "Addon cannot be null");
 		Validate.isTrue(has(addon.getName()), "Addon not registered");

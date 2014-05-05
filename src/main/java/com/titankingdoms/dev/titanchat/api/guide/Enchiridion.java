@@ -18,47 +18,35 @@
 package com.titankingdoms.dev.titanchat.api.guide;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableList.Builder;
-import com.titankingdoms.dev.titanchat.api.Manager;
+import com.titankingdoms.dev.titanchat.api.Module;
 
-public final class Enchiridion extends Index implements Manager<Chapter> {
+public final class Enchiridion extends Index implements Module {
 	
 	private static final String DESC = "The General Index";
 	private static final String NAME = "Enchiridion";
 	
-	private static final Set<Class<? extends Manager<?>>> DEPENDENCIES;
+	private static final String[] DEPENDENCIES = new String[0];
 	
-	private final Map<String, Chapter> chapters;
-	
-	private boolean loaded = false;
+	private boolean loaded;
 	
 	public Enchiridion() {
 		super("General");
-		this.chapters = new TreeMap<>();
+		this.loaded = false;
 	}
 	
-	static {
-		DEPENDENCIES = ImmutableSet.of();
-	}
-	
-	@Override
 	public Chapter get(String title) {
 		return getChapter(title);
 	}
 	
-	@Override
 	public List<Chapter> getAll() {
 		return getChapters();
 	}
 	
 	@Override
-	public Set<Class<? extends Manager<?>>> getDependencies() {
+	public String[] getDependencies() {
 		return DEPENDENCIES;
 	}
 	
@@ -72,32 +60,29 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 		return NAME;
 	}
 	
-	@Override
 	public boolean has(String title) {
 		return contains(title);
 	}
 	
-	@Override
 	public boolean has(Chapter chapter) {
 		return contains(chapter);
 	}
 	
 	@Override
-	public void load() {
-		if (loaded)
-			return;
-		
-		this.loaded = true;
+	public boolean isLoaded() {
+		return loaded;
 	}
 	
 	@Override
+	public void load() {}
+	
 	public List<String> match(String title) {
 		if (title == null || title.isEmpty())
-			return ImmutableList.copyOf(chapters.keySet());
+			return getContent();
 		
 		Builder<String> matches = ImmutableList.builder();
 		
-		for (String match : chapters.keySet()) {
+		for (String match : getContent()) {
 			if (!match.startsWith(title))
 				continue;
 			
@@ -108,29 +93,24 @@ public final class Enchiridion extends Index implements Manager<Chapter> {
 	}
 	
 	@Override
-	public void register(Chapter chapter) {
-		addChapter(chapter);
-	}
-	
-	@Override
-	public void reload() {
-		if (!loaded)
-			this.loaded = true;
-	}
+	public void reload() {}
 	
 	@Override
 	protected void setDescription(String description) {}
 	
 	@Override
-	public void unload() {
-		if (!loaded)
+	public void setLoaded(boolean loaded) {
+		if (this.loaded == loaded)
 			return;
 		
-		this.loaded = false;
+		this.loaded = loaded;
+		
+		if (loaded)
+			load();
+		else
+			unload();
 	}
 	
 	@Override
-	public void unregister(Chapter chapter) {
-		removeChapter(chapter);
-	}
+	public void unload() {}
 }

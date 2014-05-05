@@ -41,17 +41,20 @@ public final class UserData {
 	
 	private final UUID id;
 	
-	private String viewing = "";
+	private String viewing;
 	
-	private Set<String> connected = new HashSet<>();
+	private Set<String> connected;
 	
-	private Map<String, String> metadata = new HashMap<>();
+	private Map<String, String> metadata;
 	
 	public UserData(User user) {
 		Validate.notNull(user, "User cannot be null");
 		
 		this.plugin = TitanChat.instance();
 		this.id = user.getUniqueId();
+		this.viewing = "";
+		this.connected = new HashSet<>();
+		this.metadata = new HashMap<>();
 		
 		if (!user.isViewing(null))
 			this.viewing = user.getViewing().getName() + "::" + user.getViewing().getType();
@@ -66,7 +69,7 @@ public final class UserData {
 			String value;
 			
 			if (plugin.getSystem().isLoaded(UserManager.class))
-				value = plugin.getSystem().getManager(UserManager.class).getDataHandler().get(key).toString(data);
+				value = plugin.getSystem().getModule(UserManager.class).getDataHandler().get(key).toString(data);
 			else
 				value = data.value();
 			

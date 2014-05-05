@@ -32,7 +32,7 @@ public class Index implements Chapter {
 	
 	private final String title;
 	
-	private String description = "";
+	private String description;
 	
 	private final Map<String, Chapter> chapters;
 	
@@ -41,6 +41,7 @@ public class Index implements Chapter {
 		
 		this.plugin = TitanChat.instance();
 		this.title = title;
+		this.description = "";
 		this.chapters = new TreeMap<>();
 	}
 	
@@ -70,6 +71,10 @@ public class Index implements Chapter {
 	
 	public List<Chapter> getChapters() {
 		return ImmutableList.copyOf(chapters.values());
+	}
+	
+	public List<String> getContent() {
+		return ImmutableList.copyOf(chapters.keySet());
 	}
 	
 	@Override
