@@ -18,9 +18,9 @@
 package com.titankingdoms.dev.titanchat.api.command.guide;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.api.guide.Index;
+import com.titankingdoms.dev.titanchat.api.guide.AbstractIndex;
 
-public abstract class Assistance extends Index {
+public abstract class Assistance extends AbstractIndex {
 	
 	protected final Command command;
 	

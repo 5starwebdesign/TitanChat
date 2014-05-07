@@ -29,7 +29,7 @@ import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 import com.titankingdoms.dev.titanchat.conversation.user.User;
 import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
+import com.titankingdoms.dev.titanchat.tools.Format;
 
 public final class TitanChatListener implements Listener {
 	

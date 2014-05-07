@@ -33,7 +33,7 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.command.guide.Assistance;
 import com.titankingdoms.dev.titanchat.api.command.guide.GenericAssistance;
 import com.titankingdoms.dev.titanchat.api.guide.Chapter;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
+import com.titankingdoms.dev.titanchat.tools.Format;
 
 public abstract class Command {
 	
@@ -286,12 +286,12 @@ public abstract class Command {
 		if (isRegistered() && parent != null) {
 			Assistance index = this.parent.getAssistance();
 			
-			index.removeChapter(this.assistance);
+			index.removeChapter(this.assistance.getTitle());
 			index.addChapter(assistance);
 		}
 		
 		for (Chapter child : this.assistance.getChapters())
-			this.assistance.removeChapter(child);
+			this.assistance.removeChapter(child.getTitle());
 		
 		for (Command command : getAll())
 			assistance.addChapter(command.getAssistance());
@@ -359,6 +359,6 @@ public abstract class Command {
 		command.setParent(null);
 		command.assembleCanonicalSyntax();
 		
-		assistance.removeChapter(command.getAssistance());
+		assistance.removeChapter(command.getAssistance().getTitle());
 	}
 }

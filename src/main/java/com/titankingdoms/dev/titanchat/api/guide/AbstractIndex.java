@@ -24,24 +24,21 @@ import java.util.TreeMap;
 import org.apache.commons.lang.Validate;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.titankingdoms.dev.titanchat.api.AbstractModule;
 
-public final class Enchiridion extends AbstractModule implements Index {
+public abstract class AbstractIndex implements Index {
 	
-	private static final String DESC = "The General Index";
-	private static final String TITLE = "General";
+	private final String title;
 	
-	private static final String[] DEPENDENCIES = new String[0];
+	private String description;
 	
 	private final Map<String, Chapter> chapters;
 	
-	public Enchiridion() {
-		super("Enchiridion");
+	public AbstractIndex(String title) {
+		this.title = title;
+		this.description = "";
 		this.chapters = new TreeMap<>();
 	}
 	
-	@Override
 	public void addChapter(Chapter chapter) {
 		Validate.notNull(chapter, "Chapter cannot be null");
 		Validate.isTrue(!contains(chapter.getTitle()), "Chapter already registered");
@@ -52,14 +49,6 @@ public final class Enchiridion extends AbstractModule implements Index {
 	@Override
 	public boolean contains(String title) {
 		return title != null && !title.isEmpty() && chapters.containsKey(title.toLowerCase());
-	}
-	
-	public Chapter get(String title) {
-		return getChapter(title);
-	}
-	
-	public List<Chapter> getAll() {
-		return getChapters();
 	}
 	
 	@Override
@@ -114,13 +103,8 @@ public final class Enchiridion extends AbstractModule implements Index {
 	}
 	
 	@Override
-	public String[] getDependencies() {
-		return DEPENDENCIES;
-	}
-	
-	@Override
 	public String getDescription() {
-		return DESC;
+		return description;
 	}
 	
 	@Override
@@ -134,35 +118,9 @@ public final class Enchiridion extends AbstractModule implements Index {
 	}
 	
 	@Override
-	public String getTitle() {
-		return TITLE;
+	public final String getTitle() {
+		return title;
 	}
-	
-	public boolean has(String title) {
-		return contains(title);
-	}
-	
-	@Override
-	public void load() {}
-	
-	public List<String> match(String title) {
-		if (title == null || title.isEmpty())
-			return getContentTable();
-		
-		Builder<String> matches = ImmutableList.builder();
-		
-		for (String match : getContentTable()) {
-			if (!match.startsWith(title))
-				continue;
-			
-			matches.add(match);
-		}
-		
-		return matches.build();
-	}
-	
-	@Override
-	public void reload() {}
 	
 	@Override
 	public void removeChapter(String title) {
@@ -172,6 +130,7 @@ public final class Enchiridion extends AbstractModule implements Index {
 		chapters.remove(title.toLowerCase());
 	}
 	
-	@Override
-	public void unload() {}
+	public void setDescription(String description) {
+		this.description = (description != null) ? description : "";
+	}
 }

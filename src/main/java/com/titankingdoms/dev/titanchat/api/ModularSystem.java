@@ -83,18 +83,21 @@ public final class ModularSystem {
 		return running;
 	}
 	
-	public void loadModule(Module module) {
+	public Module loadModule(Module module) {
 		Validate.notNull(module, "Module cannot be null");
 		
-		if (!isRegistered(module) || module.isLoaded())
-			return;
+		if (!isRegistered(module))
+			return null;
+		
+		if (module.isLoaded() && isLoaded(module))
+			return module;
 		
 		for (String dependency : module.getDependencies()) {
 			if (dependency == null || dependency.isEmpty() || isLoaded(dependency))
 				continue;
 			
 			if (!isRegistered(dependency))
-				return;
+				return null;
 			
 			loadModule(registered.get(dependency));
 		}
@@ -105,6 +108,7 @@ public final class ModularSystem {
 		modules.put(module.getName(), module);
 		
 		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Load"));
+		return module;
 	}
 	
 	public void loadModules() {
@@ -136,18 +140,16 @@ public final class ModularSystem {
 		reloadModules();
 	}
 	
-	public void reloadModule(Module module) {
+	public Module reloadModule(Module module) {
 		Validate.notNull(module, "Module cannot be null");
 		
 		if (!isRegistered(module))
-			return;
+			return null;
 		
-		if (!module.isLoaded())
-			loadModule(module);
-		
-		module.reload();
+		loadModule(module).reload();
 		
 		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Reload"));
+		return module;
 	}
 	
 	public void reloadModules() {
@@ -185,11 +187,14 @@ public final class ModularSystem {
 		this.running = false;
 	}
 	
-	public void unloadModule(Module module) {
+	public Module unloadModule(Module module) {
 		Validate.notNull(module, "Module cannot be null");
 		
-		if (!isRegistered(module) || !module.isLoaded())
-			return;
+		if (!isRegistered(module))
+			return null;
+		
+		if (!module.isLoaded() && !isLoaded(module))
+			return module;
 		
 		module.setLoaded(false);
 		
@@ -197,6 +202,7 @@ public final class ModularSystem {
 		modules.remove(module.getName());
 		
 		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Unload"));
+		return module;
 	}
 	
 	public void unloadModules() {
@@ -210,9 +216,6 @@ public final class ModularSystem {
 		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(isRegistered(name), "Module not registered");
 		
-		if (isLoaded(name))
-			unloadModule(getModule(name));
-		
-		registered.remove(name);
+		registered.remove(unloadModule(getModule(name)).getName());
 	}
 }

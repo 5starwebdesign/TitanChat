@@ -15,21 +15,22 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.guide;
+package com.titankingdoms.dev.titanchat.api.format;
 
-import java.util.List;
+import com.titankingdoms.dev.titanchat.api.AbstractModule;
 
-public interface Index extends Chapter {
+public final class Formatter extends AbstractModule {
 	
-	public void addChapter(Chapter chapter);
+	public Formatter() {
+		super("Formatter");
+	}
 	
-	public boolean contains(String title);
+	@Override
+	public void load() {}
 	
-	public Chapter getChapter(String title);
+	@Override
+	public void reload() {}
 	
-	public List<Chapter> getChapters();
-	
-	public List<String> getContentTable();
-	
-	public void removeChapter(String title);
+	@Override
+	public void unload() {}
 }

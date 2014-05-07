@@ -17,19 +17,28 @@
 
 package com.titankingdoms.dev.titanchat.api.guide;
 
-import java.util.List;
-
-public interface Index extends Chapter {
+public abstract class AbstractChapter implements Chapter {
 	
-	public void addChapter(Chapter chapter);
+	private final String title;
 	
-	public boolean contains(String title);
+	private String description;
 	
-	public Chapter getChapter(String title);
+	public AbstractChapter(String title) {
+		this.title = title;
+		this.description = "";
+	}
 	
-	public List<Chapter> getChapters();
+	@Override
+	public String getDescription() {
+		return description;
+	}
 	
-	public List<String> getContentTable();
+	@Override
+	public String getTitle() {
+		return title;
+	}
 	
-	public void removeChapter(String title);
+	public void setDescription(String description) {
+		this.description = (description != null) ? description : "";
+	}
 }

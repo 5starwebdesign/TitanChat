@@ -20,7 +20,7 @@ package com.titankingdoms.dev.titanchat.command;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
+import com.titankingdoms.dev.titanchat.tools.Format;
 
 public final class MainCommand extends Command {
 	

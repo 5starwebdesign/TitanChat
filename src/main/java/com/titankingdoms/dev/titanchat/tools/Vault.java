@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.utility;
+package com.titankingdoms.dev.titanchat.tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import net.milkbowl.vault.economy.EconomyResponse;
 import net.milkbowl.vault.economy.EconomyResponse.ResponseType;
 import net.milkbowl.vault.permission.Permission;
 
-public final class VaultUtils {
+public final class Vault {
 	
 	private static Chat chat;
 	private static Economy econ;
@@ -186,10 +186,7 @@ public final class VaultUtils {
 	}
 	
 	public static boolean initialise(Server server) {
-		if (server == null)
-			return false;
-		
-		if (server.getPluginManager().getPlugin("Vault") == null)
+		if (server == null || server.getPluginManager().getPlugin("Vault") == null)
 			return false;
 		
 		ServicesManager services = server.getServicesManager();

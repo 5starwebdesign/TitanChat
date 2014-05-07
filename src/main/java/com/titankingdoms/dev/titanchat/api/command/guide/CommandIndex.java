@@ -21,9 +21,9 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.command.Command;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.guide.Chapter;
-import com.titankingdoms.dev.titanchat.api.guide.Index;
+import com.titankingdoms.dev.titanchat.api.guide.AbstractIndex;
 
-public final class CommandIndex extends Index {
+public final class CommandIndex extends AbstractIndex {
 	
 	public CommandIndex() {
 		super("Commands");
@@ -42,17 +42,17 @@ public final class CommandIndex extends Index {
 			if (manager.has(chapter.getTitle()))
 				continue;
 			
-			super.removeChapter(chapter);
+			super.removeChapter(chapter.getTitle());
 		}
 		
 		for (Command command : manager.getAll()) {
 			if (contains(command.getLabel()))
-				super.removeChapter(getChapter(command.getLabel()));
+				super.removeChapter(command.getLabel());
 			
 			super.addChapter(command.getAssistance());
 		}
 	}
 	
 	@Override
-	public void removeChapter(Chapter chapter) {}
+	public void removeChapter(String title) {}
 }

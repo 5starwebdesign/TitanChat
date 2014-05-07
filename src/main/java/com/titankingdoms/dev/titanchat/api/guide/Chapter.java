@@ -19,9 +19,9 @@ package com.titankingdoms.dev.titanchat.api.guide;
 
 public interface Chapter {
 	
-	public String getDescription();
-	
 	public String getContent(int page);
+	
+	public String getDescription();
 	
 	public int getPageCount();
 	

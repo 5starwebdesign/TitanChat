@@ -36,9 +36,9 @@ import com.titankingdoms.dev.titanchat.command.MainCommand;
 import com.titankingdoms.dev.titanchat.command.main.*;
 import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
+import com.titankingdoms.dev.titanchat.tools.Vault;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory.Version;
-import com.titankingdoms.dev.titanchat.utility.VaultUtils;
 
 public final class TitanChat extends JavaPlugin {
 	
@@ -152,7 +152,7 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Attempting to set up VaultUtils...");
 		
-		if (!VaultUtils.initialise(getServer()))
+		if (!Vault.initialise(getServer()))
 			log(Level.INFO, "Failed to set up VaultUtils");
 		
 		log(Level.INFO, "Starting TitanChat System...");

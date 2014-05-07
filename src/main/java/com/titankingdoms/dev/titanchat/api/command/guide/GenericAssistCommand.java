@@ -22,8 +22,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
+import com.titankingdoms.dev.titanchat.tools.Format;
 
 public final class GenericAssistCommand extends Command {
 	
@@ -76,7 +75,7 @@ public final class GenericAssistCommand extends Command {
 		
 		message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
 		
-		for (String line : FormatUtils.wrap(Format.AZURE + content, 50))
+		for (String line : Format.wrap(Format.AZURE + content, 50))
 			message(sender, line);
 	}
 }

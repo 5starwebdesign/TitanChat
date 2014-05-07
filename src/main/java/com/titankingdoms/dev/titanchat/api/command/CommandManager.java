@@ -34,8 +34,8 @@ import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.AbstractModule;
 import com.titankingdoms.dev.titanchat.api.command.guide.CommandIndex;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
-import com.titankingdoms.dev.titanchat.utility.FormatUtils.Format;
-import com.titankingdoms.dev.titanchat.utility.Messaging;
+import com.titankingdoms.dev.titanchat.tools.Messaging;
+import com.titankingdoms.dev.titanchat.tools.Format;
 
 public final class CommandManager extends AbstractModule {
 	
@@ -179,7 +179,7 @@ public final class CommandManager extends AbstractModule {
 		for (Command command : getAll())
 			unregister(command);
 		
-		plugin.getSystem().getModule(Enchiridion.class).removeChapter(index);
+		plugin.getSystem().getModule(Enchiridion.class).removeChapter("Commands");
 	}
 	
 	public void unregister(Command command) {
