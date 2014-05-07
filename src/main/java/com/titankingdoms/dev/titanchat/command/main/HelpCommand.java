@@ -25,7 +25,7 @@ import com.titankingdoms.dev.titanchat.api.command.Command;
 import com.titankingdoms.dev.titanchat.api.command.guide.GenericAssistCommand;
 import com.titankingdoms.dev.titanchat.api.guide.Chapter;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
-import com.titankingdoms.dev.titanchat.api.guide.AbstractIndex;
+import com.titankingdoms.dev.titanchat.api.guide.Index;
 import com.titankingdoms.dev.titanchat.tools.Format;
 
 public final class HelpCommand extends Command {
@@ -54,10 +54,10 @@ public final class HelpCommand extends Command {
 		
 		for (String arg : args) {
 			if (!NumberUtils.isNumber(arg)) {
-				if (!AbstractIndex.class.isInstance(chapter))
+				if (!Index.class.isInstance(chapter))
 					break;
 				
-				chapter = AbstractIndex.class.cast(chapter).getChapter(arg);
+				chapter = Index.class.cast(chapter).getChapter(arg);
 				continue;
 			}
 			
