@@ -143,10 +143,10 @@ public final class ModularSystem {
 	public Module reloadModule(Module module) {
 		Validate.notNull(module, "Module cannot be null");
 		
-		if (!isRegistered(module))
+		if (!isRegistered(module) || loadModule(module) == null)
 			return null;
 		
-		loadModule(module).reload();
+		module.reload();
 		
 		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Reload"));
 		return module;
