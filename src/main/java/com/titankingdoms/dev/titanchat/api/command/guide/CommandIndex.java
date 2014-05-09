@@ -17,16 +17,25 @@
 
 package com.titankingdoms.dev.titanchat.api.command.guide;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.ImmutableList;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.command.Command;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
+import com.titankingdoms.dev.titanchat.api.guide.AbstractChapter;
 import com.titankingdoms.dev.titanchat.api.guide.Chapter;
-import com.titankingdoms.dev.titanchat.api.guide.AbstractIndex;
+import com.titankingdoms.dev.titanchat.api.guide.Index;
 
-public final class CommandIndex extends AbstractIndex {
+public final class CommandIndex extends AbstractChapter implements Index {
+	
+	private final Map<String, Chapter> chapters;
 	
 	public CommandIndex() {
 		super("Commands");
+		this.chapters = new LinkedHashMap<>();
 	}
 	
 	@Override
@@ -34,17 +43,82 @@ public final class CommandIndex extends AbstractIndex {
 		throw new UnsupportedOperationException();
 	}
 	
+	@Override
+	public boolean contains(String title) {
+		return title != null && !title.isEmpty() && chapters.containsKey(title.toLowerCase());
+	}
+	
+	@Override
+	public Chapter getChapter(String title) {
+		return (title == null || title.isEmpty()) ? null : chapters.get(title.toLowerCase());
+	}
+	
+	@Override
+	public List<Chapter> getChapters() {
+		return ImmutableList.copyOf(chapters.values());
+	}
+	
+	@Override
+	public String getContent(int page) {
+		StringBuilder content = new StringBuilder();
+		
+		List<Chapter> chapters = getChapters();
+		
+		int start = (page - 1) * 6;
+		int end = start + 6;
+		
+		if (end > chapters.size())
+			end = chapters.size();
+		
+		for (int count = start; count < end; count++) {
+			if (content.length() > 0)
+				content.append('\n');
+			
+			Chapter chapter = chapters.get(count);
+			
+			String title = chapter.getTitle();
+			String description = chapter.getDescription();
+			
+			content.append(title);
+			
+			if (!description.isEmpty()) {
+				content.append(" - ");
+				
+				if (description.length() > 52 - title.length())
+					content.append(description.substring(0, 49 - title.length()) + "...");
+				else
+					content.append(description);
+			}
+		}
+		
+		return content.toString();
+	}
+	
+	@Override
+	public List<String> getContentTable() {
+		return ImmutableList.copyOf(chapters.keySet());
+	}
+	
+	@Override
+	public int getPageCount() {
+		int count = chapters.size() / 6;
+		
+		if ((chapters.size() % 6) != 0)
+			count++;
+		
+		return count;
+	}
+	
 	public void index() {
 		if (!TitanChat.system().isLoaded(CommandManager.class))
 			return;
 		
-		for (Chapter chapter : getChapters())
-			super.removeChapter(chapter.getTitle());
+		chapters.clear();
 		
 		CommandManager manager = TitanChat.system().getModule(CommandManager.class);
 		
 		for (Command command : manager.getAll())
-			super.addChapter(command.getAssistance());
+			chapters.put(command.getLabel().toLowerCase(), command.getAssistance());
 	}
 	
 	@Override
