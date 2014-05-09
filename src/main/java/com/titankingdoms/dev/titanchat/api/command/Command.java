@@ -153,7 +153,7 @@ public abstract class Command {
 	}
 	
 	public String[] getAliases() {
-		return aliases;
+		return aliases.clone();
 	}
 	
 	public final Assistance getAssistance() {
@@ -175,7 +175,7 @@ public abstract class Command {
 		return description;
 	}
 	
-	public String getLabel() {
+	public final String getLabel() {
 		return label;
 	}
 	
@@ -244,14 +244,14 @@ public abstract class Command {
 	}
 	
 	public void invokeExecution(CommandSender sender, String[] args) {
-		if (!isProgressive() || args.length < 1)
+		if (!progressive || args.length < 1)
 			return;
 		
 		callProgressiveExecution(sender, args[0], Arrays.copyOfRange(args, 1, args.length));
 	}
 	
 	public List<String> invokeTabCompletion(CommandSender sender, String[] args) {
-		if (!isProgressive() || args.length < 1)
+		if (!progressive || args.length < 1)
 			return ImmutableList.of();
 		
 		return callProgressiveTabCompletion(sender, args[0], Arrays.copyOfRange(args, 1, args.length));
@@ -261,7 +261,7 @@ public abstract class Command {
 		return true;
 	}
 	
-	public boolean isProgressive() {
+	public final boolean isProgressive() {
 		return progressive;
 	}
 	
@@ -273,7 +273,7 @@ public abstract class Command {
 	}
 	
 	public final boolean isRegistered(String label) {
-		return isProgressive() && label != null && commands.containsKey(label.toLowerCase());
+		return progressive && label != null && commands.containsKey(label.toLowerCase());
 	}
 	
 	protected void message(CommandSender sender, String... messages) {
@@ -286,6 +286,8 @@ public abstract class Command {
 		Validate.isTrue(!command.isRegistered(), "Command already registered");
 		
 		commands.put(command.getLabel().toLowerCase(), command);
+		
+		assistance.addChapter(command.getAssistance());
 		
 		if (!command.hasAliases())
 			return;
@@ -301,11 +303,11 @@ public abstract class Command {
 		}
 	}
 	
-	public void setAliases(String... aliases) {
+	protected void setAliases(String... aliases) {
 		this.aliases = (aliases != null) ? aliases : new String[0];
 	}
 	
-	public void setArgumentRange(int minArgs, int maxArgs) {
+	protected void setArgumentRange(int minArgs, int maxArgs) {
 		this.minArgs = (minArgs >= 0) ? minArgs : 0;
 		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : this.minArgs;
 	}
@@ -314,7 +316,7 @@ public abstract class Command {
 		this.assistance = (assistance != null) ? assistance : new GenericAssistance(this);
 	}
 	
-	public void setDescription(String description) {
+	protected void setDescription(String description) {
 		this.description = (description != null) ? description : "";
 	}
 	
@@ -322,8 +324,10 @@ public abstract class Command {
 		this.progressive = progressive;
 	}
 	
-	public void setSyntax(String syntax) {
+	protected void setSyntax(String syntax) {
 		this.syntax = (syntax != null) ? label + " " + syntax : label;
+		
+		assembleCanonicalSyntax();
 	}
 	
 	public final void unregisterCommand(String label) {
@@ -331,6 +335,8 @@ public abstract class Command {
 		Validate.isTrue(isRegistered(label), "Command not registered");
 		
 		Command command = commands.remove(label.toLowerCase());
+		
+		assistance.removeChapter(label);
 		
 		if (!command.hasAliases())
 			return;
