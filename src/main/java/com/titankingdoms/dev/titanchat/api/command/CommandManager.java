@@ -18,6 +18,7 @@
 package com.titankingdoms.dev.titanchat.api.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -108,7 +109,7 @@ public final class CommandManager extends AbstractModule {
 			
 		default:
 			if (!has(label))
-				return new ArrayList<>();
+				return ImmutableList.of();
 			
 			return get(label).invokeTabCompletion(sender, regroup(args));
 		}
@@ -121,7 +122,10 @@ public final class CommandManager extends AbstractModule {
 		commands.put(command.getLabel().toLowerCase(), command);
 		
 		for (String alias : command.getAliases()) {
-			if (has(alias))
+			if (alias.matches(".*\\W+.*"))
+				continue;
+			
+			if (has(alias) && get(alias).getLabel().equalsIgnoreCase(alias))
 				continue;
 			
 			commands.put(alias.toLowerCase(), command);
@@ -159,8 +163,13 @@ public final class CommandManager extends AbstractModule {
 		Command command = get(label);
 		String[] arguments = regroup(args);
 		
-		if (!command.isPermitted(sender, arguments)) {
+		if (!command.isPermittedExecution(sender, arguments)) {
 			Messaging.message(sender, Format.RED + "You do not have permission");
+			return true;
+		}
+		
+		if (arguments.length > 0 && arguments[0].equals("?") && !command.isRegistered(arguments[0])) {
+			command.invokeAssistanceDisplay(sender, Arrays.copyOfRange(arguments, 1, args.length));
 			return true;
 		}
 		
@@ -177,19 +186,22 @@ public final class CommandManager extends AbstractModule {
 	@Override
 	public void unload() {
 		for (Command command : getAll())
-			unregister(command);
+			unregister(command.getLabel());
 		
 		plugin.getSystem().getModule(Enchiridion.class).removeChapter("Commands");
 	}
 	
-	public void unregister(Command command) {
-		Validate.notNull(command, "Command cannot be null");
-		Validate.isTrue(has(command), "Command not registered");
+	public void unregister(String label) {
+		Validate.notEmpty(label, "Label cannot be empty");
+		Validate.isTrue(has(label), "Command not registered");
 		
-		commands.remove(command.getLabel().toLowerCase());
+		Command command = commands.remove(label.toLowerCase());
 		
 		for (String alias : command.getAliases()) {
-			if (has(alias) && !get(alias).equals(command))
+			if (alias.matches(".*\\W+.*"))
+				continue;
+			
+			if (has(alias) && get(alias).getLabel().equalsIgnoreCase(alias))
 				continue;
 			
 			commands.remove(alias.toLowerCase());

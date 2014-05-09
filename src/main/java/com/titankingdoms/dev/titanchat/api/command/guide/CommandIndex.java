@@ -30,29 +30,25 @@ public final class CommandIndex extends AbstractIndex {
 	}
 	
 	@Override
-	public void addChapter(Chapter chapter) {}
+	public void addChapter(Chapter chapter) {
+		throw new UnsupportedOperationException();
+	}
 	
 	public void index() {
 		if (!TitanChat.system().isLoaded(CommandManager.class))
 			return;
 		
+		for (Chapter chapter : getChapters())
+			super.removeChapter(chapter.getTitle());
+		
 		CommandManager manager = TitanChat.system().getModule(CommandManager.class);
 		
-		for (Chapter chapter : getChapters()) {
-			if (manager.has(chapter.getTitle()))
-				continue;
-			
-			super.removeChapter(chapter.getTitle());
-		}
-		
-		for (Command command : manager.getAll()) {
-			if (contains(command.getLabel()))
-				super.removeChapter(command.getLabel());
-			
+		for (Command command : manager.getAll())
 			super.addChapter(command.getAssistance());
-		}
 	}
 	
 	@Override
-	public void removeChapter(String title) {}
+	public void removeChapter(String title) {
+		throw new UnsupportedOperationException();
+	}
 }

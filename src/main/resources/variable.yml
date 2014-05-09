@@ -1,0 +1,4 @@
+format:
+    default: '%tag%'
+    tags:
+        

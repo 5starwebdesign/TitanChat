@@ -62,7 +62,7 @@ public final class Conversation {
 	}
 	
 	public Conversation setFormat(String format) {
-		Validate.isTrue(format != null && format.contains("%message"), "Format cannot forgo '%meesage'");
+		Validate.isTrue(format != null && format.contains("%message"), "Format cannot omit '%meesage'");
 		
 		this.format = format;
 		return this;

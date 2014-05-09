@@ -64,7 +64,7 @@ public final class Enchiridion extends AbstractModule implements Index {
 	
 	@Override
 	public Chapter getChapter(String title) {
-		return (title != null && !title.isEmpty()) ? chapters.get(title.toLowerCase()) : null;
+		return (title == null || title.isEmpty()) ? null : chapters.get(title.toLowerCase());
 	}
 	
 	@Override

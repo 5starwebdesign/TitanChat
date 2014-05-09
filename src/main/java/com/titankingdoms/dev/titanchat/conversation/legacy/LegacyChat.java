@@ -43,7 +43,7 @@ public final class LegacyChat implements Node, NodeManager<LegacyChat> {
 	
 	@Override
 	public LegacyChat get(String name) {
-		return this;
+		return (name == null || name.isEmpty()) ? null : this;
 	}
 	
 	@Override

@@ -15,38 +15,32 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.addon;
+package com.titankingdoms.dev.titanchat.api.format;
 
-import com.titankingdoms.dev.titanchat.tools.loading.Loadable;
+import org.apache.commons.lang.Validate;
 
-public abstract class Addon extends Loadable {
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
+
+public final class Constant implements Variable {
 	
-	private boolean enabled;
+	private final String tag;
 	
-	public Addon(String name) {
-		super(name);
-		this.enabled = false;
+	private final String value;
+	
+	public Constant(String tag, String value) {
+		Validate.notEmpty(tag, "Tag cannot be empty");
+		
+		this.tag = "%" + tag;
+		this.value = (value != null) ? value : "";
 	}
 	
-	public final boolean isEnabled() {
-		return enabled;
+	@Override
+	public String getTag() {
+		return tag;
 	}
 	
-	public void onDisable() {}
-	
-	public void onEnable() {}
-	
-	public void onReload() {}
-	
-	public final void setEnabled(boolean enabled) {
-		if (this.enabled == enabled)
-			return;
-		
-		this.enabled = enabled;
-		
-		if (enabled)
-			onEnable();
-		else
-			onDisable();
+	@Override
+	public String getValue(Node sender, Node recipient) {
+		return value;
 	}
 }

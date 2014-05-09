@@ -50,7 +50,7 @@ public final class Console implements Node, NodeManager<Console> {
 	
 	@Override
 	public Console get(String name) {
-		return (name != null && !name.isEmpty()) ? instance : null;
+		return (name == null || name.isEmpty()) ? null : instance;
 	}
 	
 	@Override

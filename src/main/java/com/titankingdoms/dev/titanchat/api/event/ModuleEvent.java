@@ -17,9 +17,11 @@
 
 package com.titankingdoms.dev.titanchat.api.event;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.Module;
 
 public class ModuleEvent extends Event {
@@ -31,6 +33,10 @@ public class ModuleEvent extends Event {
 	private final String type;
 	
 	public ModuleEvent(Module module, String type) {
+		super(!TitanChat.instance().getServer().isPrimaryThread());
+		Validate.notNull(module, "Module cannot be null");
+		Validate.notEmpty(type, "Type cannot be empty");
+		
 		this.module = module;
 		this.type = type;
 	}

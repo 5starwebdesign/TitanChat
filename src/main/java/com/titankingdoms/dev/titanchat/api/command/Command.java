@@ -17,7 +17,6 @@
 
 package com.titankingdoms.dev.titanchat.api.command;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 import com.google.common.collect.ImmutableList;
@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.command.guide.Assistance;
 import com.titankingdoms.dev.titanchat.api.command.guide.GenericAssistance;
-import com.titankingdoms.dev.titanchat.api.guide.Chapter;
 import com.titankingdoms.dev.titanchat.tools.Format;
 
 public abstract class Command {
@@ -42,6 +41,7 @@ public abstract class Command {
 	private final String label;
 	
 	private String[] aliases;
+	
 	private String description;
 	
 	private int maxArgs;
@@ -50,7 +50,7 @@ public abstract class Command {
 	private String canonSyntax;
 	private String syntax;
 	
-	private boolean registration = true;
+	private boolean progressive;
 	
 	private final Map<String, Command> commands;
 	
@@ -59,16 +59,17 @@ public abstract class Command {
 	private Command parent;
 	
 	public Command(String label) {
-		Validate.notEmpty(label.trim(), "Label cannot be empty");
+		Validate.notEmpty(label, "Label cannot be empty");
+		Validate.isTrue(label.matches(".*\\W+.*"), "Label cannot contain non-word characters");
 		
 		this.plugin = TitanChat.instance();
-		this.label = label.trim();
+		this.label = label;
 		this.aliases = new String[0];
 		this.description = "";
 		this.maxArgs = 0;
 		this.minArgs = 0;
-		this.syntax = this.label;
-		this.registration = true;
+		this.syntax = label;
+		this.progressive = true;
 		this.commands = new TreeMap<>();
 		this.assistance = new GenericAssistance(this);
 	}
@@ -77,7 +78,7 @@ public abstract class Command {
 		if (parent != null) {
 			Command command = this;
 			
-			StringBuilder absolute = new StringBuilder().append("/");
+			StringBuilder absolute = new StringBuilder().append('/');
 			
 			while (command != null) {
 				String syntax = command.getSyntax();
@@ -99,29 +100,60 @@ public abstract class Command {
 		return canonSyntax;
 	}
 	
-	@Override
-	public boolean equals(Object object) {
-		return getClass().isInstance(object) && toString().equals(object.toString());
-	}
-	
-	protected void execute(CommandSender sender, String[] args) {
-		if (!registration)
+	protected final void callProgressiveExecution(CommandSender sender, String label, String[] args) {
+		if (!isRegistered(label)) {
+			message(sender, Format.RED + "Invalid command", "Syntax: " + getCanonicalSyntax());
 			return;
+		}
 		
-		message(sender, Format.RED + "Invalid command");
-		message(sender, "Syntax: " + getCanonicalSyntax());
+		Command command = getCommand(label);
+		
+		if (!command.isPermittedExecution(sender, args)) {
+			message(sender, Format.RED + "You do not have permission");
+			return;
+		}
+		
+		if (args.length > 0 && args[0].equals("?") && !command.isRegistered(args[0])) {
+			command.invokeAssistanceDisplay(sender, Arrays.copyOfRange(args, 1, args.length));
+			return;
+		}
+		
+		if (args.length < command.getMinArguments() || args.length > command.getMaxArguments()) {
+			message(sender, Format.RED + "Invalid argument length", "Syntax: " + getCanonicalSyntax());
+			return;
+		}
+		
+		command.invokeExecution(sender, args);
 	}
 	
-	private final Command get(String name) {
-		return (has(name)) ? commands.get(name.toLowerCase()) : null;
+	protected final List<String> callProgressiveTabCompletion(CommandSender sender, String label, String[] args) {
+		switch (args.length) {
+			
+		case 0:
+			if (label == null || label.isEmpty())
+				return ImmutableList.copyOf(commands.keySet());
+			
+			Builder<String> matches = ImmutableList.builder();
+			
+			for (String match : commands.keySet()) {
+				if (!match.startsWith(label))
+					continue;
+				
+				matches.add(match);
+			}
+			
+			return matches.build();
+			
+		default:
+			if (!isRegistered(label))
+				return ImmutableList.of();
+			
+			return getCommand(label).invokeTabCompletion(sender, args);
+		}
 	}
 	
 	public String[] getAliases() {
-		return aliases.clone();
-	}
-	
-	private final List<Command> getAll() {
-		return ImmutableList.copyOf(commands.values());
+		return aliases;
 	}
 	
 	public final Assistance getAssistance() {
@@ -135,11 +167,15 @@ public abstract class Command {
 		return canonSyntax;
 	}
 	
+	private final Command getCommand(String label) {
+		return (label == null) ? null : commands.get(label.toLowerCase());
+	}
+	
 	public String getDescription() {
 		return description;
 	}
 	
-	public final String getLabel() {
+	public String getLabel() {
 		return label;
 	}
 	
@@ -159,206 +195,154 @@ public abstract class Command {
 		return syntax;
 	}
 	
-	private final boolean has(String name) {
-		return name != null && !name.isEmpty() && commands.containsKey(name.toLowerCase());
+	public boolean hasAliases() {
+		return aliases.length > 0;
 	}
 	
-	private final boolean has(Command command) {
-		return command != null && has(command.getLabel()) && get(command.getLabel()).equals(command);
+	public boolean hasDescription() {
+		return !description.isEmpty();
 	}
 	
-	@Override
-	public int hashCode() {
-		return toString().hashCode();
-	}
-	
-	public final void invokeExecution(CommandSender sender, String[] args) {
-		if (args.length > 0 && invokeExecution(sender, args[0], Arrays.copyOfRange(args, 1, args.length)))
-			return;
+	public final void invokeAssistanceDisplay(CommandSender sender, String[] args) {
+		boolean list = args.length > 0 && args[0].equalsIgnoreCase("list");
 		
-		execute(sender, args);
-	}
-	
-	private final boolean invokeExecution(CommandSender sender, String label, String[] args) {
-		if (!registration || !has(label))
-			return false;
+		String title = assistance.getTitle();
 		
-		Command command = get(label);
+		int max = (list) ? assistance.getListCount() : assistance.getPageCount();
+		int page = 1;
 		
-		if (!command.isPermitted(sender, args)) {
-			message(sender, Format.RED + "You do not have permission");
-			return true;
-		}
-		
-		if (args.length < command.getMinArguments() || args.length > command.getMaxArguments()) {
-			message(sender, Format.RED + "Invalid argument length", "Syntax: " + getCanonicalSyntax());
-			return true;
-		}
-		
-		command.invokeExecution(sender, args);
-		return true;
-	}
-	
-	public final List<String> invokeTabCompletion(CommandSender sender, String[] args) {
-		switch (args.length) {
-		
-		case 0:
-			return tabComplete(sender, args);
-		
-		case 1:
-			if (commands.isEmpty())
-				return tabComplete(sender, args);
+		if (max > 1) {
+			switch (args.length) {
 			
-			if (args[0] == null || args[0].isEmpty())
-				return ImmutableList.copyOf(commands.keySet());
-			
-			Builder<String> matches = ImmutableList.builder();
-			
-			for (String match : commands.keySet()) {
-				if (!match.startsWith(args[0]))
-					continue;
+			case 0:
+				break;
 				
-				matches.add(match);
+			case 1:
+				page = (!list) ? NumberUtils.toInt(args[0], 1) : 1;
+				break;
+				
+			default:
+				page = NumberUtils.toInt((!list) ? args[0] : args[1], 1);
+				break;
 			}
 			
-			return matches.build();
-			
-		default:
-			if (!has(args[0]))
-				return tabComplete(sender, args);
-			
-			return get(args[0]).invokeTabCompletion(sender, Arrays.copyOfRange(args, 1, args.length));
+			title += " (" + page + "/" + max + ")";
 		}
+		
+		if (page < 1)
+			page = 1;
+		
+		if (page > max)
+			page = max;
+		
+		String content = (list) ? assistance.getCommands(page) : assistance.getContent(page);
+		
+		message(sender, Format.AZURE + StringUtils.center(" " + title + " ", 50, '='));
+		
+		for (String line : Format.wrap(Format.AZURE + content, 50))
+			message(sender, line);
 	}
 	
-	public boolean isPermitted(CommandSender sender, String[] args) {
+	public void invokeExecution(CommandSender sender, String[] args) {
+		if (!isProgressive() || args.length < 1)
+			return;
+		
+		callProgressiveExecution(sender, args[0], Arrays.copyOfRange(args, 1, args.length));
+	}
+	
+	public List<String> invokeTabCompletion(CommandSender sender, String[] args) {
+		if (!isProgressive() || args.length < 1)
+			return ImmutableList.of();
+		
+		return callProgressiveTabCompletion(sender, args[0], Arrays.copyOfRange(args, 1, args.length));
+	}
+	
+	public boolean isPermittedExecution(CommandSender sender, String[] args) {
 		return true;
 	}
 	
-	protected final boolean isRegistered() {
+	public boolean isProgressive() {
+		return progressive;
+	}
+	
+	public final boolean isRegistered() {
 		if (!plugin.getSystem().isLoaded(CommandManager.class))
 			return false;
 		
 		return parent != null || plugin.getSystem().getModule(CommandManager.class).has(this);
 	}
 	
-	public final void message(CommandSender recipient, String... lines) {
-		Validate.notNull(recipient, "Recipient cannot be null");
-		Validate.notNull(lines, "Lines cannot be null");
-		
-		recipient.sendMessage(StringUtils.join(lines, '\n'));
+	public final boolean isRegistered(String label) {
+		return isProgressive() && label != null && commands.containsKey(label.toLowerCase());
 	}
 	
-	public final void register(Command command) {
-		if (!registration)
-			return;
-		
+	protected void message(CommandSender sender, String... messages) {
+		Validate.notNull(sender, "Sender cannot be null");
+		sender.sendMessage(StringUtils.join(messages, '\n'));
+	}
+	
+	public final void registerCommand(Command command) {
 		Validate.notNull(command, "Command cannot be null");
-		
-		if (command.isRegistered())
-			return;
+		Validate.isTrue(!command.isRegistered(), "Command already registered");
 		
 		commands.put(command.getLabel().toLowerCase(), command);
 		
+		if (!command.hasAliases())
+			return;
+		
 		for (String alias : command.getAliases()) {
-			if (has(alias))
+			if (alias.matches(".*\\W+.*"))
+				continue;
+			
+			if (isRegistered(alias) && getCommand(alias).getLabel().equalsIgnoreCase(alias))
 				continue;
 			
 			commands.put(alias.toLowerCase(), command);
 		}
-		
-		command.setParent(this);
-		command.assembleCanonicalSyntax();
-		
-		assistance.addChapter(command.getAssistance());
 	}
 	
-	protected void setAliases(String... aliases) {
+	public void setAliases(String... aliases) {
 		this.aliases = (aliases != null) ? aliases : new String[0];
 	}
 	
-	protected void setArgumentRange(int minArgs, int maxArgs) {
+	public void setArgumentRange(int minArgs, int maxArgs) {
 		this.minArgs = (minArgs >= 0) ? minArgs : 0;
 		this.maxArgs = (maxArgs >= minArgs) ? maxArgs : this.minArgs;
 	}
 	
 	public final void setAssistance(Assistance assistance) {
-		if (isRegistered() && parent != null) {
-			Assistance index = this.parent.getAssistance();
-			
-			index.removeChapter(this.assistance.getTitle());
-			index.addChapter(assistance);
-		}
-		
-		for (Chapter child : this.assistance.getChapters())
-			this.assistance.removeChapter(child.getTitle());
-		
-		for (Command command : getAll())
-			assistance.addChapter(command.getAssistance());
-		
 		this.assistance = (assistance != null) ? assistance : new GenericAssistance(this);
-		
-		if (isRegistered() && parent == null)
-			plugin.getSystem().getModule(CommandManager.class).getIndex().index();
 	}
 	
-	protected void setDescription(String description) {
+	public void setDescription(String description) {
 		this.description = (description != null) ? description : "";
 	}
 	
-	private void setParent(Command parent) {
-		this.parent = parent;
+	protected final void setProgressive(boolean progressive) {
+		this.progressive = progressive;
 	}
 	
-	protected void setSupportRegistration(boolean registration) {
-		this.registration = registration;
-	}
-	
-	protected void setSyntax(String syntax) {
+	public void setSyntax(String syntax) {
 		this.syntax = (syntax != null) ? label + " " + syntax : label;
+	}
+	
+	public final void unregisterCommand(String label) {
+		Validate.notEmpty(label, "Label cannot be empty");
+		Validate.isTrue(isRegistered(label), "Command not registered");
 		
-		assembleCanonicalSyntax();
-	}
-	
-	protected List<String> tabComplete(CommandSender sender, String[] args) {
-		return new ArrayList<>();
-	}
-	
-	@Override
-	public String toString() {
-		return "\"Command\": {" +
-				"\"label\": \"" + getLabel() + "\", " +
-				"\"aliases\": [\"" + StringUtils.join(getAliases(), "\", \"") + "\"], " +
-				"\"description\": \"" + getDescription() + "\", " +
-				"\"range\": {" +
-				"\"minArgs\": \"" + getMinArguments() + "\", " +
-				"\"maxArgs\": " + getMaxArguments() + "\"" +
-				"}, " +
-				"\"syntax\": \"" + getSyntax() + "\"" +
-				"}";
-	}
-	
-	public final void unregister(Command command) {
-		if (!registration)
+		Command command = commands.remove(label.toLowerCase());
+		
+		if (!command.hasAliases())
 			return;
-		
-		Validate.notNull(command, "Command cannot be null");
-		
-		if (!has(command))
-			return;
-		
-		commands.remove(command.getLabel().toLowerCase());
 		
 		for (String alias : command.getAliases()) {
-			if (has(alias) && !get(alias).equals(command))
+			if (alias.matches(".*\\W+.*"))
+				continue;
+			
+			if (!isRegistered(alias) || !getCommand(alias).getLabel().equalsIgnoreCase(alias))
 				continue;
 			
 			commands.remove(alias.toLowerCase());
 		}
-		
-		command.setParent(null);
-		command.assembleCanonicalSyntax();
-		
-		assistance.removeChapter(command.getAssistance().getTitle());
 	}
 }

@@ -37,6 +37,7 @@ import com.titankingdoms.dev.titanchat.command.main.*;
 import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.tools.Vault;
+import com.titankingdoms.dev.titanchat.tools.metrics.Metrics;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory;
 import com.titankingdoms.dev.titanchat.tools.release.ReleaseHistory.Version;
 
@@ -63,7 +64,7 @@ public final class TitanChat extends JavaPlugin {
 				log(Level.INFO, "Attempting to enquire for updates...");
 				
 				if (!getConfig().getBoolean("tools.update-enquiry", false)) {
-					log(Level.INFO, "Enquiry disabled");
+					log(Level.INFO, "Enquiry is disabled");
 					return;
 				}
 				
@@ -106,6 +107,30 @@ public final class TitanChat extends JavaPlugin {
 					log(Level.INFO, "Get files at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
 			}
 		});
+	}
+	
+	private void initiateMetrics() {
+		log(Level.INFO, "Attempting to initialise metrics...");
+		
+		if (!getConfig().getBoolean("tools.metrics-statistics", false)) {
+			log(Level.INFO, "Metrics is disabled");
+			return;
+		}
+		
+		try {
+			Metrics metrics = new Metrics(this);
+			
+			if (metrics.isOptOut()) {
+				log(Level.INFO, "Metrics is disabled");
+				return;
+			}
+			
+			if (metrics.start())
+				log(Level.INFO, "Metrics is initialised");
+			
+		} catch (Exception e) {
+			log(Level.WARNING, "An error occured while initialising Metrics");
+		}
 	}
 	
 	public static TitanChat instance() {
@@ -214,7 +239,7 @@ public final class TitanChat extends JavaPlugin {
 		
 		MainCommand tcCommand = new MainCommand();
 		
-		tcCommand.register(new HelpCommand());
+		tcCommand.registerCommand(new HelpCommand());
 		
 		cmdManager.register(tcCommand);
 		

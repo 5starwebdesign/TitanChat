@@ -51,12 +51,20 @@ public final class ModularSystem {
 		return addon;
 	}
 	
+	public Module[] getLoadedModules() {
+		return modules.values().toArray(new Module[0]);
+	}
+	
 	public Module getModule(String name) {
 		return modules.get(name);
 	}
 	
 	public <T extends Module> T getModule(Class<T> clazz) {
 		return clazz.cast(getModule(labels.get(clazz)));
+	}
+	
+	public Module[] getRegisteredModules() {
+		return registered.values().toArray(new Module[0]);
 	}
 	
 	public boolean isLoaded(String name) {
@@ -206,7 +214,7 @@ public final class ModularSystem {
 	}
 	
 	public void unloadModules() {
-		Module[] loaded = modules.values().toArray(new Module[0]);
+		Module[] loaded = getLoadedModules();
 		
 		for (int index = loaded.length - 1; index >= 0; index--)
 			unloadModule(loaded[index]);

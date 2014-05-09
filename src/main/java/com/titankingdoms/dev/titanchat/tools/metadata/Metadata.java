@@ -33,7 +33,7 @@ public final class Metadata {
 	}
 	
 	public Data get(String key) {
-		return (has(key)) ? metadata.get(key) : null;
+		return (key == null || key.isEmpty()) ? null : metadata.get(key);
 	}
 	
 	public boolean has(String key) {

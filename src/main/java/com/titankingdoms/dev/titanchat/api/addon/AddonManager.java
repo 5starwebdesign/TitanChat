@@ -19,15 +19,10 @@ package com.titankingdoms.dev.titanchat.api.addon;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import org.apache.commons.lang.Validate;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.AbstractModule;
@@ -49,11 +44,11 @@ public final class AddonManager extends AbstractModule {
 		this.addons = new HashMap<>();
 	}
 	
-	public Addon get(String name) {
+	public Addon getAddon(String name) {
 		return (name == null || name.isEmpty()) ? null : addons.get(name.toLowerCase());
 	}
 	
-	public Set<Addon> getAll() {
+	public Set<Addon> getAddons() {
 		return ImmutableSet.copyOf(addons.values());
 	}
 	
@@ -61,74 +56,49 @@ public final class AddonManager extends AbstractModule {
 		return new File(plugin.getDataFolder(), "addons");
 	}
 	
-	public boolean has(String name) {
+	public boolean isLoaded(String name) {
 		return name != null && !name.isEmpty() && addons.containsKey(name.toLowerCase());
-	}
-	
-	public boolean has(Addon addon) {
-		return addon != null && has(addon.getName()) && get(addon.getName()).equals(addon);
 	}
 	
 	@Override
 	public void load() {
 		for (Addon addon : Loader.load(Addon.class, getDirectory()))
-			register(addon);
+			addons.put(addon.getName().toLowerCase(), addon);
 		
-		for (Addon addon : getAll())
+		for (Addon addon : getAddons())
 			addon.onEnable();
-	}
-	
-	public List<String> match(String name) {
-		if (name == null || name.isEmpty())
-			return ImmutableList.copyOf(addons.keySet());
-		
-		Builder<String> matches = ImmutableList.builder();
-		
-		for (String addon : addons.keySet()) {
-			if (!addon.startsWith(name.toLowerCase()))
-				continue;
-			
-			matches.add(addon);
-		}
-		
-		return matches.build();
-	}
-	
-	public void register(Addon addon) {
-		Validate.notNull(addon, "Addon cannot be null");
-		Validate.isTrue(!has(addon.getName()), "Addon already registered");
-		
-		addons.put(addon.getName().toLowerCase(), addon);
 	}
 	
 	@Override
 	public void reload() {
-		for (Addon addon : getAll()) {
-			if (addon.getFile().exists())
-				addon.onReload();
-			else
+		for (Addon addon : getAddons()) {
+			if (!addon.getFile().exists())
 				addon.onDisable();
 			
-			unregister(addon);
+			addons.remove(addon.getName().toLowerCase());
 		}
 		
-		for (Addon addon : Loader.load(Addon.class, getDirectory()))
-			register(addon);
+		for (Addon addon : Loader.load(Addon.class, getDirectory())) {
+			if (isLoaded(addon.getName()))
+				continue;
+			
+			addons.put(addon.getName().toLowerCase(), addon);
+		}
+		
+		for (Addon addon : getAddons()) {
+			if (addon.isEnabled())
+				addon.onReload();
+			else
+				addon.onEnable();
+		}
 	}
 	
 	@Override
 	public void unload() {
-		for (Addon addon : getAll())
+		for (Addon addon : getAddons())
 			addon.onDisable();
 		
-		for (Addon addon : getAll())
-			unregister(addon);
-	}
-	
-	public void unregister(Addon addon) {
-		Validate.notNull(addon, "Addon cannot be null");
-		Validate.isTrue(has(addon.getName()), "Addon not registered");
-		
-		addons.remove(addon.getName().toLowerCase());
+		for (Addon addon : getAddons())
+			addons.remove(addon.getName().toLowerCase());
 	}
 }

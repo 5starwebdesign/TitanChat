@@ -17,12 +17,22 @@
 
 package com.titankingdoms.dev.titanchat.api.format;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.titankingdoms.dev.titanchat.api.AbstractModule;
 
 public final class Formatter extends AbstractModule {
 	
+	private final Map<String, Variable> variables;
+	
 	public Formatter() {
 		super("Formatter");
+		this.variables = new HashMap<>();
+	}
+	
+	public Variable get(String tag) {
+		return (tag == null || tag.isEmpty()) ? null : variables.get("%" + tag.toLowerCase());
 	}
 	
 	@Override

@@ -25,6 +25,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.conversation.Conversation;
 import com.titankingdoms.dev.titanchat.api.conversation.Node;
 
@@ -39,6 +40,7 @@ public final class ConverseEvent extends Event implements Cancellable {
 	private boolean cancelled;
 	
 	public ConverseEvent(Conversation conversation) {
+		super(!TitanChat.instance().getServer().isPrimaryThread());
 		Validate.notNull(conversation, "Conversation cannot be null");
 		
 		this.conversation = conversation;

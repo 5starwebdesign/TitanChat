@@ -25,17 +25,12 @@ import org.apache.commons.lang.Validate;
 
 import com.google.common.collect.ImmutableList;
 
-public abstract class AbstractIndex implements Index {
-	
-	private final String title;
-	
-	private String description;
+public abstract class AbstractIndex extends AbstractChapter implements Index {
 	
 	private final Map<String, Chapter> chapters;
 	
 	public AbstractIndex(String title) {
-		this.title = title;
-		this.description = "";
+		super(title);
 		this.chapters = new TreeMap<>();
 	}
 	
@@ -53,7 +48,7 @@ public abstract class AbstractIndex implements Index {
 	
 	@Override
 	public Chapter getChapter(String title) {
-		return (title != null && !title.isEmpty()) ? chapters.get(title.toLowerCase()) : null;
+		return (title == null || title.isEmpty()) ? null : chapters.get(title.toLowerCase());
 	}
 	
 	@Override
@@ -103,11 +98,6 @@ public abstract class AbstractIndex implements Index {
 	}
 	
 	@Override
-	public String getDescription() {
-		return description;
-	}
-	
-	@Override
 	public int getPageCount() {
 		int count = chapters.size() / 6;
 		
@@ -118,19 +108,10 @@ public abstract class AbstractIndex implements Index {
 	}
 	
 	@Override
-	public final String getTitle() {
-		return title;
-	}
-	
-	@Override
 	public void removeChapter(String title) {
 		Validate.notEmpty(title, "Title cannot be empty");
 		Validate.isTrue(contains(title), "Chapter not registered");
 		
 		chapters.remove(title.toLowerCase());
-	}
-	
-	public void setDescription(String description) {
-		this.description = (description != null) ? description : "";
 	}
 }

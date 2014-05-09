@@ -17,6 +17,8 @@
 
 package com.titankingdoms.dev.titanchat.api.guide;
 
+import org.apache.commons.lang.Validate;
+
 public abstract class AbstractChapter implements Chapter {
 	
 	private final String title;
@@ -24,6 +26,9 @@ public abstract class AbstractChapter implements Chapter {
 	private String description;
 	
 	public AbstractChapter(String title) {
+		Validate.notEmpty(title, "Title cannot be empty");
+		Validate.isTrue(title.matches(".*\\W+.*"), "Title cannot contain non-word characters");
+		
 		this.title = title;
 		this.description = "";
 	}
@@ -34,7 +39,7 @@ public abstract class AbstractChapter implements Chapter {
 	}
 	
 	@Override
-	public String getTitle() {
+	public final String getTitle() {
 		return title;
 	}
 	

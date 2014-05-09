@@ -15,38 +15,13 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.api.addon;
+package com.titankingdoms.dev.titanchat.api.format;
 
-import com.titankingdoms.dev.titanchat.tools.loading.Loadable;
+import com.titankingdoms.dev.titanchat.api.conversation.Node;
 
-public abstract class Addon extends Loadable {
+public interface Variable {
 	
-	private boolean enabled;
+	public String getTag();
 	
-	public Addon(String name) {
-		super(name);
-		this.enabled = false;
-	}
-	
-	public final boolean isEnabled() {
-		return enabled;
-	}
-	
-	public void onDisable() {}
-	
-	public void onEnable() {}
-	
-	public void onReload() {}
-	
-	public final void setEnabled(boolean enabled) {
-		if (this.enabled == enabled)
-			return;
-		
-		this.enabled = enabled;
-		
-		if (enabled)
-			onEnable();
-		else
-			onDisable();
-	}
+	public String getValue(Node sender, Node recipient);
 }

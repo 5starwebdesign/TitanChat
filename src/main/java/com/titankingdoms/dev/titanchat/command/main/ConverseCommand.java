@@ -15,33 +15,22 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.titankingdoms.dev.titanchat.command;
-
-import java.util.Arrays;
+package com.titankingdoms.dev.titanchat.command.main;
 
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.tools.Format;
 
-public final class MainCommand extends Command {
+public final class ConverseCommand extends Command {
 	
-	public MainCommand() {
-		super("TitanChat");
-		setAliases("tc", "tchat");
-		setArgumentRange(0, 10240);
-		setDescription("Main commands of TitanChat");
-		setSyntax("[command]");
+	public ConverseCommand(String label) {
+		super("Converse");
+		setAliases("chat", "speak", "talk");
+		setArgumentRange(1, 10240);
+		setDescription("Converses through/with the viewing node");
+		setSyntax("<message>");
 	}
 	
 	@Override
-	public void invokeExecution(CommandSender sender, String[] args) {
-		if (args.length < 1) {
-			message(sender, Format.GOLD + "You are running v" + plugin.getDescription().getVersion());
-			message(sender, Format.GOLD + "Type \"/titanchat ?\" for help");
-			return;
-		}
-		
-		callProgressiveExecution(sender, args[0], Arrays.copyOfRange(args, 1, args.length));
-	}
+	public void invokeExecution(CommandSender sender, String[] args) {}
 }

@@ -22,7 +22,6 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
 import com.titankingdoms.dev.titanchat.api.command.Command;
-import com.titankingdoms.dev.titanchat.api.command.guide.GenericAssistCommand;
 import com.titankingdoms.dev.titanchat.api.guide.Chapter;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
 import com.titankingdoms.dev.titanchat.api.guide.Index;
@@ -34,13 +33,12 @@ public final class HelpCommand extends Command {
 		super("?");
 		setAliases("help", "h");
 		setArgumentRange(0, 10240);
-		setDescription("Assistance for TitanChat");
-		setSyntax("<chapter|index>...");
-		register(new GenericAssistCommand(this));
+		setDescription("Displays assistance for TitanChat");
+		setSyntax("[chapter|index]...");
 	}
 	
 	@Override
-	protected void execute(CommandSender sender, String[] args) {
+	public void invokeExecution(CommandSender sender, String[] args) {
 		if (!plugin.getSystem().isLoaded(Enchiridion.class)) {
 			message(sender, Format.RED + "Enchiridion not found");
 			return;
