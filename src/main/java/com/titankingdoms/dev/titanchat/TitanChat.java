@@ -32,8 +32,6 @@ import com.titankingdoms.dev.titanchat.api.ModularSystem;
 import com.titankingdoms.dev.titanchat.api.command.CommandManager;
 import com.titankingdoms.dev.titanchat.api.conversation.Network;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
-import com.titankingdoms.dev.titanchat.command.MainCommand;
-import com.titankingdoms.dev.titanchat.command.main.*;
 import com.titankingdoms.dev.titanchat.conversation.user.UserManager;
 import com.titankingdoms.dev.titanchat.listener.TitanChatListener;
 import com.titankingdoms.dev.titanchat.tools.Vault;
@@ -183,9 +181,6 @@ public final class TitanChat extends JavaPlugin {
 		log(Level.INFO, "Starting TitanChat System...");
 		system.start();
 		
-		if (!registerCommands())
-			log(Level.WARNING, "Failed to register commands");
-		
 		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
 		log(Level.INFO, "Registered listeners");
 		
@@ -229,21 +224,6 @@ public final class TitanChat extends JavaPlugin {
 			throw new IllegalStateException("CommandManager not found");
 		
 		return system.getModule(CommandManager.class).preview(sender, label, args);
-	}
-	
-	private boolean registerCommands() {
-		if (!system.isLoaded(CommandManager.class))
-			return false;
-		
-		CommandManager cmdManager = system.getModule(CommandManager.class);
-		
-		MainCommand tcCommand = new MainCommand();
-		
-		tcCommand.registerCommand(new HelpCommand());
-		
-		cmdManager.register(tcCommand);
-		
-		return true;
 	}
 	
 	public static ModularSystem system() {

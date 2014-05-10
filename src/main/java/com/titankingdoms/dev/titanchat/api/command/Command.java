@@ -281,7 +281,7 @@ public abstract class Command {
 		sender.sendMessage(StringUtils.join(messages, '\n'));
 	}
 	
-	public final void registerCommand(Command command) {
+	public final Command registerCommand(Command command) {
 		Validate.notNull(command, "Command cannot be null");
 		Validate.isTrue(!command.isRegistered(), "Command already registered");
 		
@@ -290,7 +290,7 @@ public abstract class Command {
 		assistance.addChapter(command.getAssistance());
 		
 		if (!command.hasAliases())
-			return;
+			return this;
 		
 		for (String alias : command.getAliases()) {
 			if (alias.matches(".*\\W+.*"))
@@ -301,6 +301,17 @@ public abstract class Command {
 			
 			commands.put(alias.toLowerCase(), command);
 		}
+		
+		return this;
+	}
+	
+	public final Command registerCommands(Command... commands) {
+		Validate.notNull(commands, "Commands cannot be null");
+		
+		for (Command command : commands)
+			registerCommand(command);
+		
+		return this;
 	}
 	
 	protected void setAliases(String... aliases) {
@@ -330,7 +341,7 @@ public abstract class Command {
 		assembleCanonicalSyntax();
 	}
 	
-	public final void unregisterCommand(String label) {
+	public final Command unregisterCommand(String label) {
 		Validate.notEmpty(label, "Label cannot be empty");
 		Validate.isTrue(isRegistered(label), "Command not registered");
 		
@@ -339,7 +350,7 @@ public abstract class Command {
 		assistance.removeChapter(label);
 		
 		if (!command.hasAliases())
-			return;
+			return this;
 		
 		for (String alias : command.getAliases()) {
 			if (alias.matches(".*\\W+.*"))
@@ -350,5 +361,16 @@ public abstract class Command {
 			
 			commands.remove(alias.toLowerCase());
 		}
+		
+		return this;
+	}
+	
+	public final Command unregisterCommands(String... labels) {
+		Validate.notNull(labels, "Labels cannot be null");
+		
+		for (String label : labels)
+			unregisterCommand(label);
+		
+		return this;
 	}
 }

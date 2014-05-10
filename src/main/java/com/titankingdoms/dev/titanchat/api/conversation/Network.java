@@ -44,8 +44,8 @@ public final class Network extends AbstractModule {
 		return (type == null || type.isEmpty()) ? null : managers.get(type.toLowerCase());
 	}
 	
-	public Set<NodeManager<? extends Node>> getAll() {
-		return ImmutableSet.copyOf(managers.values());
+	public int getCount() {
+		return managers.size();
 	}
 	
 	public Node getNode(String type, String name) {

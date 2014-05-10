@@ -23,7 +23,7 @@ import com.titankingdoms.dev.titanchat.api.command.Command;
 
 public final class ConverseCommand extends Command {
 	
-	public ConverseCommand(String label) {
+	public ConverseCommand() {
 		super("Converse");
 		setAliases("chat", "speak", "talk");
 		setArgumentRange(1, 10240);

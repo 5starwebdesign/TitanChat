@@ -129,6 +129,8 @@ public final class ModularSystem {
 		Validate.isTrue(!isRegistered(module.getName()), "Module already registered");
 		
 		registered.put(module.getName(), module);
+		
+		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Register"));
 	}
 	
 	public void reload() {
@@ -224,6 +226,8 @@ public final class ModularSystem {
 		Validate.notEmpty(name, "Name cannot be empty");
 		Validate.isTrue(isRegistered(name), "Module not registered");
 		
-		registered.remove(unloadModule(getModule(name)).getName());
+		Module module = registered.remove(unloadModule(getModule(name)).getName());
+		
+		TitanChat.instance().getServer().getPluginManager().callEvent(new ModuleEvent(module, "Unregister"));
 	}
 }

@@ -34,6 +34,7 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.titankingdoms.dev.titanchat.TitanChat;
 import com.titankingdoms.dev.titanchat.api.AbstractModule;
 import com.titankingdoms.dev.titanchat.api.command.guide.CommandIndex;
+import com.titankingdoms.dev.titanchat.api.event.CommandEvent;
 import com.titankingdoms.dev.titanchat.api.guide.Enchiridion;
 import com.titankingdoms.dev.titanchat.tools.Messaging;
 import com.titankingdoms.dev.titanchat.tools.Format;
@@ -131,6 +132,8 @@ public final class CommandManager extends AbstractModule {
 			commands.put(alias.toLowerCase(), command);
 		}
 		
+		plugin.getServer().getPluginManager().callEvent(new CommandEvent(command, "Register"));
+		
 		index.index();
 	}
 	
@@ -206,6 +209,8 @@ public final class CommandManager extends AbstractModule {
 			
 			commands.remove(alias.toLowerCase());
 		}
+		
+		plugin.getServer().getPluginManager().callEvent(new CommandEvent(command, "Unregister"));
 		
 		index.index();
 	}
