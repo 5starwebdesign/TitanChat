@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.tools;
+package com.nodinchan.dev.titanchat.tools.vault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,29 +37,43 @@ public final class Vault {
 	private static Economy econ;
 	private static Permission perm;
 	
+	private Vault() {}
+	
 	public static EconomyResponse depositBank(String name, double amount) {
-		if (name == null || name.isEmpty() || amount < 0 || econ == null)
+		if (econ == null)
+			throw new IllegalStateException("Economy bridge not found");
+		
+		if (name == null || name.isEmpty() || amount < 0)
 			return new EconomyResponse(0.0D, 0.0D, ResponseType.FAILURE, "Cannot deposit");
 		
 		return econ.bankDeposit(name, amount);
 	}
 	
 	public static EconomyResponse depositPlayer(Player player, double amount) {
-		if (player == null || amount < 0 || econ == null)
+		if (econ == null)
+			throw new IllegalStateException("Economy bridge not found");
+		
+		if (player == null || amount < 0)
 			return new EconomyResponse(0.0D, 0.0D, ResponseType.FAILURE, "Cannot deposit");
 		
 		return econ.depositPlayer(player.getName(), player.getWorld().getName(), amount);
 	}
 	
 	public static double getBalance(Player player) {
-		if (player == null || econ == null)
+		if (econ == null)
+			throw new IllegalStateException("Economy bridge not found");
+		
+		if (player == null)
 			return 0.0D;
 		
 		return econ.getBalance(player.getName(), player.getWorld().getName());
 	}
 	
 	public static EconomyResponse getBankBalance(String name) {
-		if (name == null || name.isEmpty() || econ == null)
+		if (econ == null)
+			throw new IllegalStateException("Economy bridge not found");
+		
+		if (name == null || name.isEmpty())
 			return new EconomyResponse(0.0D, 0.0D, ResponseType.FAILURE, "Cannot find balance");
 		
 		return econ.bankBalance(name);
@@ -67,14 +81,25 @@ public final class Vault {
 	
 	public static List<String> getBanks() {
 		if (econ == null)
-			return new ArrayList<String>();
+			throw new IllegalStateException("Economy bridge not found");
 		
 		List<String> banks = econ.getBanks();
 		return (banks != null) ? banks : new ArrayList<String>();
 	}
 	
+	public static Chat getChatBridge() {
+		return chat;
+	}
+	
+	public static Economy getEconomyBridge() {
+		return econ;
+	}
+	
 	public static String getGroupInfo(Player player, String node, String def) {
-		if (player == null || node == null || node.isEmpty() || chat == null)
+		if (chat == null)
+			throw new IllegalStateException("Chat bridge not found");
+		
+		if (player == null || node == null || node.isEmpty())
 			return def;
 		
 		String group = chat.getPrimaryGroup(player.getWorld(), player.getName());
@@ -86,7 +111,10 @@ public final class Vault {
 	}
 	
 	public static String getGroup(Player player) {
-		if (player == null || perm == null)
+		if (perm == null)
+			throw new IllegalStateException("Permission bridge not found");
+		
+		if (player == null)
 			return "";
 		
 		String group = perm.getPrimaryGroup(player.getWorld(), player.getName());
@@ -94,7 +122,10 @@ public final class Vault {
 	}
 	
 	public static String getGroupPrefix(Player player) {
-		if (player == null || chat == null)
+		if (chat == null)
+			throw new IllegalStateException("Chat bridge not found");
+		
+		if (player == null)
 			return "";
 		
 		String group = chat.getPrimaryGroup(player.getWorld(), player.getName());
@@ -107,7 +138,10 @@ public final class Vault {
 	}
 	
 	public static String[] getGroups(Player player) {
-		if (player == null || perm == null)
+		if (perm == null)
+			throw new IllegalStateException("Permission bridge not found");
+		
+		if (player == null)
 			return new String[0];
 		
 		String[] groups = perm.getPlayerGroups(player.getWorld(), player.getName());
@@ -116,14 +150,17 @@ public final class Vault {
 	
 	public static String[] getGroups() {
 		if (perm == null)
-			return new String[0];
+			throw new IllegalStateException("Permission bridge not found");
 		
 		String[] groups = perm.getGroups();
 		return (groups != null) ? groups : new String[0];
 	}
 	
 	public static String getGroupSuffix(Player player) {
-		if (player == null || chat == null)
+		if (chat == null)
+			throw new IllegalStateException("Chat bridge not found");
+		
+		if (player == null)
 			return "";
 		
 		String group = chat.getPrimaryGroup(player.getWorld(), player.getName());
@@ -135,15 +172,25 @@ public final class Vault {
 		return (suffix != null) ? suffix : "";
 	}
 	
+	public static Permission getPermissionBridge() {
+		return perm;
+	}
+	
 	public static String getPlayerInfo(Player player, String node, String def) {
-		if (player == null || node == null || node.isEmpty() || chat == null)
+		if (chat == null)
+			throw new IllegalStateException("Chat bridge not found");
+		
+		if (player == null || node == null || node.isEmpty())
 			return def;
 		
 		return chat.getPlayerInfoString(player.getWorld(), player.getName(), node, def);
 	}
 	
 	public static String getPlayerPrefix(Player player) {
-		if (player == null || chat == null)
+		if (chat == null)
+			throw new IllegalStateException("Chat bridge not found");
+		
+		if (player == null)
 			return "";
 		
 		String prefix = chat.getPlayerPrefix(player.getWorld(), player.getName());
@@ -151,7 +198,10 @@ public final class Vault {
 	}
 	
 	public static String getPlayerSuffix(Player player) {
-		if (player == null || chat == null)
+		if (chat == null)
+			throw new IllegalStateException("Chat bridge not found");
+		
+		if (player == null)
 			return "";
 		
 		String suffix = chat.getPlayerSuffix(player.getWorld(), player.getName());
@@ -159,15 +209,18 @@ public final class Vault {
 	}
 	
 	public static boolean hasAccount(Player player) {
-		return player != null && econ != null && econ.hasAccount(player.getName(), player.getWorld().getName());
+		if (econ == null)
+			throw new IllegalStateException("Economy bridge not found");
+		
+		return player != null && econ.hasAccount(player.getName(), player.getWorld().getName());
 	}
 	
 	public static boolean hasPermission(CommandSender sender, String node) {
+		if (perm == null)
+			throw new IllegalStateException("Permission bridge not found");
+		
 		if (sender == null || node == null || node.isEmpty())
 			return false;
-		
-		if (perm == null)
-			return sender.hasPermission(node);
 		
 		if (Player.class.isInstance(sender))
 			return hasPermission((Player) sender, node);
@@ -176,11 +229,11 @@ public final class Vault {
 	}
 	
 	public static boolean hasPermission(Player player, String node) {
+		if (perm == null)
+			throw new IllegalStateException("Permission bridge not found");
+		
 		if (player == null || node == null || node.isEmpty())
 			return false;
-		
-		if (perm == null)
-			return player.hasPermission(node);
 		
 		return perm.playerHas(player.getWorld(), player.getName(), node);
 	}
@@ -210,14 +263,20 @@ public final class Vault {
 	}
 	
 	public static EconomyResponse withdrawBank(String name, double amount) {
-		if (name == null || name.isEmpty() || amount < 0 || econ == null)
+		if (econ == null)
+			throw new IllegalStateException("Economy bridge not found");
+		
+		if (name == null || name.isEmpty() || amount < 0)
 			return new EconomyResponse(0.0D, 0.0D, ResponseType.FAILURE, "Cannot withdraw");
 		
 		return econ.bankWithdraw(name, amount);
 	}
 	
 	public static EconomyResponse withdrawPlayer(Player player, double amount) {
-		if (player == null || amount < 0 || econ == null)
+		if (econ == null)
+			throw new IllegalStateException("Economy bridge not found");
+		
+		if (player == null || amount < 0)
 			return new EconomyResponse(0.0D, 0.0D, ResponseType.FAILURE, "Cannot withdraw");
 		
 		return econ.withdrawPlayer(player.getName(), player.getWorld().getName(), amount);

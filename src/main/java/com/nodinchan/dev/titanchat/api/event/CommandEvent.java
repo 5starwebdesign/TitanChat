@@ -18,10 +18,10 @@
 package com.nodinchan.dev.titanchat.api.event;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import com.nodinchan.dev.titanchat.TitanChat;
 import com.nodinchan.dev.titanchat.api.command.Command;
 
 public class CommandEvent extends Event {
@@ -33,7 +33,7 @@ public class CommandEvent extends Event {
 	private final String type;
 	
 	public CommandEvent(Command command, String type) {
-		super(!TitanChat.instance().getServer().isPrimaryThread());
+		super(!Bukkit.isPrimaryThread());
 		Validate.notNull(command, "Command cannot be null");
 		Validate.notEmpty(type, "Type cannot be empty");
 		

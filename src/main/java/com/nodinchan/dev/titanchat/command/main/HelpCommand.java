@@ -25,7 +25,7 @@ import com.nodinchan.dev.guide.Chapter;
 import com.nodinchan.dev.guide.Index;
 import com.nodinchan.dev.titanchat.api.command.Command;
 import com.nodinchan.dev.titanchat.api.guide.SimpleGuide;
-import com.nodinchan.dev.tools.format.Format;
+import com.nodinchan.dev.titanchat.tools.Format;
 
 public final class HelpCommand extends Command {
 	

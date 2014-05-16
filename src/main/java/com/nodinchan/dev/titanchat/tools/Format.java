@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.tools.format;
+package com.nodinchan.dev.titanchat.tools;
 
 import java.util.Arrays;
 import java.util.Collection;

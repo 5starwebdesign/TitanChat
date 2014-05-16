@@ -34,10 +34,10 @@ import com.nodinchan.dev.titanchat.api.conversation.SimpleNetwork;
 import com.nodinchan.dev.titanchat.api.guide.SimpleGuide;
 import com.nodinchan.dev.titanchat.conversation.user.UserManager;
 import com.nodinchan.dev.titanchat.listener.TitanChatListener;
-import com.nodinchan.dev.titanchat.tools.Vault;
+import com.nodinchan.dev.titanchat.tools.ReleaseHistory;
+import com.nodinchan.dev.titanchat.tools.ReleaseHistory.Version;
 import com.nodinchan.dev.titanchat.tools.metrics.Metrics;
-import com.nodinchan.dev.tools.release.ReleaseHistory;
-import com.nodinchan.dev.tools.release.ReleaseHistory.Version;
+import com.nodinchan.dev.titanchat.tools.vault.Vault;
 
 public final class TitanChat extends JavaPlugin {
 	

@@ -36,14 +36,14 @@ import com.nodinchan.dev.titanchat.TitanChat;
 import com.nodinchan.dev.titanchat.api.command.guide.CommandIndex;
 import com.nodinchan.dev.titanchat.api.event.CommandEvent;
 import com.nodinchan.dev.titanchat.api.guide.SimpleGuide;
-import com.nodinchan.dev.tools.format.Format;
-import com.nodinchan.dev.tools.messaging.Messaging;
+import com.nodinchan.dev.titanchat.tools.Format;
+import com.nodinchan.dev.titanchat.tools.Messaging;
 
 public final class CommandManager extends AbstractModule {
 	
 	private final TitanChat plugin;
 	
-	private static final String[] DEPENDENCIES = new String[] { "Enchiridion" };
+	private static final String[] DEPENDENCIES = new String[] { "Guide" };
 	
 	private final Map<String, Command> commands;
 	
