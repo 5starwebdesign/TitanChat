@@ -26,11 +26,8 @@ public final class Chat_TitanChat extends Chat {
 	
 	private static final String NAME = "TitanChat";
 	
-	private final TitanChat plugin;
-	
 	public Chat_TitanChat(Permission perm) {
 		super(perm);
-		this.plugin = TitanChat.instance();
 	}
 	
 	@Override
@@ -70,37 +67,31 @@ public final class Chat_TitanChat extends Chat {
 	
 	@Override
 	public boolean getPlayerInfoBoolean(String world, String player, String node, boolean def) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
 	@Override
 	public double getPlayerInfoDouble(String world, String player, String node, double def) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
 	@Override
 	public int getPlayerInfoInteger(String world, String player, String node, int def) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
 	@Override
 	public String getPlayerInfoString(String world, String player, String node, String def) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
 	public String getPlayerPrefix(String world, String player) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	@Override
 	public String getPlayerSuffix(String world, String player) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -140,38 +131,20 @@ public final class Chat_TitanChat extends Chat {
 	}
 	
 	@Override
-	public void setPlayerInfoBoolean(String world, String player, String node, boolean value) {
-		// TODO Auto-generated method stub
-
-	}
+	public void setPlayerInfoBoolean(String world, String player, String node, boolean value) {}
 	
 	@Override
-	public void setPlayerInfoDouble(String world, String player, String node, double value) {
-		// TODO Auto-generated method stub
-
-	}
+	public void setPlayerInfoDouble(String world, String player, String node, double value) {}
 	
 	@Override
-	public void setPlayerInfoInteger(String world, String player, String node, int value) {
-		// TODO Auto-generated method stub
-
-	}
+	public void setPlayerInfoInteger(String world, String player, String node, int value) {}
 	
 	@Override
-	public void setPlayerInfoString(String world, String player, String node, String value) {
-		// TODO Auto-generated method stub
-
-	}
+	public void setPlayerInfoString(String world, String player, String node, String value) {}
 	
 	@Override
-	public void setPlayerPrefix(String world, String player, String prefix) {
-		// TODO Auto-generated method stub
-
-	}
+	public void setPlayerPrefix(String world, String player, String prefix) {}
 	
 	@Override
-	public void setPlayerSuffix(String world, String player, String suffix) {
-		// TODO Auto-generated method stub
-
-	}
+	public void setPlayerSuffix(String world, String player, String suffix) {}
 }

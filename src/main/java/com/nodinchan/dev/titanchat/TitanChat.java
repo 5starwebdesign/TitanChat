@@ -23,12 +23,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nodinchan.dev.module.ModularSystem;
@@ -138,20 +141,21 @@ public final class TitanChat extends JavaPlugin {
 	private void initiateVault() {
 		log(Level.INFO, "[TitanChat] Attempting to set up Vault bridge...");
 		
-		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
+		
+		if (vault == null) {
 			log(Level.INFO, "[TitanChat] Failed to set up Vault bridge");
 			return;
 		}
 		
-		Vault.initialise(getServer());
+		ServicesManager services = getServer().getServicesManager();
+		ServicePriority priority = ServicePriority.Lowest;
 		
-		if (Vault.isChatSetup() || !Vault.isPermissionSetup())
-			return;
-		
-		Chat_TitanChat chat = new Chat_TitanChat(Vault.getPermissionBridge());
-		getServer().getServicesManager().register(Chat.class, chat, this, ServicePriority.Lowest);
+		services.register(Chat.class, new Chat_TitanChat(services.load(Permission.class)), vault, priority);
 		
 		log(Level.INFO, "[Vault][Chat] TitanChat found: Loaded");
+		
+		Vault.initialise(getServer());
 	}
 	
 	public static TitanChat instance() {
