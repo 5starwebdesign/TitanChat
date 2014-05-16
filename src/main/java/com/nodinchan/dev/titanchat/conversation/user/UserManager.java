@@ -18,16 +18,14 @@
 package com.nodinchan.dev.titanchat.conversation.user;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.nodinchan.dev.conversation.NodeManager;
 import com.nodinchan.dev.metadata.DataConversionHandler;
 import com.nodinchan.dev.module.AbstractModule;
@@ -43,6 +41,7 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	
 	private static final String[] DEPENDENCIES = new String[] { "Network" };
 	
+	private final Map<String, UUID> ids;
 	private final Map<UUID, User> users;
 	
 	private final DataConversionHandler dataHandler;
@@ -52,6 +51,7 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	public UserManager() {
 		super("UserManager");
 		this.plugin = TitanChat.instance();
+		this.ids = new HashMap<>();
 		this.users = new HashMap<>();
 		this.dataHandler = new DataConversionHandler();
 		this.storage = new YMLUserStorage();
@@ -74,8 +74,8 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	}
 	
 	@Override
-	public User get(String id) {
-		try { return get(UUID.fromString(id)); } catch (Exception e) { return null; }
+	public User get(String name) {
+		return (name == null || name.isEmpty()) ? null : get(ids.get(name.toLowerCase()));
 	}
 	
 	@Override
@@ -105,8 +105,12 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	}
 	
 	@Override
-	public boolean has(String id) {
-		try { return isRegistered(UUID.fromString(id)); } catch (Exception e) { return false; }
+	public boolean has(String name) {
+		return isOnline(name);
+	}
+	
+	public boolean isOnline(String name) {
+		return name != null && !name.isEmpty() && ids.containsKey(name.toLowerCase());
 	}
 	
 	public boolean isRegistered(UUID id) {
@@ -116,14 +120,17 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	@Override
 	public void load() {}
 	
-	public List<String> match(String name) {
-		Builder<String> matches = ImmutableList.builder();
+	public Set<String> match(String name) {
+		if (name == null || name.isEmpty())
+			return ImmutableSet.copyOf(ids.keySet());
 		
-		for (User user : users.values()) {
-			if (name != null && !user.getName().startsWith(name))
+		Builder<String> matches = ImmutableSet.builder();
+		
+		for (String user : ids.keySet()) {
+			if (!user.startsWith(name))
 				continue;
 			
-			matches.add(user.getName());
+			matches.add(user);
 		}
 		
 		return matches.build();
@@ -133,8 +140,10 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	public void register(User user) {
 		Validate.notNull(user, "User cannot be null");
 		Validate.isTrue(!isRegistered(user.getUniqueId()), "User already registered");
+		Validate.isTrue(user.isOnline(), "User cannot be offline");
 		
 		users.put(user.getUniqueId(), user);
+		ids.put(user.getName().toLowerCase(), user.getUniqueId());
 	}
 	
 	@Override
@@ -151,7 +160,9 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	public void unregister(User user) {
 		Validate.notNull(user, "User cannot be null");
 		Validate.isTrue(isRegistered(user.getUniqueId()), "User not registered");
+		Validate.isTrue(user.isOnline(), "User cannot be offline");
 		
 		users.remove(user.getUniqueId());
+		ids.remove(user.getName().toLowerCase());
 	}
 }

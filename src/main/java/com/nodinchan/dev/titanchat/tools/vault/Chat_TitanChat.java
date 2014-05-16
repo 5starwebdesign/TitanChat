@@ -17,8 +17,6 @@
 
 package com.nodinchan.dev.titanchat.tools.vault;
 
-import com.nodinchan.dev.titanchat.TitanChat;
-
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 
@@ -31,22 +29,22 @@ public final class Chat_TitanChat extends Chat {
 	}
 	
 	@Override
-	public boolean getGroupInfoBoolean(String world, String group, String node, boolean def) {
+	public boolean getGroupInfoBoolean(String world, String group, String key, boolean def) {
 		throw new UnsupportedOperationException("TitanChat does not support group info nodes");
 	}
 	
 	@Override
-	public double getGroupInfoDouble(String world, String group, String node, double def) {
+	public double getGroupInfoDouble(String world, String group, String key, double def) {
 		throw new UnsupportedOperationException("TitanChat does not support group info nodes");
 	}
 	
 	@Override
-	public int getGroupInfoInteger(String world, String group, String node, int def) {
+	public int getGroupInfoInteger(String world, String group, String key, int def) {
 		throw new UnsupportedOperationException("TitanChat does not support group info nodes");
 	}
 	
 	@Override
-	public String getGroupInfoString(String world, String group, String node, String def) {
+	public String getGroupInfoString(String world, String group, String key, String def) {
 		throw new UnsupportedOperationException("TitanChat does not support group info nodes");
 	}
 	
@@ -66,32 +64,32 @@ public final class Chat_TitanChat extends Chat {
 	}
 	
 	@Override
-	public boolean getPlayerInfoBoolean(String world, String player, String node, boolean def) {
+	public boolean getPlayerInfoBoolean(String world, String name, String key, boolean def) {
 		return false;
 	}
 	
 	@Override
-	public double getPlayerInfoDouble(String world, String player, String node, double def) {
+	public double getPlayerInfoDouble(String world, String name, String key, double def) {
 		return 0;
 	}
 	
 	@Override
-	public int getPlayerInfoInteger(String world, String player, String node, int def) {
+	public int getPlayerInfoInteger(String world, String name, String key, int def) {
 		return 0;
 	}
 	
 	@Override
-	public String getPlayerInfoString(String world, String player, String node, String def) {
+	public String getPlayerInfoString(String world, String name, String key, String def) {
 		return null;
 	}
 	
 	@Override
-	public String getPlayerPrefix(String world, String player) {
+	public String getPlayerPrefix(String world, String name) {
 		return null;
 	}
 	
 	@Override
-	public String getPlayerSuffix(String world, String player) {
+	public String getPlayerSuffix(String world, String name) {
 		return null;
 	}
 	
@@ -101,22 +99,22 @@ public final class Chat_TitanChat extends Chat {
 	}
 	
 	@Override
-	public void setGroupInfoBoolean(String world, String group, String node, boolean value) {
+	public void setGroupInfoBoolean(String world, String group, String key, boolean value) {
 		throw new UnsupportedOperationException("TitanChat does not support group info nodes");
 	}
 	
 	@Override
-	public void setGroupInfoDouble(String world, String group, String node, double value) {
+	public void setGroupInfoDouble(String world, String group, String key, double value) {
 		throw new UnsupportedOperationException("TitanChat does not support group info nodes");
 	}
 	
 	@Override
-	public void setGroupInfoInteger(String world, String group, String node, int value) {
+	public void setGroupInfoInteger(String world, String group, String key, int value) {
 		throw new UnsupportedOperationException("TitanChat does not support group info nodes");
 	}
 	
 	@Override
-	public void setGroupInfoString(String world, String group, String node, String value) {
+	public void setGroupInfoString(String world, String group, String key, String value) {
 		throw new UnsupportedOperationException("TitanChat does not support group info nodes");
 	}
 	
@@ -131,20 +129,20 @@ public final class Chat_TitanChat extends Chat {
 	}
 	
 	@Override
-	public void setPlayerInfoBoolean(String world, String player, String node, boolean value) {}
+	public void setPlayerInfoBoolean(String world, String name, String key, boolean value) {}
 	
 	@Override
-	public void setPlayerInfoDouble(String world, String player, String node, double value) {}
+	public void setPlayerInfoDouble(String world, String name, String key, double value) {}
 	
 	@Override
-	public void setPlayerInfoInteger(String world, String player, String node, int value) {}
+	public void setPlayerInfoInteger(String world, String name, String key, int value) {}
 	
 	@Override
-	public void setPlayerInfoString(String world, String player, String node, String value) {}
+	public void setPlayerInfoString(String world, String name, String key, String value) {}
 	
 	@Override
-	public void setPlayerPrefix(String world, String player, String prefix) {}
+	public void setPlayerPrefix(String world, String name, String prefix) {}
 	
 	@Override
-	public void setPlayerSuffix(String world, String player, String suffix) {}
+	public void setPlayerSuffix(String world, String name, String suffix) {}
 }
