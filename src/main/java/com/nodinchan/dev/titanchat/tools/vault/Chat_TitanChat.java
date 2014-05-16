@@ -17,6 +17,8 @@
 
 package com.nodinchan.dev.titanchat.tools.vault;
 
+import com.nodinchan.dev.titanchat.TitanChat;
+
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 

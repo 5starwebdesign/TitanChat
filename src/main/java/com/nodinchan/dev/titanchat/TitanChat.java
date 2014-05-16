@@ -22,10 +22,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
+
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nodinchan.dev.module.ModularSystem;
@@ -34,10 +40,11 @@ import com.nodinchan.dev.titanchat.api.conversation.SimpleNetwork;
 import com.nodinchan.dev.titanchat.api.guide.SimpleGuide;
 import com.nodinchan.dev.titanchat.conversation.user.UserManager;
 import com.nodinchan.dev.titanchat.listener.TitanChatListener;
-import com.nodinchan.dev.titanchat.tools.ReleaseHistory;
-import com.nodinchan.dev.titanchat.tools.ReleaseHistory.Version;
 import com.nodinchan.dev.titanchat.tools.metrics.Metrics;
-import com.nodinchan.dev.titanchat.tools.vault.Vault;
+import com.nodinchan.dev.titanchat.tools.vault.Chat_TitanChat;
+import com.nodinchan.dev.tools.ReleaseHistory;
+import com.nodinchan.dev.tools.Vault;
+import com.nodinchan.dev.tools.ReleaseHistory.Version;
 
 public final class TitanChat extends JavaPlugin {
 	
@@ -59,10 +66,10 @@ public final class TitanChat extends JavaPlugin {
 			
 			@Override
 			public void run() {
-				log(Level.INFO, "Attempting to enquire for updates...");
+				log(Level.INFO, "[TitanChat] Attempting to enquire for updates...");
 				
 				if (!getConfig().getBoolean("tools.update-enquiry", false)) {
-					log(Level.INFO, "Enquiry is disabled");
+					log(Level.INFO, "[TitanChat] Enquiry is disabled");
 					return;
 				}
 				
@@ -70,7 +77,7 @@ public final class TitanChat extends JavaPlugin {
 				history.searchHistory();
 				
 				if (!history.hasVersions()) {
-					log(Level.INFO, "No releases found");
+					log(Level.INFO, "[TitanChat] No releases found");
 					return;
 				}
 				
@@ -92,7 +99,7 @@ public final class TitanChat extends JavaPlugin {
 					if (latest == running && index < comparison - 1)
 						continue;
 					
-					log(Level.INFO, "No updates available");
+					log(Level.INFO, "[TitanChat] No updates available");
 					return;
 				}
 				
@@ -108,10 +115,10 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	private void initiateMetrics() {
-		log(Level.INFO, "Attempting to initialise metrics...");
+		log(Level.INFO, "[TitanChat] Attempting to initialise metrics...");
 		
 		if (!getConfig().getBoolean("tools.metrics-statistics", false)) {
-			log(Level.INFO, "Metrics is disabled");
+			log(Level.INFO, "[TitanChat] Metrics is disabled");
 			return;
 		}
 		
@@ -119,16 +126,36 @@ public final class TitanChat extends JavaPlugin {
 			Metrics metrics = new Metrics(this);
 			
 			if (metrics.isOptOut()) {
-				log(Level.INFO, "Metrics is disabled");
+				log(Level.INFO, "[TitanChat] Metrics is disabled");
 				return;
 			}
 			
 			if (metrics.start())
-				log(Level.INFO, "Metrics is initialised");
+				log(Level.INFO, "[TitanChat] Metrics is initialised");
 			
 		} catch (Exception e) {
-			log(Level.WARNING, "An error occured while initialising Metrics");
+			log(Level.WARNING, "[TitanChat] An error occured while initialising Metrics");
 		}
+	}
+	
+	private void initiateVault() {
+		log(Level.INFO, "[TitanChat] Attempting to set up Vault bridge...");
+		
+		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
+		
+		if (vault == null) {
+			log(Level.INFO, "[TitanChat] Failed to set up Vault bridge");
+			return;
+		}
+		
+		ServicesManager services = getServer().getServicesManager();
+		ServicePriority priority = ServicePriority.Lowest;
+		
+		services.register(Chat.class, new Chat_TitanChat(services.load(Permission.class)), vault, priority);
+		
+		log(Level.INFO, "[Vault][Chat] TitanChat found: Loaded");
+		
+		Vault.initialise(getServer());
 	}
 	
 	public static TitanChat instance() {
@@ -173,10 +200,7 @@ public final class TitanChat extends JavaPlugin {
 		
 		enquireUpdate();
 		
-		log(Level.INFO, "Attempting to set up VaultUtils...");
-		
-		if (!Vault.initialise(getServer()))
-			log(Level.INFO, "Failed to set up VaultUtils");
+		initiateVault();
 		
 		log(Level.INFO, "Starting TitanChat System...");
 		system.start();

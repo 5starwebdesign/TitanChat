@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.tools;
+package com.nodinchan.dev.tools;
 
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -32,7 +32,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import com.google.common.collect.ImmutableList;
-import com.nodinchan.dev.titanchat.tools.ReleaseHistory.Version.ReleaseType;
+import com.nodinchan.dev.tools.ReleaseHistory.Version.ReleaseType;
 
 public class ReleaseHistory {
 	

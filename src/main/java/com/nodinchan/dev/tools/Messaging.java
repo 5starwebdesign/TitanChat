@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.tools;
+package com.nodinchan.dev.tools;
 
 import java.util.Collection;
 
