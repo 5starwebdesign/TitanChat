@@ -36,8 +36,8 @@ import com.nodinchan.dev.titanchat.TitanChat;
 import com.nodinchan.dev.titanchat.api.command.guide.CommandIndex;
 import com.nodinchan.dev.titanchat.api.event.CommandEvent;
 import com.nodinchan.dev.titanchat.api.guide.SimpleGuide;
-import com.nodinchan.dev.titanchat.tools.Format;
-import com.nodinchan.dev.titanchat.tools.Messaging;
+import com.nodinchan.dev.tools.Format;
+import com.nodinchan.dev.tools.Messaging;
 
 public final class CommandManager extends AbstractModule {
 	

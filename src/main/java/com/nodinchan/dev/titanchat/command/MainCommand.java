@@ -22,7 +22,7 @@ import java.util.Arrays;
 import org.bukkit.command.CommandSender;
 
 import com.nodinchan.dev.titanchat.api.command.Command;
-import com.nodinchan.dev.titanchat.tools.Format;
+import com.nodinchan.dev.tools.Format;
 
 public final class MainCommand extends Command {
 	

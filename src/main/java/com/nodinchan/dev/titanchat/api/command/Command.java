@@ -32,7 +32,7 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.nodinchan.dev.titanchat.TitanChat;
 import com.nodinchan.dev.titanchat.api.command.guide.Assistance;
 import com.nodinchan.dev.titanchat.api.command.guide.GenericAssistance;
-import com.nodinchan.dev.titanchat.tools.Format;
+import com.nodinchan.dev.tools.Format;
 
 public abstract class Command {
 	
