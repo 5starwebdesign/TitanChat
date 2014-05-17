@@ -19,10 +19,13 @@ package com.nodinchan.dev.titanchat.conversation.user;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
@@ -30,6 +33,8 @@ import com.nodinchan.dev.conversation.NodeManager;
 import com.nodinchan.dev.metadata.DataConversionHandler;
 import com.nodinchan.dev.module.AbstractModule;
 import com.nodinchan.dev.titanchat.TitanChat;
+import com.nodinchan.dev.titanchat.api.conversation.SimpleNetwork;
+import com.nodinchan.dev.titanchat.conversation.user.storage.UserData;
 import com.nodinchan.dev.titanchat.conversation.user.storage.UserStorage;
 import com.nodinchan.dev.titanchat.conversation.user.storage.yml.YMLUserStorage;
 
@@ -44,7 +49,7 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	private final Map<String, UUID> ids;
 	private final Map<UUID, User> users;
 	
-	private final DataConversionHandler dataHandler;
+	private final DataConversionHandler conversion;
 	
 	private UserStorage storage;
 	
@@ -53,16 +58,30 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 		this.plugin = TitanChat.instance();
 		this.ids = new HashMap<>();
 		this.users = new HashMap<>();
-		this.dataHandler = new DataConversionHandler();
+		this.conversion = new DataConversionHandler();
 		this.storage = new YMLUserStorage();
 	}
 	
-	public User get(UUID id) {
+	@Override
+	public User get(String name) {
+		return getByName(name);
+	}
+	
+	@Override
+	public Set<User> getAll() {
+		return ImmutableSet.copyOf(users.values());
+	}
+	
+	public User getByName(String name) {
+		return (name == null || name.isEmpty()) ? null : getByUniqueId(ids.get(name.toLowerCase()));
+	}
+	
+	public User getByUniqueId(UUID id) {
 		if (id == null)
 			return null;
 		
 		if (!isRegistered(id)) {
-			User user = new User(plugin.getServer().getOfflinePlayer(id));
+			User user = new User(id);
 			
 			if (!user.isOnline())
 				return user;
@@ -73,18 +92,8 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 		return users.get(id);
 	}
 	
-	@Override
-	public User get(String name) {
-		return (name == null || name.isEmpty()) ? null : get(ids.get(name.toLowerCase()));
-	}
-	
-	@Override
-	public Set<User> getAll() {
-		return ImmutableSet.copyOf(users.values());
-	}
-	
 	public DataConversionHandler getDataHandler() {
-		return dataHandler;
+		return conversion;
 	}
 	
 	@Override
@@ -106,15 +115,15 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	
 	@Override
 	public boolean has(String name) {
-		return isOnline(name);
-	}
-	
-	public boolean isOnline(String name) {
 		return name != null && !name.isEmpty() && ids.containsKey(name.toLowerCase());
 	}
 	
 	public boolean isRegistered(UUID id) {
 		return id != null && users.containsKey(id);
+	}
+	
+	public boolean isRegistered(OfflinePlayer player) {
+		return player != null && isRegistered(player.getUniqueId());
 	}
 	
 	@Override
@@ -136,14 +145,48 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 		return matches.build();
 	}
 	
-	@Override
-	public void register(User user) {
-		Validate.notNull(user, "User cannot be null");
-		Validate.isTrue(!isRegistered(user.getUniqueId()), "User already registered");
-		Validate.isTrue(user.isOnline(), "User cannot be offline");
+	public void onJoin(Player player) {
+		Validate.notNull(player, "Player cannot be null");
+		Validate.isTrue(!isRegistered(player.getUniqueId()), "Player already registered");
+		Validate.isTrue(plugin.getSystem().isLoaded(SimpleNetwork.class), "Network not found");
+		
+		SimpleNetwork network = plugin.getSystem().getModule(SimpleNetwork.class);
+		
+		User user = new User(player.getUniqueId());
+		
+		UserData data = getStorage().loadData(user.getUniqueId().toString());
+		
+		String[] viewing = data.getViewing().split("::");
+		
+		if (network.hasNode(viewing[1], viewing[0]))
+			user.setViewing(network.getNode(viewing[1], viewing[0]));
+		
+		for (String connected : data.getConnected()) {
+			String[] node = connected.split("::");
+			
+			if (!network.hasNode(node[1], node[0]))
+				continue;
+			
+			user.getConnection().connect(network.getNode(node[1], node[0]));
+		}
+		
+		for (Entry<String, String> meta : data.getMetadata().entrySet())
+			user.getMetadata().set(meta.getKey(), conversion.fromString(meta.getKey(), meta.getValue()));
 		
 		users.put(user.getUniqueId(), user);
-		ids.put(user.getName().toLowerCase(), user.getUniqueId());
+	}
+	
+	public void onQuit(Player player) {
+		Validate.notNull(player, "Player cannot be null");
+		Validate.isTrue(isRegistered(player.getUniqueId()), "Player not registered");
+		Validate.isTrue(plugin.getSystem().isLoaded(SimpleNetwork.class), "Network not found");
+		
+		getStorage().saveData(new UserData(users.remove(player.getUniqueId())));
+	}
+	
+	@Override
+	public void register(User user) {
+		onJoin((user == null) ? null : user.getPlayer());
 	}
 	
 	@Override
@@ -158,11 +201,6 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	
 	@Override
 	public void unregister(User user) {
-		Validate.notNull(user, "User cannot be null");
-		Validate.isTrue(isRegistered(user.getUniqueId()), "User not registered");
-		Validate.isTrue(user.isOnline(), "User cannot be offline");
-		
-		users.remove(user.getUniqueId());
-		ids.remove(user.getName().toLowerCase());
+		onQuit((user == null) ? null : user.getPlayer());
 	}
 }

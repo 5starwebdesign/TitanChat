@@ -21,7 +21,7 @@ public interface UserStorage {
 	
 	public String getName();
 	
-	public void loadData(UserData data);
+	public UserData loadData(String id);
 	
 	public void saveData(UserData data);
 }

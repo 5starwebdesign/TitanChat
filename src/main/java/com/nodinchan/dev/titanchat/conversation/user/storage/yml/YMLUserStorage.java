@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
@@ -57,10 +58,10 @@ public final class YMLUserStorage implements UserStorage {
 	}
 	
 	@Override
-	public void loadData(UserData data) {
-		Validate.notNull(data, "Data cannot be null");
+	public UserData loadData(String id) {
+		Validate.notEmpty(id, "ID cannot be empty");
 		
-		String id = data.getUniqueId().toString();
+		UserData data = new UserData(UUID.fromString(id));
 		
 		reloadYML();
 		
@@ -83,6 +84,8 @@ public final class YMLUserStorage implements UserStorage {
 			
 			data.setMetadata(metadata);
 		}
+		
+		return data;
 	}
 	
 	public void reloadYML() {

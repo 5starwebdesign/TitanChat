@@ -47,6 +47,16 @@ public final class UserData {
 	
 	private Map<String, String> metadata;
 	
+	public UserData(UUID id) {
+		Validate.notNull(id, "ID cannot be null");
+		
+		this.plugin = TitanChat.instance();
+		this.id = id;
+		this.viewing = "";
+		this.connected = new HashSet<>();
+		this.metadata = new HashMap<>();
+	}
+	
 	public UserData(User user) {
 		Validate.notNull(user, "User cannot be null");
 		

@@ -49,12 +49,12 @@ public final class User implements Node {
 	
 	private final Set<Node> terminus;
 	
-	public User(OfflinePlayer player) {
-		Validate.notNull(player, "Player cannot be null");
+	public User(UUID id) {
+		Validate.notNull(id, "ID cannot be null");
 		
 		this.plugin = TitanChat.instance();
-		this.id = player.getUniqueId();
-		this.name = (player.hasPlayedBefore()) ? player.getName() : "Unknown";
+		this.id = id;
+		this.name = getOfflinePlayer().getName();
 		this.connection = new UserConnection(this);
 		this.terminus = ImmutableSet.<Node>of(this);
 	}

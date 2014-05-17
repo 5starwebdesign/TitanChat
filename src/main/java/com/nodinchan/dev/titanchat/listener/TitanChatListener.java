@@ -48,7 +48,7 @@ public final class TitanChatListener implements Listener {
 		
 		event.setCancelled(true);
 		
-		User user = manager.get(event.getPlayer().getUniqueId());
+		User user = manager.getByUniqueId(event.getPlayer().getUniqueId());
 		Node viewing = user.getViewing();
 		
 		if (viewing == null) {
@@ -66,8 +66,10 @@ public final class TitanChatListener implements Listener {
 		
 		UserManager manager = plugin.getSystem().getModule(UserManager.class);
 		
-		User user = new User(event.getPlayer());
-		manager.register(user);
+		if (manager.isRegistered(event.getPlayer()))
+			return;
+		
+		manager.onJoin(event.getPlayer());
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -77,7 +79,9 @@ public final class TitanChatListener implements Listener {
 		
 		UserManager manager = plugin.getSystem().getModule(UserManager.class);
 		
-		User user = manager.get(event.getPlayer().getName());
-		manager.unregister(user);
+		if (!manager.isRegistered(event.getPlayer()))
+			return;
+		
+		manager.onQuit(event.getPlayer());
 	}
 }

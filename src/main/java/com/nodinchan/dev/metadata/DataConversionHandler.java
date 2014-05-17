@@ -32,6 +32,10 @@ public final class DataConversionHandler {
 		this.converters = new HashMap<>();
 	}
 	
+	public Data fromString(String key, String value) {
+		return get(key).fromString(value);
+	}
+	
 	public DataConverter get(String key) {
 		return (has(key)) ? converters.get(key) : COMMON;
 	}
@@ -45,6 +49,10 @@ public final class DataConversionHandler {
 		Validate.isTrue(!has(converter.getKey()), "Converter already registered");
 		
 		converters.put(converter.getKey(), converter);
+	}
+	
+	public String toString(String key, Data data) {
+		return get(key).toString(data);
 	}
 	
 	public void unregister(DataConverter converter) {
