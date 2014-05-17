@@ -1,6 +1,6 @@
 == TitanChat
 
-TitanChat, a chat management and formatting plugin, its high flexibility is what makes it special. Instead of having a large bulk of hardcoded supports for other plugins, an addon system was implemented to support other plugins and add new features. The built in commands in TitanChat help make your chat management task easier. Channels can also be disabled to have your old global Minecraft chat, but giving you more control over chat.
+TitanChat, a conversation management plugin and developer tool, is highly flexible. Instead of having a bulk of hardcoded integrations with other plugins, an addon system was implemented for this purpose. The flexibility and control given to users and developers alike are immense, allowing TitanChat to do as you wish.
 
 ----
 
@@ -8,27 +8,19 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 * High flexibility
 * Easy to understand and use
-* Built-in commands to manage your chat
-* Supports any permissions plugins that uses SuperPerms or is supported by [[http://dev.bukkit.org/milkbowl/Vault|Vault]]
+* Simple API
+* Supports any SuperPerms based or any [[http://dev.bukkit.org/bridge/vault|Vault]] supported permissions plugin
 ** [[http://dev.bukkit.org/permissions/bpermissions/|bPermissions]]
 ** [[http://dev.bukkit.org/permissions/permissionsex/|PermissionsEx]]
-** [[http://dev.bukkit.org/permissions/droxperms/|DroxPerms]]
-** [[http://dev.bukkit.org/permissions/simplyperms/|SimplyPerms]]
-** [[http://dev.bukkit.org/permissions/xperms/|XPerms]]
-** [[http://dev.bukkit.org/permissions/permbukkit/|PermissionsBukkit]]
-** [[http://dev.bukkit.org/permissions/totalpermissions/|TotalPermissions]]
-** SuperPerms
-** GroupManager
-** [[http://dev.bukkit.org/permissions/privileges/|Privileges]]
-** [[http://dev.bukkit.org/permissions/zpermissions/|zPermissions]]
+** [[http://dev.bukkit.org/permissions/permbukkit/|PermissionsBukkit]], etc.
 * Addon system to support other plugins and add new features
 
 ----
 
 === Functions
 
-* Chat management
-* Chat formatting
+* Conversation management
+* Developer tool
 
 ----
 
@@ -41,7 +33,7 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 
 === How to install
 
-# Download [Unavailable]
+# Download from [Unavailable]
 # Place in plugins folder
 # Start up to load default configuration
 # Configure
@@ -65,13 +57,13 @@ TitanChat, a chat management and formatting plugin, its high flexibility is what
 === Credits
 
 * Author: NodinChan
-* Contributor(s): SLiPCoR, lol768
-* Tester(s): gwinans, gabizou, AlphaBlend
+* Contributor(s): AlphaBlend, lol768, SLiPCoR
+* Tester(s): gwinans, gabizou
 
-==== Thank you
+==== Special Thanks
 
-* Thanks to gwinans for the idea
-* Thanks to my friends online for their help
-* Thanks to all the users who support me through feedback
+* To gwinans for the idea
+* To fellow developers on IRC for help
+* To all users who has given me any form of support
 
 ----
