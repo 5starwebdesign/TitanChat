@@ -62,6 +62,22 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 		this.storage = new YMLUserStorage();
 	}
 	
+	public Set<String> find(String name) {
+		if (name == null || name.isEmpty())
+			return ImmutableSet.copyOf(ids.keySet());
+		
+		Builder<String> matches = ImmutableSet.builder();
+		
+		for (String user : ids.keySet()) {
+			if (!user.startsWith(name))
+				continue;
+			
+			matches.add(user);
+		}
+		
+		return matches.build();
+	}
+	
 	@Override
 	public User get(String name) {
 		return getByName(name);
@@ -128,22 +144,6 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	
 	@Override
 	public void load() {}
-	
-	public Set<String> match(String name) {
-		if (name == null || name.isEmpty())
-			return ImmutableSet.copyOf(ids.keySet());
-		
-		Builder<String> matches = ImmutableSet.builder();
-		
-		for (String user : ids.keySet()) {
-			if (!user.startsWith(name))
-				continue;
-			
-			matches.add(user);
-		}
-		
-		return matches.build();
-	}
 	
 	public void onJoin(Player player) {
 		Validate.notNull(player, "Player cannot be null");

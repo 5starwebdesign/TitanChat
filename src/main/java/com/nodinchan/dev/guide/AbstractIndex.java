@@ -24,6 +24,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang.Validate;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 public abstract class AbstractIndex extends AbstractChapter implements Index {
 	
@@ -113,5 +114,22 @@ public abstract class AbstractIndex extends AbstractChapter implements Index {
 		Validate.isTrue(contains(title), "Chapter not registered");
 		
 		chapters.remove(title.toLowerCase());
+	}
+	
+	@Override
+	public List<String> search(String title) {
+		if (title == null || title.isEmpty())
+			return getContentList();
+		
+		Builder<String> matches = ImmutableList.builder();
+		
+		for (String match : getContentList()) {
+			if (!match.startsWith(title))
+				continue;
+			
+			matches.add(match);
+		}
+		
+		return matches.build();
 	}
 }

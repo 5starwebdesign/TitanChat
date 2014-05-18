@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.nodinchan.dev.guide.AbstractChapter;
 import com.nodinchan.dev.guide.Chapter;
 import com.nodinchan.dev.guide.Index;
@@ -124,5 +125,22 @@ public final class CommandIndex extends AbstractChapter implements Index {
 	@Override
 	public void removeChapter(String title) {
 		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public List<String> search(String title) {
+		if (title == null || title.isEmpty())
+			return getContentList();
+		
+		Builder<String> matches = ImmutableList.builder();
+		
+		for (String match : getContentList()) {
+			if (!match.startsWith(title))
+				continue;
+			
+			matches.add(match);
+		}
+		
+		return matches.build();
 	}
 }

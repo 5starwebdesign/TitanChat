@@ -17,10 +17,13 @@
 
 package com.nodinchan.dev.titanchat.command.main;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.CommandSender;
 
+import com.google.common.collect.ImmutableList;
 import com.nodinchan.dev.guide.Chapter;
 import com.nodinchan.dev.guide.Index;
 import com.nodinchan.dev.titanchat.api.command.Command;
@@ -40,7 +43,7 @@ public final class HelpCommand extends Command {
 	@Override
 	public void invokeExecution(CommandSender sender, String[] args) {
 		if (!plugin.getSystem().isLoaded(SimpleGuide.class)) {
-			message(sender, Format.RED + "Enchiridion not found");
+			message(sender, Format.RED + "Guide not found");
 			return;
 		}
 		
@@ -48,19 +51,16 @@ public final class HelpCommand extends Command {
 		
 		Chapter chapter = guide;
 		
-		int page = 1;
+		int page = -1;
 		
 		for (String arg : args) {
-			if (!NumberUtils.isNumber(arg)) {
-				if (!Index.class.isInstance(chapter))
-					break;
-				
-				chapter = Index.class.cast(chapter).getChapter(arg);
-				continue;
-			}
+			if (page > 0 || (!NumberUtils.isNumber(arg) && !Index.class.isInstance(chapter)))
+				break;
 			
-			page = NumberUtils.toInt(arg, 0);
-			break;
+			if (NumberUtils.isNumber(arg))
+				page = Math.abs(NumberUtils.toInt(arg));
+			else
+				chapter = Index.class.cast(chapter).getChapter(arg);
 		}
 		
 		if (chapter == null) {
@@ -68,14 +68,14 @@ public final class HelpCommand extends Command {
 			return;
 		}
 		
+		if (page < 1)
+			page = 1;
+		
 		int max = chapter.getPageCount();
 		
 		String title = chapter.getTitle();
 		
 		if (max > 1) {
-			if (page < 1)
-				page = 1;
-			
 			if (page > max)
 				page = max;
 			
@@ -86,5 +86,22 @@ public final class HelpCommand extends Command {
 		
 		for (String line : Format.wrap(Format.AZURE + chapter.getContent(page), 50))
 			message(sender, line);
+	}
+	
+	@Override
+	public List<String> invokeTabCompletion(CommandSender sender, String[] args) {
+		SimpleGuide guide = plugin.getSystem().getModule(SimpleGuide.class);
+		
+		Chapter chapter = guide;
+		
+		for (int arg = 0; arg < args.length; arg++) {
+			if (NumberUtils.isNumber(args[arg]) || !Index.class.isInstance(chapter))
+				return ImmutableList.of();
+			
+			if (arg < args.length - 1)
+				chapter = Index.class.cast(chapter).getChapter(args[arg]);
+		}
+		
+		return Index.class.cast(chapter).search(args[args.length - 1]);
 	}
 }

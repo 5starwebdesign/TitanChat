@@ -9,11 +9,11 @@ TitanChat, a conversation management plugin and developer tool, is highly flexib
 * High flexibility
 * Easy to understand and use
 * Simple API
+* Addon system to support other plugins and add new features
 * Supports any SuperPerms based or any [[http://dev.bukkit.org/bridge/vault|Vault]] supported permissions plugin
 ** [[http://dev.bukkit.org/permissions/bpermissions/|bPermissions]]
 ** [[http://dev.bukkit.org/permissions/permissionsex/|PermissionsEx]]
 ** [[http://dev.bukkit.org/permissions/permbukkit/|PermissionsBukkit]], etc.
-* Addon system to support other plugins and add new features
 
 ----
 
@@ -33,7 +33,7 @@ TitanChat, a conversation management plugin and developer tool, is highly flexib
 
 === How to install
 
-# Download from [Unavailable]
+# Download from [[https://github.com/TitanDevelopment/TitanChat/tree/rewrite|Unavailable]]
 # Place in plugins folder
 # Start up to load default configuration
 # Configure

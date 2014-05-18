@@ -32,4 +32,6 @@ public interface Index extends Chapter {
 	public List<String> getContentList();
 	
 	public void removeChapter(String title);
+	
+	public List<String> search(String title);
 }
