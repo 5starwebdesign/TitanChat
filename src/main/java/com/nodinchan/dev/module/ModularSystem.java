@@ -70,6 +70,10 @@ public final class ModularSystem {
 		return registered.values().toArray(new Module[0]);
 	}
 	
+	public Module getRegistration(String name) {
+		return registered.get(name);
+	}
+	
 	public boolean isLoaded(String name) {
 		return name != null && !name.isEmpty() && modules.containsKey(name);
 	}

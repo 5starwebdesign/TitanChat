@@ -20,7 +20,7 @@ package com.nodinchan.dev.titanchat.api.conversation;
 import com.nodinchan.dev.conversation.Network;
 import com.nodinchan.dev.module.Module;
 
-public final class SimpleNetwork extends Network implements Module {
+public final class NetworkModule extends Network implements Module {
 	
 	private static final String NAME = "Network";
 	
@@ -28,7 +28,7 @@ public final class SimpleNetwork extends Network implements Module {
 	
 	private boolean loaded;
 	
-	public SimpleNetwork() {
+	public NetworkModule() {
 		this.loaded = false;
 	}
 	

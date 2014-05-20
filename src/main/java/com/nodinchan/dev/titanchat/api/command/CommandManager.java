@@ -35,7 +35,7 @@ import com.nodinchan.dev.module.AbstractModule;
 import com.nodinchan.dev.titanchat.TitanChat;
 import com.nodinchan.dev.titanchat.api.command.guide.CommandIndex;
 import com.nodinchan.dev.titanchat.api.event.CommandEvent;
-import com.nodinchan.dev.titanchat.api.guide.SimpleGuide;
+import com.nodinchan.dev.titanchat.api.guide.GuideModule;
 import com.nodinchan.dev.tools.Format;
 import com.nodinchan.dev.tools.Messaging;
 
@@ -83,7 +83,7 @@ public final class CommandManager extends AbstractModule {
 	
 	@Override
 	public void load() {
-		plugin.getSystem().getModule(SimpleGuide.class).addChapter(index);
+		plugin.getSystem().getModule(GuideModule.class).addChapter(index);
 	}
 	
 	public List<String> match(String label) {
@@ -191,7 +191,7 @@ public final class CommandManager extends AbstractModule {
 		for (Command command : getAll())
 			unregister(command.getLabel());
 		
-		plugin.getSystem().getModule(SimpleGuide.class).removeChapter("Commands");
+		plugin.getSystem().getModule(GuideModule.class).removeChapter("Commands");
 	}
 	
 	public void unregister(String label) {

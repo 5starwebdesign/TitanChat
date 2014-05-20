@@ -27,7 +27,7 @@ import com.google.common.collect.ImmutableList;
 import com.nodinchan.dev.guide.Chapter;
 import com.nodinchan.dev.guide.Index;
 import com.nodinchan.dev.titanchat.api.command.Command;
-import com.nodinchan.dev.titanchat.api.guide.SimpleGuide;
+import com.nodinchan.dev.titanchat.api.guide.GuideModule;
 import com.nodinchan.dev.tools.Format;
 
 public final class HelpCommand extends Command {
@@ -42,12 +42,12 @@ public final class HelpCommand extends Command {
 	
 	@Override
 	public void invokeExecution(CommandSender sender, String[] args) {
-		if (!plugin.getSystem().isLoaded(SimpleGuide.class)) {
+		if (!plugin.getSystem().isLoaded(GuideModule.class)) {
 			message(sender, Format.RED + "Guide not found");
 			return;
 		}
 		
-		SimpleGuide guide = plugin.getSystem().getModule(SimpleGuide.class);
+		GuideModule guide = plugin.getSystem().getModule(GuideModule.class);
 		
 		Chapter chapter = guide;
 		
@@ -90,7 +90,7 @@ public final class HelpCommand extends Command {
 	
 	@Override
 	public List<String> invokeTabCompletion(CommandSender sender, String[] args) {
-		SimpleGuide guide = plugin.getSystem().getModule(SimpleGuide.class);
+		GuideModule guide = plugin.getSystem().getModule(GuideModule.class);
 		
 		Chapter chapter = guide;
 		

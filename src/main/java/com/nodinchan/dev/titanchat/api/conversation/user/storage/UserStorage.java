@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.conversation.user.storage;
+package com.nodinchan.dev.titanchat.api.conversation.user.storage;
 
 public interface UserStorage {
 	

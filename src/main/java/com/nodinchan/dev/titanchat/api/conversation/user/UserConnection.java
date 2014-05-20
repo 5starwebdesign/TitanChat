@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.conversation.user;
+package com.nodinchan.dev.titanchat.api.conversation.user;
 
 import com.nodinchan.dev.conversation.Connection;
 import com.nodinchan.dev.conversation.Node;

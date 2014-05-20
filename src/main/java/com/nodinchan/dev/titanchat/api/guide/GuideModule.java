@@ -20,7 +20,7 @@ package com.nodinchan.dev.titanchat.api.guide;
 import com.nodinchan.dev.guide.Guide;
 import com.nodinchan.dev.module.Module;
 
-public final class SimpleGuide extends Guide implements Module {
+public final class GuideModule extends Guide implements Module {
 	
 	private static final String NAME = "Guide";
 	
@@ -28,7 +28,7 @@ public final class SimpleGuide extends Guide implements Module {
 	
 	private boolean loaded;
 	
-	public SimpleGuide() {
+	public GuideModule() {
 		this.loaded = false;
 	}
 	

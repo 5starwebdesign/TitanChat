@@ -36,9 +36,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.nodinchan.dev.module.ModularSystem;
 import com.nodinchan.dev.titanchat.api.command.CommandManager;
-import com.nodinchan.dev.titanchat.api.conversation.SimpleNetwork;
-import com.nodinchan.dev.titanchat.api.guide.SimpleGuide;
-import com.nodinchan.dev.titanchat.conversation.user.UserManager;
+import com.nodinchan.dev.titanchat.api.conversation.NetworkModule;
+import com.nodinchan.dev.titanchat.api.conversation.user.UserManager;
+import com.nodinchan.dev.titanchat.api.guide.GuideModule;
 import com.nodinchan.dev.titanchat.listener.TitanChatListener;
 import com.nodinchan.dev.titanchat.tools.metrics.Metrics;
 import com.nodinchan.dev.titanchat.tools.vault.Chat_TitanChat;
@@ -224,8 +224,8 @@ public final class TitanChat extends JavaPlugin {
 		
 		log(Level.INFO, "Registering managers...");
 		system.registerModule(new CommandManager());
-		system.registerModule(new SimpleGuide());
-		system.registerModule(new SimpleNetwork());
+		system.registerModule(new GuideModule());
+		system.registerModule(new NetworkModule());
 		system.registerModule(new UserManager());
 		
 		log(Level.INFO, "Now loaded");

@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.conversation.user.storage.yml;
+package com.nodinchan.dev.titanchat.api.conversation.user.storage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,8 +29,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.nodinchan.dev.titanchat.TitanChat;
-import com.nodinchan.dev.titanchat.conversation.user.storage.UserData;
-import com.nodinchan.dev.titanchat.conversation.user.storage.UserStorage;
 
 public final class YMLUserStorage implements UserStorage {
 	

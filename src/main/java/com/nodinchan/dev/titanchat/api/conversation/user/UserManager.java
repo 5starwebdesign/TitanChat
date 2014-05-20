@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.conversation.user;
+package com.nodinchan.dev.titanchat.api.conversation.user;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,10 +33,10 @@ import com.nodinchan.dev.conversation.NodeManager;
 import com.nodinchan.dev.metadata.DataConversionHandler;
 import com.nodinchan.dev.module.AbstractModule;
 import com.nodinchan.dev.titanchat.TitanChat;
-import com.nodinchan.dev.titanchat.api.conversation.SimpleNetwork;
-import com.nodinchan.dev.titanchat.conversation.user.storage.UserData;
-import com.nodinchan.dev.titanchat.conversation.user.storage.UserStorage;
-import com.nodinchan.dev.titanchat.conversation.user.storage.yml.YMLUserStorage;
+import com.nodinchan.dev.titanchat.api.conversation.NetworkModule;
+import com.nodinchan.dev.titanchat.api.conversation.user.storage.UserData;
+import com.nodinchan.dev.titanchat.api.conversation.user.storage.UserStorage;
+import com.nodinchan.dev.titanchat.api.conversation.user.storage.YMLUserStorage;
 
 public final class UserManager extends AbstractModule implements NodeManager<User> {
 	
@@ -59,7 +59,6 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 		this.ids = new HashMap<>();
 		this.users = new HashMap<>();
 		this.conversion = new DataConversionHandler();
-		this.storage = new YMLUserStorage();
 	}
 	
 	public Set<String> find(String name) {
@@ -119,7 +118,7 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	
 	public UserStorage getStorage() {
 		if (storage == null)
-			throw new IllegalStateException("No storage method");
+			this.storage = new YMLUserStorage();
 		
 		return storage;
 	}
@@ -148,9 +147,9 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	public void onJoin(Player player) {
 		Validate.notNull(player, "Player cannot be null");
 		Validate.isTrue(!isRegistered(player.getUniqueId()), "Player already registered");
-		Validate.isTrue(plugin.getSystem().isLoaded(SimpleNetwork.class), "Network not found");
+		Validate.isTrue(plugin.getSystem().isLoaded(NetworkModule.class), "Network not found");
 		
-		SimpleNetwork network = plugin.getSystem().getModule(SimpleNetwork.class);
+		NetworkModule network = plugin.getSystem().getModule(NetworkModule.class);
 		
 		User user = new User(player.getUniqueId());
 		
@@ -179,7 +178,7 @@ public final class UserManager extends AbstractModule implements NodeManager<Use
 	public void onQuit(Player player) {
 		Validate.notNull(player, "Player cannot be null");
 		Validate.isTrue(isRegistered(player.getUniqueId()), "Player not registered");
-		Validate.isTrue(plugin.getSystem().isLoaded(SimpleNetwork.class), "Network not found");
+		Validate.isTrue(plugin.getSystem().isLoaded(NetworkModule.class), "Network not found");
 		
 		getStorage().saveData(new UserData(users.remove(player.getUniqueId())));
 	}

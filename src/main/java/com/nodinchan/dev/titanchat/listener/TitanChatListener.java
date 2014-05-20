@@ -27,8 +27,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import com.nodinchan.dev.conversation.Network;
 import com.nodinchan.dev.conversation.Node;
 import com.nodinchan.dev.titanchat.TitanChat;
-import com.nodinchan.dev.titanchat.conversation.user.User;
-import com.nodinchan.dev.titanchat.conversation.user.UserManager;
+import com.nodinchan.dev.titanchat.api.conversation.user.User;
+import com.nodinchan.dev.titanchat.api.conversation.user.UserManager;
 import com.nodinchan.dev.tools.Format;
 
 public final class TitanChatListener implements Listener {

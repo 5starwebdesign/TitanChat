@@ -15,7 +15,7 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.conversation.user.storage;
+package com.nodinchan.dev.titanchat.api.conversation.user.storage;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableSet;
 import com.nodinchan.dev.conversation.Node;
 import com.nodinchan.dev.metadata.Data;
 import com.nodinchan.dev.titanchat.TitanChat;
-import com.nodinchan.dev.titanchat.conversation.user.User;
-import com.nodinchan.dev.titanchat.conversation.user.UserManager;
+import com.nodinchan.dev.titanchat.api.conversation.user.User;
+import com.nodinchan.dev.titanchat.api.conversation.user.UserManager;
 
 public final class UserData {
 	
