@@ -1,6 +1,6 @@
 == TitanChat
 
-TitanChat, a conversation management plugin and developer tool, is highly flexible. Instead of having a bulk of hardcoded integrations with other plugins, an addon system was implemented for this purpose. The flexibility and control given to users and developers alike are immense, allowing TitanChat to do as you wish.
+TitanChat is a highly flexible conversation management plugin and developer tool. Instead of having a bulk of hardcoded integrations with other plugins, a module system was implemented for this purpose. The flexibility and control given to users and developers alike are immense, allowing TitanChat to do as you wish.
 
 ----
 
@@ -9,11 +9,7 @@ TitanChat, a conversation management plugin and developer tool, is highly flexib
 * High flexibility
 * Easy to understand and use
 * Simple API
-* Addon system to support other plugins and add new features
-* Supports any SuperPerms based or any [[http://dev.bukkit.org/bridge/vault|Vault]] supported permissions plugin
-** [[http://dev.bukkit.org/permissions/bpermissions/|bPermissions]]
-** [[http://dev.bukkit.org/permissions/permissionsex/|PermissionsEx]]
-** [[http://dev.bukkit.org/permissions/permbukkit/|PermissionsBukkit]], etc.
+* Module system to support other plugins and add new features
 
 ----
 
@@ -26,8 +22,7 @@ TitanChat, a conversation management plugin and developer tool, is highly flexib
 
 === Dependencies
 
-* CraftBukkit 1.7.9-R0.1-SNAPSHOT
-* Vault (Optional)
+* CraftBukkit 1.7.9-R0.2
 
 ----
 
@@ -58,12 +53,6 @@ TitanChat, a conversation management plugin and developer tool, is highly flexib
 
 * Author: NodinChan
 * Contributor(s): AlphaBlend, lol768, SLiPCoR
-* Tester(s): gwinans, gabizou
-
-==== Special Thanks
-
-* To gwinans for the idea
-* To fellow developers on IRC for help
-* To all users who has given me any form of support
+* Tester(s): gabizou, gwinans
 
 ----

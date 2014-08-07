@@ -19,17 +19,13 @@ package com.nodinchan.dev.module;
 
 public interface Module {
 	
-	public String[] getDependencies();
-	
 	public String getName();
 	
 	public boolean isLoaded();
 	
 	public void load();
 	
-	public void reload();
-	
-	public void setLoaded(boolean loaded);
+	public boolean setLoaded(boolean loaded);
 	
 	public void unload();
 }

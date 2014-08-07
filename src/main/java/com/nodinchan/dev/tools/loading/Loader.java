@@ -19,7 +19,7 @@ package com.nodinchan.dev.tools.loading;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -34,42 +34,49 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 public final class Loader {
 	
-	private static final Logger log = Logger.getLogger("LoadingLog");
+	private static final String DESCRIPTION = "loadable";
+	private static final File DIRECTORY = new File("loadables");
+	private static final JarFilter FILTER = new JarFilter();
+	private static final Logger LOG = Logger.getLogger("Loader");
 	
-	public static <T extends Loadable> List<T> load(Class<T> clazz, File directory) {
+	public static <T> List<T> load(Class<T> type, File directory, String description, JarFilter filter, Logger log) {
+		if (type == null)
+			throw new IllegalArgumentException("Class cannot be null");
+		
 		List<T> loadables = new ArrayList<>();
 		
-		for (File file : directory.listFiles(new ExtensionFilter(".jar"))) {
+		if (directory == null)
+			directory = DIRECTORY;
+		
+		if (description == null || description.isEmpty())
+			description = DESCRIPTION;
+		
+		if (filter == null)
+			filter = FILTER;
+		
+		if (log == null)
+			log = LOG;
+		
+		for (File file : directory.listFiles(filter)) {
 			JarFile jar = null;
 			
 			try {
 				jar = new JarFile(file);
-				JarEntry entry = jar.getJarEntry("loadable.yml");
+				JarEntry entry = jar.getJarEntry(description + ".yml");
 				
 				if (entry == null)
-					throw new Exception("The YAML file loadable.yml was not found");
+					throw new IllegalStateException("The YAML file " + description + ".yml was not found");
 				
-				InputStream entryStream = jar.getInputStream(entry);
-				
-				if (entryStream == null)
-					throw new Exception();
+				InputStreamReader reader = new InputStreamReader(jar.getInputStream(entry), "UTF-8");
 				
 				ClassLoader loader = URLClassLoader.newInstance(new URL[] { file.toURI().toURL() });
-				String main = YamlConfiguration.loadConfiguration(entryStream).getString("main-class");
+				String main = YamlConfiguration.loadConfiguration(reader).getString("main-class");
 				
 				Class<?> loadedClass = Class.forName(main, true, loader);
-				Class<? extends T> loadableClass = loadedClass.asSubclass(clazz);
-				Constructor<? extends T> ctor = loadableClass.getConstructor();
+				Class<? extends T> loadableClass = loadedClass.asSubclass(type);
+				Constructor<? extends T> loadableConstructor = loadableClass.getConstructor();
 				
-				T loadable = ctor.newInstance();
-				
-				File dataFolder = new File(file.getParentFile(), loadable.getName());
-				dataFolder.mkdirs();
-				
-				loadable.init(loader, file, dataFolder);
-				loadable.onLoad();
-				
-				loadables.add(loadable);
+				loadables.add(loadableConstructor.newInstance());
 				
 			} catch (Exception e) {
 				log.log(Level.WARNING, "The Jar file " + file.getName() + " failed to load");
@@ -84,17 +91,75 @@ public final class Loader {
 		return loadables;
 	}
 	
-	public static class ExtensionFilter implements FileFilter {
-		
-		private final String extension;
-		
-		public ExtensionFilter(String extension) {
-			this.extension = (extension != null) ? extension : "";
-		}
+	public static <T> List<T> load(Class<T> type, File directory, String description, JarFilter filter) {
+		return load(type, directory, description, filter, LOG);
+	}
+	
+	public static <T> List<T> load(Class<T> type, File directory, String description, Logger log) {
+		return load(type, directory, description, FILTER, log);
+	}
+	
+	public static <T> List<T> load(Class<T> type, File directory, JarFilter filter, Logger log) {
+		return load(type, directory, DESCRIPTION, filter, log);
+	}
+	
+	public static <T> List<T> load(Class<T> type, String description, JarFilter filter, Logger log) {
+		return load(type, DIRECTORY, description, filter, log);
+	}
+	
+	public static <T> List<T> load(Class<T> type, File directory, String description) {
+		return load(type, directory, description, FILTER, LOG);
+	}
+	
+	public static <T> List<T> load(Class<T> type, File directory, JarFilter filter) {
+		return load(type, directory, DESCRIPTION, filter, LOG);
+	}
+	
+	public static <T> List<T> load(Class<T> type, File directory, Logger log) {
+		return load(type, directory, DESCRIPTION, FILTER, log);
+	}
+	
+	public static <T> List<T> load(Class<T> type, String description, JarFilter filter) {
+		return load(type, DIRECTORY, description, filter, LOG);
+	}
+	
+	public static <T> List<T> load(Class<T> type, String description, Logger log) {
+		return load(type, DIRECTORY, description, FILTER, log);
+	}
+	
+	public static <T> List<T> load(Class<T> type, JarFilter filter, Logger log) {
+		return load(type, DIRECTORY, DESCRIPTION, filter, log);
+	}
+	
+	public static <T> List<T> load(Class<T> type, File directory) {
+		return load(type, directory, DESCRIPTION, FILTER, LOG);
+	}
+	
+	public static <T> List<T> load(Class<T> type, String description) {
+		return load(type, DIRECTORY, description, FILTER, LOG);
+	}
+	
+	public static <T> List<T> load(Class<T> type, JarFilter filter) {
+		return load(type, DIRECTORY, DESCRIPTION, filter, LOG);
+	}
+	
+	public static <T> List<T> load(Class<T> type, Logger log) {
+		return load(type, DIRECTORY, DESCRIPTION, FILTER, log);
+	}
+	
+	public static <T> List<T> load(Class<T> type) {
+		return load(type, DIRECTORY, DESCRIPTION, FILTER, LOG);
+	}
+	
+	public static class JarFilter implements FileFilter {
 		
 		@Override
-		public boolean accept(File file) {
-			return file != null && file.getName().endsWith(extension);
+		public final boolean accept(File file) {
+			return file != null && file.getName().endsWith(".jar") && valid(file);
+		}
+		
+		public boolean valid(File file) {
+			return true;
 		}
 	}
 }

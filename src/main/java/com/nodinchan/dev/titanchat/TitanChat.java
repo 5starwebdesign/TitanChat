@@ -17,145 +17,25 @@
 
 package com.nodinchan.dev.titanchat;
 
-import java.io.File;
-import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.permission.Permission;
-
-import org.apache.commons.lang.Validate;
-import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.nodinchan.dev.module.ModularSystem;
-import com.nodinchan.dev.titanchat.api.command.CommandManager;
-import com.nodinchan.dev.titanchat.api.conversation.NetworkModule;
-import com.nodinchan.dev.titanchat.api.conversation.user.UserManager;
-import com.nodinchan.dev.titanchat.api.guide.GuideModule;
-import com.nodinchan.dev.titanchat.listener.TitanChatListener;
-import com.nodinchan.dev.titanchat.tools.metrics.Metrics;
-import com.nodinchan.dev.titanchat.tools.vault.Chat_TitanChat;
-import com.nodinchan.dev.tools.ReleaseHistory;
-import com.nodinchan.dev.tools.Vault;
-import com.nodinchan.dev.tools.ReleaseHistory.Version;
+import com.nodinchan.dev.module.ModuleManager;
 
 public final class TitanChat extends JavaPlugin {
 	
 	private static TitanChat instance;
+	private static ModuleManager manager;
 	
-	private final Logger log = Logger.getLogger("TitanLog");
-	
-	private final ModularSystem system = new ModularSystem(this);
-	
-	public ModularSystem getSystem() {
-		if (instance == null)
-			throw new IllegalStateException("TitanChat is not in operation");
-		
-		return system;
+	public TitanChat getInstance() {
+		return instance();
 	}
 	
-	private void enquireUpdate() {
-		getServer().getScheduler().runTaskAsynchronously(this, new Runnable() {
-			
-			@Override
-			public void run() {
-				log(Level.INFO, "[TitanChat] Attempting to enquire for updates...");
-				
-				if (!getConfig().getBoolean("tools.update-enquiry", false)) {
-					log(Level.INFO, "[TitanChat] Enquiry is disabled");
-					return;
-				}
-				
-				ReleaseHistory history = new ReleaseHistory(35800, getDescription());
-				history.searchHistory();
-				
-				if (!history.hasVersions()) {
-					log(Level.INFO, "[TitanChat] No releases found");
-					return;
-				}
-				
-				Version rVersion = history.getRunningVersion();
-				Version lVersion = history.getLatestVersion();
-				
-				String[] rVersioning = rVersion.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
-				String[] lVersioning = lVersion.getTitle().replaceAll("[^\\d\\.]", "").split("\\.");
-				
-				int comparison = Math.min(rVersioning.length, lVersioning.length);
-				
-				for (int index = 0; index < comparison; index++) {
-					int running = NumberUtils.toInt(rVersioning[index], 0);
-					int latest = NumberUtils.toInt(lVersioning[index], 0);
-					
-					if (latest > running)
-						break;
-					
-					if (latest == running && index < comparison - 1)
-						continue;
-					
-					log(Level.INFO, "[TitanChat] No updates available");
-					return;
-				}
-				
-				log(Level.INFO, "A new version of TitanChat is available! (" + lVersion.getTitle() + ")");
-				log(Level.INFO, "You are running " + rVersion.getTitle() + " currently");
-				
-				if (!lVersion.getDownloadLink().isEmpty())
-					log(Level.INFO, "Get files at " + lVersion.getDownloadLink());
-				else
-					log(Level.INFO, "Get files at http://dev.bukkit.org/bukkit-plugins/titanchat/files/");
-			}
-		});
-	}
-	
-	private void initiateMetrics() {
-		log(Level.INFO, "[TitanChat] Attempting to initialise metrics...");
-		
-		if (!getConfig().getBoolean("tools.metrics-statistics", false)) {
-			log(Level.INFO, "[TitanChat] Metrics is disabled");
-			return;
-		}
-		
-		try {
-			Metrics metrics = new Metrics(this);
-			
-			if (metrics.isOptOut()) {
-				log(Level.INFO, "[TitanChat] Metrics is disabled");
-				return;
-			}
-			
-			if (metrics.start())
-				log(Level.INFO, "[TitanChat] Metrics is initialised");
-			
-		} catch (Exception e) {
-			log(Level.WARNING, "[TitanChat] An error occured while initialising Metrics");
-		}
-	}
-	
-	private void initiateVault() {
-		log(Level.INFO, "[TitanChat] Attempting to set up Vault bridge...");
-		
-		Plugin vault = getServer().getPluginManager().getPlugin("Vault");
-		
-		if (vault == null) {
-			log(Level.INFO, "[TitanChat] Failed to set up Vault bridge");
-			return;
-		}
-		
-		ServicesManager services = getServer().getServicesManager();
-		ServicePriority priority = ServicePriority.Lowest;
-		
-		services.register(Chat.class, new Chat_TitanChat(services.load(Permission.class)), vault, priority);
-		
-		log(Level.INFO, "[Vault][Chat] TitanChat found: Loaded");
-		
-		Vault.initialise(getServer());
+	public ModuleManager getManager() {
+		return manager();
 	}
 	
 	public static TitanChat instance() {
@@ -166,91 +46,30 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	public void log(Level level, String message) {
-		Validate.notEmpty(message, "Message cannot be empty");
-		log.log((level != null) ? level : Level.INFO, message);
+		if (message == null || message.isEmpty())
+			return;
+		
+		getLogger().log((level != null) ? level : Level.INFO, message);
+	}
+	
+	public static ModuleManager manager() {
+		if (instance == null)
+			throw new IllegalStateException("TitanChat is not in operation");
+		
+		return manager;
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (!system.isLoaded(CommandManager.class))
-			throw new IllegalStateException("CommandManager not found");
-		
-		return system.getModule(CommandManager.class).run(sender, label, args);
+		return false;
 	}
 	
 	@Override
-	public void onDisable() {
-		log(Level.INFO, "Now disabling...");
-		
-		log(Level.INFO, "Stopping TitanChat System...");
-		system.stop();
-		
-		if (instance != null)
-			instance = null;
-		
-		log(Level.INFO, "Now disabled");
-	}
+	public void onDisable() {}
 	
 	@Override
-	public void onEnable() {
-		log(Level.INFO, "Now enabling...");
-		
-		if (instance == null)
-			instance = this;
-		
-		enquireUpdate();
-		
-		initiateVault();
-		
-		log(Level.INFO, "Starting TitanChat System...");
-		system.start();
-		
-		getServer().getPluginManager().registerEvents(new TitanChatListener(), this);
-		log(Level.INFO, "Registered listeners");
-		
-		log(Level.INFO, "Now enabled");
-	}
+	public void onEnable() {}
 	
 	@Override
-	public void onLoad() {
-		log(Level.INFO, "Now loading...");
-		
-		instance = this;
-		
-		if (!new File(getDataFolder(), "config.yml").exists())
-			log(Level.INFO, "Generating default configuration...");
-			
-		saveResource("config.yml", false);
-		
-		log(Level.INFO, "Registering managers...");
-		system.registerModule(new CommandManager());
-		system.registerModule(new GuideModule());
-		system.registerModule(new NetworkModule());
-		system.registerModule(new UserManager());
-		
-		log(Level.INFO, "Now loaded");
-	}
-	
-	public void onReload() {
-		log(Level.INFO, "Now reloading...");
-		
-		if (instance == null)
-			instance = this;
-		
-		system.reload();
-		
-		log(Level.INFO, "Now reloaded");
-	}
-	
-	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-		if (!system.isLoaded(CommandManager.class))
-			throw new IllegalStateException("CommandManager not found");
-		
-		return system.getModule(CommandManager.class).preview(sender, label, args);
-	}
-	
-	public static ModularSystem system() {
-		return instance.getSystem();
-	}
+	public void onLoad() {}
 }

@@ -15,39 +15,55 @@
  *     along with this program.  If not, see {http://www.gnu.org/licenses/}.
  */
 
-package com.nodinchan.dev.titanchat.api.command.guide;
+package com.nodinchan.dev.module.loading;
 
-import com.nodinchan.dev.guide.AbstractIndex;
-import com.nodinchan.dev.titanchat.api.command.Command;
+import java.io.InputStream;
 
-public abstract class Assistance extends AbstractIndex {
+import com.nodinchan.dev.module.Module;
+
+public abstract class LoadableModule implements Module {
 	
-	protected final Command command;
+	private final String name;
 	
-	public Assistance(Command command) {
-		super((command != null) ? command.getLabel() : "");
-		this.command = command;
-	}
+	protected boolean loaded;
 	
-	public final String getCommands(int page) {
-		return super.getContent(page);
-	}
-	
-	@Override
-	public abstract String getContent(int page);
-	
-	@Override
-	public final String getDescription() {
-		return command.getDescription();
-	}
-	
-	public final int getListCount() {
-		return super.getPageCount();
+	public LoadableModule(String name) {
+		this.name = name;
+		this.loaded = false;
 	}
 	
 	@Override
-	public abstract int getPageCount();
+	public final String getName() {
+		return name;
+	}
+	
+	public final InputStream getResource(String name) {
+		return getClass().getClassLoader().getResourceAsStream(name);
+	}
 	
 	@Override
-	public final void setDescription(String description) {}
+	public final boolean isLoaded() {
+		return loaded;
+	}
+	
+	@Override
+	public void load() {}
+	
+	@Override
+	public boolean setLoaded(boolean loaded) {
+		if (this.loaded == loaded)
+			return false;
+		
+		this.loaded = loaded;
+		
+		if (loaded)
+			load();
+		else
+			unload();
+		
+		return true;
+	}
+	
+	@Override
+	public void unload() {}
 }

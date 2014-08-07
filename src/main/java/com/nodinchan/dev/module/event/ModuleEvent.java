@@ -17,8 +17,6 @@
 
 package com.nodinchan.dev.module.event;
 
-import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -33,10 +31,6 @@ public class ModuleEvent extends Event {
 	private final String type;
 	
 	public ModuleEvent(Module module, String type) {
-		super(!Bukkit.isPrimaryThread());
-		Validate.notNull(module, "Module cannot be null");
-		Validate.notEmpty(type, "Type cannot be empty");
-		
 		this.module = module;
 		this.type = type;
 	}
@@ -50,11 +44,11 @@ public class ModuleEvent extends Event {
 		return handlers;
 	}
 	
-	public final Module getModule() {
+	public Module getModule() {
 		return module;
 	}
 	
-	public final String getType() {
+	public String getType() {
 		return type;
 	}
 }
