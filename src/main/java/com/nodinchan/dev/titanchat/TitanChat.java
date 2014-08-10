@@ -34,8 +34,8 @@ public final class TitanChat extends JavaPlugin {
 		return instance();
 	}
 	
-	public ModuleManager getManager() {
-		return manager();
+	public ModuleManager getModuleManager() {
+		return module();
 	}
 	
 	public static TitanChat instance() {
@@ -52,7 +52,7 @@ public final class TitanChat extends JavaPlugin {
 		getLogger().log((level != null) ? level : Level.INFO, message);
 	}
 	
-	public static ModuleManager manager() {
+	public static ModuleManager module() {
 		if (instance == null)
 			throw new IllegalStateException("TitanChat is not in operation");
 		
@@ -65,11 +65,20 @@ public final class TitanChat extends JavaPlugin {
 	}
 	
 	@Override
-	public void onDisable() {}
+	public void onDisable() {
+		if (instance != null)
+			instance = null;
+	}
 	
 	@Override
-	public void onEnable() {}
+	public void onEnable() {
+		if (instance == null)
+			instance = this;
+	}
 	
 	@Override
-	public void onLoad() {}
+	public void onLoad() {
+		if (instance == null)
+			instance = this;
+	}
 }
