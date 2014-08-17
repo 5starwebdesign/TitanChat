@@ -28,7 +28,7 @@ TitanChat is a highly flexible conversation management plugin and developer tool
 
 === How to install
 
-# Download from -[[https://github.com/TitanDevelopment/TitanChat/tree/rewrite|Unavailable]]-
+# Download from -[[https://github.com/TitanDevelopment/TitanChat/tree/infinity|Unavailable]]-
 # Place in plugins folder
 # Start up to load default configuration
 # Configure

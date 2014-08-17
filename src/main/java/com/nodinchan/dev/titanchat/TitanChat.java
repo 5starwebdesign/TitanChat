@@ -23,7 +23,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.nodinchan.dev.module.Module;
 import com.nodinchan.dev.module.ModuleManager;
+import com.nodinchan.dev.titanchat.tools.metrics.Metrics;
 
 public final class TitanChat extends JavaPlugin {
 	
@@ -36,6 +38,22 @@ public final class TitanChat extends JavaPlugin {
 	
 	public ModuleManager getModuleManager() {
 		return module();
+	}
+	
+	private void initialiseMetrics() {
+		log(Level.INFO, "Attempting to initialise metrics...");
+		
+		try {
+			Metrics metrics = new Metrics(this);
+			
+			if (getConfig().getBoolean("tools.metrics", true) && !metrics.isOptOut() && metrics.start())
+				log(Level.INFO, "Metrics is initialised");
+			else
+				log(Level.INFO, "Metrics is disabled");
+			
+		} catch (Exception e) {
+			log(Level.WARNING, "An error occured while initialising Metrics");
+		}
 	}
 	
 	public static TitanChat instance() {
@@ -59,26 +77,27 @@ public final class TitanChat extends JavaPlugin {
 		return manager;
 	}
 	
+	public static <T extends Module> T module(Class<T> clazz) {
+		return module().getModule(clazz);
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		return false;
 	}
 	
 	@Override
-	public void onDisable() {
-		if (instance != null)
-			instance = null;
-	}
+	public void onDisable() {}
 	
 	@Override
 	public void onEnable() {
-		if (instance == null)
-			instance = this;
+		initialiseMetrics();
 	}
 	
 	@Override
 	public void onLoad() {
-		if (instance == null)
-			instance = this;
+		instance = this;
+		
+		manager = new ModuleManager(this);
 	}
 }
